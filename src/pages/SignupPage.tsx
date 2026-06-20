@@ -1,5 +1,6 @@
 import { useState } from "react"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
+import { Loader2 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -17,6 +18,7 @@ import { useAuthStore } from "@/store/auth-store"
 export function SignupPage() {
   const register = useAuthStore((state) => state.register)
   const isLoading = useAuthStore((state) => state.isLoading)
+  const navigate = useNavigate()
 
   const [form, setForm] = useState({
     firstName: "",
@@ -38,6 +40,7 @@ export function SignupPage() {
 
     try {
       await register(form)
+      navigate("/")
     } catch (err) {
       setError(err instanceof Error ? err.message : "Registration failed")
     }
@@ -48,7 +51,8 @@ export function SignupPage() {
       <CardHeader>
         <CardTitle>Create your account</CardTitle>
         <CardDescription>
-          Join Therabridge to start your wellness journey. You must be 18 or older.
+          Join Therabridge to start your wellness journey. You must be 18 or
+          older.
         </CardDescription>
       </CardHeader>
 
@@ -67,9 +71,12 @@ export function SignupPage() {
                 id="firstName"
                 autoComplete="given-name"
                 value={form.firstName}
-                onChange={(event) => updateField("firstName", event.target.value)}
+                onChange={(event) =>
+                  updateField("firstName", event.target.value)
+                }
                 required
                 minLength={2}
+                disabled={isLoading}
               />
             </div>
 
@@ -79,9 +86,12 @@ export function SignupPage() {
                 id="lastName"
                 autoComplete="family-name"
                 value={form.lastName}
-                onChange={(event) => updateField("lastName", event.target.value)}
+                onChange={(event) =>
+                  updateField("lastName", event.target.value)
+                }
                 required
                 minLength={2}
+                disabled={isLoading}
               />
             </div>
           </div>
@@ -97,6 +107,7 @@ export function SignupPage() {
               minLength={3}
               pattern="[a-zA-Z0-9_]{3,30}"
               title="Letters, numbers, and underscores only (3-30 characters)"
+              disabled={isLoading}
             />
           </div>
 
@@ -109,6 +120,7 @@ export function SignupPage() {
               value={form.email}
               onChange={(event) => updateField("email", event.target.value)}
               required
+              disabled={isLoading}
             />
           </div>
 
@@ -118,8 +130,11 @@ export function SignupPage() {
               id="dateOfBirth"
               type="date"
               value={form.dateOfBirth}
-              onChange={(event) => updateField("dateOfBirth", event.target.value)}
+              onChange={(event) =>
+                updateField("dateOfBirth", event.target.value)
+              }
               required
+              disabled={isLoading}
             />
           </div>
 
@@ -133,18 +148,33 @@ export function SignupPage() {
               onChange={(event) => updateField("password", event.target.value)}
               required
               minLength={8}
+              disabled={isLoading}
             />
           </div>
         </CardContent>
 
         <CardFooter className="flex-col gap-4">
-          <Button type="submit" className="w-full bg-emerald-600 hover:bg-emerald-700" disabled={isLoading}>
-            {isLoading ? "Creating account..." : "Create account"}
+          <Button
+            type="submit"
+            className="w-full bg-emerald-600 hover:bg-emerald-700"
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <span className="flex items-center justify-center gap-2">
+                <Loader2 className="size-4 animate-spin" />
+                Creating account...
+              </span>
+            ) : (
+              "Create account"
+            )}
           </Button>
 
           <p className="text-center text-sm text-muted-foreground">
             Already have an account?{" "}
-            <Link to="/login" className="font-medium text-emerald-700 hover:underline dark:text-emerald-400">
+            <Link
+              to="/login"
+              className="font-medium text-emerald-700 hover:underline dark:text-emerald-400"
+            >
               Sign in
             </Link>
           </p>

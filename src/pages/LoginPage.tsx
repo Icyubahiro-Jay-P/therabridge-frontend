@@ -1,5 +1,6 @@
 import { useState } from "react"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
+import { Loader2 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -13,10 +14,12 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useAuthStore } from "@/store/auth-store"
+import { ModeToggle } from "@/components/mode-toggle"
 
 export function LoginPage() {
   const login = useAuthStore((state) => state.login)
   const isLoading = useAuthStore((state) => state.isLoading)
+  const navigate = useNavigate()
 
   const [identifier, setIdentifier] = useState("")
   const [password, setPassword] = useState("")
@@ -28,6 +31,7 @@ export function LoginPage() {
 
     try {
       await login({ identifier, password })
+      navigate("/")
     } catch (err) {
       setError(err instanceof Error ? err.message : "Login failed")
     }
@@ -35,6 +39,10 @@ export function LoginPage() {
 
   return (
     <Card>
+      {/* circle theme change button in the top-right corner */}
+      <div className="absolute top-4 right-4">
+        <ModeToggle />
+      </div>
       <CardHeader>
         <CardTitle>Welcome back</CardTitle>
         <CardDescription>
@@ -58,10 +66,11 @@ export function LoginPage() {
               value={identifier}
               onChange={(event) => setIdentifier(event.target.value)}
               required
+              disabled={isLoading}
             />
           </div>
 
-          <div className="space-y-2">
+          <div className="mb-4 space-y-2">
             <Label htmlFor="password">Password</Label>
             <Input
               id="password"
@@ -71,18 +80,33 @@ export function LoginPage() {
               onChange={(event) => setPassword(event.target.value)}
               required
               minLength={8}
+              disabled={isLoading}
             />
           </div>
         </CardContent>
 
         <CardFooter className="flex-col gap-4">
-          <Button type="submit" className="w-full bg-emerald-600 hover:bg-emerald-700" disabled={isLoading}>
-            {isLoading ? "Signing in..." : "Sign in"}
+          <Button
+            type="submit"
+            className="w-full cursor-pointer bg-emerald-600 hover:bg-emerald-700"
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <span className="flex items-center justify-center gap-2">
+                <Loader2 className="size-4 animate-spin" />
+                Signing in...
+              </span>
+            ) : (
+              "Sign in"
+            )}
           </Button>
 
           <p className="text-center text-sm text-muted-foreground">
             Don&apos;t have an account?{" "}
-            <Link to="/signup" className="font-medium text-emerald-700 hover:underline dark:text-emerald-400">
+            <Link
+              to="/signup"
+              className="font-medium text-emerald-700 hover:underline dark:text-emerald-400"
+            >
               Create one
             </Link>
           </p>

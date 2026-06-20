@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { Loader2 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -104,7 +105,9 @@ export function ProfilePage() {
         confirmPassword: "",
       })
     } catch (err) {
-      setPasswordError(err instanceof Error ? err.message : "Password change failed")
+      setPasswordError(
+        err instanceof Error ? err.message : "Password change failed"
+      )
     }
   }
 
@@ -124,7 +127,8 @@ export function ProfilePage() {
         </CardHeader>
         <CardContent className="grid gap-3 text-sm sm:grid-cols-2">
           <p>
-            <span className="text-muted-foreground">Username:</span> @{user.username}
+            <span className="text-muted-foreground">Username:</span> @
+            {user.username}
           </p>
           <p>
             <span className="text-muted-foreground">Email:</span> {user.email}
@@ -174,6 +178,7 @@ export function ProfilePage() {
                   }
                   required
                   minLength={2}
+                  disabled={isLoading}
                 />
               </div>
 
@@ -187,6 +192,7 @@ export function ProfilePage() {
                   }
                   required
                   minLength={2}
+                  disabled={isLoading}
                 />
               </div>
             </div>
@@ -201,6 +207,7 @@ export function ProfilePage() {
                   updateProfileField("dateOfBirth", event.target.value)
                 }
                 required
+                disabled={isLoading}
               />
             </div>
 
@@ -214,6 +221,7 @@ export function ProfilePage() {
                 onChange={(event) =>
                   updateProfileField("avatar", event.target.value)
                 }
+                disabled={isLoading}
               />
             </div>
 
@@ -222,14 +230,24 @@ export function ProfilePage() {
               <Textarea
                 id="profile-bio"
                 value={profileForm.bio}
-                onChange={(event) => updateProfileField("bio", event.target.value)}
+                onChange={(event) =>
+                  updateProfileField("bio", event.target.value)
+                }
                 maxLength={300}
                 rows={4}
+                disabled={isLoading}
               />
             </div>
 
             <Button type="submit" disabled={isLoading}>
-              {isLoading ? "Saving..." : "Save profile"}
+              {isLoading ? (
+                <span className="flex items-center justify-center gap-2">
+                  <Loader2 className="size-4 animate-spin" />
+                  Saving...
+                </span>
+              ) : (
+                "Save profile"
+              )}
             </Button>
           </CardContent>
         </form>
@@ -269,6 +287,7 @@ export function ProfilePage() {
                   }))
                 }
                 required
+                disabled={isLoading}
               />
             </div>
 
@@ -287,6 +306,7 @@ export function ProfilePage() {
                   }
                   required
                   minLength={8}
+                  disabled={isLoading}
                 />
               </div>
 
@@ -304,12 +324,20 @@ export function ProfilePage() {
                   }
                   required
                   minLength={8}
+                  disabled={isLoading}
                 />
               </div>
             </div>
 
             <Button type="submit" variant="outline" disabled={isLoading}>
-              {isLoading ? "Updating..." : "Update password"}
+              {isLoading ? (
+                <span className="flex items-center justify-center gap-2">
+                  <Loader2 className="size-4 animate-spin" />
+                  Updating...
+                </span>
+              ) : (
+                "Update password"
+              )}
             </Button>
           </CardContent>
         </form>

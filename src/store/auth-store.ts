@@ -22,8 +22,8 @@ interface AuthState {
   isLoading: boolean
   isInitialized: boolean
   initialize: () => Promise<void>
-  login: (payload: LoginPayload) => Promise<void>
-  register: (payload: RegisterPayload) => Promise<void>
+  login: (payload: LoginPayload) => Promise<string>
+  register: (payload: RegisterPayload) => Promise<string>
   logout: () => Promise<void>
   updateProfile: (payload: UpdateProfilePayload) => Promise<void>
   changePassword: (payload: ChangePasswordPayload) => Promise<void>
@@ -49,8 +49,9 @@ export const useAuthStore = create<AuthState>((set) => ({
   login: async (payload) => {
     set({ isLoading: true })
     try {
-      const user = await loginRequest(payload)
+      const { user, message } = await loginRequest(payload)
       set({ user })
+      return message
     } catch (error) {
       throw new Error(getErrorMessage(error))
     } finally {
@@ -61,8 +62,9 @@ export const useAuthStore = create<AuthState>((set) => ({
   register: async (payload) => {
     set({ isLoading: true })
     try {
-      const user = await registerRequest(payload)
+      const { user, message } = await registerRequest(payload)
       set({ user })
+      return message
     } catch (error) {
       throw new Error(getErrorMessage(error))
     } finally {

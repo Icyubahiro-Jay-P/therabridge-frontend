@@ -38,14 +38,26 @@ function normalizeUser(raw: RawUser): User {
   }
 }
 
-export async function register(payload: RegisterPayload): Promise<User> {
-  const { data } = await api.post<{ user: RawUser }>("/api/users/register", payload)
-  return normalizeUser(data.user)
+type AuthResponse = {
+  message: string
+  user: RawUser
 }
 
-export async function login(payload: LoginPayload): Promise<User> {
-  const { data } = await api.post<{ user: RawUser }>("/api/users/login", payload)
-  return normalizeUser(data.user)
+export async function register(
+  payload: RegisterPayload
+): Promise<{ user: User; message: string }> {
+  const { data } = await api.post<AuthResponse>(
+    "/api/users/register",
+    payload
+  )
+  return { user: normalizeUser(data.user), message: data.message }
+}
+
+export async function login(
+  payload: LoginPayload
+): Promise<{ user: User; message: string }> {
+  const { data } = await api.post<AuthResponse>("/api/users/login", payload)
+  return { user: normalizeUser(data.user), message: data.message }
 }
 
 export async function logout(): Promise<void> {
@@ -64,4 +76,23 @@ export async function updateProfile(payload: UpdateProfilePayload): Promise<User
 
 export async function changePassword(payload: ChangePasswordPayload): Promise<void> {
   await api.post("/api/users/change-password", payload)
+}
+
+export async function forgotPassword(email: string): Promise<string> {
+  const { data } = await api.post<{ success: boolean; data: string }>(
+    "/api/users/forgot-password",
+    { email }
+  )
+  return data.data // "Email sent"
+}
+
+export async function resetPassword(
+  token: string,
+  password: string
+): Promise<string> {
+  const { data } = await api.post<{ success: boolean; message: string }>(
+    `/api/users/reset-password/${token}`,
+    { password }
+  )
+  return data.message
 }

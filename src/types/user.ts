@@ -14,18 +14,18 @@ export interface User {
   updatedAt?: string
 }
 
-export interface RegisterPayload {
-  username: string
-  email: string
-  password: string
-  firstName: string
-  lastName: string
-  dateOfBirth: string
-}
-
 export interface LoginPayload {
   identifier: string
   password: string
+}
+
+export interface RegisterPayload {
+  firstName: string
+  lastName: string
+  username: string
+  email: string
+  password: string
+  dateOfBirth: string
 }
 
 export interface UpdateProfilePayload {

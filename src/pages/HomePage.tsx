@@ -96,7 +96,9 @@ function ExerciseModal({
         {/* Header */}
         <div
           className="rounded-t-2xl p-6 text-white"
-          style={{ background: `linear-gradient(135deg, ${exercise.color}dd, ${exercise.color}99)` }}
+          style={{
+            background: `linear-linear(135deg, ${exercise.color}dd, ${exercise.color}99)`,
+          }}
         >
           <button
             onClick={onClose}
@@ -123,7 +125,10 @@ function ExerciseModal({
                 You completed <strong>{exercise.title}</strong>. Take a moment
                 to notice how you feel right now.
               </p>
-              <Button onClick={onClose} className="mt-2 bg-emerald-600 hover:bg-emerald-700">
+              <Button
+                onClick={onClose}
+                className="mt-2 bg-emerald-600 hover:bg-emerald-700"
+              >
                 Close
               </Button>
             </div>
@@ -136,17 +141,19 @@ function ExerciseModal({
                     key={i}
                     className={cn(
                       "h-1.5 flex-1 rounded-full transition-all",
-                      i <= step ? "bg-emerald-500" : "bg-gray-200 dark:bg-gray-700"
+                      i <= step
+                        ? "bg-emerald-500"
+                        : "bg-gray-200 dark:bg-gray-700"
                     )}
                   />
                 ))}
               </div>
 
-              <p className="mb-1 text-xs font-medium text-gray-400 dark:text-gray-500 uppercase tracking-wider">
+              <p className="mb-1 text-xs font-medium tracking-wider text-gray-400 uppercase dark:text-gray-500">
                 Step {step + 1} of {exercise.steps.length}
               </p>
 
-              <p className="mb-6 text-lg font-medium text-gray-800 dark:text-gray-100 leading-relaxed">
+              <p className="mb-6 text-lg leading-relaxed font-medium text-gray-800 dark:text-gray-100">
                 {currentStep.instruction}
               </p>
 
@@ -155,7 +162,10 @@ function ExerciseModal({
                 <div className="mb-6 flex items-center justify-center">
                   <div
                     className="flex size-20 flex-col items-center justify-center rounded-full border-4 text-xl font-bold"
-                    style={{ borderColor: exercise.color, color: exercise.color }}
+                    style={{
+                      borderColor: exercise.color,
+                      color: exercise.color,
+                    }}
                   >
                     {timeLeft}s
                   </div>
@@ -207,10 +217,7 @@ function ExerciseCard({
   return (
     <div className="group relative flex flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-md dark:border-gray-700/60 dark:bg-gray-900">
       {/* Color accent */}
-      <div
-        className="h-1.5 w-full"
-        style={{ background: exercise.color }}
-      />
+      <div className="h-1.5 w-full" style={{ background: exercise.color }} />
 
       <div className="flex flex-1 flex-col gap-3 p-5">
         {/* Icon + badge row */}
@@ -228,7 +235,7 @@ function ExerciseCard({
           <h3 className="font-semibold text-gray-900 dark:text-white">
             {exercise.title}
           </h3>
-          <p className="mt-1 text-sm text-gray-500 dark:text-gray-400 line-clamp-2">
+          <p className="mt-1 line-clamp-2 text-sm text-gray-500 dark:text-gray-400">
             {exercise.description}
           </p>
         </div>
@@ -295,7 +302,7 @@ export function HomePage() {
 
       <div className="space-y-10">
         {/* ── Hero banner ── */}
-        <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-emerald-600 via-emerald-600 to-teal-700 p-8 text-white shadow-xl shadow-emerald-700/20">
+        <section className="relative overflow-hidden rounded-3xl bg-linear-to-br from-emerald-600 via-emerald-600 to-teal-700 p-8 text-white shadow-xl shadow-emerald-700/20">
           <div className="pointer-events-none absolute inset-0">
             <div className="absolute -top-10 -right-10 size-64 rounded-full bg-white/5" />
             <div className="absolute -bottom-16 -left-10 size-64 rounded-full bg-white/5" />
@@ -318,7 +325,11 @@ export function HomePage() {
                   Open Chat
                 </Link>
               </Button>
-              <Button asChild variant="outline" className="border-white/30 bg-white/10 text-white hover:bg-white/20">
+              <Button
+                asChild
+                variant="outline"
+                className="border-white/30 bg-white/10 text-white hover:bg-white/20"
+              >
                 <Link to="/profile">
                   View Profile <ArrowRight className="size-4" />
                 </Link>
@@ -376,7 +387,10 @@ export function HomePage() {
             {
               label: "Member since",
               value: user.createdAt
-                ? new Date(user.createdAt).toLocaleDateString(undefined, { month: "long", year: "numeric" })
+                ? new Date(user.createdAt).toLocaleDateString(undefined, {
+                    month: "long",
+                    year: "numeric",
+                  })
                 : "Today",
               icon: "🗓️",
             },
@@ -397,8 +411,12 @@ export function HomePage() {
             >
               <span className="text-2xl">{stat.icon}</span>
               <div>
-                <p className="text-xs text-gray-400 dark:text-gray-500">{stat.label}</p>
-                <p className="font-semibold text-gray-900 dark:text-white">{stat.value}</p>
+                <p className="text-xs text-gray-400 dark:text-gray-500">
+                  {stat.label}
+                </p>
+                <p className="font-semibold text-gray-900 dark:text-white">
+                  {stat.value}
+                </p>
               </div>
             </div>
           ))}

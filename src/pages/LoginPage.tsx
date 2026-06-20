@@ -38,7 +38,7 @@ export function LoginPage() {
   }
 
   return (
-    <div className="relative flex min-h-svh items-center justify-center overflow-hidden bg-gradient-to-br from-emerald-50 via-white to-teal-50 px-4 py-10 dark:from-gray-950 dark:via-gray-900 dark:to-emerald-950/30">
+    <div className="relative flex min-h-svh items-center justify-center overflow-hidden bg-linear-to-br from-emerald-50 via-white to-teal-50 px-4 py-10 dark:from-gray-950 dark:via-gray-900 dark:to-emerald-950/30">
       {/* Background decorations */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="absolute -top-40 -right-32 size-96 rounded-full bg-emerald-400/20 blur-3xl dark:bg-emerald-600/10" />
@@ -54,7 +54,7 @@ export function LoginPage() {
         {/* Logo */}
         <div className="mb-8 text-center">
           <Link to="/" className="inline-flex flex-col items-center gap-3">
-            <span className="inline-flex size-14 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 shadow-lg shadow-emerald-500/30">
+            <span className="inline-flex size-14 items-center justify-center rounded-2xl bg-linear-to-br from-emerald-500 to-teal-600 shadow-lg shadow-emerald-500/30">
               <Leaf className="size-7 text-white" />
             </span>
             <div>
@@ -139,7 +139,7 @@ export function LoginPage() {
                   required
                   minLength={8}
                   disabled={isLoading}
-                  className="pl-9 pr-10"
+                  className="pr-10 pl-9"
                 />
                 <button
                   type="button"
@@ -161,7 +161,7 @@ export function LoginPage() {
             <Button
               type="submit"
               disabled={isLoading}
-              className="mt-2 w-full bg-gradient-to-r from-emerald-600 to-teal-600 font-semibold shadow-md shadow-emerald-500/20 hover:from-emerald-700 hover:to-teal-700"
+              className="mt-2 w-full bg-linear-to-r from-emerald-600 to-teal-600 font-semibold shadow-md shadow-emerald-500/20 hover:from-emerald-700 hover:to-teal-700"
             >
               {isLoading ? (
                 <span className="flex items-center gap-2">

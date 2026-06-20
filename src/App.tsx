@@ -9,6 +9,7 @@ import { SignupPage } from "@/pages/SignupPage"
 import { ProfilePage } from "@/pages/ProfilePage"
 import { ChatPage } from "@/pages/ChatPage"
 import { useAuthStore } from "@/store/auth-store"
+import { Leaf } from "lucide-react"
 
 function AuthInitializer({ children }: { children: React.ReactNode }) {
   const initialize = useAuthStore((state) => state.initialize)
@@ -20,12 +21,14 @@ function AuthInitializer({ children }: { children: React.ReactNode }) {
 
   if (!isInitialized) {
     return (
-      <div className="flex min-h-svh items-center justify-center bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-gray-950 dark:to-gray-900">
+      <div className="flex min-h-svh items-center justify-center bg-linear-to-br from-emerald-50 to-teal-50 dark:from-gray-950 dark:to-gray-900">
         <div className="flex flex-col items-center gap-3">
           <span className="inline-flex size-12 animate-pulse items-center justify-center rounded-xl bg-emerald-600">
-            <span className="text-xl">🌿</span>
+            <Leaf />
           </span>
-          <p className="text-sm text-gray-500 dark:text-gray-400">Loading Therabridge…</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400">
+            Loading Therabridge…
+          </p>
         </div>
       </div>
     )

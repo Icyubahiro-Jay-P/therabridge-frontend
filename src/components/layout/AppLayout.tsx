@@ -30,8 +30,11 @@ export function AppLayout() {
       <header className="sticky top-0 z-40 border-b border-gray-200/80 bg-white/80 backdrop-blur dark:border-gray-800/80 dark:bg-gray-900/80">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
           {/* Brand */}
-          <Link to="/" className="inline-flex items-center gap-2.5 font-bold text-gray-900 dark:text-white">
-            <span className="inline-flex size-8 items-center justify-center rounded-lg bg-gradient-to-br from-emerald-500 to-teal-600 shadow-sm">
+          <Link
+            to="/"
+            className="inline-flex items-center gap-2.5 font-bold text-gray-900 dark:text-white"
+          >
+            <span className="inline-flex size-8 items-center justify-center rounded-lg bg-linear-to-br from-emerald-500 to-teal-600 shadow-sm">
               <Leaf className="size-4 text-white" />
             </span>
             Therabridge
@@ -55,7 +58,7 @@ export function AppLayout() {
 
           {/* Right side */}
           <div className="flex items-center gap-2">
-            <span className="hidden text-sm text-gray-500 dark:text-gray-400 sm:inline">
+            <span className="hidden text-sm text-gray-500 sm:inline dark:text-gray-400">
               {user?.firstName}
             </span>
             <ModeToggle />

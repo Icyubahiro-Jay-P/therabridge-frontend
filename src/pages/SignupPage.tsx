@@ -2,7 +2,7 @@ import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import {
   AtSign,
-  Calendar,
+  Calendar as CalendarIcon,
   Eye,
   EyeOff,
   Leaf,
@@ -19,6 +19,11 @@ import { ModeToggle } from "@/components/mode-toggle"
 import { useAuthStore } from "@/store/auth-store"
 import { cn } from "@/lib/utils"
 
+// Shadcn Calendar imports
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { Calendar } from "@/components/ui/calendar"
+import { format } from "date-fns"
+
 type Feedback = { type: "success" | "error"; message: string }
 
 export function SignupPage() {
@@ -34,11 +39,22 @@ export function SignupPage() {
     password: "",
     dateOfBirth: "",
   })
+
+  const [date, setDate] = useState<Date | undefined>()
   const [showPassword, setShowPassword] = useState(false)
   const [feedback, setFeedback] = useState<Feedback | null>(null)
 
   function updateField(field: keyof typeof form, value: string) {
     setForm((current) => ({ ...current, [field]: value }))
+  }
+
+  function handleDateSelect(selectedDate: Date | undefined) {
+    setDate(selectedDate)
+    if (selectedDate) {
+      updateField("dateOfBirth", selectedDate.toISOString().split("T")[0])
+    } else {
+      updateField("dateOfBirth", "")
+    }
   }
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -58,7 +74,7 @@ export function SignupPage() {
   }
 
   return (
-    <div className="relative flex min-h-svh items-center justify-center overflow-hidden bg-gradient-to-br from-emerald-50 via-white to-teal-50 px-4 py-10 dark:from-gray-950 dark:via-gray-900 dark:to-emerald-950/30">
+    <div className="relative flex min-h-svh items-center justify-center overflow-hidden bg-linear-to-br from-emerald-50 via-white to-teal-50 px-4 py-10 dark:from-gray-950 dark:via-gray-900 dark:to-emerald-950/30">
       {/* Background decorations */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="absolute -top-40 -right-32 size-96 rounded-full bg-emerald-400/20 blur-3xl dark:bg-emerald-600/10" />
@@ -74,7 +90,7 @@ export function SignupPage() {
         {/* Logo */}
         <div className="mb-8 text-center">
           <Link to="/" className="inline-flex flex-col items-center gap-3">
-            <span className="inline-flex size-14 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 shadow-lg shadow-emerald-500/30">
+            <span className="inline-flex size-14 items-center justify-center rounded-2xl bg-linear-to-br from-emerald-500 to-teal-600 shadow-lg shadow-emerald-500/30">
               <Leaf className="size-7 text-white" />
             </span>
             <div>
@@ -127,7 +143,7 @@ export function SignupPage() {
                   <Input
                     id="firstName"
                     autoComplete="given-name"
-                    placeholder="Jane"
+                    placeholder="First name"
                     value={form.firstName}
                     onChange={(e) => updateField("firstName", e.target.value)}
                     required
@@ -144,7 +160,7 @@ export function SignupPage() {
                 <Input
                   id="lastName"
                   autoComplete="family-name"
-                  placeholder="Doe"
+                  placeholder="Last name"
                   value={form.lastName}
                   onChange={(e) => updateField("lastName", e.target.value)}
                   required
@@ -164,7 +180,7 @@ export function SignupPage() {
                 <Input
                   id="username"
                   autoComplete="username"
-                  placeholder="jane_doe"
+                  placeholder="username"
                   value={form.username}
                   onChange={(e) => updateField("username", e.target.value)}
                   required
@@ -188,7 +204,7 @@ export function SignupPage() {
                   id="email"
                   type="email"
                   autoComplete="email"
-                  placeholder="you@example.com"
+                  placeholder="Email address"
                   value={form.email}
                   onChange={(e) => updateField("email", e.target.value)}
                   required
@@ -198,23 +214,38 @@ export function SignupPage() {
               </div>
             </div>
 
-            {/* Date of birth */}
+            {/* Date of Birth - Shadcn Calendar with dropdowns */}
             <div className="space-y-1.5">
               <Label htmlFor="dateOfBirth" className="text-sm font-medium">
                 Date of birth
               </Label>
-              <div className="relative">
-                <Calendar className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-gray-400" />
-                <Input
-                  id="dateOfBirth"
-                  type="date"
-                  value={form.dateOfBirth}
-                  onChange={(e) => updateField("dateOfBirth", e.target.value)}
-                  required
-                  disabled={isLoading}
-                  className="pl-9"
-                />
-              </div>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className={cn(
+                      "relative w-full justify-start text-left font-normal pl-9",
+                      !date && "text-muted-foreground"
+                    )}
+                    disabled={isLoading}
+                  >
+                    <CalendarIcon className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-gray-400" />
+                    {date ? format(date, "PPP") : <span>Pick a date</span>}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar
+                    mode="single"
+                    selected={date}
+                    onSelect={handleDateSelect}
+                    initialFocus
+                    captionLayout="dropdown"  
+                    disabled={(date) =>
+                      date > new Date() || date < new Date("1900-01-01")
+                    }
+                  />
+                </PopoverContent>
+              </Popover>
             </div>
 
             {/* Password */}
@@ -256,7 +287,7 @@ export function SignupPage() {
             <Button
               type="submit"
               disabled={isLoading}
-              className="mt-2 w-full bg-gradient-to-r from-emerald-600 to-teal-600 font-semibold shadow-md shadow-emerald-500/20 hover:from-emerald-700 hover:to-teal-700"
+              className="mt-2 w-full bg-linear-to-r from-emerald-600 to-teal-600 font-semibold shadow-md shadow-emerald-500/20 hover:from-emerald-700 hover:to-teal-700"
             >
               {isLoading ? (
                 <span className="flex items-center gap-2">

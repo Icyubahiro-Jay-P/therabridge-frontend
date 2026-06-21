@@ -238,7 +238,6 @@ export function SignupPage() {
                     mode="single"
                     selected={date}
                     onSelect={handleDateSelect}
-                    initialFocus
                     captionLayout="dropdown"  
                     disabled={(date) =>
                       date > new Date() || date < new Date("1900-01-01")

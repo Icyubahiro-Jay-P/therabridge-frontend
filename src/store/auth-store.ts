@@ -1,4 +1,5 @@
-import { create } from "zustand"
+// src/store/auth-store.ts
+import { create } from "zustand";
 
 import {
   fetchProfile,
@@ -7,26 +8,25 @@ import {
   register as registerRequest,
   updateProfile as updateProfileRequest,
   changePassword as changePasswordRequest,
-} from "@/lib/auth-api"
-import { getErrorMessage } from "@/lib/api"
+} from "@/lib/auth-api";
 import type {
   ChangePasswordPayload,
   LoginPayload,
   RegisterPayload,
   UpdateProfilePayload,
   User,
-} from "@/types/user"
+} from "@/types/user";
 
 interface AuthState {
-  user: User | null
-  isLoading: boolean
-  isInitialized: boolean
-  initialize: () => Promise<void>
-  login: (payload: LoginPayload) => Promise<string>
-  register: (payload: RegisterPayload) => Promise<string>
-  logout: () => Promise<void>
-  updateProfile: (payload: UpdateProfilePayload) => Promise<void>
-  changePassword: (payload: ChangePasswordPayload) => Promise<void>
+  user: User | null;
+  isLoading: boolean;
+  isInitialized: boolean;
+  initialize: () => Promise<void>;
+  login: (payload: LoginPayload) => Promise<string>;
+  register: (payload: RegisterPayload) => Promise<string>;
+  logout: () => Promise<void>;
+  updateProfile: (payload: UpdateProfilePayload) => Promise<void>;
+  changePassword: (payload: ChangePasswordPayload) => Promise<void>;
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
@@ -35,75 +35,80 @@ export const useAuthStore = create<AuthState>((set) => ({
   isInitialized: false,
 
   initialize: async () => {
-    set({ isLoading: true })
+    set({ isLoading: true });
     try {
-      const user = await fetchProfile()
-      set({ user, isInitialized: true })
+      const user = await fetchProfile();
+      set({ user, isInitialized: true });
     } catch {
-      set({ user: null, isInitialized: true })
+      set({ user: null, isInitialized: true });
     } finally {
-      set({ isLoading: false })
+      set({ isLoading: false });
     }
   },
 
   login: async (payload) => {
-    set({ isLoading: true })
+    set({ isLoading: true });
     try {
-      const { user, message } = await loginRequest(payload)
-      set({ user })
-      return message
+      const { user, message } = await loginRequest(payload);
+      set({ user });
+      return message; // Success message from backend
     } catch (error) {
-      throw new Error(getErrorMessage(error))
+      const message = error instanceof Error ? error.message : "Login failed";
+      throw new Error(message); // This now carries real backend messages
     } finally {
-      set({ isLoading: false })
+      set({ isLoading: false });
     }
   },
 
   register: async (payload) => {
-    set({ isLoading: true })
+    set({ isLoading: true });
     try {
-      const { user, message } = await registerRequest(payload)
-      set({ user })
-      return message
+      const { user, message } = await registerRequest(payload);
+      set({ user });
+      return message;
     } catch (error) {
-      throw new Error(getErrorMessage(error))
+      const message = error instanceof Error ? error.message : "Registration failed";
+      throw new Error(message);
     } finally {
-      set({ isLoading: false })
+      set({ isLoading: false });
     }
   },
 
   logout: async () => {
-    set({ isLoading: true })
+    set({ isLoading: true });
     try {
-      await logoutRequest()
-      set({ user: null })
+      await logoutRequest();
+      set({ user: null });
     } catch (error) {
-      throw new Error(getErrorMessage(error))
+      const message = error instanceof Error ? error.message : "Logout failed";
+      throw new Error(message);
     } finally {
-      set({ isLoading: false })
+      set({ isLoading: false });
     }
   },
 
   updateProfile: async (payload) => {
-    set({ isLoading: true })
+    set({ isLoading: true });
     try {
-      const user = await updateProfileRequest(payload)
-      set({ user })
+      const user = await updateProfileRequest(payload);
+      set({ user });
     } catch (error) {
-      throw new Error(getErrorMessage(error))
+      const message = error instanceof Error ? error.message : "Update failed";
+      throw new Error(message);
     } finally {
-      set({ isLoading: false })
+      set({ isLoading: false });
     }
   },
 
   changePassword: async (payload) => {
-    set({ isLoading: true })
+    set({ isLoading: true });
     try {
-      await changePasswordRequest(payload)
+      await changePasswordRequest(payload);
     } catch (error) {
-      throw new Error(getErrorMessage(error))
+      const message = error instanceof Error ? error.message : "Password change failed";
+      throw new Error(message);
     } finally {
-      set({ isLoading: false })
+      set({ isLoading: false });
     }
   },
-}))
+}));

@@ -14,8 +14,10 @@ import { Leaf } from "lucide-react"
 function AuthInitializer({ children }: { children: React.ReactNode }) {
   const initialize = useAuthStore((state) => state.initialize)
   const isInitialized = useAuthStore((state) => state.isInitialized)
+  const user = useAuthStore((state) => state.user)
 
   useEffect(() => {
+    // Only run once on app start
     void initialize()
   }, [initialize])
 

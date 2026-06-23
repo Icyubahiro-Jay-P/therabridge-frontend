@@ -1,3 +1,4 @@
+// src/pages/LoginPage.tsx
 import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { Eye, EyeOff, Leaf, Loader2, Lock, Mail } from "lucide-react"
@@ -28,7 +29,11 @@ export function LoginPage() {
     try {
       const message = await login({ identifier, password })
       setFeedback({ type: "success", message })
-      window.setTimeout(() => navigate("/"), 900)
+      
+      // Give user time to see success then navigate cleanly
+      setTimeout(() => {
+        navigate("/", { replace: true })
+      }, 900)
     } catch (err) {
       setFeedback({
         type: "error",

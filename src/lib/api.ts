@@ -1,46 +1,35 @@
-import axios from "axios"
+// src/lib/api.ts
+import axios from "axios";
+
+const API_BASE_URL = "http://localhost:5000"; // Your backend
 
 export const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL ?? "http://localhost:5000",
-  withCredentials: true,
+  baseURL: API_BASE_URL,
+  timeout: 10000,
   headers: {
     "Content-Type": "application/json",
   },
-})
+  withCredentials: true, // Important for cookies/sessions if your backend uses them
+});
 
-/**
- * Extract a human-readable error message from any thrown value.
- * Handles Axios errors (API errors + network errors), generic Errors, and strings.
- */
-export function getErrorMessage(error: unknown): string {
-  if (axios.isAxiosError(error)) {
-    // The backend returned a response (4xx / 5xx)
-    if (error.response) {
-      const data = error.response.data as
-        | { message?: string; error?: string }
-        | undefined
-      return (
-        data?.message ??
-        data?.error ??
-        `Server error (${error.response.status})`
-      )
-    }
+// Request interceptor (optional but nice)
+api.interceptors.request.use(
+  (config) => {
+    // You can add auth token here later if needed
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
 
-    // No response — network / CORS / server down
-    if (error.request) {
-      return "Cannot reach the server. Make sure the backend is running on port 5000."
-    }
-
-    return error.message
+// Response interceptor for better error messages
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    const errorMessage =
+      error.response?.data?.message ||
+      error.response?.data?.error ||
+      error.message ||
+      "Something went wrong";
+    return Promise.reject(new Error(errorMessage));
   }
-
-  if (error instanceof Error) {
-    return error.message
-  }
-
-  if (typeof error === "string") {
-    return error
-  }
-
-  return "Something went wrong. Please try again."
-}
+);

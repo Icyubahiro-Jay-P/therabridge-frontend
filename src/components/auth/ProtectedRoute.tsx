@@ -3,9 +3,9 @@ import { Navigate, Outlet } from "react-router-dom"
 import { useAuthStore } from "@/store/auth-store"
 
 export function ProtectedRoute() {
-  const { user, isInitialized, isLoading } = useAuthStore()
+  const { user, isInitialized } = useAuthStore()
 
-  if (!isInitialized || isLoading) {
+  if (!isInitialized) {
     return (
       <div className="flex min-h-svh items-center justify-center">
         <p className="text-sm text-muted-foreground">Loading...</p>
@@ -21,9 +21,9 @@ export function ProtectedRoute() {
 }
 
 export function GuestRoute() {
-  const { user, isInitialized, isLoading } = useAuthStore()
+  const { user, isInitialized } = useAuthStore()
 
-  if (!isInitialized || isLoading) {
+  if (!isInitialized) {
     return (
       <div className="flex min-h-svh items-center justify-center">
         <p className="text-sm text-muted-foreground">Loading...</p>

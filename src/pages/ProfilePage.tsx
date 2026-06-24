@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react"
-import { Loader2 } from "lucide-react"
+import { useEffect, useRef, useState } from "react"
+import { Loader2, Upload, X, Camera } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -28,6 +28,14 @@ export function ProfilePage() {
   const isLoading = useAuthStore((state) => state.isLoading)
   const updateProfile = useAuthStore((state) => state.updateProfile)
   const changePassword = useAuthStore((state) => state.changePassword)
+  const uploadAvatar = useAuthStore((state) => state.uploadAvatar)
+
+  const fileInputRef = useRef<HTMLInputElement>(null)
+  const [avatarPreview, setAvatarPreview] = useState<string>("")
+  const [avatarFile, setAvatarFile] = useState<File | null>(null)
+  const [avatarUploading, setAvatarUploading] = useState(false)
+  const [avatarMessage, setAvatarMessage] = useState("")
+  const [avatarError, setAvatarError] = useState("")
 
   const [profileForm, setProfileForm] = useState({
     firstName: "",
@@ -56,9 +64,68 @@ export function ProfilePage() {
       bio: user.bio ?? "",
       avatar: user.avatar ?? "",
     })
+    setAvatarPreview(user.avatar ?? "")
   }, [user])
 
   if (!user) return null
+
+  function handleAvatarChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0]
+    if (!file) return
+
+    // Validate file size (5MB limit)
+    if (file.size > 5 * 1024 * 1024) {
+      setAvatarError("File size must be less than 5MB")
+      return
+    }
+
+    // Validate file type
+    const validTypes = ["image/jpeg", "image/png", "image/gif", "image/webp"]
+    if (!validTypes.includes(file.type)) {
+      setAvatarError("Only image files (JPG, PNG, GIF, WebP) are allowed")
+      return
+    }
+
+    setAvatarFile(file)
+    setAvatarError("")
+
+    // Create preview
+    const reader = new FileReader()
+    reader.onloadend = () => {
+      setAvatarPreview(reader.result as string)
+    }
+    reader.readAsDataURL(file)
+  }
+
+  function handleRemoveAvatar() {
+    setAvatarFile(null)
+    setAvatarPreview("")
+    if (fileInputRef.current) {
+      fileInputRef.current.value = ""
+    }
+    setAvatarError("")
+  }
+
+  async function handleAvatarSubmit() {
+    if (!avatarFile) return
+
+    setAvatarMessage("")
+    setAvatarError("")
+    setAvatarUploading(true)
+
+    try {
+      await uploadAvatar(avatarFile)
+      setAvatarMessage("Profile picture uploaded successfully!")
+      setAvatarFile(null)
+      if (fileInputRef.current) {
+        fileInputRef.current.value = ""
+      }
+    } catch (err) {
+      setAvatarError(err instanceof Error ? err.message : "Upload failed")
+    } finally {
+      setAvatarUploading(false)
+    }
+  }
 
   function updateProfileField(field: keyof typeof profileForm, value: string) {
     setProfileForm((current) => ({ ...current, [field]: value }))
@@ -120,7 +187,7 @@ export function ProfilePage() {
         </p>
       </div>
 
-      <Card>
+      <Card className="dark:bg-gray-850">
         <CardHeader>
           <CardTitle>Account overview</CardTitle>
           <CardDescription>Read-only fields from your account</CardDescription>
@@ -143,6 +210,104 @@ export function ProfilePage() {
               ? new Date(user.createdAt).toLocaleDateString()
               : "Unknown"}
           </p>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Profile picture</CardTitle>
+          <CardDescription>
+            Upload a profile picture from your device. Max 5MB.
+          </CardDescription>
+        </CardHeader>
+
+        <CardContent className="space-y-4">
+          {avatarMessage ? (
+            <p className="rounded-2xl bg-emerald-50 px-4 py-3 text-sm text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-300">
+              {avatarMessage}
+            </p>
+          ) : null}
+          {avatarError ? (
+            <p className="rounded-2xl bg-destructive/10 px-4 py-3 text-sm text-destructive">
+              {avatarError}
+            </p>
+          ) : null}
+
+          <div className="flex flex-col items-center gap-4">
+            {/* Avatar preview */}
+            <div className="relative">
+              <div className="flex h-32 w-32 items-center justify-center overflow-hidden rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 dark:border-gray-600 dark:bg-gray-800">
+                {avatarPreview ? (
+                  <img
+                    src={avatarPreview}
+                    alt="Preview"
+                    className="h-full w-full object-cover"
+                  />
+                ) : (
+                  <div className="flex flex-col items-center gap-1 text-gray-400">
+                    <Camera className="size-8" />
+                    <span className="text-xs">No preview</span>
+                  </div>
+                )}
+              </div>
+              {avatarPreview && (
+                <button
+                  onClick={handleRemoveAvatar}
+                  className="absolute -top-2 -right-2 rounded-full bg-destructive p-1 text-white hover:bg-destructive/90"
+                >
+                  <X className="size-4" />
+                </button>
+              )}
+            </div>
+
+            {/* File input and upload button */}
+            <div className="w-full space-y-2">
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/jpeg,image/png,image/gif,image/webp"
+                onChange={handleAvatarChange}
+                className="hidden"
+              />
+
+              <div className="flex gap-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={avatarUploading}
+                  className="flex-1"
+                >
+                  <Upload className="size-4" />
+                  Choose file
+                </Button>
+
+                {avatarFile && (
+                  <Button
+                    type="button"
+                    onClick={handleAvatarSubmit}
+                    disabled={avatarUploading}
+                    className="flex-1"
+                  >
+                    {avatarUploading ? (
+                      <span className="flex items-center justify-center gap-2">
+                        <Loader2 className="size-4 animate-spin" />
+                        Uploading...
+                      </span>
+                    ) : (
+                      "Upload"
+                    )}
+                  </Button>
+                )}
+              </div>
+
+              {avatarFile && (
+                <p className="text-xs text-gray-500 dark:text-gray-400">
+                  Selected: {avatarFile.name}
+                </p>
+              )}
+            </div>
+          </div>
         </CardContent>
       </Card>
 

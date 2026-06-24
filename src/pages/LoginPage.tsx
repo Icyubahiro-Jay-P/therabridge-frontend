@@ -1,7 +1,6 @@
-// src/pages/LoginPage.tsx
 import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
-import { Eye, EyeOff, Leaf, Loader2, Lock, Mail } from "lucide-react"
+import { Eye, EyeOff, Leaf, Loader2, Lock, Mail, TriangleAlert, CircleCheck  } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -10,7 +9,16 @@ import { ModeToggle } from "@/components/mode-toggle"
 import { useAuthStore } from "@/store/auth-store"
 import { cn } from "@/lib/utils"
 
+type FieldErrors = Partial<Record<"identifier" | "password", string>>
 type Feedback = { type: "success" | "error"; message: string }
+
+function validate(identifier: string, password: string): FieldErrors {
+  const errors: FieldErrors = {}
+  if (!identifier.trim()) errors.identifier = "Email or username is required."
+  if (!password) errors.password = "Password is required."
+  else if (password.length < 8) errors.password = "Password must be at least 8 characters."
+  return errors
+}
 
 export function LoginPage() {
   const login = useAuthStore((state) => state.login)
@@ -21,16 +29,36 @@ export function LoginPage() {
   const [password, setPassword] = useState("")
   const [showPassword, setShowPassword] = useState(false)
   const [feedback, setFeedback] = useState<Feedback | null>(null)
+  const [fieldErrors, setFieldErrors] = useState<FieldErrors>({})
+  const [touched, setTouched] = useState<Partial<Record<"identifier" | "password", boolean>>>({})
+
+  function handleBlur(field: keyof FieldErrors) {
+    setTouched((prev) => ({ ...prev, [field]: true }))
+    setFieldErrors(validate(identifier, password))
+  }
+
+  function handleIdentifierChange(value: string) {
+    setIdentifier(value)
+    if (touched.identifier) setFieldErrors(validate(value, password))
+  }
+
+  function handlePasswordChange(value: string) {
+    setPassword(value)
+    if (touched.password) setFieldErrors(validate(identifier, value))
+  }
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
     setFeedback(null)
 
+    const errors = validate(identifier, password)
+    setFieldErrors(errors)
+    setTouched({ identifier: true, password: true })
+    if (Object.keys(errors).length > 0) return
+
     try {
       const message = await login({ identifier, password })
       setFeedback({ type: "success", message })
-      
-      // Give user time to see success then navigate cleanly
       setTimeout(() => {
         navigate("/", { replace: true })
       }, 900)
@@ -93,8 +121,8 @@ export function LoginPage() {
                   : "border border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-900/50 dark:bg-emerald-950/40 dark:text-emerald-400"
               )}
             >
-              <span>{feedback.type === "error" ? "⚠️" : "✅"}</span>
-              <span>{feedback.message}</span>
+              <span>{feedback.type === "error" ? <TriangleAlert size={18}/> : <CircleCheck size={18}/>}</span>
+              <span className="baseline">{feedback.message}</span>
             </div>
           )}
 
@@ -111,12 +139,16 @@ export function LoginPage() {
                   autoComplete="username"
                   placeholder="Email or username"
                   value={identifier}
-                  onChange={(e) => setIdentifier(e.target.value)}
+                  onChange={(e) => handleIdentifierChange(e.target.value)}
+                  onBlur={() => handleBlur("identifier")}
                   required
                   disabled={isLoading}
-                  className="pl-9"
+                  className={cn("pl-9", fieldErrors.identifier && "border-red-400 dark:border-red-600")}
                 />
               </div>
+              {fieldErrors.identifier && (
+                <p className="mt-1 text-xs text-red-500 dark:text-red-400">{fieldErrors.identifier}</p>
+              )}
             </div>
 
             {/* Password */}
@@ -140,11 +172,12 @@ export function LoginPage() {
                   autoComplete="current-password"
                   placeholder="••••••••"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={(e) => handlePasswordChange(e.target.value)}
+                  onBlur={() => handleBlur("password")}
                   required
                   minLength={8}
                   disabled={isLoading}
-                  className="pr-10 pl-9"
+                  className={cn("pr-10 pl-9", fieldErrors.password && "border-red-400 dark:border-red-600")}
                 />
                 <button
                   type="button"
@@ -160,6 +193,9 @@ export function LoginPage() {
                   )}
                 </button>
               </div>
+              {fieldErrors.password && (
+                <p className="mt-1 text-xs text-red-500 dark:text-red-400">{fieldErrors.password}</p>
+              )}
             </div>
 
             {/* Submit */}

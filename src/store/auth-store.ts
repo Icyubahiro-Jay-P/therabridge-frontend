@@ -8,6 +8,7 @@ import {
   register as registerRequest,
   updateProfile as updateProfileRequest,
   changePassword as changePasswordRequest,
+  uploadAvatar as uploadAvatarRequest,
 } from "@/lib/auth-api";
 import type {
   ChangePasswordPayload,
@@ -27,6 +28,7 @@ interface AuthState {
   logout: () => Promise<void>;
   updateProfile: (payload: UpdateProfilePayload) => Promise<void>;
   changePassword: (payload: ChangePasswordPayload) => Promise<void>;
+  uploadAvatar: (file: File) => Promise<void>;
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
@@ -35,14 +37,11 @@ export const useAuthStore = create<AuthState>((set) => ({
   isInitialized: false,
 
   initialize: async () => {
-    set({ isLoading: true });
     try {
       const user = await fetchProfile();
       set({ user, isInitialized: true });
     } catch {
       set({ user: null, isInitialized: true });
-    } finally {
-      set({ isLoading: false });
     }
   },
 
@@ -106,6 +105,19 @@ export const useAuthStore = create<AuthState>((set) => ({
       await changePasswordRequest(payload);
     } catch (error) {
       const message = error instanceof Error ? error.message : "Password change failed";
+      throw new Error(message);
+    } finally {
+      set({ isLoading: false });
+    }
+  },
+
+  uploadAvatar: async (file) => {
+    set({ isLoading: true });
+    try {
+      const user = await uploadAvatarRequest(file);
+      set({ user });
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Upload failed";
       throw new Error(message);
     } finally {
       set({ isLoading: false });

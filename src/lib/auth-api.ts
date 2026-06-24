@@ -75,6 +75,15 @@ export async function updateProfile(payload: UpdateProfilePayload): Promise<User
   return normalizeUser(data.user);
 }
 
+export async function uploadAvatar(file: File): Promise<User> {
+  const formData = new FormData();
+  formData.append("avatar", file);
+  const { data } = await api.post<{ user: RawUser }>("/api/users/upload-avatar", formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+  return normalizeUser(data.user);
+}
+
 export async function changePassword(payload: ChangePasswordPayload): Promise<void> {
   await api.post("/api/users/change-password", payload);
 }

@@ -19,12 +19,45 @@ import { ModeToggle } from "@/components/mode-toggle"
 import { useAuthStore } from "@/store/auth-store"
 import { cn } from "@/lib/utils"
 
-// Shadcn Calendar imports
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Calendar } from "@/components/ui/calendar"
 import { format } from "date-fns"
 
+type FieldName = "firstName" | "lastName" | "username" | "email" | "password" | "dateOfBirth"
+type FieldErrors = Partial<Record<FieldName, string>>
 type Feedback = { type: "success" | "error"; message: string }
+
+function validate(form: Record<FieldName, string>): FieldErrors {
+  const errors: FieldErrors = {}
+  if (!form.firstName.trim() || form.firstName.trim().length < 2)
+    errors.firstName = "First name must be at least 2 characters."
+  if (!form.lastName.trim() || form.lastName.trim().length < 2)
+    errors.lastName = "Last name must be at least 2 characters."
+  if (!form.username.trim()) {
+    errors.username = "Username is required."
+  } else if (!/^[a-zA-Z0-9_]{3,30}$/.test(form.username.trim())) {
+    errors.username = "Letters, numbers, underscores only (3–30 chars)."
+  }
+  if (!form.email.trim()) {
+    errors.email = "Email is required."
+  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) {
+    errors.email = "Invalid email format."
+  }
+  if (!form.password) {
+    errors.password = "Password is required."
+  } else if (form.password.length < 8) {
+    errors.password = "Password must be at least 8 characters."
+  }
+  if (!form.dateOfBirth) {
+    errors.dateOfBirth = "Date of birth is required."
+  } else {
+    const today = new Date()
+    const birthDate = new Date(form.dateOfBirth)
+    const age = today.getFullYear() - birthDate.getFullYear()
+    if (age < 18 || age > 120) errors.dateOfBirth = "You must be between 18 and 120 years old."
+  }
+  return errors
+}
 
 export function SignupPage() {
   const register = useAuthStore((state) => state.register)
@@ -43,23 +76,38 @@ export function SignupPage() {
   const [date, setDate] = useState<Date | undefined>()
   const [showPassword, setShowPassword] = useState(false)
   const [feedback, setFeedback] = useState<Feedback | null>(null)
+  const [fieldErrors, setFieldErrors] = useState<FieldErrors>({})
+  const [touched, setTouched] = useState<Partial<Record<FieldName, boolean>>>({})
 
-  function updateField(field: keyof typeof form, value: string) {
-    setForm((current) => ({ ...current, [field]: value }))
+  function updateField(field: FieldName, value: string) {
+    setForm((current) => {
+      const next = { ...current, [field]: value }
+      if (touched[field]) setFieldErrors(validate(next))
+      return next
+    })
+  }
+
+  function handleBlur(field: FieldName) {
+    setTouched((prev) => ({ ...prev, [field]: true }))
+    setFieldErrors(validate(form))
   }
 
   function handleDateSelect(selectedDate: Date | undefined) {
     setDate(selectedDate)
-    if (selectedDate) {
-      updateField("dateOfBirth", selectedDate.toISOString().split("T")[0])
-    } else {
-      updateField("dateOfBirth", "")
-    }
+    const value = selectedDate ? selectedDate.toISOString().split("T")[0] : ""
+    const next = { ...form, dateOfBirth: value }
+    setForm(next)
+    if (touched.dateOfBirth) setFieldErrors(validate(next))
   }
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
     setFeedback(null)
+
+    const errors = validate(form)
+    setFieldErrors(errors)
+    setTouched({ firstName: true, lastName: true, username: true, email: true, password: true, dateOfBirth: true })
+    if (Object.keys(errors).length > 0) return
 
     try {
       const message = await register(form)
@@ -146,12 +194,16 @@ export function SignupPage() {
                     placeholder="First name"
                     value={form.firstName}
                     onChange={(e) => updateField("firstName", e.target.value)}
+                    onBlur={() => handleBlur("firstName")}
                     required
                     minLength={2}
                     disabled={isLoading}
-                    className="pl-9"
+                    className={cn("pl-9", fieldErrors.firstName && "border-red-400 dark:border-red-600")}
                   />
                 </div>
+                {fieldErrors.firstName && (
+                  <p className="text-xs text-red-500 dark:text-red-400">{fieldErrors.firstName}</p>
+                )}
               </div>
               <div className="space-y-1.5">
                 <Label htmlFor="lastName" className="text-sm font-medium">
@@ -163,10 +215,15 @@ export function SignupPage() {
                   placeholder="Last name"
                   value={form.lastName}
                   onChange={(e) => updateField("lastName", e.target.value)}
+                  onBlur={() => handleBlur("lastName")}
                   required
                   minLength={2}
                   disabled={isLoading}
+                  className={cn(fieldErrors.lastName && "border-red-400 dark:border-red-600")}
                 />
+                {fieldErrors.lastName && (
+                  <p className="text-xs text-red-500 dark:text-red-400">{fieldErrors.lastName}</p>
+                )}
               </div>
             </div>
 
@@ -183,14 +240,18 @@ export function SignupPage() {
                   placeholder="username"
                   value={form.username}
                   onChange={(e) => updateField("username", e.target.value)}
+                  onBlur={() => handleBlur("username")}
                   required
                   minLength={3}
                   pattern="[a-zA-Z0-9_]{3,30}"
                   title="Letters, numbers, and underscores only (3–30 chars)"
                   disabled={isLoading}
-                  className="pl-9"
+                  className={cn("pl-9", fieldErrors.username && "border-red-400 dark:border-red-600")}
                 />
               </div>
+              {fieldErrors.username && (
+                <p className="text-xs text-red-500 dark:text-red-400">{fieldErrors.username}</p>
+              )}
             </div>
 
             {/* Email */}
@@ -207,11 +268,15 @@ export function SignupPage() {
                   placeholder="Email address"
                   value={form.email}
                   onChange={(e) => updateField("email", e.target.value)}
+                  onBlur={() => handleBlur("email")}
                   required
                   disabled={isLoading}
-                  className="pl-9"
+                  className={cn("pl-9", fieldErrors.email && "border-red-400 dark:border-red-600")}
                 />
               </div>
+              {fieldErrors.email && (
+                <p className="text-xs text-red-500 dark:text-red-400">{fieldErrors.email}</p>
+              )}
             </div>
 
             {/* Date of Birth - Shadcn Calendar with dropdowns */}
@@ -225,7 +290,8 @@ export function SignupPage() {
                     variant="outline"
                     className={cn(
                       "relative w-full justify-start text-left font-normal pl-9",
-                      !date && "text-muted-foreground"
+                      !date && "text-muted-foreground",
+                      fieldErrors.dateOfBirth && "border-red-400 dark:border-red-600"
                     )}
                     disabled={isLoading}
                   >
@@ -245,6 +311,9 @@ export function SignupPage() {
                   />
                 </PopoverContent>
               </Popover>
+              {fieldErrors.dateOfBirth && (
+                <p className="text-xs text-red-500 dark:text-red-400">{fieldErrors.dateOfBirth}</p>
+              )}
             </div>
 
             {/* Password */}
@@ -261,10 +330,11 @@ export function SignupPage() {
                   placeholder="Min. 8 characters"
                   value={form.password}
                   onChange={(e) => updateField("password", e.target.value)}
+                  onBlur={() => handleBlur("password")}
                   required
                   minLength={8}
                   disabled={isLoading}
-                  className="pl-9 pr-10"
+                  className={cn("pl-9 pr-10", fieldErrors.password && "border-red-400 dark:border-red-600")}
                 />
                 <button
                   type="button"
@@ -280,6 +350,9 @@ export function SignupPage() {
                   )}
                 </button>
               </div>
+              {fieldErrors.password && (
+                <p className="text-xs text-red-500 dark:text-red-400">{fieldErrors.password}</p>
+              )}
             </div>
 
             {/* Submit */}

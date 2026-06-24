@@ -3,12 +3,14 @@ import { Link, useNavigate } from "react-router-dom"
 import {
   AtSign,
   Calendar as CalendarIcon,
+  CheckCircle2,
   Eye,
   EyeOff,
   Leaf,
   Loader2,
   Lock,
   Mail,
+  TriangleAlert,
   User,
 } from "lucide-react"
 
@@ -173,7 +175,7 @@ export function SignupPage() {
               )}
             >
               <span className="shrink-0">
-                {feedback.type === "error" ? "⚠️" : "✅"}
+                {feedback.type === "error" ? <TriangleAlert className="size-4" /> : <CheckCircle2 className="size-4" />}
               </span>
               <span>{feedback.message}</span>
             </div>

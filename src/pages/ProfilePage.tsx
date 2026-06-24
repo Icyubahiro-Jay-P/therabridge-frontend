@@ -1,6 +1,15 @@
 import { useEffect, useRef, useState } from "react"
-import { Loader2, Upload, X, Camera } from "lucide-react"
+import {
+  CalendarDays,
+  Camera,
+  CheckCircle2,
+  Loader2,
+  Mail,
+  Shield,
+  X,
+} from "lucide-react"
 
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -16,11 +25,13 @@ import { useAuthStore } from "@/store/auth-store"
 
 function toDateInputValue(value?: string) {
   if (!value) return ""
-
   const date = new Date(value)
   if (Number.isNaN(date.getTime())) return ""
-
   return date.toISOString().slice(0, 10)
+}
+
+function getInitials(firstName: string, lastName: string) {
+  return `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase()
 }
 
 export function ProfilePage() {
@@ -42,7 +53,6 @@ export function ProfilePage() {
     lastName: "",
     dateOfBirth: "",
     bio: "",
-    avatar: "",
   })
   const [passwordForm, setPasswordForm] = useState({
     currentPassword: "",
@@ -54,15 +64,19 @@ export function ProfilePage() {
   const [passwordMessage, setPasswordMessage] = useState("")
   const [passwordError, setPasswordError] = useState("")
 
+  const avatarUrl = user?.avatar
+    ? user.avatar.startsWith("http")
+      ? user.avatar
+      : `http://localhost:5000${user.avatar}`
+    : ""
+
   useEffect(() => {
     if (!user) return
-
     setProfileForm({
       firstName: user.firstName,
       lastName: user.lastName,
       dateOfBirth: toDateInputValue(user.dateOfBirth),
       bio: user.bio ?? "",
-      avatar: user.avatar ?? "",
     })
     setAvatarPreview(user.avatar ?? "")
   }, [user])
@@ -72,24 +86,17 @@ export function ProfilePage() {
   function handleAvatarChange(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0]
     if (!file) return
-
-    // Validate file size (5MB limit)
     if (file.size > 5 * 1024 * 1024) {
       setAvatarError("File size must be less than 5MB")
       return
     }
-
-    // Validate file type
     const validTypes = ["image/jpeg", "image/png", "image/gif", "image/webp"]
     if (!validTypes.includes(file.type)) {
       setAvatarError("Only image files (JPG, PNG, GIF, WebP) are allowed")
       return
     }
-
     setAvatarFile(file)
     setAvatarError("")
-
-    // Create preview
     const reader = new FileReader()
     reader.onloadend = () => {
       setAvatarPreview(reader.result as string)
@@ -108,14 +115,12 @@ export function ProfilePage() {
 
   async function handleAvatarSubmit() {
     if (!avatarFile) return
-
     setAvatarMessage("")
     setAvatarError("")
     setAvatarUploading(true)
-
     try {
       await uploadAvatar(avatarFile)
-      setAvatarMessage("Profile picture uploaded successfully!")
+      setAvatarMessage("Profile picture updated!")
       setAvatarFile(null)
       if (fileInputRef.current) {
         fileInputRef.current.value = ""
@@ -135,16 +140,14 @@ export function ProfilePage() {
     event.preventDefault()
     setProfileMessage("")
     setProfileError("")
-
     try {
       await updateProfile({
         firstName: profileForm.firstName,
         lastName: profileForm.lastName,
         dateOfBirth: profileForm.dateOfBirth,
         bio: profileForm.bio,
-        avatar: profileForm.avatar,
       })
-      setProfileMessage("Profile updated successfully.")
+      setProfileMessage("Profile saved!")
     } catch (err) {
       setProfileError(err instanceof Error ? err.message : "Update failed")
     }
@@ -154,12 +157,10 @@ export function ProfilePage() {
     event.preventDefault()
     setPasswordMessage("")
     setPasswordError("")
-
     if (passwordForm.newPassword !== passwordForm.confirmPassword) {
       setPasswordError("New passwords do not match.")
       return
     }
-
     try {
       await changePassword({
         currentPassword: passwordForm.currentPassword,
@@ -179,155 +180,150 @@ export function ProfilePage() {
   }
 
   return (
-    <div className="space-y-8">
-      <div>
-        <h1 className="text-3xl font-semibold tracking-tight">Profile</h1>
-        <p className="mt-2 text-muted-foreground">
-          Manage your account details synced with the Therabridge backend.
-        </p>
+    <div className="space-y-8 p-6">
+      {/* ── Profile header ── */}
+      <div className="flex flex-col items-center gap-5 sm:flex-row sm:items-start">
+        <div className="relative shrink-0">
+          <Avatar className="size-24 border-2 border-gray-200 shadow-sm dark:border-gray-700">
+            <AvatarImage src={avatarUrl || undefined} />
+            <AvatarFallback className="bg-emerald-100 text-lg font-semibold text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-400">
+              {getInitials(user.firstName, user.lastName)}
+            </AvatarFallback>
+          </Avatar>
+          <button
+            onClick={() => fileInputRef.current?.click()}
+            className="absolute -bottom-1 -right-1 flex size-7 items-center justify-center rounded-full border-2 border-white bg-emerald-500 text-white shadow hover:bg-emerald-600 dark:border-gray-900"
+          >
+            <Camera className="size-3.5" />
+          </button>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/jpeg,image/png,image/gif,image/webp"
+            onChange={handleAvatarChange}
+            className="hidden"
+          />
+        </div>
+
+        <div className="flex flex-1 flex-col items-center text-center sm:items-start sm:text-left">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+            {user.firstName} {user.lastName}
+          </h1>
+          <p className="text-sm text-gray-500 dark:text-gray-400">
+            @{user.username}
+          </p>
+          {user.bio && (
+            <p className="mt-2 max-w-lg text-sm text-gray-600 dark:text-gray-300">
+              {user.bio}
+            </p>
+          )}
+        </div>
       </div>
 
-      <Card className="dark:bg-gray-850">
-        <CardHeader>
-          <CardTitle>Account overview</CardTitle>
-          <CardDescription>Read-only fields from your account</CardDescription>
-        </CardHeader>
-        <CardContent className="grid gap-3 text-sm sm:grid-cols-2">
-          <p>
-            <span className="text-muted-foreground">Username:</span> @
-            {user.username}
-          </p>
-          <p>
-            <span className="text-muted-foreground">Email:</span> {user.email}
-          </p>
-          <p>
-            <span className="text-muted-foreground">Role:</span>{" "}
-            <span className="capitalize">{user.role}</span>
-          </p>
-          <p>
-            <span className="text-muted-foreground">Member since:</span>{" "}
-            {user.createdAt
-              ? new Date(user.createdAt).toLocaleDateString()
-              : "Unknown"}
-          </p>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Profile picture</CardTitle>
-          <CardDescription>
-            Upload a profile picture from your device. Max 5MB.
-          </CardDescription>
-        </CardHeader>
-
-        <CardContent className="space-y-4">
-          {avatarMessage ? (
-            <p className="rounded-2xl bg-emerald-50 px-4 py-3 text-sm text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-300">
-              {avatarMessage}
-            </p>
-          ) : null}
-          {avatarError ? (
-            <p className="rounded-2xl bg-destructive/10 px-4 py-3 text-sm text-destructive">
-              {avatarError}
-            </p>
-          ) : null}
-
-          <div className="flex flex-col items-center gap-4">
-            {/* Avatar preview */}
-            <div className="relative">
-              <div className="flex h-32 w-32 items-center justify-center overflow-hidden rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 dark:border-gray-600 dark:bg-gray-800">
-                {avatarPreview ? (
-                  <img
-                    src={avatarPreview}
-                    alt="Preview"
-                    className="h-full w-full object-cover"
-                  />
-                ) : (
-                  <div className="flex flex-col items-center gap-1 text-gray-400">
-                    <Camera className="size-8" />
-                    <span className="text-xs">No preview</span>
-                  </div>
-                )}
-              </div>
-              {avatarPreview && (
-                <button
-                  onClick={handleRemoveAvatar}
-                  className="absolute -top-2 -right-2 rounded-full bg-destructive p-1 text-white hover:bg-destructive/90"
-                >
-                  <X className="size-4" />
-                </button>
-              )}
-            </div>
-
-            {/* File input and upload button */}
-            <div className="w-full space-y-2">
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept="image/jpeg,image/png,image/gif,image/webp"
-                onChange={handleAvatarChange}
-                className="hidden"
-              />
-
-              <div className="flex gap-2">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => fileInputRef.current?.click()}
-                  disabled={avatarUploading}
-                  className="flex-1"
-                >
-                  <Upload className="size-4" />
-                  Choose file
-                </Button>
-
-                {avatarFile && (
+      {/* Avatar file selected — show upload action */}
+      {avatarFile && (
+        <Card>
+          <CardContent className="flex items-center justify-between pt-6">
+            <span className="truncate text-sm text-gray-600 dark:text-gray-400">
+              {avatarFile.name}
+            </span>
+            <div className="flex gap-2">
+              {avatarUploading ? (
+                <span className="flex items-center gap-2 text-sm text-gray-500">
+                  <Loader2 className="size-4 animate-spin" />
+                  Uploading...
+                </span>
+              ) : (
+                <>
                   <Button
                     type="button"
                     onClick={handleAvatarSubmit}
-                    disabled={avatarUploading}
-                    className="flex-1"
+                    size="sm"
+                    className="bg-emerald-600 hover:bg-emerald-700"
                   >
-                    {avatarUploading ? (
-                      <span className="flex items-center justify-center gap-2">
-                        <Loader2 className="size-4 animate-spin" />
-                        Uploading...
-                      </span>
-                    ) : (
-                      "Upload"
-                    )}
+                    Upload photo
                   </Button>
-                )}
-              </div>
-
-              {avatarFile && (
-                <p className="text-xs text-gray-500 dark:text-gray-400">
-                  Selected: {avatarFile.name}
-                </p>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={handleRemoveAvatar}
+                  >
+                    <X className="size-3.5" />
+                  </Button>
+                </>
               )}
             </div>
-          </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      )}
 
+      {/* Messages */}
+      {avatarMessage && (
+        <p className="flex items-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700 dark:border-emerald-900/50 dark:bg-emerald-950/40 dark:text-emerald-300">
+          <CheckCircle2 className="size-4 shrink-0" />
+          {avatarMessage}
+        </p>
+      )}
+      {avatarError && (
+        <p className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-900/50 dark:bg-red-950/40 dark:text-red-400">
+          {avatarError}
+        </p>
+      )}
+
+      {/* ── Account overview ── */}
+      <div className="grid gap-4 sm:grid-cols-3">
+        {([
+          { icon: Mail, label: "Email", value: user.email },
+          {
+            icon: Shield,
+            label: "Role",
+            value: user.role.charAt(0).toUpperCase() + user.role.slice(1),
+          },
+          {
+            icon: CalendarDays,
+            label: "Member since",
+            value: user.createdAt
+              ? new Date(user.createdAt).toLocaleDateString(undefined, {
+                  month: "long",
+                  year: "numeric",
+                })
+              : "Today",
+          },
+        ] as const).map(({ icon: Icon, label, value }) => (
+          <div
+            key={label}
+            className="flex items-center gap-3 rounded-xl border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700/60 dark:bg-gray-900"
+          >
+            <Icon className="size-5 shrink-0 text-gray-400" />
+            <div className="min-w-0">
+              <p className="text-xs text-gray-400 dark:text-gray-500">
+                {label}
+              </p>
+              <p className="truncate text-sm font-medium text-gray-900 dark:text-white">
+                {value}
+              </p>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* ── Edit profile ── */}
       <Card>
         <CardHeader>
           <CardTitle>Edit profile</CardTitle>
-          <CardDescription>
-            Update your personal details and bio.
-          </CardDescription>
+          <CardDescription>Update your name, date of birth, and bio.</CardDescription>
         </CardHeader>
-
         <form onSubmit={handleProfileSubmit}>
           <CardContent className="space-y-4">
             {profileMessage ? (
-              <p className="rounded-2xl bg-emerald-50 px-4 py-3 text-sm text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-300">
+              <p className="flex items-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700 dark:border-emerald-900/50 dark:bg-emerald-950/40 dark:text-emerald-300">
+                <CheckCircle2 className="size-4 shrink-0" />
                 {profileMessage}
               </p>
             ) : null}
             {profileError ? (
-              <p className="rounded-2xl bg-destructive/10 px-4 py-3 text-sm text-destructive">
+              <p className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-900/50 dark:bg-red-950/40 dark:text-red-400">
                 {profileError}
               </p>
             ) : null}
@@ -346,7 +342,6 @@ export function ProfilePage() {
                   disabled={isLoading}
                 />
               </div>
-
               <div className="space-y-2">
                 <Label htmlFor="profile-lastName">Last name</Label>
                 <Input
@@ -377,20 +372,6 @@ export function ProfilePage() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="profile-avatar">Avatar URL</Label>
-              <Input
-                id="profile-avatar"
-                type="url"
-                placeholder="https://example.com/avatar.jpg"
-                value={profileForm.avatar}
-                onChange={(event) =>
-                  updateProfileField("avatar", event.target.value)
-                }
-                disabled={isLoading}
-              />
-            </div>
-
-            <div className="space-y-2">
               <Label htmlFor="profile-bio">Bio</Label>
               <Textarea
                 id="profile-bio"
@@ -399,8 +380,9 @@ export function ProfilePage() {
                   updateProfileField("bio", event.target.value)
                 }
                 maxLength={300}
-                rows={4}
+                rows={3}
                 disabled={isLoading}
+                placeholder="Tell others a little about yourself..."
               />
             </div>
 
@@ -418,6 +400,7 @@ export function ProfilePage() {
         </form>
       </Card>
 
+      {/* ── Change password ── */}
       <Card>
         <CardHeader>
           <CardTitle>Change password</CardTitle>
@@ -425,16 +408,16 @@ export function ProfilePage() {
             Choose a strong password with at least 8 characters.
           </CardDescription>
         </CardHeader>
-
         <form onSubmit={handlePasswordSubmit}>
           <CardContent className="space-y-4">
             {passwordMessage ? (
-              <p className="rounded-2xl bg-emerald-50 px-4 py-3 text-sm text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-300">
+              <p className="flex items-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700 dark:border-emerald-900/50 dark:bg-emerald-950/40 dark:text-emerald-300">
+                <CheckCircle2 className="size-4 shrink-0" />
                 {passwordMessage}
               </p>
             ) : null}
             {passwordError ? (
-              <p className="rounded-2xl bg-destructive/10 px-4 py-3 text-sm text-destructive">
+              <p className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-900/50 dark:bg-red-950/40 dark:text-red-400">
                 {passwordError}
               </p>
             ) : null}
@@ -474,7 +457,6 @@ export function ProfilePage() {
                   disabled={isLoading}
                 />
               </div>
-
               <div className="space-y-2">
                 <Label htmlFor="confirm-password">Confirm new password</Label>
                 <Input

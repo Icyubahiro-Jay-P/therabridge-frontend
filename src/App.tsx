@@ -8,16 +8,15 @@ import { LoginPage } from "@/pages/LoginPage"
 import { SignupPage } from "@/pages/SignupPage"
 import { ProfilePage } from "@/pages/ProfilePage"
 import { ChatPage } from "@/pages/ChatPage"
+import { CommunityPage } from "@/pages/CommunityPage"
 import { useAuthStore } from "@/store/auth-store"
 import { Leaf } from "lucide-react"
 
 function AuthInitializer({ children }: { children: React.ReactNode }) {
   const initialize = useAuthStore((state) => state.initialize)
   const isInitialized = useAuthStore((state) => state.isInitialized)
-  const user = useAuthStore((state) => state.user)
 
   useEffect(() => {
-    // Only run once on app start
     void initialize()
   }, [initialize])
 
@@ -29,7 +28,7 @@ function AuthInitializer({ children }: { children: React.ReactNode }) {
             <Leaf />
           </span>
           <p className="text-sm text-gray-500 dark:text-gray-400">
-            Loading Therabridge…
+            Loading Therabridge...
           </p>
         </div>
       </div>
@@ -44,17 +43,17 @@ export function App() {
     <BrowserRouter>
       <AuthInitializer>
         <Routes>
-          {/* ── Guest-only (login / signup are full-page self-contained layouts) ── */}
           <Route element={<GuestRoute />}>
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignupPage />} />
           </Route>
 
-          {/* ── Protected app pages ── */}
           <Route element={<ProtectedRoute />}>
             <Route element={<AppLayout />}>
               <Route path="/" element={<HomePage />} />
               <Route path="/chat" element={<ChatPage />} />
+              <Route path="/chat/:username" element={<ChatPage />} />
+              <Route path="/community" element={<CommunityPage />} />
               <Route path="/profile" element={<ProfilePage />} />
             </Route>
           </Route>

@@ -5,10 +5,13 @@ import {
   CalendarDays,
   CheckCircle2,
   Flame,
+  Layers,
   MessageCircle,
   Puzzle,
   Sparkles,
   TriangleAlert,
+  TrendingUp,
+  Zap,
 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -17,6 +20,7 @@ import { ExerciseModal } from "@/components/exercises/ExerciseModal"
 import type { Exercise } from "@/components/exercises/types"
 import { useAuthStore } from "@/store/auth-store"
 import { api } from "@/lib/api"
+import { cn } from "@/lib/utils"
 
 interface ExerciseLogEntry {
   _id: string
@@ -31,6 +35,14 @@ interface ExerciseLogEntry {
   completed: boolean
   completedAt: string
   timeSpent: number
+}
+
+interface ScoreStreak {
+  exerciseScore: number
+  loginStreak: number
+  exerciseStreak: number
+  longestLoginStreak: number
+  longestExerciseStreak: number
 }
 
 function getGreeting() {
@@ -48,16 +60,20 @@ export function HomePage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [activeExercise, setActiveExercise] = useState<Exercise | null>(null)
+  const [scoreStreak, setScoreStreak] = useState<ScoreStreak | null>(null)
+  const [showCompleted, setShowCompleted] = useState(false)
 
   useEffect(() => {
     async function load() {
       try {
-        const [exRes, logsRes] = await Promise.all([
+        const [exRes, logsRes, scoreRes] = await Promise.all([
           api.get<Exercise[]>("/api/exercises"),
           api.get<ExerciseLogEntry[]>("/api/exercises/logs/mine").catch(() => ({ data: [] })),
+          api.get<ScoreStreak>("/api/users/score-streak").catch(() => ({ data: null })),
         ])
         setExercises(exRes.data)
         setLogs(logsRes.data)
+        if (scoreRes.data) setScoreStreak(scoreRes.data)
       } catch {
         setError("Could not load exercises. Make sure the backend is running.")
       } finally {
@@ -68,6 +84,13 @@ export function HomePage() {
   }, [])
 
   if (!user) return null
+
+  const completedExerciseIds = new Set(
+    logs.filter((l) => l.completed).map((l) => l.exercise._id)
+  )
+  const displayedExercises = showCompleted
+    ? exercises
+    : exercises.filter((ex) => !completedExerciseIds.has(ex._id))
 
   return (
     <>
@@ -115,6 +138,42 @@ export function HomePage() {
           </div>
         </section>
 
+        {/* Score & Streak Section */}
+        {scoreStreak && (
+          <section className="grid gap-4 sm:grid-cols-4">
+            <div className="flex items-center gap-3 rounded-2xl border border-amber-200 bg-amber-50 p-4 dark:border-amber-900/50 dark:bg-amber-950/20">
+              <Zap className="size-6 text-amber-500" />
+              <div>
+                <p className="text-xs text-amber-600 dark:text-amber-400">EX Score</p>
+                <p className="text-xl font-bold text-amber-700 dark:text-amber-300">{scoreStreak.exerciseScore}</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3 rounded-2xl border border-emerald-200 bg-emerald-50 p-4 dark:border-emerald-900/50 dark:bg-emerald-950/20">
+              <TrendingUp className="size-6 text-emerald-500" />
+              <div>
+                <p className="text-xs text-emerald-600 dark:text-emerald-400">Exercise Streak</p>
+                <p className="text-xl font-bold text-emerald-700 dark:text-emerald-300">{scoreStreak.exerciseStreak} days</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3 rounded-2xl border border-sky-200 bg-sky-50 p-4 dark:border-sky-900/50 dark:bg-sky-950/20">
+              <Flame className="size-6 text-sky-500" />
+              <div>
+                <p className="text-xs text-sky-600 dark:text-sky-400">Login Streak</p>
+                <p className="text-xl font-bold text-sky-700 dark:text-sky-300">{scoreStreak.loginStreak} days</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3 rounded-2xl border border-violet-200 bg-violet-50 p-4 dark:border-violet-900/50 dark:bg-violet-950/20">
+              <Layers className="size-6 text-violet-500" />
+              <div>
+                <p className="text-xs text-violet-600 dark:text-violet-400">Best Streak</p>
+                <p className="text-xl font-bold text-violet-700 dark:text-violet-300">
+                  {Math.max(scoreStreak.longestLoginStreak, scoreStreak.longestExerciseStreak)} days
+                </p>
+              </div>
+            </div>
+          </section>
+        )}
+
         <section>
           <div className="mb-5 flex items-end justify-between">
             <div>
@@ -125,6 +184,18 @@ export function HomePage() {
                 Guided practices to calm your mind and body
               </p>
             </div>
+            <button
+              onClick={() => setShowCompleted(!showCompleted)}
+              className={cn(
+                "flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-colors",
+                showCompleted
+                  ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-400"
+                  : "bg-gray-100 text-gray-500 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700"
+              )}
+            >
+              <CheckCircle2 className="size-3.5" />
+              {showCompleted ? "Hide completed" : `Show completed (${completedExerciseIds.size})`}
+            </button>
           </div>
 
           {loading && (
@@ -146,11 +217,12 @@ export function HomePage() {
 
           {!loading && !error && (
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {exercises.map((ex) => (
+              {displayedExercises.map((ex) => (
                 <ExerciseCard
                   key={ex._id}
                   exercise={ex}
                   onStart={() => setActiveExercise(ex)}
+                  completed={completedExerciseIds.has(ex._id)}
                 />
               ))}
             </div>

@@ -1,9 +1,10 @@
 import { useEffect } from "react"
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom"
+import { BrowserRouter, Route, Routes } from "react-router-dom"
 
 import { GuestRoute, ProtectedRoute } from "@/components/auth/ProtectedRoute"
 import { AppLayout } from "@/components/layout/AppLayout"
 import { useAuthStore } from "@/store/auth-store"
+import { api } from "@/lib/api"
 import { Leaf } from "lucide-react"
 
 import { LoginPage } from "@/pages/LoginPage"
@@ -11,6 +12,7 @@ import { SignupPage } from "@/pages/SignupPage"
 import { ForgotPasswordPage } from "@/pages/ForgotPasswordPage"
 import { ResetPasswordPage } from "@/pages/ResetPasswordPage"
 import { PublicProfilePage } from "@/pages/PublicProfilePage"
+import { NotFoundPage } from "@/pages/NotFoundPage"
 
 import { HomePage as UserHomePage } from "@/pages/user/HomePage"
 import { ChatPage as UserChatPage } from "@/pages/user/ChatPage"
@@ -18,6 +20,10 @@ import { CommunityPage as UserCommunityPage } from "@/pages/user/CommunityPage"
 import { TherapistsPage as UserTherapistsPage } from "@/pages/user/TherapistsPage"
 import { SettingsPage as UserSettingsPage } from "@/pages/user/SettingsPage"
 import { ProfilePage as UserProfilePage } from "@/pages/user/ProfilePage"
+import { TherryPage as UserTherryPage } from "@/pages/user/TherryPage"
+import { NotificationsPage as UserNotificationsPage } from "@/pages/user/NotificationsPage"
+import { MoodPage as UserMoodPage } from "@/pages/user/MoodPage"
+import { CrisisPage as UserCrisisPage } from "@/pages/user/CrisisPage"
 
 import { AdminDashboardPage } from "@/pages/admin/DashboardPage"
 import { AdminUsersPage } from "@/pages/admin/UsersPage"
@@ -50,6 +56,17 @@ function AuthInitializer({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     void initialize()
   }, [initialize])
+
+  useEffect(() => {
+    async function trackLogin() {
+      try {
+        await api.post("/api/users/login-streak")
+      } catch {}
+    }
+    if (isInitialized) {
+      void trackLogin()
+    }
+  }, [isInitialized])
 
   if (!isInitialized) {
     return (
@@ -101,6 +118,10 @@ export function App() {
               <Route path="/therapists" element={<UserTherapistsPage />} />
               <Route path="/settings" element={<UserSettingsPage />} />
               <Route path="/profile" element={<UserProfilePage />} />
+              <Route path="/therry" element={<UserTherryPage />} />
+              <Route path="/notifications" element={<UserNotificationsPage />} />
+              <Route path="/mood" element={<UserMoodPage />} />
+              <Route path="/crisis" element={<UserCrisisPage />} />
               <Route path="/clients" element={<TherapistClientsPage />} />
               <Route path="/users" element={<AdminUsersPage />} />
               <Route path="/communities" element={<AdminCommunitiesPage />} />
@@ -109,7 +130,8 @@ export function App() {
 
           <Route path="/user/:username" element={<PublicProfilePage />} />
 
-          <Route path="*" element={<Navigate to="/" replace />} />
+          <Route path="/404" element={<NotFoundPage />} />
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </AuthInitializer>
     </BrowserRouter>

@@ -14,6 +14,10 @@ import {
   Users,
   LayoutDashboard,
   Shield,
+  BotIcon,
+  Bell,
+  Heart,
+  AlertTriangle,
 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -85,7 +89,7 @@ function NavItemWithBadge({
       <div className="relative">
         {icon}
         {badge !== undefined && badge > 0 && (
-          <span className="absolute -top-1.5 -right-1.5 flex min-w-[16px] items-center justify-center rounded-full bg-emerald-600 px-1 text-[10px] font-bold text-white leading-none py-0.5">
+          <span className="absolute -top-1.5 -right-1.5 flex min-w-[16px] items-center justify-center rounded-full bg-emerald-600 px-1 py-0.5 text-[10px] leading-none font-bold text-white">
             {badge > 99 ? "99+" : badge}
           </span>
         )}
@@ -111,16 +115,30 @@ function LogoutModal({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
       <div className="w-full max-w-sm rounded-2xl bg-white p-6 shadow-2xl dark:bg-gray-900 dark:ring-1 dark:ring-white/10">
-        <div className="mb-1 flex size-12 items-center justify-center rounded-full bg-amber-100 dark:bg-amber-900/30">
-          <LogOut className="size-6 text-amber-600 dark:text-amber-400" />
+        <div className="mb-1 flex size-12 items-center justify-self-center justify-center rounded-full bg-red-100 dark:bg-red-900/30">
+          <LogOut className="size-6 text-red-600 dark:text-red-400" />
         </div>
-        <h3 className="mt-4 text-lg font-semibold text-gray-900 dark:text-white">Log out?</h3>
+        <h3 className="mt-4 text-lg font-semibold text-gray-900 dark:text-white text-center">
+          Log out?
+        </h3>
         <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-          Are you sure you want to log out? You'll need to sign in again to access your account.
+          Are you sure you want to log out? You'll need to sign in again to
+          access your account.
         </p>
         <div className="mt-5 flex gap-3">
-          <Button variant="outline" onClick={onCancel} disabled={loading} className="flex-1">Cancel</Button>
-          <Button onClick={onConfirm} disabled={loading} className="flex-1 bg-amber-600 hover:bg-amber-700 text-white">
+          <Button
+            variant="outline"
+            onClick={onCancel}
+            disabled={loading}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button
+            onClick={onConfirm}
+            disabled={loading}
+            className="flex-1 bg-red-600 text-white hover:bg-red-700"
+          >
             {loading ? "Logging out..." : "Log out"}
           </Button>
         </div>
@@ -134,6 +152,7 @@ export function AppLayout() {
   const [sidebarMode, setSidebarMode] = useState<SidebarMode>("full")
   const [mobileOpen, setMobileOpen] = useState(false)
   const [unreadCount, setUnreadCount] = useState(0)
+  const [notificationCount, setNotificationCount] = useState(0)
   const [logoutModalOpen, setLogoutModalOpen] = useState(false)
   const [loggingOut, setLoggingOut] = useState(false)
 
@@ -159,10 +178,14 @@ export function AppLayout() {
   useEffect(() => {
     async function poll() {
       try {
-        const resp = await api.get("/api/chat/conversations")
-        const convs: { unread: number }[] = resp.data
+        const [chatRes, notifRes] = await Promise.all([
+          api.get("/api/chat/conversations"),
+          api.get("/api/notifications/unread-count").catch(() => ({ data: { count: 0 } })),
+        ])
+        const convs: { unread: number }[] = chatRes.data
         const total = convs.reduce((sum, c) => sum + (c.unread ?? 0), 0)
         setUnreadCount(total)
+        setNotificationCount(notifRes.data.count ?? 0)
       } catch {}
     }
     void poll()
@@ -173,14 +196,19 @@ export function AppLayout() {
   const isMinimized = sidebarMode === "minimized"
   const isHidden = sidebarMode === "hidden"
 
-  function closeMobile() { setMobileOpen(false) }
+  function closeMobile() {
+    setMobileOpen(false)
+  }
 
   async function handleLogoutConfirm() {
     setLoggingOut(true)
     try {
       await logout()
-    } catch {}
-    finally { setLoggingOut(false); setLogoutModalOpen(false) }
+    } catch {
+    } finally {
+      setLoggingOut(false)
+      setLogoutModalOpen(false)
+    }
   }
 
   return (
@@ -222,10 +250,16 @@ export function AppLayout() {
           </Link>
         </div>
 
-        <nav className="flex flex-col gap-1 p-3 flex-1">
+        <nav className="flex flex-1 flex-col gap-1 p-3">
           <NavItem
             to="/"
-            icon={role === "user" ? <Home className="size-4" /> : <LayoutDashboard className="size-4" />}
+            icon={
+              role === "user" ? (
+                <Home className="size-4" />
+              ) : (
+                <LayoutDashboard className="size-4" />
+              )
+            }
             label={role === "user" ? "Home" : "Dashboard"}
             minimized={isMinimized}
             end
@@ -246,15 +280,35 @@ export function AppLayout() {
             minimized={isMinimized}
             onClick={closeMobile}
           />
+
+          {/* User-specific nav items */}
           {role === "user" && (
-            <NavItem
-              to="/therapists"
-              icon={<Stethoscope className="size-4" />}
-              label="Therapists"
-              minimized={isMinimized}
-              onClick={closeMobile}
-            />
+            <>
+              <NavItem
+                to="/therry"
+                icon={<BotIcon className="size-4" />}
+                label="Therry"
+                minimized={isMinimized}
+                onClick={closeMobile}
+              />
+              <NavItem
+                to="/mood"
+                icon={<Heart className="size-4" />}
+                label="Mood"
+                minimized={isMinimized}
+                onClick={closeMobile}
+              />
+              <NavItem
+                to="/therapists"
+                icon={<Stethoscope className="size-4" />}
+                label="Therapists"
+                minimized={isMinimized}
+                onClick={closeMobile}
+              />
+            </>
           )}
+
+          {/* Therapist-specific */}
           {role === "therapist" && (
             <NavItem
               to="/clients"
@@ -264,6 +318,8 @@ export function AppLayout() {
               onClick={closeMobile}
             />
           )}
+
+          {/* Admin-specific */}
           {role === "admin" && (
             <>
               <NavItem
@@ -282,7 +338,27 @@ export function AppLayout() {
               />
             </>
           )}
+
           <div className="mt-auto" />
+
+          {/* Crisis support - shown for all */}
+          <NavItem
+            to="/crisis"
+            icon={<AlertTriangle className="size-4" />}
+            label="Crisis Support"
+            minimized={isMinimized}
+            onClick={closeMobile}
+          />
+
+          <NavItemWithBadge
+            to="/notifications"
+            icon={<Bell className="size-4" />}
+            label="Notifications"
+            minimized={isMinimized}
+            badge={notificationCount}
+            onClick={closeMobile}
+          />
+
           <NavItem
             to="/settings"
             icon={<Settings className="size-4" />}
@@ -309,17 +385,21 @@ export function AppLayout() {
             <button
               onClick={() => setSidebarMode(isMinimized ? "full" : "minimized")}
               className={cn(
-                "flex w-8 items-center rounded-lg cursor-pointer p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-600 dark:hover:bg-gray-800 dark:hover:text-gray-200",
+                "flex w-8 cursor-pointer items-center rounded-lg p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-600 dark:hover:bg-gray-800 dark:hover:text-gray-200",
                 isMinimized ? "justify-center" : "gap-2"
               )}
               title={isMinimized ? "Expand sidebar" : "Minimize sidebar"}
             >
-              {isMinimized ? <PanelLeftOpen className="size-4" /> : <PanelLeftClose className="size-4" />}
+              {isMinimized ? (
+                <PanelLeftOpen className="size-4" />
+              ) : (
+                <PanelLeftClose className="size-4" />
+              )}
             </button>
           )}
 
           {!isMinimized && (
-            <div className="flex items-center justify-between gap-2 px-1 mb-1">
+            <div className="mb-1 flex items-center justify-between gap-2 px-1">
               <span className="truncate text-sm text-gray-500 dark:text-gray-400">
                 @{user?.username}
               </span>
@@ -337,7 +417,7 @@ export function AppLayout() {
             size={isMinimized ? "icon" : "sm"}
             onClick={() => setLogoutModalOpen(true)}
             className={cn(
-              "border-gray-200 cursor-pointer text-gray-600 hover:border-red-200 hover:bg-red-50 hover:text-red-600 dark:border-gray-700 dark:text-gray-400 dark:hover:border-red-900 dark:hover:bg-red-950/30 dark:hover:text-red-400",
+              "cursor-pointer border-gray-200 text-gray-600 hover:border-red-200 hover:bg-red-50 hover:text-red-600 dark:border-gray-700 dark:text-gray-400 dark:hover:border-red-900 dark:hover:bg-red-950/30 dark:hover:text-red-400",
               isMinimized ? "w-full" : "w-full gap-1.5"
             )}
           >

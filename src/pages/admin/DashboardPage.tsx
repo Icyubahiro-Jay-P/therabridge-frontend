@@ -6,6 +6,7 @@ import {
   Shield,
   Users,
   Hash,
+  AlertTriangle,
 } from "lucide-react"
 
 import { useAuthStore } from "@/store/auth-store"
@@ -16,25 +17,30 @@ interface Stats {
   users: number
   therapists: number
   communities: number
+  activeCrisis: number
+  totalNotifications: number
 }
 
 export function AdminDashboardPage() {
   const user = useAuthStore((state) => state.user)
-  const [stats, setStats] = useState<Stats>({ users: 0, therapists: 0, communities: 0 })
+  const [stats, setStats] = useState<Stats>({ users: 0, therapists: 0, communities: 0, activeCrisis: 0, totalNotifications: 0 })
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     async function load() {
       try {
-        const [usersRes, communitiesRes] = await Promise.all([
+        const [usersRes, communitiesRes, crisisRes] = await Promise.all([
           api.get("/api/users/users"),
           api.get("/api/chat/communities"),
+          api.get("/api/crisis/active").catch(() => ({ data: [] })),
         ])
         const allUsers = usersRes.data
         setStats({
           users: allUsers.filter((u: { role: string }) => u.role === "user").length,
           therapists: allUsers.filter((u: { role: string }) => u.role === "therapist").length,
           communities: communitiesRes.data.length,
+          activeCrisis: crisisRes.data.length || 0,
+          totalNotifications: 0,
         })
       } catch {} finally {
         setLoading(false)
@@ -52,9 +58,10 @@ export function AdminDashboardPage() {
   }
 
   const cards = [
-    { label: "Users", value: stats.users, icon: Users, href: "/admin/users", color: "bg-sky-500" },
-    { label: "Therapists", value: stats.therapists, icon: Shield, href: "/admin/therapists", color: "bg-emerald-500" },
-    { label: "Communities", value: stats.communities, icon: Hash, href: "/admin/communities", color: "bg-violet-500" },
+    { label: "Users", value: stats.users, icon: Users, href: "/users", color: "bg-sky-500" },
+    { label: "Therapists", value: stats.therapists, icon: Shield, href: "/users", color: "bg-emerald-500" },
+    { label: "Communities", value: stats.communities, icon: Hash, href: "/communities", color: "bg-violet-500" },
+    { label: "Active Crisis", value: stats.activeCrisis, icon: AlertTriangle, href: "/crisis", color: "bg-red-500" },
   ]
 
   return (
@@ -66,18 +73,23 @@ export function AdminDashboardPage() {
         </p>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-3">
+      <div className="grid gap-4 sm:grid-cols-4">
         {cards.map(({ label, value, icon: Icon, href, color }) => (
           <Link
             key={label}
             to={href}
-            className="flex items-center gap-4 rounded-2xl border border-gray-200 bg-white p-5 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md dark:border-gray-700/60 dark:bg-gray-900"
+            className={cn(
+              "flex items-center gap-4 rounded-2xl border border-gray-200 bg-white p-5 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md dark:border-gray-700/60 dark:bg-gray-900",
+              label === "Active Crisis" && value > 0 && "border-red-200 dark:border-red-900/50"
+            )}
           >
             <span className={cn("flex size-12 items-center justify-center rounded-xl text-white", color)}>
               <Icon className="size-6" />
             </span>
             <div>
-              <p className="text-2xl font-bold text-gray-900 dark:text-white">{value}</p>
+              <p className={cn("text-2xl font-bold", label === "Active Crisis" && value > 0 ? "text-red-600 dark:text-red-400" : "text-gray-900 dark:text-white")}>
+                {value}
+              </p>
               <p className="text-sm text-gray-500 dark:text-gray-400">{label}</p>
             </div>
             <ChevronRight className="ml-auto size-4 text-gray-300" />

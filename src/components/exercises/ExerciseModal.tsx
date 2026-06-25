@@ -116,7 +116,8 @@ export function ExerciseModal({
         >
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 rounded-full bg-white/20 p-1.5 hover:bg-white/30"
+            disabled={!done}
+            className={`absolute top-4 right-4 rounded-full bg-white/20 p-1.5 hover:bg-white/30 cursor-${done ? "pointer" : "no-drop"}`}
           >
             <X className="size-4" />
           </button>

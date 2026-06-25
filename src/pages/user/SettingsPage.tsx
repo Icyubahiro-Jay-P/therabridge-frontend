@@ -151,7 +151,7 @@ export function SettingsPage() {
   const deleteCommunityMessages = useCallback(async () => {
     setDeletingCommunity(true); setServerError(null); setSuccess(null)
     try {
-      await api.delete("/api/chat/community/messages")
+      await api.delete("/api/chat/community-messages")
       setSuccess("All community messages deleted.")
       setModal(null)
     } catch (err) { setServerError(getErrorMessage(err)) }
@@ -161,7 +161,7 @@ export function SettingsPage() {
   const deleteAccount = useCallback(async () => {
     setDeletingAccount(true); setServerError(null); setSuccess(null)
     try {
-      await api.delete("/api/auth/account")
+      await api.delete("/api/users/profile", { data: { username: (() => { try { const u = JSON.parse(localStorage.getItem("auth-storage") ?? "{}"); return u.state?.user?.username ?? "" } catch { return "" } })() } })
       setSuccess("Account deleted. Logging out...")
       setModal(null)
       setTimeout(() => { window.location.href = "/login" }, 2000)

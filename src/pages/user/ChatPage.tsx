@@ -2,8 +2,11 @@ import { useEffect, useRef, useState } from "react"
 import { Link, useNavigate, useParams } from "react-router-dom"
 import {
   CheckCheck,
+  Edit,
+  History,
   Loader2,
   MessageCircle,
+  MoreVertical,
   Search,
   Send,
   TriangleAlert,
@@ -25,6 +28,11 @@ interface ChatUser {
   avatar?: string | null
 }
 
+interface EditEntry {
+  content: string
+  editedAt: string
+}
+
 interface DirectMessage {
   _id: string
   sender: ChatUser
@@ -34,6 +42,9 @@ interface DirectMessage {
   readAt?: string
   createdAt: string
   unsent?: boolean
+  edited?: boolean
+  editCount?: number
+  editHistory?: EditEntry[]
 }
 
 interface Conversation {
@@ -76,7 +87,11 @@ function loadSetting<T>(key: string, fallback: T): T {
 
 function Avatar({ user, size = "md" }: { user: ChatUser; size?: "sm" | "md" }) {
   const [imgError, setImgError] = useState(false)
-  const baseUrl: string = (typeof import.meta !== "undefined" && import.meta.env && import.meta.env.VITE_API_URL) || "http://localhost:5000"
+  const baseUrl: string =
+    (typeof import.meta !== "undefined" &&
+      import.meta.env &&
+      import.meta.env.VITE_API_URL) ||
+    "http://localhost:5000"
   const avatarUrl = user.avatar
     ? user.avatar.startsWith("http")
       ? user.avatar
@@ -138,9 +153,18 @@ export function ChatPage() {
   const [newMessage, setNewMessage] = useState("")
   const [sending, setSending] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [showPreviews, setShowPreviews] = useState(() => loadSetting("messagePreviews", true))
-  const [enterToSend, setEnterToSend] = useState(() => loadSetting("enterToSend", true))
+  const [showPreviews, setShowPreviews] = useState(() =>
+    loadSetting("messagePreviews", true)
+  )
+  const [enterToSend, setEnterToSend] = useState(() =>
+    loadSetting("enterToSend", true)
+  )
   const [deleting, setDeleting] = useState<string | null>(null)
+  const [editingId, setEditingId] = useState<string | null>(null)
+  const [editingContent, setEditingContent] = useState("")
+  const [showHistoryFor, setShowHistoryFor] = useState<string | null>(null)
+  const [menuOpenId, setMenuOpenId] = useState<string | null>(null)
+  const [selectedTimestampMessage, setSelectedTimestampMessage] = useState<string | null>(null)
 
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
@@ -300,6 +324,27 @@ export function ChatPage() {
       setError(getErrorMessage(err))
     } finally {
       setDeleting(null)
+    }
+  }
+
+  function startEdit(msg: DirectMessage) {
+    setEditingId(msg._id)
+    setEditingContent(msg.content)
+    setMenuOpenId(null)
+  }
+
+  async function handleSaveEdit() {
+    if (!editingId || !editingContent.trim()) return
+    try {
+      const { data } = await api.put<DirectMessage>(
+        `/api/chat/edit/${editingId}`,
+        { content: editingContent.trim() }
+      )
+      setMessages((prev) => prev.map((m) => (m._id === editingId ? data : m)))
+      setEditingId(null)
+      setEditingContent("")
+    } catch (err) {
+      setError(getErrorMessage(err))
     }
   }
 
@@ -469,44 +514,165 @@ export function ChatPage() {
                   const isMe = msg.sender._id === (currentUser?.id ?? "")
                   const seen = isMe && msg.read && msg.readAt
                   const isUnsent = msg.unsent
+                  const isEditing = editingId === msg._id
+                  const canEdit = isMe && !isUnsent
+                  const menuOpen = menuOpenId === msg._id
+                  const windowMinutes = 10
+                  const msgAge =
+                    (Date.now() - new Date(msg.createdAt).getTime()) / 1000 / 60
+                  const editAllowed =
+                    canEdit &&
+                    msgAge < windowMinutes &&
+                    (msg.editCount ?? 0) < 3
+                  const hasEdits =
+                    msg.edited && (msg.editHistory ?? []).length > 0
                   return (
                     <div
                       key={msg._id}
                       className={cn(
-                        "flex flex-col",
+                        "flex flex-col mb-2",
                         isMe ? "items-end" : "items-start"
                       )}
                     >
                       <div
                         className={cn(
-                          "group relative max-w-[70%] rounded-2xl text-sm",
-                          isMe
-                            ? "rounded-br-md bg-emerald-600 text-white"
-                            : "rounded-bl-md bg-gray-100 text-gray-900 dark:bg-gray-800 dark:text-gray-100"
+                          "flex max-w-[70%] gap-2",
+                          isMe ? "flex-row-reverse justify-end" : "flex-row"
                         )}
                       >
-                        <div
-                          className={cn(
-                            "px-3.5 pt-2.5",
-                            isUnsent && "italic opacity-60"
-                          )}
-                        >
-                          <p>{isUnsent ? "Message unsent" : msg.content}</p>
-                        </div>
-                        <div
-                          className={cn(
-                            "flex items-center gap-2 px-3.5 pb-2",
-                            isMe ? "justify-end" : "justify-start"
-                          )}
-                        ></div>
-                      </div>
-                      <div className="flex items-center gap-1 text-[10px]">
-                        {isMe && !isUnsent && seen && (
-                          <span className="inline-flex items-center gap-0.5 text-[11px] leading-none text-emerald-400">
-                            <CheckCheck className="size-3" />
-                          </span>
+                        {/* Three dots - always on the left side of the bubble */}
+                        {canEdit && (
+                          <div className="flex-shrink-0 pt-1">
+                            <button
+                              onClick={() =>
+                                setMenuOpenId(menuOpen ? null : msg._id)
+                              }
+                              className="flex size-6 items-center justify-center rounded-full opacity-0 transition-opacity group-hover:opacity-100 hover:bg-black/10 dark:hover:bg-white/10"
+                            >
+                              <MoreVertical className="size-3.5" />
+                            </button>
+                          </div>
                         )}
-                        {!isUnsent && (
+
+                        {/* Message bubble - content sized with proper wrapping */}
+                        <div
+                          onClick={() =>
+                            setSelectedTimestampMessage(
+                              selectedTimestampMessage === msg._id
+                                ? null
+                                : msg._id
+                            )
+                          }
+                          className={cn(
+                            "cursor-pointer group relative rounded-2xl text-sm break-words",
+                            isMe
+                              ? "rounded-br-md bg-emerald-600 text-white"
+                              : "rounded-bl-md bg-gray-100 text-gray-900 dark:bg-gray-800 dark:text-gray-100"
+                          )}
+                          style={{ maxWidth: "100%" }} // ensures it sizes to content but respects parent max-w
+                        >
+                          {isEditing && (
+                            <div className="px-3.5 pt-2.5 pb-2">
+                              <textarea
+                                value={editingContent}
+                                onChange={(e) =>
+                                  setEditingContent(e.target.value)
+                                }
+                                className="w-full resize-none rounded-lg border border-emerald-400 bg-white/90 p-2 text-sm text-gray-900 outline-none focus:ring-1 focus:ring-emerald-500 dark:bg-gray-800 dark:text-gray-100"
+                                rows={2}
+                                autoFocus
+                              />
+                              <div className="mt-2 flex justify-end gap-1.5">
+                                <Button
+                                  size="sm"
+                                  variant="ghost"
+                                  onClick={() => {
+                                    setEditingId(null)
+                                    setEditingContent("")
+                                  }}
+                                  className="h-7 px-2 text-xs text-white hover:bg-white/20"
+                                >
+                                  <X className="size-3" /> Cancel
+                                </Button>
+                                <Button
+                                  size="sm"
+                                  onClick={handleSaveEdit}
+                                  disabled={!editingContent.trim()}
+                                  className="h-7 bg-white px-2 text-xs text-emerald-700 hover:bg-emerald-50"
+                                >
+                                  <CheckCheck className="size-3" /> Save
+                                </Button>
+                              </div>
+                            </div>
+                          )}
+
+                          {!isEditing && (
+                            <>
+                              <div
+                                className={cn(
+                                  "px-3.5 pt-2.5",
+                                  isUnsent && "italic opacity-60"
+                                )}
+                              >
+                                <p className="break-words whitespace-pre-wrap">
+                                  {isUnsent ? "Message unsent" : msg.content}
+                                </p>
+                              </div>
+
+                              <div
+                                className={cn(
+                                  "flex items-center gap-2 px-3.5 pb-2",
+                                  isMe ? "justify-end" : "justify-start"
+                                )}
+                              />
+                            </>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Menu dropdown */}
+                      {menuOpen && canEdit && (
+                        <>
+                          <div
+                            className="fixed inset-0 z-10"
+                            onClick={() => setMenuOpenId(null)}
+                          />
+                          <div
+                            className={cn(
+                              "absolute z-20 min-w-[120px] rounded-lg border border-gray-200 bg-white py-1 shadow-lg dark:border-gray-700 dark:bg-gray-800",
+                              isMe ? "right-8" : "left-8"
+                            )}
+                          >
+                            {editAllowed && (
+                              <button
+                                onClick={() => startEdit(msg)}
+                                className="flex w-full items-center gap-2 px-3 py-1.5 text-left text-xs text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"
+                              >
+                                <Edit className="size-3" /> Edit
+                              </button>
+                            )}
+                            <button
+                              onClick={() => {
+                                handleUnsend(msg._id)
+                                setMenuOpenId(null)
+                              }}
+                              disabled={deleting === msg._id}
+                              className="flex w-full items-center gap-2 px-3 py-1.5 text-left text-xs text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-950/30"
+                            >
+                              <X className="size-3" /> Unsend
+                            </button>
+                          </div>
+                        </>
+                      )}
+
+                      {/* Timestamp + seen (toggle on message click) */}
+                      {selectedTimestampMessage === msg._id && !isUnsent && (
+                        <div className="mt-1 flex items-center gap-1 text-[10px]">
+                          {isMe && seen && (
+                            <span className="inline-flex items-center gap-0.5 text-[11px] leading-none text-emerald-400">
+                              <CheckCheck className="size-3" />
+                            </span>
+                          )}
                           <span
                             className={cn(
                               "text-[11px] leading-none",
@@ -517,17 +683,53 @@ export function ChatPage() {
                           >
                             {formatTime(msg.createdAt)}
                           </span>
-                        )}
-                      </div>
-                      {isMe && !isUnsent && (
+                        </div>
+                      )}
+
+                      {/* Edit history stuff */}
+                      {hasEdits && (
                         <button
-                          onClick={() => handleUnsend(msg._id)}
-                          disabled={deleting === msg._id}
-                          className="mt-0.5 flex items-center gap-1 rounded px-2 py-0.5 text-[10px] text-gray-400 opacity-0 transition-opacity hover:opacity-100 hover:bg-red-50 hover:text-red-500 dark:hover:bg-red-950/30"
+                          onClick={() =>
+                            setShowHistoryFor(
+                              showHistoryFor === msg._id ? null : msg._id
+                            )
+                          }
+                          className="flex items-center gap-1 rounded px-1.5 py-0.5 text-[10px] text-gray-400 hover:text-emerald-600 hover:underline dark:hover:text-emerald-400 cursor-pointer"
                         >
-                          <X className="size-2.5" />
-                          Unsend
+                          <History className="size-2.5" />
+                          edited ({msg.editCount})
                         </button>
+                      )}
+
+                      {showHistoryFor === msg._id && hasEdits && (
+                        <div
+                          className={cn(
+                            "mt-1 rounded-lg border border-gray-200 bg-gray-50 p-3 text-xs dark:border-gray-700 dark:bg-gray-900",
+                            isMe ? "mr-2" : "ml-2"
+                          )}
+                          style={{ maxWidth: "70%" }}
+                        >
+                          <p className="mb-1.5 font-medium text-gray-500 dark:text-gray-400">
+                            Edit history
+                          </p>
+                          <div className="space-y-1.5">
+                            {[...(msg.editHistory ?? [])]
+                              .reverse()
+                              .map((entry, i) => (
+                                <div
+                                  key={i}
+                                  className="rounded bg-white p-2 dark:bg-gray-800"
+                                >
+                                  <p className="text-gray-700 dark:text-gray-300">
+                                    {entry.content}
+                                  </p>
+                                  <p className="mt-0.5 text-gray-400">
+                                    {formatTime(entry.editedAt)}
+                                  </p>
+                                </div>
+                              ))}
+                          </div>
+                        </div>
                       )}
                     </div>
                   )
@@ -555,7 +757,11 @@ export function ChatPage() {
                       e.preventDefault()
                       void sendMessage()
                     }
-                    if (!enterToSend && e.key === "Enter" && (e.ctrlKey || e.metaKey)) {
+                    if (
+                      !enterToSend &&
+                      e.key === "Enter" &&
+                      (e.ctrlKey || e.metaKey)
+                    ) {
                       e.preventDefault()
                       void sendMessage()
                     }

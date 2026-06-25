@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
 import {
+  fetchChatSettings as fetchChatSettingsRequest,
   fetchProfile,
   login as loginRequest,
   logout as logoutRequest,
@@ -9,10 +10,12 @@ import {
   updateProfile as updateProfileRequest,
   changePassword as changePasswordRequest,
   uploadAvatar as uploadAvatarRequest,
+  updateChatSettings as updateChatSettingsRequest,
   updatePrivacy as updatePrivacyRequest,
 } from "@/lib/auth-api";
 import type {
   ChangePasswordPayload,
+  ChatSettings,
   LoginPayload,
   PrivacySettings,
   RegisterPayload,
@@ -32,6 +35,7 @@ interface AuthState {
   changePassword: (payload: ChangePasswordPayload) => Promise<void>;
   uploadAvatar: (file: File) => Promise<void>;
   updatePrivacy: (settings: Partial<PrivacySettings>) => Promise<void>;
+  updateChatSettings: (settings: Partial<ChatSettings>) => Promise<void>;
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -45,7 +49,10 @@ export const useAuthStore = create<AuthState>()(
         set({ isInitialized: true });
         try {
           const user = await fetchProfile();
-          if (user) set({ user });
+          if (user) {
+            const chatSettings = await fetchChatSettingsRequest();
+            set({ user: { ...user, chatSettings } });
+          }
         } catch {}
       },
 
@@ -134,6 +141,21 @@ export const useAuthStore = create<AuthState>()(
           const privacySettings = await updatePrivacyRequest(settings);
           set((state) => ({
             user: state.user ? { ...state.user, privacySettings } : null,
+          }));
+        } catch (error) {
+          const message = error instanceof Error ? error.message : "Update failed";
+          throw new Error(message);
+        } finally {
+          set({ isLoading: false });
+        }
+      },
+
+      updateChatSettings: async (settings) => {
+        set({ isLoading: true });
+        try {
+          const chatSettings = await updateChatSettingsRequest(settings);
+          set((state) => ({
+            user: state.user ? { ...state.user, chatSettings } : null,
           }));
         } catch (error) {
           const message = error instanceof Error ? error.message : "Update failed";

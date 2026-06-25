@@ -63,23 +63,24 @@ function formatTime(dateString: string) {
   })
 }
 
-function loadMessagePreviews(): boolean {
+function loadSetting<T>(key: string, fallback: T): T {
   try {
     const stored = localStorage.getItem("therabridge-settings")
     if (stored) {
       const s = JSON.parse(stored)
-      return s.messagePreviews !== false
+      return s[key] ?? fallback
     }
   } catch {}
-  return true
+  return fallback
 }
 
 function Avatar({ user, size = "md" }: { user: ChatUser; size?: "sm" | "md" }) {
   const [imgError, setImgError] = useState(false)
+  const baseUrl: string = (typeof import.meta !== "undefined" && import.meta.env && import.meta.env.VITE_API_URL) || "http://localhost:5000"
   const avatarUrl = user.avatar
     ? user.avatar.startsWith("http")
       ? user.avatar
-      : `http://localhost:5000${user.avatar}`
+      : `${baseUrl}${user.avatar}`
     : null
 
   if (avatarUrl && !imgError) {
@@ -136,26 +137,22 @@ export function ChatPage() {
   const [loadingMessages, setLoadingMessages] = useState(false)
   const [newMessage, setNewMessage] = useState("")
   const [sending, setSending] = useState(false)
-  const [selectedTimestampMessage, setSelectedTimestampMessage] = useState<
-    string | null
-  >(null)
   const [error, setError] = useState<string | null>(null)
-  const [showPreviews, setShowPreviews] = useState(loadMessagePreviews)
+  const [showPreviews, setShowPreviews] = useState(() => loadSetting("messagePreviews", true))
+  const [enterToSend, setEnterToSend] = useState(() => loadSetting("enterToSend", true))
   const [deleting, setDeleting] = useState<string | null>(null)
 
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    function onStorage() {
-      setShowPreviews(loadMessagePreviews())
+    function reload() {
+      setShowPreviews(loadSetting("messagePreviews", true))
+      setEnterToSend(loadSetting("enterToSend", true))
     }
-    window.addEventListener("storage", onStorage)
-    const interval = setInterval(
-      () => setShowPreviews(loadMessagePreviews()),
-      2000
-    )
+    window.addEventListener("storage", reload)
+    const interval = setInterval(reload, 2000)
     return () => {
-      window.removeEventListener("storage", onStorage)
+      window.removeEventListener("storage", reload)
       clearInterval(interval)
     }
   }, [])
@@ -266,8 +263,7 @@ export function ChatPage() {
   }, [searchQuery])
 
   useEffect(() => {
-    function handleClick() {
-    }
+    function handleClick() {}
     document.addEventListener("click", handleClick)
     return () => document.removeEventListener("click", handleClick)
   }, [])
@@ -314,9 +310,7 @@ export function ChatPage() {
   }
 
   return (
-    <div
-      className="flex h-full overflow-hidden"
-    >
+    <div className="flex h-full overflow-hidden">
       <aside className="flex w-72 shrink-0 flex-col border-r border-gray-200 dark:border-gray-700/60">
         <div className="p-3">
           <div className="relative">
@@ -484,11 +478,6 @@ export function ChatPage() {
                       )}
                     >
                       <div
-                        onClick={() =>
-                          setSelectedTimestampMessage((prev) =>
-                            prev === msg._id ? null : msg._id
-                          )
-                        }
                         className={cn(
                           "group relative max-w-[70%] rounded-2xl text-sm",
                           isMe
@@ -509,29 +498,32 @@ export function ChatPage() {
                             "flex items-center gap-2 px-3.5 pb-2",
                             isMe ? "justify-end" : "justify-start"
                           )}
-                        >
-                          {seen && !isUnsent && (
-                            <span className="inline-flex items-center gap-0.5 text-[11px] leading-none text-emerald-200">
-                              <CheckCheck className="size-3" />
-                            </span>
-                          )}
-                        </div>
+                        ></div>
                       </div>
-                      {selectedTimestampMessage === msg._id && (
-                        <div
-                          className={cn(
-                            "mt-1 text-[11px] leading-none",
-                            isMe ? "text-emerald-200" : "text-gray-500 dark:text-gray-400"
-                          )}
-                        >
-                          {formatTime(msg.createdAt)}
-                        </div>
-                      )}
+                      <div className="flex items-center gap-1 text-[10px]">
+                        {isMe && !isUnsent && seen && (
+                          <span className="inline-flex items-center gap-0.5 text-[11px] leading-none text-emerald-400">
+                            <CheckCheck className="size-3" />
+                          </span>
+                        )}
+                        {!isUnsent && (
+                          <span
+                            className={cn(
+                              "text-[11px] leading-none",
+                              isMe
+                                ? "text-emerald-300 dark:text-emerald-600"
+                                : "text-gray-500 dark:text-gray-400"
+                            )}
+                          >
+                            {formatTime(msg.createdAt)}
+                          </span>
+                        )}
+                      </div>
                       {isMe && !isUnsent && (
                         <button
                           onClick={() => handleUnsend(msg._id)}
                           disabled={deleting === msg._id}
-                          className="mt-0.5 flex items-center gap-1 rounded px-2 py-0.5 text-[10px] text-gray-400 opacity-0 transition-opacity group-hover:opacity-100 hover:bg-red-50 hover:text-red-500 dark:hover:bg-red-950/30"
+                          className="mt-0.5 flex items-center gap-1 rounded px-2 py-0.5 text-[10px] text-gray-400 opacity-0 transition-opacity hover:opacity-100 hover:bg-red-50 hover:text-red-500 dark:hover:bg-red-950/30"
                         >
                           <X className="size-2.5" />
                           Unsend
@@ -559,7 +551,11 @@ export function ChatPage() {
                   disabled={sending}
                   className="flex-1 rounded-xl"
                   onKeyDown={(e) => {
-                    if (e.key === "Enter" && !e.shiftKey) {
+                    if (enterToSend && e.key === "Enter" && !e.shiftKey) {
+                      e.preventDefault()
+                      void sendMessage()
+                    }
+                    if (!enterToSend && e.key === "Enter" && (e.ctrlKey || e.metaKey)) {
                       e.preventDefault()
                       void sendMessage()
                     }

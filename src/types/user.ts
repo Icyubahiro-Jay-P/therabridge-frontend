@@ -13,6 +13,11 @@ export interface User {
   createdAt?: string
   updatedAt?: string
   privacySettings?: PrivacySettings
+  chatSettings?: ChatSettings
+}
+
+export interface ChatSettings {
+  readReceipts: boolean
 }
 
 export interface PrivacySettings {

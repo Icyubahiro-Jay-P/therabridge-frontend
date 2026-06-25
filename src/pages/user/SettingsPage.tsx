@@ -8,6 +8,7 @@ import {
   Globe,
   Loader2,
   Lock,
+  MessageCircle,
   Moon,
   Sun,
   Trash2,
@@ -29,6 +30,7 @@ interface Settings {
   focusMode: boolean
   communityScreenshotProtection: boolean
   accountVisibility: "visible" | "anonymous"
+  enterToSend: boolean
 }
 
 const DEFAULT_SETTINGS: Settings = {
@@ -39,6 +41,7 @@ const DEFAULT_SETTINGS: Settings = {
   focusMode: false,
   communityScreenshotProtection: false,
   accountVisibility: "visible",
+  enterToSend: true,
 }
 
 function loadSettings(): Settings {
@@ -258,6 +261,16 @@ export function SettingsPage() {
       </section>
 
       <section className="space-y-3">
+        <h2 className="text-sm font-semibold uppercase tracking-wider text-gray-400">Messaging</h2>
+        <SettingRow icon={MessageCircle} label="Read receipts" description="Let others see when you've read their messages">
+          <ReadReceiptsToggle />
+        </SettingRow>
+        <SettingRow icon={MessageCircle} label="Enter to send" description="Press Enter to send, Shift+Enter for new line">
+          <Switch checked={settings.enterToSend} onCheckedChange={(v) => updateSetting("enterToSend", v)} />
+        </SettingRow>
+      </section>
+
+      <section className="space-y-3">
         <h2 className="text-sm font-semibold uppercase tracking-wider text-red-500">Danger Zone</h2>
         <div className="space-y-2">
           <div className="flex items-center justify-between gap-4 rounded-xl border border-red-200 px-4 py-3.5 dark:border-red-900/50">
@@ -340,6 +353,31 @@ export function SettingsPage() {
         onConfirm={deleteAccount}
         onCancel={closeModal}
       />
+    </div>
+  )
+}
+
+function ReadReceiptsToggle() {
+  const user = useAuthStore((state) => state.user)
+  const updateChatSettings = useAuthStore((state) => state.updateChatSettings)
+  const isLoading = useAuthStore((state) => state.isLoading)
+  const [error, setError] = useState("")
+
+  const enabled = user?.chatSettings?.readReceipts ?? true
+
+  async function toggle() {
+    setError("")
+    try {
+      await updateChatSettings({ readReceipts: !enabled })
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to update")
+    }
+  }
+
+  return (
+    <div className="flex flex-col items-end gap-1">
+      <Switch checked={enabled} onCheckedChange={toggle} disabled={isLoading} />
+      {error && <p className="text-xs text-red-500">{error}</p>}
     </div>
   )
 }

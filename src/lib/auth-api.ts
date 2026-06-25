@@ -2,6 +2,7 @@
 import { api } from "@/lib/api";
 import type {
   ChangePasswordPayload,
+  ChatSettings,
   LoginPayload,
   PrivacySettings,
   PublicProfile,
@@ -24,6 +25,7 @@ type RawUser = {
   createdAt?: string;
   updatedAt?: string;
   privacySettings?: PrivacySettings;
+  chatSettings?: ChatSettings;
 };
 
 function normalizeUser(raw: RawUser): User {
@@ -40,6 +42,7 @@ function normalizeUser(raw: RawUser): User {
     createdAt: raw.createdAt,
     updatedAt: raw.updatedAt,
     privacySettings: raw.privacySettings,
+    chatSettings: raw.chatSettings,
   };
 }
 
@@ -115,6 +118,16 @@ export async function fetchPublicProfile(username: string): Promise<PublicProfil
   const clean = username.startsWith("@") ? username.slice(1) : username;
   const { data } = await api.get<PublicProfile>(`/api/users/${clean}`);
   return data;
+}
+
+export async function fetchChatSettings(): Promise<ChatSettings> {
+  const { data } = await api.get<ChatSettings>("/api/chat/settings");
+  return data;
+}
+
+export async function updateChatSettings(chatSettings: Partial<ChatSettings>): Promise<ChatSettings> {
+  const { data } = await api.put<{ chatSettings: ChatSettings }>("/api/chat/settings", { chatSettings });
+  return data.chatSettings;
 }
 
 export async function updatePrivacy(privacySettings: Partial<PrivacySettings>): Promise<PrivacySettings> {

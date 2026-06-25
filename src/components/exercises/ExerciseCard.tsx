@@ -10,7 +10,6 @@ import {
 import type { LucideIcon } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
-import { cn } from "@/lib/utils"
 import type { Exercise } from "./types"
 
 const typeIcons: Record<string, LucideIcon> = {

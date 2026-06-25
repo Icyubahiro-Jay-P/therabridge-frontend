@@ -42,7 +42,7 @@ export function ProfilePage() {
   const uploadAvatar = useAuthStore((state) => state.uploadAvatar)
 
   const fileInputRef = useRef<HTMLInputElement>(null)
-  const [avatarPreview, setAvatarPreview] = useState<string>("")
+  const [, setAvatarPreview] = useState<string>("")
   const [avatarFile, setAvatarFile] = useState<File | null>(null)
   const [avatarUploading, setAvatarUploading] = useState(false)
   const [avatarMessage, setAvatarMessage] = useState("")

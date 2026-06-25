@@ -128,3 +128,32 @@
     @apply font-sans;
     }
 }
+
+/* Calm mode: softer colors */
+html.calm-mode {
+  --background: oklch(0.99 0.003 120);
+  --foreground: oklch(0.3 0.01 120);
+  --card: oklch(0.985 0.005 120);
+  --card-foreground: oklch(0.3 0.01 120);
+  --border: oklch(0.93 0.005 120);
+  --muted: oklch(0.97 0.004 120);
+  --muted-foreground: oklch(0.6 0.01 120);
+}
+
+html.calm-mode.dark {
+  --background: oklch(0.18 0.005 120);
+  --foreground: oklch(0.92 0.003 120);
+  --card: oklch(0.22 0.006 120);
+  --card-foreground: oklch(0.92 0.003 120);
+  --border: oklch(0.28 0.005 120);
+  --muted: oklch(0.25 0.005 120);
+  --muted-foreground: oklch(0.7 0.005 120);
+}
+
+/* Screenshot protection */
+.screenshot-protected {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}

@@ -3,6 +3,8 @@ import { api } from "@/lib/api";
 import type {
   ChangePasswordPayload,
   LoginPayload,
+  PrivacySettings,
+  PublicProfile,
   RegisterPayload,
   UpdateProfilePayload,
   User,
@@ -21,6 +23,7 @@ type RawUser = {
   bio?: string;
   createdAt?: string;
   updatedAt?: string;
+  privacySettings?: PrivacySettings;
 };
 
 function normalizeUser(raw: RawUser): User {
@@ -36,6 +39,7 @@ function normalizeUser(raw: RawUser): User {
     bio: raw.bio,
     createdAt: raw.createdAt,
     updatedAt: raw.updatedAt,
+    privacySettings: raw.privacySettings,
   };
 }
 
@@ -105,4 +109,15 @@ export async function resetPassword(
     { password }
   );
   return data.message;
+}
+
+export async function fetchPublicProfile(username: string): Promise<PublicProfile> {
+  const clean = username.startsWith("@") ? username.slice(1) : username;
+  const { data } = await api.get<PublicProfile>(`/api/users/${clean}`);
+  return data;
+}
+
+export async function updatePrivacy(privacySettings: Partial<PrivacySettings>): Promise<PrivacySettings> {
+  const { data } = await api.put<{ privacySettings: PrivacySettings }>("/api/users/privacy", { privacySettings });
+  return data.privacySettings;
 }

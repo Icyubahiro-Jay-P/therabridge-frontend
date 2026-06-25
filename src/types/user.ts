@@ -1,4 +1,3 @@
-// src/types/user.ts
 export type UserRole = "user" | "admin" | "therapist"
 
 export interface User {
@@ -13,6 +12,30 @@ export interface User {
   bio?: string
   createdAt?: string
   updatedAt?: string
+  privacySettings?: PrivacySettings
+}
+
+export interface PrivacySettings {
+  firstName: "public" | "private"
+  lastName: "public" | "private"
+  email: "public" | "private"
+  dateOfBirth: "public" | "private"
+  bio: "public" | "private"
+}
+
+export type PrivacyField = keyof PrivacySettings
+
+export interface PublicProfile {
+  _id: string
+  username: string
+  firstName: string | null
+  lastName: string | null
+  email: string | null
+  dateOfBirth: string | null
+  bio: string | null
+  role: UserRole
+  avatar?: string | null
+  createdAt?: string
 }
 
 export interface LoginPayload {

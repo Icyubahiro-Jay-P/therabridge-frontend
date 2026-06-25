@@ -1,21 +1,22 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import {
   Activity,
   CheckCircle2,
   ChevronRight,
   Compass,
   Heart,
+  Loader2,
   Sparkles,
   Wind,
   X,
 } from "lucide-react"
-import type { LucideIcon } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
+import { api } from "@/lib/api"
 import type { Exercise } from "./types"
 
-const typeIcons: Record<string, LucideIcon> = {
+const typeIcons: Record<string, typeof Sparkles> = {
   breathing: Wind,
   mindfulness: Sparkles,
   gratitude: Heart,
@@ -40,9 +41,28 @@ export function ExerciseModal({
   const [step, setStep] = useState(0)
   const [done, setDone] = useState(false)
   const [timeLeft, setTimeLeft] = useState<number | null>(null)
+  const [logId, setLogId] = useState<string | null>(null)
+  const [saving, setSaving] = useState(false)
+  const [sessionError, setSessionError] = useState("")
+  const startTimeRef = useRef<number>(Date.now())
 
   const currentStep = exercise.steps[step]
   const TypeIcon = typeIcons[exercise.type] ?? Sparkles
+  const stepReady = timeLeft === null || timeLeft <= 0
+  const totalExerciseDuration = exercise.duration
+
+  useEffect(() => {
+    async function init() {
+      try {
+        const { data } = await api.post(`/api/exercises/${exercise._id}/start`)
+        setLogId(data.logId)
+        startTimeRef.current = Date.now()
+      } catch {
+        setSessionError("Could not start exercise session.")
+      }
+    }
+    void init()
+  }, [exercise._id])
 
   useEffect(() => {
     if (!currentStep?.duration) {
@@ -62,11 +82,26 @@ export function ExerciseModal({
     return () => clearInterval(interval)
   }, [step, currentStep?.duration])
 
-  function advance() {
+  async function advance() {
+    if (!stepReady) return
+
     if (step < exercise.steps.length - 1) {
       setStep((s) => s + 1)
     } else {
-      setDone(true)
+      setSaving(true)
+      try {
+        const timeSpent = Math.floor((Date.now() - startTimeRef.current) / 1000)
+        await api.post(`/api/exercises/${exercise._id}/complete`, {
+          logId,
+          timeSpent,
+        })
+        setDone(true)
+      } catch {
+        setSessionError("Failed to save your progress. You can still close.")
+        setDone(true)
+      } finally {
+        setSaving(false)
+      }
     }
   }
 
@@ -88,11 +123,17 @@ export function ExerciseModal({
           <TypeIcon className="mb-1 size-8" />
           <h2 className="text-xl font-bold">{exercise.title}</h2>
           <p className="mt-1 text-sm text-white/80">
-            {exercise.steps.length} steps · {formatDuration(exercise.duration)}
+            {exercise.steps.length} steps · {formatDuration(totalExerciseDuration)}
           </p>
         </div>
 
         <div className="p-6">
+          {sessionError && (
+            <p className="mb-4 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700 dark:border-red-900/50 dark:bg-red-950/40 dark:text-red-400">
+              {sessionError}
+            </p>
+          )}
+
           {done ? (
             <div className="flex flex-col items-center gap-4 py-4 text-center">
               <CheckCircle2 className="size-16 text-emerald-500" />
@@ -143,17 +184,29 @@ export function ExerciseModal({
                       color: exercise.color,
                     }}
                   >
-                    {timeLeft}s
+                    {timeLeft > 0 ? `${timeLeft}s` : "0s"}
                   </div>
                 </div>
               )}
 
+              {!stepReady && (
+                <p className="mb-3 text-center text-xs text-gray-400">
+                  Please wait for the timer...
+                </p>
+              )}
+
               <Button
                 onClick={advance}
-                className="w-full font-semibold"
+                disabled={!stepReady || saving}
+                className="w-full font-semibold disabled:opacity-50"
                 style={{ background: exercise.color }}
               >
-                {step < exercise.steps.length - 1 ? (
+                {saving ? (
+                  <span className="flex items-center gap-2">
+                    <Loader2 className="size-4 animate-spin" />
+                    Saving...
+                  </span>
+                ) : step < exercise.steps.length - 1 ? (
                   <>
                     Next step <ChevronRight className="size-4" />
                   </>

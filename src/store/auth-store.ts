@@ -9,10 +9,12 @@ import {
   updateProfile as updateProfileRequest,
   changePassword as changePasswordRequest,
   uploadAvatar as uploadAvatarRequest,
+  updatePrivacy as updatePrivacyRequest,
 } from "@/lib/auth-api";
 import type {
   ChangePasswordPayload,
   LoginPayload,
+  PrivacySettings,
   RegisterPayload,
   UpdateProfilePayload,
   User,
@@ -29,6 +31,7 @@ interface AuthState {
   updateProfile: (payload: UpdateProfilePayload) => Promise<void>;
   changePassword: (payload: ChangePasswordPayload) => Promise<void>;
   uploadAvatar: (file: File) => Promise<void>;
+  updatePrivacy: (settings: Partial<PrivacySettings>) => Promise<void>;
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
@@ -118,6 +121,21 @@ export const useAuthStore = create<AuthState>((set) => ({
       set({ user });
     } catch (error) {
       const message = error instanceof Error ? error.message : "Upload failed";
+      throw new Error(message);
+    } finally {
+      set({ isLoading: false });
+    }
+  },
+
+  updatePrivacy: async (settings) => {
+    set({ isLoading: true });
+    try {
+      const privacySettings = await updatePrivacyRequest(settings);
+      set((state) => ({
+        user: state.user ? { ...state.user, privacySettings } : null,
+      }));
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Update failed";
       throw new Error(message);
     } finally {
       set({ isLoading: false });

@@ -3,6 +3,8 @@ import { Link } from "react-router-dom"
 import {
   ArrowRight,
   CalendarDays,
+  CheckCircle2,
+  Flame,
   MessageCircle,
   Puzzle,
   Sparkles,
@@ -16,6 +18,21 @@ import type { Exercise } from "@/components/exercises/types"
 import { useAuthStore } from "@/store/auth-store"
 import { api } from "@/lib/api"
 
+interface ExerciseLogEntry {
+  _id: string
+  exercise: {
+    _id: string
+    title: string
+    emoji: string
+    color: string
+    type: string
+    duration: number
+  }
+  completed: boolean
+  completedAt: string
+  timeSpent: number
+}
+
 function getGreeting() {
   const hour = new Date().getHours()
   if (hour < 12) return "Good morning"
@@ -27,6 +44,7 @@ export function HomePage() {
   const user = useAuthStore((state) => state.user)
 
   const [exercises, setExercises] = useState<Exercise[]>([])
+  const [logs, setLogs] = useState<ExerciseLogEntry[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [activeExercise, setActiveExercise] = useState<Exercise | null>(null)
@@ -34,8 +52,12 @@ export function HomePage() {
   useEffect(() => {
     async function load() {
       try {
-        const { data } = await api.get<Exercise[]>("/api/exercises")
-        setExercises(data)
+        const [exRes, logsRes] = await Promise.all([
+          api.get<Exercise[]>("/api/exercises"),
+          api.get<ExerciseLogEntry[]>("/api/exercises/logs/mine").catch(() => ({ data: [] })),
+        ])
+        setExercises(exRes.data)
+        setLogs(logsRes.data)
       } catch {
         setError("Could not load exercises. Make sure the backend is running.")
       } finally {
@@ -134,6 +156,36 @@ export function HomePage() {
             </div>
           )}
         </section>
+
+        {logs.filter((l) => l.completed).length > 0 && (
+          <section>
+            <div className="mb-4 flex items-center gap-2">
+              <Flame className="size-5 text-emerald-500" />
+              <h2 className="text-lg font-bold text-gray-900 dark:text-white">
+                Recent completions
+              </h2>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {logs
+                .filter((l) => l.completed)
+                .slice(0, 10)
+                .map((log) => (
+                  <div
+                    key={log._id}
+                    className="flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-xs text-emerald-700 dark:border-emerald-900/50 dark:bg-emerald-950/40 dark:text-emerald-300"
+                  >
+                    <CheckCircle2 className="size-3" />
+                    <span>{log.exercise.emoji} {log.exercise.title}</span>
+                    {log.completedAt && (
+                      <span className="text-emerald-400 dark:text-emerald-500">
+                        {new Date(log.completedAt).toLocaleDateString()}
+                      </span>
+                    )}
+                  </div>
+                ))}
+            </div>
+          </section>
+        )}
 
         <section className="grid gap-4 sm:grid-cols-3">
           {([

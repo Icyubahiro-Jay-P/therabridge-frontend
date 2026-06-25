@@ -12,6 +12,7 @@ import {
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { ScrollArea } from "@/components/ui/scroll-area"
 import { useAuthStore } from "@/store/auth-store"
 import { api } from "@/lib/api"
 import { cn } from "@/lib/utils"
@@ -328,7 +329,7 @@ export function ChatPage() {
             />
           </div>
         </div>
-        <div className="flex-1 overflow-y-auto">
+        <ScrollArea className="flex-1">
           {searchQuery.length >= 2 && (
             <div className="border-b border-gray-200 dark:border-gray-700/60">
               <p className="px-3 py-1.5 text-xs font-medium tracking-wider text-gray-400 uppercase">
@@ -418,7 +419,7 @@ export function ChatPage() {
               )}
             </>
           )}
-        </div>
+        </ScrollArea>
       </aside>
 
       <div className="flex flex-1 flex-col">
@@ -452,9 +453,7 @@ export function ChatPage() {
               </Link>
             </div>
 
-            <div
-              className="flex-1 space-y-2 overflow-y-auto px-5 py-4"
-            >
+            <ScrollArea className="flex-1 px-5 py-4">
               {error && (
                 <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-900/50 dark:bg-red-950/40 dark:text-red-400">
                   <TriangleAlert className="inline size-4 shrink-0" /> {error}
@@ -543,7 +542,7 @@ export function ChatPage() {
                 })
               )}
               <div ref={messagesEndRef} />
-            </div>
+            </ScrollArea>
 
             <div className="border-t border-gray-200 px-4 py-3.5 dark:border-gray-700/60">
               <form

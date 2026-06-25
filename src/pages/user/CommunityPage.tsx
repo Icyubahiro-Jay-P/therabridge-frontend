@@ -18,6 +18,7 @@ import {
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { ScrollArea } from "@/components/ui/scroll-area"
 import { useAuthStore } from "@/store/auth-store"
 import { api } from "@/lib/api"
 import { cn } from "@/lib/utils"
@@ -349,7 +350,8 @@ function CommunitySettingsModal({
             <X className="size-5" />
           </button>
         </div>
-        <div className="max-h-[70vh] space-y-6 overflow-y-auto p-6">
+        <ScrollArea className="max-h-[70vh] p-6">
+          <div className="space-y-6">
           {error && (
             <div className="rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700 dark:border-red-900/50 dark:bg-red-950/40 dark:text-red-400">
               <TriangleAlert className="inline size-4 shrink-0" /> {error}
@@ -434,6 +436,7 @@ function CommunitySettingsModal({
             </div>
           </div>
         </div>
+        </ScrollArea>
       </div>
     </div>
   )
@@ -676,7 +679,7 @@ export function CommunityPage() {
             <KeyRound className="size-3.5" /> Join
           </Button>
         </div>
-        <div className="flex-1 overflow-y-auto">
+        <ScrollArea className="flex-1">
           {loading ? (
             <div className="flex justify-center py-8">
               <Loader2 className="size-5 animate-spin text-gray-400" />
@@ -717,7 +720,7 @@ export function CommunityPage() {
               </button>
             ))
           )}
-        </div>
+        </ScrollArea>
       </aside>
 
       <div className="flex flex-1 flex-col">
@@ -781,7 +784,7 @@ export function CommunityPage() {
               </div>
             </div>
 
-            <div className="flex-1 space-y-3 overflow-y-auto px-5 py-4">
+            <ScrollArea className="flex-1 px-5 py-4">
               {error && (
                 <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-900/50 dark:bg-red-950/40 dark:text-red-400">
                   <TriangleAlert className="inline size-4 shrink-0" /> {error}
@@ -860,7 +863,7 @@ export function CommunityPage() {
                 })
               )}
               <div ref={messagesEndRef} />
-            </div>
+            </ScrollArea>
 
             <div className="border-t border-gray-200 px-4 py-3.5 dark:border-gray-700/60">
               <form

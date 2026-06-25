@@ -5,6 +5,7 @@ import {
   Edit,
   History,
   Loader2,
+  Menu,
   MessageCircle,
   MoreVertical,
   Search,
@@ -165,6 +166,7 @@ export function ChatPage() {
   const [showHistoryFor, setShowHistoryFor] = useState<string | null>(null)
   const [menuOpenId, setMenuOpenId] = useState<string | null>(null)
   const [selectedTimestampMessage, setSelectedTimestampMessage] = useState<string | null>(null)
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false)
 
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
@@ -356,7 +358,23 @@ export function ChatPage() {
 
   return (
     <div className="flex h-full overflow-hidden">
-      <aside className="flex w-72 shrink-0 flex-col border-r border-gray-200 dark:border-gray-700/60">
+      {/* Mobile backdrop */}
+      {mobileSidebarOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-black/50 md:hidden"
+          onClick={() => setMobileSidebarOpen(false)}
+        />
+      )}
+
+      <aside
+        className={cn(
+          "flex w-72 shrink-0 flex-col border-r border-gray-200 dark:border-gray-700/60",
+          "md:relative md:flex",
+          mobileSidebarOpen
+            ? "fixed inset-y-0 left-0 z-50 bg-white dark:bg-gray-900"
+            : "hidden"
+        )}
+      >
         <div className="p-3">
           <div className="relative">
             <Search className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-gray-400" />
@@ -459,6 +477,17 @@ export function ChatPage() {
             </>
           )}
         </ScrollArea>
+
+        {/* Mobile header with close */}
+        <div className="flex items-center justify-between border-t border-gray-200 px-3 py-2 md:hidden dark:border-gray-700/60">
+          <span className="text-xs font-medium text-gray-400">Chats</span>
+          <button
+            onClick={() => setMobileSidebarOpen(false)}
+            className="flex size-7 items-center justify-center rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"
+          >
+            <X className="size-4 text-gray-500" />
+          </button>
+        </div>
       </aside>
 
       <div className="flex flex-1 flex-col">
@@ -477,19 +506,27 @@ export function ChatPage() {
           </div>
         ) : (
           <>
-            <div className="flex items-center justify-between border-b border-gray-200 px-5 py-3.5 dark:border-gray-700/60">
-              <Link
-                to={`/user/${partner.username}`}
-                className="flex items-center gap-3"
-              >
-                <Avatar user={partner} size="sm" />
-                <div>
-                  <p className="font-semibold text-gray-900 dark:text-white">
-                    {partner.firstName} {partner.lastName}
-                  </p>
-                  <p className="text-xs text-gray-400">@{partner.username}</p>
-                </div>
-              </Link>
+            <div className="flex items-center justify-between border-b border-gray-200 px-4 py-3.5 dark:border-gray-700/60">
+              <div className="flex items-center gap-2 min-w-0">
+                <button
+                  onClick={() => setMobileSidebarOpen(true)}
+                  className="flex size-8 shrink-0 items-center justify-center rounded-lg hover:bg-gray-100 md:hidden dark:hover:bg-gray-800"
+                >
+                  <Menu className="size-4 text-gray-500" />
+                </button>
+                <Link
+                  to={`/user/${partner.username}`}
+                  className="flex items-center gap-3 min-w-0"
+                >
+                  <Avatar user={partner} size="sm" />
+                  <div className="min-w-0">
+                    <p className="truncate font-semibold text-gray-900 dark:text-white">
+                      {partner.firstName} {partner.lastName}
+                    </p>
+                    <p className="truncate text-xs text-gray-400">@{partner.username}</p>
+                  </div>
+                </Link>
+              </div>
             </div>
 
             <ScrollArea className="flex-1 px-5 py-4">

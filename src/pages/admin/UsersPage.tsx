@@ -154,7 +154,7 @@ export function AdminUsersPage() {
               <div
                 key={u._id}
                 className={cn(
-                  "flex items-center gap-4 px-5 py-4 transition-colors hover:bg-gray-50 dark:hover:bg-gray-800/50",
+                  "flex flex-wrap items-center gap-3 px-4 py-4 transition-colors hover:bg-gray-50 dark:hover:bg-gray-800/50 sm:gap-4 sm:px-5",
                   u.isDisabled && "opacity-50"
                 )}
               >
@@ -164,12 +164,12 @@ export function AdminUsersPage() {
                 )}>
                   <UserIcon className="size-5" />
                 </div>
-                <div className="min-w-0 flex-1">
+                <div className="min-w-0 flex-1 basis-32">
                   <p className="text-sm font-medium text-gray-900 dark:text-white">
                     {u.firstName} {u.lastName}
                     {u.isDisabled && <span className="ml-2 text-xs text-red-500">(Disabled)</span>}
                   </p>
-                  <p className="text-xs text-gray-400">@{u.username} · {u.email}</p>
+                  <p className="truncate text-xs text-gray-400">@{u.username} · {u.email}</p>
                 </div>
 
                 <select
@@ -183,7 +183,7 @@ export function AdminUsersPage() {
                   <option value="admin">Admin</option>
                 </select>
 
-                <div className="flex items-center gap-1">
+                <div className="flex items-center gap-1 shrink-0">
                   <Button
                     variant="ghost"
                     size="xs"

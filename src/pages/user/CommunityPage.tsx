@@ -5,6 +5,7 @@ import {
   Hash,
   KeyRound,
   Loader2,
+  Menu,
   MessageCircle,
   Plus,
   Send,
@@ -461,6 +462,7 @@ export function CommunityPage() {
   const [showCreate, setShowCreate] = useState(false)
   const [showJoin, setShowJoin] = useState(false)
   const [showSettings, setShowSettings] = useState(false)
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false)
   const [selectedTimestampMessage, setSelectedTimestampMessage] = useState<
     string | null
   >(null)
@@ -661,7 +663,23 @@ export function CommunityPage() {
         />
       )}
 
-      <aside className="flex w-72 shrink-0 flex-col border-r border-gray-200 dark:border-gray-700/60">
+      {/* Mobile backdrop */}
+      {mobileSidebarOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-black/50 md:hidden"
+          onClick={() => setMobileSidebarOpen(false)}
+        ></div>
+      )}
+
+      <aside
+        className={cn(
+          "flex w-72 shrink-0 flex-col border-r border-gray-200 dark:border-gray-700/60",
+          "md:relative md:flex",
+          mobileSidebarOpen
+            ? "fixed inset-y-0 left-0 z-50 bg-white dark:bg-gray-900"
+            : "hidden"
+        )}
+      >
         <div className="flex gap-2 p-3">
           <Button
             size="sm"
@@ -721,6 +739,17 @@ export function CommunityPage() {
             ))
           )}
         </ScrollArea>
+
+        {/* Mobile header with close */}
+        <div className="flex items-center justify-between border-t border-gray-200 px-3 py-2 md:hidden dark:border-gray-700/60">
+          <span className="text-xs font-medium text-gray-400">Communities</span>
+          <button
+            onClick={() => setMobileSidebarOpen(false)}
+            className="flex size-7 items-center justify-center rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"
+          >
+            <X className="size-4 text-gray-500" />
+          </button>
+        </div>
       </aside>
 
       <div className="flex flex-1 flex-col">
@@ -738,15 +767,22 @@ export function CommunityPage() {
           </div>
         ) : (
           <>
-            <div className="flex items-center justify-between border-b border-gray-200 px-5 py-3.5 dark:border-gray-700/60">
-              <div className="flex items-center gap-3">
-                <span className="inline-flex size-8 items-center justify-center rounded-lg bg-emerald-100 dark:bg-emerald-900/40">
-                  <Hash className="size-4 text-emerald-600" />
-                </span>
-                <div>
-                  <p className="font-semibold text-gray-900 dark:text-white">
-                    {active.name}
-                  </p>
+            <div className="flex items-center justify-between border-b border-gray-200 px-4 py-3.5 dark:border-gray-700/60">
+              <div className="flex items-center gap-2 min-w-0">
+                <button
+                  onClick={() => setMobileSidebarOpen(true)}
+                  className="flex size-8 shrink-0 items-center justify-center rounded-lg hover:bg-gray-100 md:hidden dark:hover:bg-gray-800"
+                >
+                  <Menu className="size-4 text-gray-500" />
+                </button>
+                <div className="flex items-center gap-3 min-w-0">
+                  <span className="inline-flex size-8 shrink-0 items-center justify-center rounded-lg bg-emerald-100 dark:bg-emerald-900/40">
+                    <Hash className="size-4 text-emerald-600" />
+                  </span>
+                  <div className="min-w-0">
+                    <p className="truncate font-semibold text-gray-900 dark:text-white">
+                      {active.name}
+                    </p>
                   <p className="text-xs text-gray-400">
                     {active.members.length} members · Key:{" "}
                     <span className="font-mono font-semibold tracking-widest text-emerald-600 dark:text-emerald-400">
@@ -755,6 +791,7 @@ export function CommunityPage() {
                   </p>
                 </div>
               </div>
+            </div>
               <div className="flex items-center gap-1">
                 <button
                   onClick={() => setShowSettings(true)}

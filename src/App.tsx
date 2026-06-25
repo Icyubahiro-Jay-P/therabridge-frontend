@@ -8,6 +8,8 @@ import { Leaf } from "lucide-react"
 
 import { LoginPage } from "@/pages/LoginPage"
 import { SignupPage } from "@/pages/SignupPage"
+import { ForgotPasswordPage } from "@/pages/ForgotPasswordPage"
+import { ResetPasswordPage } from "@/pages/ResetPasswordPage"
 import { PublicProfilePage } from "@/pages/PublicProfilePage"
 
 import { HomePage as UserHomePage } from "@/pages/user/HomePage"
@@ -76,6 +78,9 @@ export function App() {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignupPage />} />
           </Route>
+
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
 
           <Route element={<ProtectedRoute />}>
             <Route element={<AppLayout />}>

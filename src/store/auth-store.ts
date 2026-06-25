@@ -1,5 +1,5 @@
-// src/store/auth-store.ts
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
 import {
   fetchProfile,
@@ -34,111 +34,129 @@ interface AuthState {
   updatePrivacy: (settings: Partial<PrivacySettings>) => Promise<void>;
 }
 
-export const useAuthStore = create<AuthState>((set) => ({
-  user: null,
-  isLoading: false,
-  isInitialized: false,
+export const useAuthStore = create<AuthState>()(
+  persist(
+    (set) => ({
+      user: null,
+      isLoading: false,
+      isInitialized: false,
 
-  initialize: async () => {
-    try {
-      const user = await fetchProfile();
-      set({ user, isInitialized: true });
-    } catch {
-      set({ user: null, isInitialized: true });
-    }
-  },
+      initialize: async () => {
+        const state = useAuthStore.getState();
+        if (state.user) {
+          set({ isInitialized: true });
+          try {
+            const user = await fetchProfile();
+            set({ user });
+          } catch {
+            set({ user: null });
+          }
+        } else {
+          set({ isInitialized: true });
+          try {
+            const user = await fetchProfile();
+            if (user) set({ user });
+          } catch {}
+        }
+      },
 
-  login: async (payload) => {
-    set({ isLoading: true });
-    try {
-      const { user, message } = await loginRequest(payload);
-      set({ user });
-      return message; // Success message from backend
-    } catch (error) {
-      const message = error instanceof Error ? error.message : "Login failed";
-      throw new Error(message); // This now carries real backend messages
-    } finally {
-      set({ isLoading: false });
-    }
-  },
+      login: async (payload) => {
+        set({ isLoading: true });
+        try {
+          const { user, message } = await loginRequest(payload);
+          set({ user });
+          return message;
+        } catch (error) {
+          const message = error instanceof Error ? error.message : "Login failed";
+          throw new Error(message);
+        } finally {
+          set({ isLoading: false });
+        }
+      },
 
-  register: async (payload) => {
-    set({ isLoading: true });
-    try {
-      const { user, message } = await registerRequest(payload);
-      set({ user });
-      return message;
-    } catch (error) {
-      const message = error instanceof Error ? error.message : "Registration failed";
-      throw new Error(message);
-    } finally {
-      set({ isLoading: false });
-    }
-  },
+      register: async (payload) => {
+        set({ isLoading: true });
+        try {
+          const { user, message } = await registerRequest(payload);
+          set({ user });
+          return message;
+        } catch (error) {
+          const message = error instanceof Error ? error.message : "Registration failed";
+          throw new Error(message);
+        } finally {
+          set({ isLoading: false });
+        }
+      },
 
-  logout: async () => {
-    set({ isLoading: true });
-    try {
-      await logoutRequest();
-      set({ user: null });
-    } catch (error) {
-      const message = error instanceof Error ? error.message : "Logout failed";
-      throw new Error(message);
-    } finally {
-      set({ isLoading: false });
-    }
-  },
+      logout: async () => {
+        set({ isLoading: true });
+        try {
+          await logoutRequest();
+          set({ user: null });
+        } catch (error) {
+          const message = error instanceof Error ? error.message : "Logout failed";
+          throw new Error(message);
+        } finally {
+          set({ isLoading: false });
+        }
+      },
 
-  updateProfile: async (payload) => {
-    set({ isLoading: true });
-    try {
-      const user = await updateProfileRequest(payload);
-      set({ user });
-    } catch (error) {
-      const message = error instanceof Error ? error.message : "Update failed";
-      throw new Error(message);
-    } finally {
-      set({ isLoading: false });
-    }
-  },
+      updateProfile: async (payload) => {
+        set({ isLoading: true });
+        try {
+          const user = await updateProfileRequest(payload);
+          set({ user });
+        } catch (error) {
+          const message = error instanceof Error ? error.message : "Update failed";
+          throw new Error(message);
+        } finally {
+          set({ isLoading: false });
+        }
+      },
 
-  changePassword: async (payload) => {
-    set({ isLoading: true });
-    try {
-      await changePasswordRequest(payload);
-    } catch (error) {
-      const message = error instanceof Error ? error.message : "Password change failed";
-      throw new Error(message);
-    } finally {
-      set({ isLoading: false });
-    }
-  },
+      changePassword: async (payload) => {
+        set({ isLoading: true });
+        try {
+          await changePasswordRequest(payload);
+        } catch (error) {
+          const message = error instanceof Error ? error.message : "Password change failed";
+          throw new Error(message);
+        } finally {
+          set({ isLoading: false });
+        }
+      },
 
-  uploadAvatar: async (file) => {
-    set({ isLoading: true });
-    try {
-      const user = await uploadAvatarRequest(file);
-      set({ user });
-    } catch (error) {
-      const message = error instanceof Error ? error.message : "Upload failed";
-      throw new Error(message);
-    } finally {
-      set({ isLoading: false });
-    }
-  },
+      uploadAvatar: async (file) => {
+        set({ isLoading: true });
+        try {
+          const user = await uploadAvatarRequest(file);
+          set({ user });
+        } catch (error) {
+          const message = error instanceof Error ? error.message : "Upload failed";
+          throw new Error(message);
+        } finally {
+          set({ isLoading: false });
+        }
+      },
 
-  updatePrivacy: async (settings) => {
-    set({ isLoading: true });
-    try {
-      const privacySettings = await updatePrivacyRequest(settings);
-      set((state) => ({
-        user: state.user ? { ...state.user, privacySettings } : null,
-      }));
-    } catch (error) {
-      const message = error instanceof Error ? error.message : "Update failed";
-      throw new Error(message);
-    } finally {
-      set({ isLoading: false });
+      updatePrivacy: async (settings) => {
+        set({ isLoading: true });
+        try {
+          const privacySettings = await updatePrivacyRequest(settings);
+          set((state) => ({
+            user: state.user ? { ...state.user, privacySettings } : null,
+          }));
+        } catch (error) {
+          const message = error instanceof Error ? error.message : "Update failed";
+          throw new Error(message);
+        } finally {
+          set({ isLoading: false });
+        }
+      },
+    }),
+    {
+      name: "auth-storage",
+      partialize: (state) => ({ user: state.user }),
     }
-  },
-}));
+  )
+);

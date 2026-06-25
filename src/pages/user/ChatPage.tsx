@@ -140,11 +140,6 @@ export function ChatPage() {
   >(null)
   const [error, setError] = useState<string | null>(null)
   const [showPreviews, setShowPreviews] = useState(loadMessagePreviews)
-  const [contextMenu, setContextMenu] = useState<{
-    messageId: string
-    x: number
-    y: number
-  } | null>(null)
   const [deleting, setDeleting] = useState<string | null>(null)
 
   const messagesEndRef = useRef<HTMLDivElement>(null)
@@ -271,7 +266,6 @@ export function ChatPage() {
 
   useEffect(() => {
     function handleClick() {
-      setContextMenu(null)
     }
     document.addEventListener("click", handleClick)
     return () => document.removeEventListener("click", handleClick)
@@ -309,7 +303,6 @@ export function ChatPage() {
       setError(getErrorMessage(err))
     } finally {
       setDeleting(null)
-      setContextMenu(null)
     }
   }
 
@@ -319,15 +312,9 @@ export function ChatPage() {
     setSearchResults([])
   }
 
-  function handleContextMenu(e: React.MouseEvent, messageId: string) {
-    e.preventDefault()
-    setContextMenu({ messageId, x: e.clientX, y: e.clientY })
-  }
-
   return (
     <div
       className="flex h-full overflow-hidden"
-      onClick={() => setContextMenu(null)}
     >
       <aside className="flex w-72 shrink-0 flex-col border-r border-gray-200 dark:border-gray-700/60">
         <div className="p-3">
@@ -467,7 +454,6 @@ export function ChatPage() {
 
             <div
               className="flex-1 space-y-2 overflow-y-auto px-5 py-4"
-              onClick={() => setContextMenu(null)}
             >
               {error && (
                 <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-900/50 dark:bg-red-950/40 dark:text-red-400">
@@ -499,16 +485,11 @@ export function ChatPage() {
                       )}
                     >
                       <div
-                        onContextMenu={(e) =>
-                          isMe && !isUnsent
-                            ? handleContextMenu(e, msg._id)
-                            : undefined
+                        onClick={() =>
+                          setSelectedTimestampMessage((prev) =>
+                            prev === msg._id ? null : msg._id
+                          )
                         }
-                         onClick={() =>
-                           setSelectedTimestampMessage((prev) =>
-                             prev === msg._id ? null : msg._id
-                           )
-                         }
                         className={cn(
                           "group relative max-w-[70%] rounded-2xl text-sm",
                           isMe

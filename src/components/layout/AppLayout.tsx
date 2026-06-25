@@ -22,7 +22,6 @@ import {
 
 import { Button } from "@/components/ui/button"
 import { ModeToggle } from "@/components/mode-toggle"
-import { ScrollArea } from "@/components/ui/scroll-area"
 import { useAuthStore } from "@/store/auth-store"
 import { api } from "@/lib/api"
 import { cn } from "@/lib/utils"
@@ -437,10 +436,8 @@ export function AppLayout() {
         </button>
       )}
 
-      <main className="flex flex-1 flex-col overflow-hidden">
-        <ScrollArea className="flex-1">
-          <Outlet />
-        </ScrollArea>
+      <main className="flex flex-1 flex-col overflow-y-auto">
+        <Outlet />
       </main>
 
       <LogoutModal

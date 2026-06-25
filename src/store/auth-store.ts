@@ -42,22 +42,11 @@ export const useAuthStore = create<AuthState>()(
       isInitialized: false,
 
       initialize: async () => {
-        const state = useAuthStore.getState();
-        if (state.user) {
-          set({ isInitialized: true });
-          try {
-            const user = await fetchProfile();
-            set({ user });
-          } catch {
-            set({ user: null });
-          }
-        } else {
-          set({ isInitialized: true });
-          try {
-            const user = await fetchProfile();
-            if (user) set({ user });
-          } catch {}
-        }
+        set({ isInitialized: true });
+        try {
+          const user = await fetchProfile();
+          if (user) set({ user });
+        } catch {}
       },
 
       login: async (payload) => {
@@ -156,7 +145,7 @@ export const useAuthStore = create<AuthState>()(
     }),
     {
       name: "auth-storage",
-      partialize: (state) => ({ user: state.user }),
+      partialize: (state) => ({ user: state.user, isInitialized: state.isInitialized }),
     }
   )
 );

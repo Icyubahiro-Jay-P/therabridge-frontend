@@ -1,6 +1,8 @@
+import { Link } from "react-router-dom"
 import { CheckCheck } from "lucide-react"
 import { cn } from "@/lib/utils"
 import type { CommunityMessage } from "./types"
+import { Avatar } from "./Avatar"
 import { timeAgo } from "../shared/utils"
 
 export function MessageBubble({
@@ -18,7 +20,12 @@ export function MessageBubble({
   const readCount = msg.readBy?.length ?? 0
 
   return (
-    <div className={cn("mb-2 flex flex-col", isMe ? "items-end" : "items-start")}>
+    <div className={cn("mb-2 flex", isMe ? "justify-end" : "justify-start")}>
+      {!isMe && (
+        <Link to={`/user/${msg.sender.username}`} className="mr-2 mt-1 shrink-0">
+          <Avatar user={msg.sender} size="sm" />
+        </Link>
+      )}
       <div className={cn("flex max-w-[70%] flex-col gap-0.5", isMe ? "items-end" : "items-start")}>
         {!isMe && (
           <span className="px-1 text-[11px] font-semibold text-emerald-600 dark:text-emerald-400">

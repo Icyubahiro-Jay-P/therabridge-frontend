@@ -43,7 +43,7 @@ export function MessageInput({
           placeholder={placeholder ?? "Type a message..."}
           disabled={sending}
           rows={1}
-          className="flex-1 resize-none rounded-xl border border-input bg-input/30 px-3 py-2 text-base outline-none transition-colors placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+          className="flex-1 resize-none rounded-xl border border-input bg-input/30 px-3 py-2 text-base outline-none transition-colors placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm [&::-webkit-scrollbar]:hidden [scrollbar-width:none]"
           onKeyDown={(e) => {
             if (enterToSend && e.key === "Enter" && !e.shiftKey) {
               e.preventDefault()

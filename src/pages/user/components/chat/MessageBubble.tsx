@@ -1,7 +1,9 @@
 import { useState } from "react"
+import { Link } from "react-router-dom"
 import { CheckCheck, History, MoreVertical, TriangleAlert } from "lucide-react"
 import { cn } from "@/lib/utils"
 import type { DirectMessage } from "./types"
+import { Avatar } from "./Avatar"
 import { MessageActions } from "./MessageActions"
 import { EditHistory } from "./EditHistory"
 import { EditMessageForm } from "./EditMessageForm"
@@ -58,51 +60,78 @@ export function MessageBubble({
     >
       <div
         className={cn(
-          "group flex max-w-[70%] gap-1 items-center",
-          isMe ? "flex-row-reverse justify-start" : "flex-row"
+          "group flex max-w-[70%] gap-1",
+          isMe ? "items-center flex-row-reverse justify-start" : "items-start flex-row"
         )}
       >
-        {canEdit && (
-          <button
-            onClick={() => setMenuOpenId(menuOpen ? null : msg._id)}
-            className="flex cursor-pointer size-6 shrink-0 items-center justify-center rounded-full opacity-0 transition-opacity group-hover:opacity-100 bg-black/10 dark:bg-white/10 hover:bg-black/20 dark:hover:bg-white/20"
-          >
-            <MoreVertical className="size-3.5" />
-          </button>
+        {!isMe && (
+          <Link to={`/user/${msg.sender.username}`} className="mt-1 shrink-0">
+            <Avatar user={msg.sender} size="sm" />
+          </Link>
         )}
-        <div
-          onClick={() => onToggleTimestamp(msg._id)}
-          className={cn(
-            "wrap-break-words relative cursor-pointer rounded-2xl text-sm",
-            isMe
-              ? "rounded-br-md bg-emerald-600 text-white"
-              : "rounded-bl-md bg-gray-300 text-gray-900 dark:bg-gray-800 dark:text-gray-100"
-          )}
-          style={{ maxWidth: "100%" }}
-        >
-          {isEditing ? (
-            <EditMessageForm
-              content={editingContent}
-              onChange={setEditingContent}
-              onSave={onSaveEdit}
-              onCancel={onCancelEdit}
-            />
-          ) : (
-            <>
-              <div
-                className={cn("px-3.5 pt-2.5", isUnsent && "italic opacity-60")}
+        <div className="flex min-w-0 flex-col">
+          <div className={cn("flex items-center gap-1", isMe ? "flex-row-reverse" : "flex-row")}>
+            {canEdit && (
+              <button
+                onClick={() => setMenuOpenId(menuOpen ? null : msg._id)}
+                className="flex cursor-pointer size-6 shrink-0 items-center justify-center rounded-full opacity-0 transition-opacity group-hover:opacity-100 bg-black/10 dark:bg-white/10 hover:bg-black/20 dark:hover:bg-white/20"
               >
-                <p className="wrap-break-words whitespace-pre-wrap">
-                  {isUnsent ? "Message unsent" : msg.content}
-                </p>
-              </div>
-              <div
+                <MoreVertical className="size-3.5" />
+              </button>
+            )}
+            <div
+              onClick={() => onToggleTimestamp(msg._id)}
+              className={cn(
+                "wrap-break-words relative cursor-pointer rounded-2xl text-sm",
+                isMe
+                  ? "rounded-br-md bg-emerald-600 text-white"
+                  : "rounded-bl-md bg-gray-300 text-gray-900 dark:bg-gray-800 dark:text-gray-100"
+              )}
+            >
+              {isEditing ? (
+                <EditMessageForm
+                  content={editingContent}
+                  onChange={setEditingContent}
+                  onSave={onSaveEdit}
+                  onCancel={onCancelEdit}
+                />
+              ) : (
+                <>
+                  <div
+                    className={cn("px-3.5 pt-2.5", isUnsent && "italic opacity-60")}
+                  >
+                    <p className="wrap-break-words whitespace-pre-wrap">
+                      {isUnsent ? "Message unsent" : msg.content}
+                    </p>
+                  </div>
+                  <div
+                    className={cn(
+                      "flex items-center gap-2 px-3.5 pb-2",
+                      isMe ? "justify-end" : "justify-start"
+                    )}
+                  />
+                </>
+              )}
+            </div>
+          </div>
+          {!isUnsent && showTime && (
+            <div className={cn("mt-0.5 flex items-center gap-1 text-[10px]", isMe ? "flex-row-reverse" : "flex-row")}>
+              {isMe && seen && (
+                <span className="inline-flex items-center gap-0.5 text-[11px] leading-none text-emerald-400">
+                  <CheckCheck className="size-3" />
+                </span>
+              )}
+              <span
                 className={cn(
-                  "flex items-center gap-2 px-3.5 pb-2",
-                  isMe ? "justify-end" : "justify-start"
+                  "text-[11px] leading-none",
+                  isMe
+                    ? "text-emerald-700 dark:text-emerald-600"
+                    : "text-gray-500 dark:text-gray-400"
                 )}
-              />
-            </>
+              >
+                {timeAgo(msg.createdAt)}
+              </span>
+            </div>
           )}
         </div>
       </div>
@@ -140,25 +169,6 @@ export function MessageBubble({
               </button>
             </div>
           </div>
-        </div>
-      )}
-      {!isUnsent && showTime && (
-        <div className={cn("mt-0.5 flex items-center gap-1 text-[10px]", isMe ? "flex-row-reverse" : "flex-row")}>
-          {isMe && seen && (
-            <span className="inline-flex items-center gap-0.5 text-[11px] leading-none text-emerald-400">
-              <CheckCheck className="size-3" />
-            </span>
-          )}
-          <span
-            className={cn(
-              "text-[11px] leading-none",
-              isMe
-                ? "text-emerald-700 dark:text-emerald-600"
-                : "text-gray-500 dark:text-gray-400"
-            )}
-          >
-            {timeAgo(msg.createdAt)}
-          </span>
         </div>
       )}
       {hasEdits && (

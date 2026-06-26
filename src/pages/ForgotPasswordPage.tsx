@@ -1,10 +1,9 @@
 import { useState } from "react"
-import { Link } from "react-router-dom"
-import { ArrowLeft, Leaf, Loader2, Mail, TriangleAlert } from "lucide-react"
+import { Leaf, TriangleAlert } from "lucide-react"
 
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import { api } from "@/lib/api"
+import { ForgotPasswordForm } from "@/pages/components/auth/ForgotPasswordForm"
+import { ForgotPasswordSuccess } from "@/pages/components/auth/ForgotPasswordSuccess"
 
 function getErrorMessage(err: unknown): string {
   if (err instanceof Error) return err.message
@@ -56,53 +55,14 @@ export function ForgotPasswordPage() {
           )}
 
           {sent ? (
-            <div className="mt-6 space-y-4">
-              <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-4 text-sm text-emerald-700 dark:border-emerald-900/50 dark:bg-emerald-950/40 dark:text-emerald-400">
-                <p className="font-medium">Check your inbox</p>
-                <p className="mt-1">
-                  If an account with <strong>{email}</strong> exists, you'll receive a password reset link shortly.
-                </p>
-              </div>
-              <Link
-                to="/login"
-                className="flex items-center justify-center gap-1.5 text-sm font-medium text-emerald-600 hover:text-emerald-700 dark:text-emerald-400"
-              >
-                <ArrowLeft className="size-3.5" /> Back to login
-              </Link>
-            </div>
+            <ForgotPasswordSuccess email={email} />
           ) : (
-            <form onSubmit={handleSubmit} className="mt-6 space-y-4">
-              <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Email address
-                </label>
-                <div className="relative mt-1.5">
-                  <Mail className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-gray-400" />
-                  <Input
-                    id="email"
-                    type="email"
-                    placeholder="you@example.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="pl-9"
-                    required
-                  />
-                </div>
-              </div>
-              <Button
-                type="submit"
-                disabled={sending || !email.trim()}
-                className="w-full bg-emerald-600 hover:bg-emerald-700"
-              >
-                {sending ? <Loader2 className="size-4 animate-spin" /> : "Send reset link"}
-              </Button>
-              <p className="text-center text-sm text-gray-500 dark:text-gray-400">
-                Remember your password?{" "}
-                <Link to="/login" className="font-medium text-emerald-600 hover:text-emerald-700 dark:text-emerald-400">
-                  Sign in
-                </Link>
-              </p>
-            </form>
+            <ForgotPasswordForm
+              email={email}
+              sending={sending}
+              onEmailChange={setEmail}
+              onSubmit={handleSubmit}
+            />
           )}
         </div>
       </div>

@@ -1,10 +1,11 @@
 import { useState } from "react"
-import { Link, useParams } from "react-router-dom"
-import { ArrowLeft, Key, Leaf, Loader2, Lock, TriangleAlert } from "lucide-react"
+import { useParams } from "react-router-dom"
+import { Leaf, TriangleAlert } from "lucide-react"
 
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import { api } from "@/lib/api"
+import { InvalidToken } from "@/pages/components/auth/InvalidToken"
+import { ResetPasswordForm } from "@/pages/components/auth/ResetPasswordForm"
+import { ResetPasswordSuccess } from "@/pages/components/auth/ResetPasswordSuccess"
 
 function getErrorMessage(err: unknown): string {
   if (err instanceof Error) return err.message
@@ -37,26 +38,7 @@ export function ResetPasswordPage() {
     }
   }
 
-  if (!token) {
-    return (
-      <div className="flex min-h-svh items-center justify-center bg-linear-to-br from-emerald-50 to-teal-50 p-4 dark:from-gray-950 dark:to-gray-900">
-        <div className="w-full max-w-md rounded-2xl border border-gray-200 bg-white p-8 shadow-lg dark:border-gray-700/60 dark:bg-gray-900">
-          <div className="flex flex-col items-center gap-4 text-center">
-            <span className="inline-flex size-12 items-center justify-center rounded-xl bg-red-100 dark:bg-red-900/30">
-              <TriangleAlert className="size-6 text-red-600 dark:text-red-400" />
-            </span>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Invalid link</h1>
-            <p className="text-sm text-gray-500 dark:text-gray-400">
-              This password reset link is invalid or has expired.
-            </p>
-            <Link to="/forgot-password" className="inline-flex items-center gap-1.5 text-sm font-medium text-emerald-600 hover:text-emerald-700 dark:text-emerald-400">
-              <ArrowLeft className="size-3.5" /> Request a new link
-            </Link>
-          </div>
-        </div>
-      </div>
-    )
-  }
+  if (!token) return <InvalidToken />
 
   return (
     <div className="flex min-h-svh items-center justify-center bg-linear-to-br from-emerald-50 to-teal-50 p-4 dark:from-gray-950 dark:to-gray-900">
@@ -81,63 +63,16 @@ export function ResetPasswordPage() {
           )}
 
           {done ? (
-            <div className="mt-6 space-y-4">
-              <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-4 text-sm text-emerald-700 dark:border-emerald-900/50 dark:bg-emerald-950/40 dark:text-emerald-400">
-                <p className="font-medium">Password reset successful!</p>
-                <p className="mt-1">You can now sign in with your new password.</p>
-              </div>
-              <Link
-                to="/login"
-                className="flex items-center justify-center gap-1.5 text-sm font-medium text-emerald-600 hover:text-emerald-700 dark:text-emerald-400"
-              >
-                <ArrowLeft className="size-3.5" /> Back to login
-              </Link>
-            </div>
+            <ResetPasswordSuccess />
           ) : (
-            <form onSubmit={handleSubmit} className="mt-6 space-y-4">
-              <div>
-                <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                  New password
-                </label>
-                <div className="relative mt-1.5">
-                  <Lock className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-gray-400" />
-                  <Input
-                    id="password"
-                    type="password"
-                    placeholder="Min. 8 characters"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="pl-9"
-                    required
-                    minLength={8}
-                  />
-                </div>
-              </div>
-              <div>
-                <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Confirm new password
-                </label>
-                <div className="relative mt-1.5">
-                  <Key className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-gray-400" />
-                  <Input
-                    id="confirmPassword"
-                    type="password"
-                    placeholder="Re-enter your password"
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    className="pl-9"
-                    required
-                  />
-                </div>
-              </div>
-              <Button
-                type="submit"
-                disabled={resetting || !password || !confirmPassword}
-                className="w-full bg-emerald-600 hover:bg-emerald-700"
-              >
-                {resetting ? <Loader2 className="size-4 animate-spin" /> : "Reset password"}
-              </Button>
-            </form>
+            <ResetPasswordForm
+              password={password}
+              confirmPassword={confirmPassword}
+              resetting={resetting}
+              onPasswordChange={setPassword}
+              onConfirmChange={setConfirmPassword}
+              onSubmit={handleSubmit}
+            />
           )}
         </div>
       </div>

@@ -1,29 +1,13 @@
 import { useEffect, useState } from "react"
-import { Link } from "react-router-dom"
-import {
-  ChevronRight,
-  Loader2,
-  Shield,
-  Users,
-  Hash,
-  AlertTriangle,
-} from "lucide-react"
+import { Loader2, Shield, Users, Hash, AlertTriangle } from "lucide-react"
 
 import { useAuthStore } from "@/store/auth-store"
 import { api } from "@/lib/api"
-import { cn } from "@/lib/utils"
-
-interface Stats {
-  users: number
-  therapists: number
-  communities: number
-  activeCrisis: number
-  totalNotifications: number
-}
+import { AdminStatCard } from "./components/AdminStatCard"
 
 export function AdminDashboardPage() {
   const user = useAuthStore((state) => state.user)
-  const [stats, setStats] = useState<Stats>({ users: 0, therapists: 0, communities: 0, activeCrisis: 0, totalNotifications: 0 })
+  const [stats, setStats] = useState({ users: 0, therapists: 0, communities: 0, activeCrisis: 0, totalNotifications: 0 })
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -74,26 +58,16 @@ export function AdminDashboardPage() {
       </div>
 
       <div className="grid gap-4 sm:grid-cols-4">
-        {cards.map(({ label, value, icon: Icon, href, color }) => (
-          <Link
-            key={label}
-            to={href}
-            className={cn(
-              "flex items-center gap-4 rounded-2xl border border-gray-200 bg-white p-5 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md dark:border-gray-700/60 dark:bg-gray-900",
-              label === "Active Crisis" && value > 0 && "border-red-200 dark:border-red-900/50"
-            )}
-          >
-            <span className={cn("flex size-12 items-center justify-center rounded-xl text-white", color)}>
-              <Icon className="size-6" />
-            </span>
-            <div>
-              <p className={cn("text-2xl font-bold", label === "Active Crisis" && value > 0 ? "text-red-600 dark:text-red-400" : "text-gray-900 dark:text-white")}>
-                {value}
-              </p>
-              <p className="text-sm text-gray-500 dark:text-gray-400">{label}</p>
-            </div>
-            <ChevronRight className="ml-auto size-4 text-gray-300" />
-          </Link>
+        {cards.map((card) => (
+          <AdminStatCard
+            key={card.label}
+            label={card.label}
+            value={card.value}
+            icon={card.icon}
+            href={card.href}
+            color={card.color}
+            isAlert={card.label === "Active Crisis"}
+          />
         ))}
       </div>
     </div>

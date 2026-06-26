@@ -177,6 +177,12 @@ html.calm-mode.dark {
   --muted-foreground: oklch(0.7 0.005 120);
 }
 
+/* Word wrapping for long message content */
+.wrap-break-words {
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
 /* Screenshot protection */
 .screenshot-protected {
   user-select: none;

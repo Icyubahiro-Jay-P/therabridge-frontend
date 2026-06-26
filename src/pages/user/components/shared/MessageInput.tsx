@@ -1,6 +1,6 @@
+import { useRef, useEffect } from "react"
 import { Loader2, Send } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 
 export function MessageInput({
   value,
@@ -17,6 +17,16 @@ export function MessageInput({
   placeholder?: string
   enterToSend?: boolean
 }) {
+  const textareaRef = useRef<HTMLTextAreaElement>(null)
+
+  useEffect(() => {
+    const el = textareaRef.current
+    if (el) {
+      el.style.height = "auto"
+      el.style.height = `${Math.min(el.scrollHeight, 160)}px`
+    }
+  }, [value])
+
   return (
     <div className="border-t border-gray-200 px-4 py-3.5 dark:border-gray-700/60">
       <form
@@ -24,14 +34,16 @@ export function MessageInput({
           e.preventDefault()
           onSend()
         }}
-        className="flex items-center gap-2"
+        className="flex items-end gap-2"
       >
-        <Input
+        <textarea
+          ref={textareaRef}
           value={value}
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder ?? "Type a message..."}
           disabled={sending}
-          className="flex-1 rounded-xl"
+          rows={1}
+          className="flex-1 resize-none rounded-xl border border-input bg-input/30 px-3 py-2 text-base outline-none transition-colors placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
           onKeyDown={(e) => {
             if (enterToSend && e.key === "Enter" && !e.shiftKey) {
               e.preventDefault()
@@ -46,7 +58,7 @@ export function MessageInput({
         <Button
           type="submit"
           disabled={sending || !value.trim()}
-          className="shrink-0 bg-emerald-600 hover:bg-emerald-700"
+          className="mb-0.5 shrink-0 bg-emerald-600 hover:bg-emerald-700"
           size="icon"
         >
           {sending ? (

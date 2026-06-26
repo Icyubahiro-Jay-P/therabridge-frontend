@@ -30,7 +30,7 @@ export function ChatMessage({ message }: { message: ChatMessageData }) {
             Therry
           </p>
         )}
-        <p className="whitespace-pre-wrap text-sm leading-relaxed">{message.content}</p>
+        <p className="wrap-break-words whitespace-pre-wrap text-sm leading-relaxed">{message.content}</p>
         <p className={cn(
           "mt-1.5 text-[10px]",
           message.role === "user" ? "text-emerald-200" : "text-gray-400"

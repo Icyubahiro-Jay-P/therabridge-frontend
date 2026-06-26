@@ -65,7 +65,7 @@ export function MessageBubble({
         {canEdit && (
           <button
             onClick={() => setMenuOpenId(menuOpen ? null : msg._id)}
-            className="flex cursor-pointer size-6 items-center justify-center rounded-full opacity-0 transition-opacity group-hover:opacity-100 bg-black/10 dark:bg-white/10 hover:bg-black/20 dark:hover:bg-white/20"
+            className="flex cursor-pointer size-6 shrink-0 items-center justify-center rounded-full opacity-0 transition-opacity group-hover:opacity-100 bg-black/10 dark:bg-white/10 hover:bg-black/20 dark:hover:bg-white/20"
           >
             <MoreVertical className="size-3.5" />
           </button>

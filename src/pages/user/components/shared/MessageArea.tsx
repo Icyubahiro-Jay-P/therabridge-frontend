@@ -27,7 +27,7 @@ export function MessageArea({
   }, [messages, scrollToBottom])
 
   return (
-    <ScrollArea className="flex-1 px-5 py-4">
+    <ScrollArea className="min-h-0 flex-1 px-5 py-4">
       {error && (
         <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-900/50 dark:bg-red-950/40 dark:text-red-400">
           <TriangleAlert className="inline size-4 shrink-0" /> {error}

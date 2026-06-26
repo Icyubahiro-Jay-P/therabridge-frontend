@@ -29,7 +29,6 @@ export function ChatView({
   sending,
   onSend,
   enterToSend,
-  messagesEndRef,
 }: {
   partner: ChatUser
   onToggleSidebar: () => void
@@ -56,7 +55,6 @@ export function ChatView({
   sending: boolean
   onSend: () => void
   enterToSend: boolean
-  messagesEndRef: React.RefObject<HTMLDivElement | null>
 }) {
   return (
     <>
@@ -80,7 +78,6 @@ export function ChatView({
         showHistoryFor={showHistoryFor}
         setShowHistoryFor={setShowHistoryFor}
         deleting={deleting}
-        messagesEndRef={messagesEndRef}
       />
       <MessageInput
         partnerName={partner.firstName}

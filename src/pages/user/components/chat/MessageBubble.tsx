@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { CheckCheck, History, MoreVertical, TriangleAlert, X } from "lucide-react"
+import { CheckCheck, History, MoreVertical, TriangleAlert } from "lucide-react"
 import { cn } from "@/lib/utils"
 import type { DirectMessage } from "./types"
 import { MessageActions } from "./MessageActions"

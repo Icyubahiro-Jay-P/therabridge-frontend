@@ -83,18 +83,6 @@ export function CommunityPage() {
               currentUserId={c.currentUser?.id}
               onToggleTimestamp={c.toggleTimestamp}
               selectedTimestampMessage={c.selectedTimestampMessage}
-              editingId={c.editingId}
-              editingContent={c.editingContent}
-              setEditingContent={c.setEditingContent}
-              onStartEdit={c.startEdit}
-              onSaveEdit={c.handleSaveEdit}
-              onCancelEdit={c.cancelEdit}
-              onUnsend={c.handleUnsend}
-              menuOpenId={c.menuOpenId}
-              setMenuOpenId={c.setMenuOpenId}
-              showHistoryFor={c.showHistoryFor}
-              setShowHistoryFor={c.setShowHistoryFor}
-              deleting={c.deleting}
             />
             <MessageInput
               value={c.newMessage}

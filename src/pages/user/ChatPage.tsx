@@ -52,7 +52,6 @@ export function ChatPage() {
             setMenuOpenId={c.setMenuOpenId}
             onToggleTimestamp={c.toggleTimestamp}
             selectedTimestampMessage={c.selectedTimestampMessage}
-            setMenuOpenId={c.setMenuOpenId}
             showHistoryFor={c.showHistoryFor}
             setShowHistoryFor={c.setShowHistoryFor}
             deleting={c.deleting}
@@ -61,7 +60,6 @@ export function ChatPage() {
             sending={c.sending}
             onSend={c.sendMessage}
             enterToSend={c.enterToSend}
-            messagesEndRef={c.messagesEndRef}
           />
         )}
       </div>

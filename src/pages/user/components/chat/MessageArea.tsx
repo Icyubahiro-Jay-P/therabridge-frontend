@@ -21,7 +21,6 @@ export function MessageArea({
   showHistoryFor,
   setShowHistoryFor,
   deleting,
-  messagesEndRef,
 }: {
   error: string | null
   loadingMessages: boolean
@@ -41,7 +40,6 @@ export function MessageArea({
   showHistoryFor: string | null
   setShowHistoryFor: (id: string | null) => void
   deleting: string | null
-  messagesEndRef: React.RefObject<HTMLDivElement | null>
 }) {
   return (
     <SharedMessageArea

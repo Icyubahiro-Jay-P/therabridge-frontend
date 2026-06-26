@@ -1,4 +1,4 @@
-import type { ChatUser } from "../chat/types"
+import type { ChatUser, EditEntry } from "../chat/types"
 
 export interface CommunityMessage {
   _id: string
@@ -6,6 +6,10 @@ export interface CommunityMessage {
   content: string
   createdAt: string
   readBy: string[]
+  unsent?: boolean
+  edited?: boolean
+  editCount?: number
+  editHistory?: EditEntry[]
 }
 
 export interface Community {

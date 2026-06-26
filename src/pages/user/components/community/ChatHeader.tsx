@@ -49,9 +49,6 @@ export function ChatHeader({
         >
           <Settings className="size-4" />
         </button>
-        <div className="text-xs text-gray-400">
-          Tap a message to show its time.
-        </div>
         <button
           onClick={onToggleScreenshot}
           className={cn(

@@ -5,10 +5,18 @@ export function getErrorMessage(err: unknown): string {
 
 export function timeAgo(dateString: string) {
   const date = new Date(dateString)
-  const diff = (Date.now() - date.getTime()) / 1000
-  if (diff < 60) return "just now"
-  if (diff < 3600) return `${Math.floor(diff / 60)}m ago`
-  if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`
+  const now = Date.now()
+  const diffMs = now - date.getTime()
+  const diffSec = diffMs / 1000
+  if (diffSec < 60) return "just now"
+  if (diffSec < 3600) return `${Math.floor(diffSec / 60)}m ago`
+  if (diffSec < 86400) return `${Math.floor(diffSec / 3600)}h ago`
+
+  const days = Math.floor(diffSec / 86400)
+  if (days === 1) return "yesterday"
+  if (days < 7) return `${days}d ago`
+  if (days < 14) return "last week"
+  if (days < 30) return `${Math.floor(days / 7)} weeks ago`
   return date.toLocaleDateString()
 }
 

@@ -7,15 +7,39 @@ export function MessageArea({
   loadingMessages,
   messages,
   currentUserId,
-  selectedTimestampMessage,
   onToggleTimestamp,
+  selectedTimestampMessage,
+  editingId,
+  editingContent,
+  setEditingContent,
+  onStartEdit,
+  onSaveEdit,
+  onCancelEdit,
+  onUnsend,
+  menuOpenId,
+  setMenuOpenId,
+  showHistoryFor,
+  setShowHistoryFor,
+  deleting,
 }: {
   error: string | null
   loadingMessages: boolean
   messages: CommunityMessage[]
   currentUserId: string | undefined
-  selectedTimestampMessage: string | null
   onToggleTimestamp: (id: string) => void
+  selectedTimestampMessage: string | null
+  editingId: string | null
+  editingContent: string
+  setEditingContent: (v: string) => void
+  onStartEdit: (msg: CommunityMessage) => void
+  onSaveEdit: () => void
+  onCancelEdit: () => void
+  onUnsend: (id: string) => void
+  menuOpenId: string | null
+  setMenuOpenId: (id: string | null) => void
+  showHistoryFor: string | null
+  setShowHistoryFor: (id: string | null) => void
+  deleting: string | null
 }) {
   return (
     <SharedMessageArea
@@ -29,8 +53,20 @@ export function MessageArea({
             key={m._id}
             msg={m}
             isMe={m.sender._id === (currentUserId ?? "")}
-            selectedTimestampMessage={selectedTimestampMessage}
             onToggleTimestamp={onToggleTimestamp}
+            selectedTimestampMessage={selectedTimestampMessage}
+            editingId={editingId}
+            editingContent={editingContent}
+            setEditingContent={setEditingContent}
+            onStartEdit={onStartEdit}
+            onSaveEdit={onSaveEdit}
+            onCancelEdit={onCancelEdit}
+            onUnsend={onUnsend}
+            menuOpenId={menuOpenId}
+            setMenuOpenId={setMenuOpenId}
+            showHistoryFor={showHistoryFor}
+            setShowHistoryFor={setShowHistoryFor}
+            deleting={deleting}
           />
         )
       }}

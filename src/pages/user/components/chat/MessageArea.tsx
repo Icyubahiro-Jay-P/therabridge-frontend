@@ -14,10 +14,10 @@ export function MessageArea({
   onSaveEdit,
   onCancelEdit,
   onUnsend,
-  onToggleTimestamp,
-  selectedTimestampMessage,
   menuOpenId,
   setMenuOpenId,
+  onToggleTimestamp,
+  selectedTimestampMessage,
   showHistoryFor,
   setShowHistoryFor,
   deleting,
@@ -34,10 +34,10 @@ export function MessageArea({
   onSaveEdit: () => void
   onCancelEdit: () => void
   onUnsend: (id: string) => void
-  onToggleTimestamp: (id: string) => void
-  selectedTimestampMessage: string | null
   menuOpenId: string | null
   setMenuOpenId: (id: string | null) => void
+  onToggleTimestamp: (id: string) => void
+  selectedTimestampMessage: string | null
   showHistoryFor: string | null
   setShowHistoryFor: (id: string | null) => void
   deleting: string | null
@@ -63,10 +63,10 @@ export function MessageArea({
             onSaveEdit={onSaveEdit}
             onCancelEdit={onCancelEdit}
             onUnsend={onUnsend}
-            onToggleTimestamp={onToggleTimestamp}
-            selectedTimestampMessage={selectedTimestampMessage}
             menuOpenId={menuOpenId}
             setMenuOpenId={setMenuOpenId}
+            onToggleTimestamp={onToggleTimestamp}
+            selectedTimestampMessage={selectedTimestampMessage}
             showHistoryFor={showHistoryFor}
             setShowHistoryFor={setShowHistoryFor}
             deleting={deleting}

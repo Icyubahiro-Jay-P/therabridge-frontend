@@ -17,10 +17,10 @@ export function ChatView({
   onSaveEdit,
   onCancelEdit,
   onUnsend,
-  onToggleTimestamp,
-  selectedTimestampMessage,
   menuOpenId,
   setMenuOpenId,
+  onToggleTimestamp,
+  selectedTimestampMessage,
   showHistoryFor,
   setShowHistoryFor,
   deleting,
@@ -44,10 +44,10 @@ export function ChatView({
   onSaveEdit: () => void
   onCancelEdit: () => void
   onUnsend: (id: string) => void
-  onToggleTimestamp: (id: string) => void
-  selectedTimestampMessage: string | null
   menuOpenId: string | null
   setMenuOpenId: (id: string | null) => void
+  onToggleTimestamp: (id: string) => void
+  selectedTimestampMessage: string | null
   showHistoryFor: string | null
   setShowHistoryFor: (id: string | null) => void
   deleting: string | null
@@ -73,10 +73,10 @@ export function ChatView({
         onSaveEdit={onSaveEdit}
         onCancelEdit={onCancelEdit}
         onUnsend={onUnsend}
-        onToggleTimestamp={onToggleTimestamp}
-        selectedTimestampMessage={selectedTimestampMessage}
         menuOpenId={menuOpenId}
         setMenuOpenId={setMenuOpenId}
+        onToggleTimestamp={onToggleTimestamp}
+        selectedTimestampMessage={selectedTimestampMessage}
         showHistoryFor={showHistoryFor}
         setShowHistoryFor={setShowHistoryFor}
         deleting={deleting}

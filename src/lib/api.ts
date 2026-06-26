@@ -1,4 +1,3 @@
-// src/lib/api.ts
 import axios from "axios";
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
@@ -9,27 +8,53 @@ export const api = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
-  withCredentials: true, // Important for cookies/sessions if your backend uses them
+  withCredentials: true,
 });
 
-// Request interceptor (optional but nice)
-api.interceptors.request.use(
-  (config) => {
-    // You can add auth token here later if needed
-    return config;
-  },
-  (error) => Promise.reject(error)
-);
+export class AuthError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "AuthError";
+  }
+}
 
-// Response interceptor for better error messages
+export class NetworkError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "NetworkError";
+  }
+}
+
+export class ValidationError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "ValidationError";
+  }
+}
+
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    const errorMessage =
+    if (!error.response) {
+      return Promise.reject(
+        new NetworkError("Network error. Check your connection.")
+      );
+    }
+
+    const status = error.response.status;
+    const serverMessage =
       error.response?.data?.message ||
       error.response?.data?.error ||
       error.message ||
       "Something went wrong";
-    return Promise.reject(new Error(errorMessage));
+
+    if (status === 401) {
+      return Promise.reject(new AuthError(serverMessage));
+    }
+    if (status === 400 || status === 409) {
+      return Promise.reject(new ValidationError(serverMessage));
+    }
+
+    return Promise.reject(new Error(serverMessage));
   }
 );

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, useCallback } from "react"
 import { Loader2, TriangleAlert } from "lucide-react"
 
 import { api } from "@/lib/api"
@@ -14,6 +14,7 @@ export function NotificationsPage() {
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState<string | null>(null)
   const [deletingId, setDeletingId] = useState<string | null>(null)
+  const [confirmDeleteAll, setConfirmDeleteAll] = useState(false)
 
   useEffect(() => {
     async function load() {
@@ -26,6 +27,12 @@ export function NotificationsPage() {
     }
     void load()
   }, [])
+
+  useEffect(() => {
+    if (!success) return
+    const timer = setTimeout(() => setSuccess(null), 4000)
+    return () => clearTimeout(timer)
+  }, [success])
 
   async function markAsRead(id: string) {
     try {
@@ -47,6 +54,7 @@ export function NotificationsPage() {
     try {
       await api.delete(`/api/notifications/${id}`)
       setNotifications((prev) => prev.filter((n) => n._id !== id))
+      setSuccess("Notification deleted")
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to delete")
     } finally { setDeletingId(null) }
@@ -60,15 +68,38 @@ export function NotificationsPage() {
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to delete")
     }
+    setConfirmDeleteAll(false)
   }
 
   const unreadCount = notifications.filter((n) => !n.read).length
 
   return (
     <div className="mx-auto max-w-2xl space-y-6 p-6">
-      <NotificationsHeader unreadCount={unreadCount} totalCount={notifications.length} onMarkAllRead={markAllAsRead} onDeleteAll={deleteAll} />
-      {success && <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700 dark:border-emerald-900/50 dark:bg-emerald-950/40 dark:text-emerald-300">{success}</div>}
-      {error && <div className="flex items-center gap-2 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-900/50 dark:bg-red-950/40 dark:text-red-400"><TriangleAlert className="size-4 shrink-0" /> {error}</div>}
+      <NotificationsHeader
+        unreadCount={unreadCount}
+        totalCount={notifications.length}
+        onMarkAllRead={markAllAsRead}
+        onDeleteAll={() => setConfirmDeleteAll(true)}
+      />
+      {success && (
+        <div className="flex items-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700 dark:border-emerald-900/50 dark:bg-emerald-950/40 dark:text-emerald-300">
+          {success}
+        </div>
+      )}
+      {error && (
+        <div className="flex items-center gap-2 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-900/50 dark:bg-red-950/40 dark:text-red-400">
+          <TriangleAlert className="size-4 shrink-0" /> {error}
+        </div>
+      )}
+      {confirmDeleteAll && (
+        <div className="flex items-center justify-between rounded-xl border border-red-200 bg-red-50 px-4 py-3 dark:border-red-900/50 dark:bg-red-950/30">
+          <span className="text-sm text-red-700 dark:text-red-400">Delete all notifications?</span>
+          <div className="flex gap-2">
+            <button onClick={() => setConfirmDeleteAll(false)} className="rounded-lg px-3 py-1 text-sm text-gray-600 hover:bg-gray-200 dark:text-gray-400 dark:hover:bg-gray-800">Cancel</button>
+            <button onClick={deleteAll} className="rounded-lg bg-red-600 px-3 py-1 text-sm text-white hover:bg-red-700">Delete</button>
+          </div>
+        </div>
+      )}
       {loading ? (
         <div className="flex justify-center py-16"><Loader2 className="size-6 animate-spin text-gray-400" /></div>
       ) : notifications.length === 0 ? (

@@ -23,8 +23,9 @@ export function useProfileState() {
   const [passwordMessage, setPasswordMessage] = useState("")
   const [passwordError, setPasswordError] = useState("")
 
+  const API_BASE_URL = import.meta.env.VITE_API_URL || ""
   const avatarUrl = user?.avatar
-    ? user.avatar.startsWith("http") ? user.avatar : `http://localhost:5000${user.avatar}`
+    ? user.avatar.startsWith("http") ? user.avatar : `${API_BASE_URL}${user.avatar}`
     : ""
 
   useEffect(() => {

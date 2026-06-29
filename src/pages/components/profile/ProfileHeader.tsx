@@ -2,6 +2,8 @@ import { User as UserIcon } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import type { PublicProfile } from "@/types/user"
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || ""
+
 function getInitials(firstName?: string | null, lastName?: string | null) {
   if (!firstName && !lastName) return "?"
   return `${(firstName || "?")[0]}${(lastName || "")[0] || ""}`.toUpperCase()
@@ -17,7 +19,7 @@ export function ProfileHeader({ profile }: { profile: PublicProfile }) {
               profile.avatar
                 ? profile.avatar.startsWith("http")
                   ? profile.avatar
-                  : `http://localhost:5000${profile.avatar}`
+                  : `${API_BASE_URL}${profile.avatar}`
                 : undefined
             }
           />

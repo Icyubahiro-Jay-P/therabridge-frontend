@@ -1,4 +1,4 @@
-# Therabridge — Frontend
+# Therabridge Frontend
 
 React 19 + TypeScript SPA for Therabridge, a mental wellness platform.
 

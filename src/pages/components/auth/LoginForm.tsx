@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom"
 import { Eye, EyeOff, Loader2, Lock, Mail, TriangleAlert, CircleCheck } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -52,7 +53,10 @@ export function LoginForm({
       </div>
 
       <div className="space-y-1.5">
-        <Label htmlFor="password" className="text-sm font-medium">Password</Label>
+        <div className="flex items-center justify-between">
+          <Label htmlFor="password" className="text-sm font-medium">Password</Label>
+          <Link to="/forgot-password" className="text-xs text-emerald-600 hover:underline dark:text-emerald-400" tabIndex={-1}>Forgot password?</Link>
+        </div>
         <div className="relative">
           <Lock className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-gray-400" />
           <Input

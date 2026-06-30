@@ -1,6 +1,21 @@
 import axios from "axios";
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+const AUTH_TOKEN_KEY = "therabridge_auth_token";
+
+export function setAuthToken(token: string | null) {
+  if (typeof window === "undefined") return;
+  if (token) {
+    localStorage.setItem(AUTH_TOKEN_KEY, token);
+  } else {
+    localStorage.removeItem(AUTH_TOKEN_KEY);
+  }
+}
+
+export function getAuthToken(): string | null {
+  if (typeof window === "undefined") return null;
+  return localStorage.getItem(AUTH_TOKEN_KEY);
+}
 
 export const api = axios.create({
   baseURL: API_BASE_URL,
@@ -9,6 +24,14 @@ export const api = axios.create({
     "Content-Type": "application/json",
   },
   withCredentials: true,
+});
+
+api.interceptors.request.use((config) => {
+  const token = getAuthToken();
+  if (token && config && config.headers) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
 });
 
 export class AuthError extends Error {

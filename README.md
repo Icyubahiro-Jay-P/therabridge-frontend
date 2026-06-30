@@ -7,7 +7,7 @@ React 19 + TypeScript SPA for Therabridge, a mental wellness platform.
 - **React 19** + **TypeScript 6**
 - **Vite 8** — Build tool
 - **React Router 7** — Client routing
-- **Zustand 5** — State management (auth, global)
+- **Zustand 5** — State management (auth, global, etc...)
 - **Axios** — HTTP client with interceptors
 - **Tailwind CSS 4** — Utility-first styling
 - **Radix UI** + **Shadcn/ui** — Headless primitives

@@ -25,10 +25,14 @@ export function TherapistsPage() {
   useEffect(() => {
     async function load() {
       try {
-        const { data } = await api.get<Therapist[]>("/api/users/therapists")
-        setTherapists(data)
+        const { data } = await api.get<{ data: Therapist[] }>(
+          "/api/users/therapists"
+        )
+        setTherapists(data.data)
       } catch (err) {
-        setError(err instanceof Error ? err.message : "Failed to load therapists")
+        setError(
+          err instanceof Error ? err.message : "Failed to load therapists"
+        )
       } finally {
         setLoading(false)
       }
@@ -56,7 +60,10 @@ export function TherapistsPage() {
         </p>
       </div>
 
-      <TherapistSearchFilters searchQuery={searchQuery} onSearchChange={setSearchQuery} />
+      <TherapistSearchFilters
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+      />
 
       {loading ? (
         <div className="flex justify-center py-16">

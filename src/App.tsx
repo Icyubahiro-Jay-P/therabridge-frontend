@@ -1,4 +1,4 @@
-import { useEffect } from "react"
+import { lazy, Suspense, useEffect } from "react"
 import { BrowserRouter, Route, Routes } from "react-router-dom"
 
 import { GuestRoute, ProtectedRoute } from "@/components/auth/ProtectedRoute"
@@ -7,30 +7,98 @@ import { useAuthStore } from "@/store/auth-store"
 import { api } from "@/lib/api"
 import { Leaf } from "lucide-react"
 
-import { LoginPage } from "@/pages/LoginPage"
-import { SignupPage } from "@/pages/SignupPage"
-import { ForgotPasswordPage } from "@/pages/ForgotPasswordPage"
-import { ResetPasswordPage } from "@/pages/ResetPasswordPage"
-import { PublicProfilePage } from "@/pages/PublicProfilePage"
-import { NotFoundPage } from "@/pages/NotFoundPage"
+const LoginPage = lazy(() =>
+  import("@/pages/LoginPage").then((mod) => ({ default: mod.LoginPage }))
+)
+const SignupPage = lazy(() =>
+  import("@/pages/SignupPage").then((mod) => ({ default: mod.SignupPage }))
+)
+const ForgotPasswordPage = lazy(() =>
+  import("@/pages/ForgotPasswordPage").then((mod) => ({
+    default: mod.ForgotPasswordPage,
+  }))
+)
+const ResetPasswordPage = lazy(() =>
+  import("@/pages/ResetPasswordPage").then((mod) => ({
+    default: mod.ResetPasswordPage,
+  }))
+)
+const PublicProfilePage = lazy(() =>
+  import("@/pages/PublicProfilePage").then((mod) => ({
+    default: mod.PublicProfilePage,
+  }))
+)
+const NotFoundPage = lazy(() =>
+  import("@/pages/NotFoundPage").then((mod) => ({ default: mod.NotFoundPage }))
+)
 
-import { HomePage as UserHomePage } from "@/pages/user/HomePage"
-import { ChatPage as UserChatPage } from "@/pages/user/ChatPage"
-import { CommunityPage as UserCommunityPage } from "@/pages/user/CommunityPage"
-import { TherapistsPage as UserTherapistsPage } from "@/pages/user/TherapistsPage"
-import { SettingsPage as UserSettingsPage } from "@/pages/user/SettingsPage"
-import { ProfilePage as UserProfilePage } from "@/pages/user/ProfilePage"
-import { TherryPage as UserTherryPage } from "@/pages/user/TherryPage"
-import { NotificationsPage as UserNotificationsPage } from "@/pages/user/NotificationsPage"
-import { MoodPage as UserMoodPage } from "@/pages/user/MoodPage"
-import { CrisisPage as UserCrisisPage } from "@/pages/user/CrisisPage"
+const UserHomePage = lazy(() =>
+  import("@/pages/user/HomePage").then((mod) => ({ default: mod.HomePage }))
+)
+const UserChatPage = lazy(() =>
+  import("@/pages/user/ChatPage").then((mod) => ({ default: mod.ChatPage }))
+)
+const UserCommunityPage = lazy(() =>
+  import("@/pages/user/CommunityPage").then((mod) => ({
+    default: mod.CommunityPage,
+  }))
+)
+const UserTherapistsPage = lazy(() =>
+  import("@/pages/user/TherapistsPage").then((mod) => ({
+    default: mod.TherapistsPage,
+  }))
+)
+const UserSettingsPage = lazy(() =>
+  import("@/pages/user/SettingsPage").then((mod) => ({
+    default: mod.SettingsPage,
+  }))
+)
+const UserProfilePage = lazy(() =>
+  import("@/pages/user/ProfilePage").then((mod) => ({
+    default: mod.ProfilePage,
+  }))
+)
+const UserTherryPage = lazy(() =>
+  import("@/pages/user/TherryPage").then((mod) => ({ default: mod.TherryPage }))
+)
+const UserNotificationsPage = lazy(() =>
+  import("@/pages/user/NotificationsPage").then((mod) => ({
+    default: mod.NotificationsPage,
+  }))
+)
+const UserMoodPage = lazy(() =>
+  import("@/pages/user/MoodPage").then((mod) => ({ default: mod.MoodPage }))
+)
+const UserCrisisPage = lazy(() =>
+  import("@/pages/user/CrisisPage").then((mod) => ({ default: mod.CrisisPage }))
+)
 
-import { AdminDashboardPage } from "@/pages/admin/DashboardPage"
-import { AdminUsersPage } from "@/pages/admin/UsersPage"
-import { AdminCommunitiesPage } from "@/pages/admin/CommunitiesPage"
+const AdminDashboardPage = lazy(() =>
+  import("@/pages/admin/DashboardPage").then((mod) => ({
+    default: mod.AdminDashboardPage,
+  }))
+)
+const AdminUsersPage = lazy(() =>
+  import("@/pages/admin/UsersPage").then((mod) => ({
+    default: mod.AdminUsersPage,
+  }))
+)
+const AdminCommunitiesPage = lazy(() =>
+  import("@/pages/admin/CommunitiesPage").then((mod) => ({
+    default: mod.AdminCommunitiesPage,
+  }))
+)
 
-import { TherapistDashboardPage } from "@/pages/therapist/DashboardPage"
-import { TherapistClientsPage } from "@/pages/therapist/ClientsPage"
+const TherapistDashboardPage = lazy(() =>
+  import("@/pages/therapist/DashboardPage").then((mod) => ({
+    default: mod.TherapistDashboardPage,
+  }))
+)
+const TherapistClientsPage = lazy(() =>
+  import("@/pages/therapist/ClientsPage").then((mod) => ({
+    default: mod.TherapistClientsPage,
+  }))
+)
 
 function RoleRoute({
   userPage: UserPage,
@@ -86,53 +154,70 @@ function AuthInitializer({ children }: { children: React.ReactNode }) {
   return children
 }
 
+const PageFallback = () => (
+  <div className="flex min-h-svh items-center justify-center bg-slate-50 text-slate-600 dark:bg-slate-950 dark:text-slate-200">
+    Loading content...
+  </div>
+)
+
 export function App() {
   return (
     <BrowserRouter>
       <AuthInitializer>
-        <Routes>
-          <Route element={<GuestRoute />}>
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/signup" element={<SignupPage />} />
-          </Route>
-
-          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-          <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
-
-          <Route element={<ProtectedRoute />}>
-            <Route element={<AppLayout />}>
-              <Route
-                path="/"
-                element={
-                  <RoleRoute
-                    userPage={UserHomePage}
-                    adminPage={AdminDashboardPage}
-                    therapistPage={TherapistDashboardPage}
-                  />
-                }
-              />
-              <Route path="/chat" element={<UserChatPage />} />
-              <Route path="/chat/:username" element={<UserChatPage />} />
-              <Route path="/community" element={<UserCommunityPage />} />
-              <Route path="/community/:inviteKey" element={<UserCommunityPage />} />
-              <Route path="/therapists" element={<UserTherapistsPage />} />
-              <Route path="/settings" element={<UserSettingsPage />} />
-              <Route path="/profile" element={<UserProfilePage />} />
-              <Route path="/therry" element={<UserTherryPage />} />
-              <Route path="/notifications" element={<UserNotificationsPage />} />
-              <Route path="/mood" element={<UserMoodPage />} />
-              <Route path="/crisis" element={<UserCrisisPage />} />
-              <Route path="/clients" element={<TherapistClientsPage />} />
-              <Route path="/users" element={<AdminUsersPage />} />
-              <Route path="/communities" element={<AdminCommunitiesPage />} />
+        <Suspense fallback={<PageFallback />}>
+          <Routes>
+            <Route element={<GuestRoute />}>
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/signup" element={<SignupPage />} />
             </Route>
-          </Route>
 
-          <Route path="/user/:username" element={<PublicProfilePage />} />
+            <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+            <Route
+              path="/reset-password/:token"
+              element={<ResetPasswordPage />}
+            />
 
-          <Route path="/404" element={<NotFoundPage />} />
-          <Route path="*" element={<NotFoundPage />} />
-        </Routes>
+            <Route element={<ProtectedRoute />}>
+              <Route element={<AppLayout />}>
+                <Route
+                  path="/"
+                  element={
+                    <RoleRoute
+                      userPage={UserHomePage}
+                      adminPage={AdminDashboardPage}
+                      therapistPage={TherapistDashboardPage}
+                    />
+                  }
+                />
+                <Route path="/chat" element={<UserChatPage />} />
+                <Route path="/chat/:username" element={<UserChatPage />} />
+                <Route path="/community" element={<UserCommunityPage />} />
+                <Route
+                  path="/community/:inviteKey"
+                  element={<UserCommunityPage />}
+                />
+                <Route path="/therapists" element={<UserTherapistsPage />} />
+                <Route path="/settings" element={<UserSettingsPage />} />
+                <Route path="/profile" element={<UserProfilePage />} />
+                <Route path="/therry" element={<UserTherryPage />} />
+                <Route
+                  path="/notifications"
+                  element={<UserNotificationsPage />}
+                />
+                <Route path="/mood" element={<UserMoodPage />} />
+                <Route path="/crisis" element={<UserCrisisPage />} />
+                <Route path="/clients" element={<TherapistClientsPage />} />
+                <Route path="/users" element={<AdminUsersPage />} />
+                <Route path="/communities" element={<AdminCommunitiesPage />} />
+              </Route>
+            </Route>
+
+            <Route path="/user/:username" element={<PublicProfilePage />} />
+
+            <Route path="/404" element={<NotFoundPage />} />
+            <Route path="*" element={<NotFoundPage />} />
+          </Routes>
+        </Suspense>
       </AuthInitializer>
     </BrowserRouter>
   )

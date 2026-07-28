@@ -4,29 +4,27 @@ import { ArrowRight, MessageCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import type { User } from "@/types/user"
 
-import { getGreeting } from "./useHomeState"
-
 interface GreetingHeaderProps {
   user: User
 }
 
 export function GreetingHeader({ user }: GreetingHeaderProps) {
   return (
-    <section className="relative overflow-hidden rounded-3xl bg-linear-to-br from-emerald-600 via-emerald-600 to-teal-700 p-8 text-white shadow-xl shadow-emerald-700/20">
-      <div className="pointer-events-none absolute inset-0">
-        <div className="absolute -top-10 -right-10 size-64 rounded-full bg-white/5" />
-        <div className="absolute -bottom-16 -left-10 size-64 rounded-full bg-white/5" />
-      </div>
-      <div className="relative">
-        <p className="text-sm font-medium text-emerald-200">{getGreeting()}</p>
-        <h1 className="mt-1.5 text-3xl font-bold tracking-tight">
-          Hi, {user.firstName}!
-        </h1>
-        <p className="mt-2 max-w-xl text-emerald-100">
-          Take a moment for yourself today. Choose a guided exercise below to
-          help you breathe, ground, and feel better.
-        </p>
-        <div className="mt-6 flex flex-wrap gap-3">
+    <section className="rounded-[2rem] border border-slate-200 bg-white p-8 shadow-lg shadow-slate-900/5 dark:border-slate-800 dark:bg-slate-950 dark:shadow-slate-950/20">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <p className="text-sm font-semibold tracking-[0.2em] text-slate-500 uppercase dark:text-slate-400">
+            Welcome Back
+          </p>
+          <h1 className="mt-2 text-3xl font-semibold tracking-tight text-slate-900 dark:text-white">
+            {user.firstName}, your wellbeing dashboard is ready.
+          </h1>
+          <p className="mt-3 max-w-2xl text-base leading-7 text-slate-600 dark:text-slate-300">
+            Continue your progress with curated sessions, quick support access,
+            and a clean view of what matters most today.
+          </p>
+        </div>
+        <div className="flex flex-wrap gap-3">
           <Button asChild variant="secondary" className="font-semibold">
             <Link to="/chat">
               <MessageCircle className="size-4" />
@@ -36,7 +34,7 @@ export function GreetingHeader({ user }: GreetingHeaderProps) {
           <Button
             asChild
             variant="outline"
-            className="border-white/30 bg-white/10 text-white hover:bg-white/20"
+            className="border-slate-300 bg-slate-50 text-slate-900 hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800"
           >
             <Link to="/profile">
               View Profile <ArrowRight className="size-4" />

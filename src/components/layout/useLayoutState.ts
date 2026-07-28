@@ -37,10 +37,12 @@ export function useLayoutState() {
     async function poll() {
       try {
         const [chatRes, notifRes] = await Promise.all([
-          api.get("/api/chat/conversations"),
-          api.get("/api/notifications/unread-count").catch(() => ({ data: { count: 0 } })),
+          api.get<{ data: { unread: number }[] }>("/api/chat/conversations"),
+          api
+            .get("/api/notifications/unread-count")
+            .catch(() => ({ data: { count: 0 } })),
         ])
-        const convs: { unread: number }[] = chatRes.data
+        const convs = chatRes.data.data
         const total = convs.reduce((sum, c) => sum + (c.unread ?? 0), 0)
         setUnreadCount(total)
         setNotificationCount(notifRes.data.count ?? 0)

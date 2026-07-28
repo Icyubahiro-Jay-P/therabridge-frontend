@@ -9,6 +9,21 @@ export default defineConfig({
   root: ".",
   build: {
     outDir: "dist",
+    chunkSizeWarningLimit: 600,
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes("node_modules")) {
+            if (id.includes("react")) return "vendor-react"
+            if (id.includes("@tanstack/react-query"))
+              return "vendor-react-query"
+            if (id.includes("lucide-react")) return "vendor-icons"
+            if (id.includes("@/")) return "app"
+            return "vendor"
+          }
+        },
+      },
+    },
   },
   resolve: {
     alias: {

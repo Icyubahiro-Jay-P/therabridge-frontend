@@ -140,7 +140,7 @@ export function SignupForm({
   setShowPassword: React.Dispatch<React.SetStateAction<boolean>>
 }) {
   const [step, setStep] = useState(0)
-  const [direction, setDirection] = useState<"forward" | "backward">("forward")
+  const [, setDirection] = useState<"forward" | "backward">("forward")
 
   const currentStep = stepItems[step]
   const currentValue =

@@ -10,7 +10,9 @@ export function Avatar({
   size?: "sm" | "md"
 }) {
   const [imgError, setImgError] = useState(false)
-  const baseUrl: string = import.meta.env.VITE_API_URL || ""
+  const baseUrl: string =
+    import.meta.env.VITE_API_URL ||
+    (typeof window !== "undefined" ? window.location.origin : "")
   const avatarUrl = user.avatar
     ? user.avatar.startsWith("http")
       ? user.avatar

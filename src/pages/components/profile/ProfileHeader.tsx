@@ -2,7 +2,9 @@ import { User as UserIcon } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import type { PublicProfile } from "@/types/user"
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || ""
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL ||
+  (typeof window !== "undefined" ? window.location.origin : "")
 
 function getInitials(firstName?: string | null, lastName?: string | null) {
   if (!firstName && !lastName) return "?"
@@ -32,7 +34,9 @@ export function ProfileHeader({ profile }: { profile: PublicProfile }) {
       <div className="flex flex-1 flex-col items-center text-center sm:items-start sm:text-left">
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
           {profile.firstName || profile.lastName ? (
-            <>{profile.firstName ?? ""} {profile.lastName ?? ""}</>
+            <>
+              {profile.firstName ?? ""} {profile.lastName ?? ""}
+            </>
           ) : (
             <span className="flex items-center gap-2">
               <UserIcon className="size-5" /> Private Profile

@@ -49,8 +49,12 @@ export function useHomeState() {
       try {
         const [exRes, logsRes, scoreRes] = await Promise.all([
           api.get<Exercise[]>("/api/exercises"),
-          api.get<ExerciseLogEntry[]>("/api/exercises/logs/mine").catch(() => ({ data: [] })),
-          api.get<ScoreStreak>("/api/users/score-streak").catch(() => ({ data: null })),
+          api
+            .get<ExerciseLogEntry[]>("/api/exercises/logs/mine")
+            .catch(() => ({ data: [] })),
+          api
+            .get<ScoreStreak>("/api/users/stats/score-streak")
+            .catch(() => ({ data: null })),
         ])
         setExercises(exRes.data)
         setLogs(logsRes.data)

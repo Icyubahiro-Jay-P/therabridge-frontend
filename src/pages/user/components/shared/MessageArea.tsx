@@ -37,7 +37,7 @@ export function MessageArea({
         <div className="flex h-full items-center justify-center">
           <Loader2 className="size-6 animate-spin text-gray-400" />
         </div>
-      ) : messages.length === 0 ? (
+      ) : !Array.isArray(messages) || messages.length === 0 ? (
         <div className="flex h-full flex-col items-center justify-center gap-2 text-center">
           <MessageCircle className="size-10 text-gray-300 dark:text-gray-600" />
           <p className="text-sm text-gray-400">{emptyMessage}</p>

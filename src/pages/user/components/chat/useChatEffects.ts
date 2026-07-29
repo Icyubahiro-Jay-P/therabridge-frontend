@@ -35,7 +35,7 @@ export function useChatEffects(state: {
         const { data } = await api.get<{ data: Conversation[] }>(
           "/api/chat/conversations"
         )
-        state.setConversations(data.data)
+        state.setConversations(Array.isArray(data.data) ? data.data : [])
       } catch (err) {
         state.setError(getErrorMessage(err))
       } finally {
@@ -72,7 +72,7 @@ export function useChatEffects(state: {
           `/api/chat/conversation/${user._id}`
         )
         if (mounted) {
-          state.setMessages(msgData)
+          state.setMessages(Array.isArray(msgData) ? msgData : [])
           if (headers) {
             state.setLoadingMessages(false)
           }

@@ -29,7 +29,7 @@ export function SearchSection({
           />
         </div>
       </div>
-      {searchQuery.length >= 2 && (
+      {searchQuery?.length >= 2 && (
         <div className="border-b border-gray-200 dark:border-gray-700/60">
           <p className="px-3 py-1.5 text-xs font-medium tracking-wider text-gray-400 uppercase">
             Search results
@@ -38,7 +38,7 @@ export function SearchSection({
             <div className="flex justify-center py-4">
               <Loader2 className="size-5 animate-spin text-gray-400" />
             </div>
-          ) : searchResults.length === 0 ? (
+          ) : !Array.isArray(searchResults) || searchResults.length === 0 ? (
             <p className="px-3 py-3 text-sm text-gray-400">No users found</p>
           ) : (
             searchResults.map((u) => (
@@ -52,7 +52,9 @@ export function SearchSection({
                   <p className="truncate text-sm font-medium text-gray-900 dark:text-white">
                     {u.firstName} {u.lastName}
                   </p>
-                  <p className="truncate text-xs text-gray-400">@{u.username}</p>
+                  <p className="truncate text-xs text-gray-400">
+                    @{u.username}
+                  </p>
                 </div>
               </button>
             ))

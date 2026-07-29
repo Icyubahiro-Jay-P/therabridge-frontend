@@ -23,12 +23,14 @@ export function ConversationList({
     )
   }
 
-  if (conversations.length === 0) {
+  if (!Array.isArray(conversations) || conversations.length === 0) {
     return (
       <div className="flex flex-col items-center gap-2 px-4 py-10 text-center">
         <MessageCircle className="size-10 text-gray-300 dark:text-gray-600" />
         <p className="text-sm text-gray-400">No conversations yet.</p>
-        <p className="text-xs text-gray-400">Search for a user to start chatting!</p>
+        <p className="text-xs text-gray-400">
+          Search for a user to start chatting!
+        </p>
       </div>
     )
   }

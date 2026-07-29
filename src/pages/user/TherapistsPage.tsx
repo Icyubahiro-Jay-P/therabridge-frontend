@@ -40,16 +40,18 @@ export function TherapistsPage() {
     void load()
   }, [])
 
-  const filtered = therapists.filter((t) => {
-    if (!searchQuery) return true
-    const q = searchQuery.toLowerCase()
-    return (
-      t.firstName.toLowerCase().includes(q) ||
-      t.lastName.toLowerCase().includes(q) ||
-      t.username.toLowerCase().includes(q) ||
-      (t.bio && t.bio.toLowerCase().includes(q))
-    )
-  })
+  const filtered = Array.isArray(therapists)
+    ? therapists.filter((t) => {
+        if (!searchQuery) return true
+        const q = searchQuery.toLowerCase()
+        return (
+          t.firstName.toLowerCase().includes(q) ||
+          t.lastName.toLowerCase().includes(q) ||
+          t.username.toLowerCase().includes(q) ||
+          !!t.bio?.toLowerCase().includes(q)
+        )
+      })
+    : []
 
   return (
     <div className="space-y-8 p-6">

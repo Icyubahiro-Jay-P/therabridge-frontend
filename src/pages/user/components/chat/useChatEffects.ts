@@ -68,14 +68,12 @@ export function useChatEffects(state: {
         }
         if (!mounted) return
         state.setPartner(user)
-        const { data: msgData, headers } = await api.get<DirectMessage[]>(
+        const response = await api.get<{ data: DirectMessage[] }>(
           `/api/chat/conversation/${user._id}`
         )
         if (mounted) {
-          state.setMessages(Array.isArray(msgData) ? msgData : [])
-          if (headers) {
-            state.setLoadingMessages(false)
-          }
+          state.setMessages(Array.isArray(response.data.data) ? response.data.data : [])
+          state.setLoadingMessages(false)
         }
       } catch {
         if (mounted) {

@@ -43,7 +43,7 @@ export function AppLayout() {
           isMinimized ? "w-16" : !isHidden ? "w-64" : "",
           isHidden &&
             cn(
-              "fixed inset-y-0 left-0 z-50",
+              "fixed inset-y-0 left-0 z-50 pb-20",
               mobileOpen ? "translate-x-0" : "-translate-x-full"
             )
         )}
@@ -67,7 +67,7 @@ export function AppLayout() {
         />
       </aside>
 
-      <main className="flex flex-1 flex-col overflow-y-auto pb-16 md:pb-0">
+      <main className="flex min-h-0 flex-1 flex-col overflow-y-auto pb-16 md:pb-0">
         <Outlet />
       </main>
 

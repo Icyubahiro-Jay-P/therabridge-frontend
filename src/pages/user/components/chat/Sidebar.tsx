@@ -38,7 +38,7 @@ export function Sidebar({
         "flex w-72 shrink-0 flex-col border-r border-gray-200 dark:border-gray-700/60",
         "md:relative md:flex",
         mobileSidebarOpen
-          ? "fixed inset-y-0 left-0 z-50 bg-white dark:bg-gray-900"
+          ? "fixed inset-y-0 left-0 z-50 bg-white dark:bg-gray-900 pb-20"
           : "hidden"
       )}
     >

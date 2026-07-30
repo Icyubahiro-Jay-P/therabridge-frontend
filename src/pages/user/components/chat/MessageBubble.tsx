@@ -56,7 +56,7 @@ export function MessageBubble({
   const seen = isMe && msg.read && msg.readAt
   return (
     <div
-      className={cn("mb-2 flex flex-col", isMe ? "items-end" : "items-start")}
+      className={cn("relative mb-2 flex flex-col", isMe ? "items-end" : "items-start")}
     >
       <div
         className={cn(
@@ -73,7 +73,7 @@ export function MessageBubble({
           <div className={cn("flex items-center gap-1", isMe ? "flex-row-reverse" : "flex-row")}>
             {canEdit && (
               <button
-                onClick={() => setMenuOpenId(menuOpen ? null : msg._id)}
+                onClick={(e) => { e.stopPropagation(); setMenuOpenId(menuOpen ? null : msg._id) }}
                 className="flex cursor-pointer size-6 shrink-0 items-center justify-center rounded-full opacity-0 transition-opacity group-hover:opacity-100 bg-black/10 dark:bg-white/10 hover:bg-black/20 dark:hover:bg-white/20"
               >
                 <MoreVertical className="size-3.5" />

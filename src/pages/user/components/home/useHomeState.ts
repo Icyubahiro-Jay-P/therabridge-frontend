@@ -44,21 +44,41 @@ export function useHomeState() {
   const [scoreStreak, setScoreStreak] = useState<ScoreStreak | null>(null)
   const [showCompleted, setShowCompleted] = useState(false)
 
+  async function fetchScoreStreak() {
+    const endpoints = [
+      "/api/users/score-streak",
+      "/api/users/stats/score-streak",
+      "/api/users/streak-score",
+      "/api/users/stats/streak-score",
+    ]
+
+    for (const endpoint of endpoints) {
+      try {
+        const response = await api.get<ScoreStreak>(endpoint)
+        if (response.data) return response.data
+      } catch (error) {
+        const status = error?.response?.status
+        if (status && status !== 404) {
+          throw error
+        }
+      }
+    }
+    return null
+  }
+
   useEffect(() => {
     async function load() {
       try {
-        const [exRes, logsRes, scoreRes] = await Promise.all([
+        const [exRes, logsRes, scoreData] = await Promise.all([
           api.get<Exercise[]>("/api/exercises"),
           api
             .get<ExerciseLogEntry[]>("/api/exercises/logs/mine")
             .catch(() => ({ data: [] })),
-          api
-            .get<ScoreStreak>("/api/users/score-streak")
-            .catch(() => ({ data: null })),
+          fetchScoreStreak(),
         ])
         setExercises(exRes.data)
         setLogs(logsRes.data)
-        if (scoreRes.data) setScoreStreak(scoreRes.data)
+        if (scoreData) setScoreStreak(scoreData)
       } catch {
         setError("Could not load exercises. Make sure the backend is running.")
       } finally {

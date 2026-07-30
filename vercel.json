@@ -6,15 +6,15 @@
     },
     {
       "source": "/api/(.*)",
-      "destination": "https://your-backend-url.com/api/$1"
+      "destination": "https://therabridge-backend.onrender.com/api/$1"
     },
     {
       "source": "/uploads/(.*)",
-      "destination": "https://your-backend-url.com/uploads/$1"
+      "destination": "https://therabridge-backend.onrender.com/uploads/$1"
     },
     {
       "source": "/socket.io/(.*)",
-      "destination": "https://your-backend-url.com/socket.io/$1"
+      "destination": "https://therabridge-backend.onrender.com/socket.io/$1"
     },
     {
       "source": "/(.*)",

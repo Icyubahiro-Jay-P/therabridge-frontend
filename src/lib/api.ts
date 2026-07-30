@@ -2,9 +2,9 @@ import axios from "axios"
 
 const API_BASE_URL =
   import.meta.env.VITE_API_URL ||
-  (typeof window !== "undefined"
+  (typeof window !== "undefined" && import.meta.env.DEV
     ? window.location.origin
-    : "http://localhost:5000")
+    : "https://therabridge-backend.onrender.com")
 const AUTH_TOKEN_KEY = "therabridge_auth_token"
 
 export function setAuthToken(token: string | null) {

@@ -35,19 +35,6 @@ function exLevel(score: number): Meta {
   return { level: 1, title: "Beginner", fill: `${(score / 50) * 100}%`, next: 50 }
 }
 
-function streakEmoji(value: number) {
-  if (value === 0) return "🌱"
-  if (value >= 365) return "👑"
-  if (value >= 180) return "🏆"
-  if (value >= 90) return "⭐"
-  if (value >= 60) return "⚡"
-  if (value >= 30) return "🔥"
-  if (value >= 14) return "🔥"
-  if (value >= 7) return "🔥"
-  if (value >= 3) return "💪"
-  return "🌱"
-}
-
 function streakLabel(value: number) {
   if (value === 0) return "Start your streak"
   if (value >= 365) return "Legendary"
@@ -82,9 +69,9 @@ export function StreakCards({ scoreStreak }: { scoreStreak: ScoreStreak }) {
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {([
           { label: "EX Score", value: scoreStreak.exerciseScore, unit: "pts", Icon: Zap, meta: exLevel(scoreStreak.exerciseScore) },
-          { label: "Exercise Streak", value: scoreStreak.exerciseStreak, unit: scoreStreak.exerciseStreak === 1 ? "day" : "days", Icon: TrendingUp, meta: nextMilestone(scoreStreak.exerciseStreak), emoji: streakEmoji(scoreStreak.exerciseStreak), tier: streakLabel(scoreStreak.exerciseStreak) },
-          { label: "Login Streak", value: scoreStreak.loginStreak, unit: scoreStreak.loginStreak === 1 ? "day" : "days", Icon: Flame, meta: nextMilestone(scoreStreak.loginStreak), emoji: streakEmoji(scoreStreak.loginStreak), tier: streakLabel(scoreStreak.loginStreak) },
-          { label: "Best Streak", value: best, unit: "days", Icon: Layers, meta: nextMilestone(best), emoji: streakEmoji(best), tier: streakLabel(best) },
+          { label: "Exercise Streak", value: scoreStreak.exerciseStreak, unit: scoreStreak.exerciseStreak === 1 ? "day" : "days", Icon: TrendingUp, meta: nextMilestone(scoreStreak.exerciseStreak), tier: streakLabel(scoreStreak.exerciseStreak) },
+          { label: "Login Streak", value: scoreStreak.loginStreak, unit: scoreStreak.loginStreak === 1 ? "day" : "days", Icon: Flame, meta: nextMilestone(scoreStreak.loginStreak), tier: streakLabel(scoreStreak.loginStreak) },
+          { label: "Best Streak", value: best, unit: "days", Icon: Layers, meta: nextMilestone(best), tier: streakLabel(best) },
         ] as const).map((card, i) => {
           const s = cardStyles[i]
           const meta = card.meta
@@ -106,11 +93,6 @@ export function StreakCards({ scoreStreak }: { scoreStreak: ScoreStreak }) {
                 <div className={cn("flex size-10 items-center justify-center rounded-xl", s.iconBg)}>
                   <card.Icon className={cn("size-5", s.iconColor)} />
                 </div>
-                {"emoji" in card && (
-                  <span className="select-none text-xl opacity-80 transition-transform duration-300 group-hover:scale-125">
-                    {card.emoji}
-                  </span>
-                )}
               </div>
 
               <div className="relative mt-4">

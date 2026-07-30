@@ -53,7 +53,7 @@ export function useHomeState() {
             .get<ExerciseLogEntry[]>("/api/exercises/logs/mine")
             .catch(() => ({ data: [] })),
           api
-            .get<ScoreStreak>("/api/users/stats/score-streak")
+            .get<ScoreStreak>("/api/users/score-streak")
             .catch(() => ({ data: null })),
         ])
         setExercises(exRes.data)

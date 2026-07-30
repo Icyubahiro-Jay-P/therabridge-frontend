@@ -5,6 +5,18 @@
       "destination": "/google3cdb1ef0ca6c39d9.html"
     },
     {
+      "source": "/api/(.*)",
+      "destination": "https://your-backend-url.com/api/$1"
+    },
+    {
+      "source": "/uploads/(.*)",
+      "destination": "https://your-backend-url.com/uploads/$1"
+    },
+    {
+      "source": "/socket.io/(.*)",
+      "destination": "https://your-backend-url.com/socket.io/$1"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }

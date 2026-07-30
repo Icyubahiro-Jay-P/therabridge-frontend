@@ -7,6 +7,22 @@ import { defineConfig } from "vite"
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   root: ".",
+  server: {
+    proxy: {
+      "/api": {
+        target: "http://localhost:5000",
+        changeOrigin: true,
+      },
+      "/uploads": {
+        target: "http://localhost:5000",
+        changeOrigin: true,
+      },
+      "/socket.io": {
+        target: "http://localhost:5000",
+        ws: true,
+      },
+    },
+  },
   build: {
     outDir: "dist",
     chunkSizeWarningLimit: 600,

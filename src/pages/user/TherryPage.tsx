@@ -70,9 +70,10 @@ export function TherryPage() {
       <TherryHeader />
 
       <div className="flex-1 overflow-y-auto space-y-4 px-6 py-4">
-        {error && (
-          <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-900/50 dark:bg-red-950/40 dark:text-red-400">
-            <TriangleAlert className="inline size-4 shrink-0" /> {error}
+          {error && (
+          <div className="flex items-center justify-between rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-900/50 dark:bg-red-950/40 dark:text-red-400">
+            <span><TriangleAlert className="inline size-4 shrink-0" /> {error}</span>
+            <button onClick={() => setError(null)} className="ml-2 rounded bg-red-100 px-2 py-1 text-xs font-medium hover:bg-red-200 dark:bg-red-900/30 dark:hover:bg-red-900/50">Dismiss</button>
           </div>
         )}
 
@@ -81,7 +82,7 @@ export function TherryPage() {
         <div ref={messagesEndRef} />
       </div>
 
-      {messages.length === 1 && <SuggestionChips onSelect={handleSend} />}
+      {(messages.length === 1 || error) && <SuggestionChips onSelect={handleSend} />}
 
       <ChatInput value={input} loading={loading} onChange={setInput} onSubmit={(e) => { e.preventDefault(); void handleSend(input) }} />
     </div>

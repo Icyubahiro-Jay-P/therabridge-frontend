@@ -10,7 +10,7 @@ export function useProfileState() {
   const uploadAvatar = useAuthStore((state) => state.uploadAvatar)
 
   const fileInputRef = useRef<HTMLInputElement>(null)
-  const [, setAvatarPreview] = useState<string>("")
+  const [avatarPreview, setAvatarPreview] = useState<string>("")
   const [avatarFile, setAvatarFile] = useState<File | null>(null)
   const [avatarUploading, setAvatarUploading] = useState(false)
   const [avatarMessage, setAvatarMessage] = useState("")
@@ -159,7 +159,7 @@ export function useProfileState() {
     avatarUploading,
     avatarMessage,
     avatarError,
-    avatarUrl,
+    avatarPreview, avatarUrl,
     profileForm,
     profileMessage,
     profileError,

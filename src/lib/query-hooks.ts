@@ -18,12 +18,8 @@ export function useGetUsers(page = 1, limit = 20, filters = {}) {
   return useQuery({
     queryKey: paginatedQueryKey(["users"], { page, limit, ...filters }),
     queryFn: async () => {
-      const params = new URLSearchParams({
-        page: page.toString(),
-        limit: limit.toString(),
-        ...filters,
-      })
-      const { data } = await api.get<PaginatedResponse<any>>(`/users?${params}`)
+      const params = new URLSearchParams({ page: page.toString(), limit: limit.toString(), ...filters })
+      const { data } = await api.get<PaginatedResponse<any>>(`/api/users/users?${params}`)
       return data
     },
     staleTime: 2 * 60 * 1000,
@@ -34,12 +30,8 @@ export function useGetTherapists(page = 1, limit = 20, filters = {}) {
   return useQuery({
     queryKey: paginatedQueryKey(["therapists"], { page, limit, ...filters }),
     queryFn: async () => {
-      const params = new URLSearchParams({
-        page: page.toString(),
-        limit: limit.toString(),
-        ...filters,
-      })
-      const { data } = await api.get<PaginatedResponse<any>>(`/users/therapists?${params}`)
+      const params = new URLSearchParams({ page: page.toString(), limit: limit.toString(), ...filters })
+      const { data } = await api.get<PaginatedResponse<any>>(`/api/users/therapists?${params}`)
       return data
     },
     staleTime: 2 * 60 * 1000,
@@ -50,7 +42,7 @@ export function useGetUserProfile(userId: string) {
   return useQuery({
     queryKey: ["user", userId],
     queryFn: async () => {
-      const { data } = await api.get(`/users/${userId}`)
+      const { data } = await api.get(`/api/users/${userId}`)
       return data
     },
     enabled: !!userId,
@@ -63,12 +55,8 @@ export function useGetMyMoods(page = 1, limit = 20, filters = {}) {
   return useQuery({
     queryKey: paginatedQueryKey(["moods"], { page, limit, ...filters }),
     queryFn: async () => {
-      const params = new URLSearchParams({
-        page: page.toString(),
-        limit: limit.toString(),
-        ...filters,
-      })
-      const { data } = await api.get<PaginatedResponse<any>>(`/mood?${params}`)
+      const params = new URLSearchParams({ page: page.toString(), limit: limit.toString(), ...filters })
+      const { data } = await api.get<PaginatedResponse<any>>(`/api/mood?${params}`)
       return data
     },
     staleTime: 1 * 60 * 1000,
@@ -79,7 +67,7 @@ export function useGetMoodStats() {
   return useQuery({
     queryKey: ["mood-stats"],
     queryFn: async () => {
-      const { data } = await api.get(`/mood/stats`)
+      const { data } = await api.get(`/api/mood/stats`)
       return data
     },
     staleTime: 2 * 60 * 1000,
@@ -91,10 +79,8 @@ export function useLogMood() {
 
   return useMutation({
     mutationFn: async (moodData: any) => {
-      const { data } = await api.post(`/mood`, moodData, {
-        headers: {
-          "Idempotency-Key": `mood-${Date.now()}-${Math.random()}`,
-        },
+      const { data } = await api.post(`/api/mood`, moodData, {
+        headers: { "Idempotency-Key": `mood-${Date.now()}-${Math.random()}` },
       })
       return data
     },
@@ -111,7 +97,7 @@ export function useGetConversations(page = 1, limit = 20) {
     queryKey: ["conversations", { page, limit }],
     queryFn: async () => {
       const params = new URLSearchParams({ page: page.toString(), limit: limit.toString() })
-      const { data } = await api.get<PaginatedResponse<any>>(`/chat/conversations?${params}`)
+      const { data } = await api.get<PaginatedResponse<any>>(`/api/chat/conversations?${params}`)
       return data
     },
     staleTime: 30 * 1000,
@@ -122,7 +108,7 @@ export function useGetConversation(userId: string) {
   return useQuery({
     queryKey: ["conversation", userId],
     queryFn: async () => {
-      const { data } = await api.get(`/chat/conversation/${userId}`)
+      const { data } = await api.get(`/api/chat/conversation/${userId}`)
       return data
     },
     enabled: !!userId,
@@ -136,7 +122,7 @@ export function useSendMessage() {
   return useMutation({
     mutationFn: async ({ recipientId, content }: { recipientId: string; content: string }) => {
       const idemKey = `msg-${recipientId}-${Date.now()}`
-      const { data } = await api.post(`/chat/send`, { recipientId, content }, {
+      const { data } = await api.post(`/api/chat/send`, { recipientId, content }, {
         headers: { "Idempotency-Key": idemKey },
       })
       return data
@@ -153,7 +139,7 @@ export function useGetExercises() {
   return useQuery({
     queryKey: ["exercises"],
     queryFn: async () => {
-      const { data } = await api.get(`/exercises`)
+      const { data } = await api.get(`/api/exercises`)
       return data
     },
     staleTime: 30 * 60 * 1000,
@@ -165,7 +151,7 @@ export function useGetExerciseLogs(page = 1, limit = 20) {
     queryKey: ["exercise-logs", { page, limit }],
     queryFn: async () => {
       const params = new URLSearchParams({ page: page.toString(), limit: limit.toString() })
-      const { data } = await api.get<PaginatedResponse<any>>(`/exercises/logs/mine?${params}`)
+      const { data } = await api.get<PaginatedResponse<any>>(`/api/exercises/logs/mine?${params}`)
       return data
     },
     staleTime: 30 * 1000,
@@ -177,7 +163,7 @@ export function useStartExercise() {
 
   return useMutation({
     mutationFn: async (exerciseId: string) => {
-      const { data } = await api.post(`/exercises/${exerciseId}/start`, {}, {
+      const { data } = await api.post(`/api/exercises/${exerciseId}/start`, {}, {
         headers: { "Idempotency-Key": `exercise-start-${exerciseId}-${Date.now()}` },
       })
       return data
@@ -193,7 +179,7 @@ export function useCompleteExercise() {
 
   return useMutation({
     mutationFn: async (exerciseId: string) => {
-      const { data } = await api.post(`/exercises/${exerciseId}/complete`, {}, {
+      const { data } = await api.post(`/api/exercises/${exerciseId}/complete`, {}, {
         headers: { "Idempotency-Key": `exercise-complete-${exerciseId}-${Date.now()}` },
       })
       return data
@@ -211,7 +197,7 @@ export function useGetNotifications(page = 1, limit = 20) {
     queryKey: ["notifications", { page, limit }],
     queryFn: async () => {
       const params = new URLSearchParams({ page: page.toString(), limit: limit.toString() })
-      const { data } = await api.get<PaginatedResponse<any>>(`/notifications?${params}`)
+      const { data } = await api.get<PaginatedResponse<any>>(`/api/notifications?${params}`)
       return data
     },
     staleTime: 10 * 1000,
@@ -223,7 +209,7 @@ export function useMarkNotificationRead() {
 
   return useMutation({
     mutationFn: async (notificationId: string) => {
-      const { data } = await api.patch(`/notifications/${notificationId}/read`)
+      const { data } = await api.put(`/api/notifications/${notificationId}/read`)
       return data
     },
     onSuccess: () => {

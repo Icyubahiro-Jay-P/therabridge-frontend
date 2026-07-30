@@ -45,7 +45,7 @@ export function useChatState() {
     return () => clearTimeout(timeout)
   }, [searchQuery])
   useEffect(() => {
-    function handleClick() {}
+    function handleClick() { setMenuOpenId(null) }
     document.addEventListener("click", handleClick)
     return () => document.removeEventListener("click", handleClick)
   }, [])

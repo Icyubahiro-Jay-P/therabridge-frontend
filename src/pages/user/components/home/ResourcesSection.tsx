@@ -70,7 +70,7 @@ export function ResourcesSection({
         </div>
       )}
 
-      {!loading && !error && (
+      {!loading && !error && displayedExercises.length > 0 && (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {displayedExercises.map((ex) => (
             <ResourceCard
@@ -81,6 +81,9 @@ export function ResourcesSection({
             />
           ))}
         </div>
+      )}
+      {!loading && !error && displayedExercises.length === 0 && (
+        <p className="text-sm text-gray-400">No exercises available right now.</p>
       )}
     </section>
   )

@@ -1,5 +1,6 @@
 import { createRoot } from "react-dom/client"
 import { QueryClientProvider } from "@tanstack/react-query"
+import { Toaster } from "sonner"
 
 import "./index.css"
 import App from "./App.tsx"
@@ -14,6 +15,7 @@ createRoot(document.getElementById("root")!).render(
       <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
         <TooltipProvider>
           <App />
+          <Toaster position="bottom-right" richColors closeButton />
         </TooltipProvider>
       </ThemeProvider>
     </QueryClientProvider>

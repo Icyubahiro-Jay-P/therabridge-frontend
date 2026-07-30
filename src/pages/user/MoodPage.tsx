@@ -1,3 +1,4 @@
+import { TriangleAlert } from "lucide-react"
 import { useMoodState } from "./components/mood/useMoodState"
 import { MoodSelector } from "./components/mood/MoodSelector"
 import { MoodChart } from "./components/mood/MoodChart"
@@ -5,7 +6,7 @@ import { MoodHistory } from "./components/mood/MoodHistory"
 
 export function MoodPage() {
   const {
-    moods, stats, loading, error, success,
+    moods, stats, loading, loadError, error, success,
     selectedMood, note, intensity, factors, saving,
     setSelectedMood, setNote, setIntensity, toggleFactor, handleLog,
     setError, setSuccess,
@@ -17,6 +18,13 @@ export function MoodPage() {
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Mood Tracker</h1>
         <p className="text-sm text-gray-500 dark:text-gray-400">Track how you're feeling and discover patterns.</p>
       </div>
+
+      {loadError && (
+        <div className="flex items-center gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-900/50 dark:bg-red-950/40 dark:text-red-400">
+          <TriangleAlert className="size-4 shrink-0" />
+          {loadError}
+        </div>
+      )}
 
       <MoodSelector
         selectedMood={selectedMood}
@@ -35,8 +43,8 @@ export function MoodPage() {
         onDismissSuccess={() => setSuccess(null)}
       />
 
-      <MoodChart stats={stats} />
-      <MoodHistory moods={moods} loading={loading} />
+      {!loadError && <MoodChart stats={stats} />}
+      <MoodHistory moods={moods} loading={loading} error={loadError && !moods.length ? loadError : null} />
     </div>
   )
 }

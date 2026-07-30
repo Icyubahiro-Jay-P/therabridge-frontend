@@ -33,6 +33,7 @@ function NotificationSkeleton() {
 export function NotificationsPage() {
   const [success, setSuccess] = useState<string | null>(null)
   const [confirmDeleteAll, setConfirmDeleteAll] = useState(false)
+  const [deletingId, setDeletingId] = useState<string | null>(null)
 
   const { data, isLoading, isError, error, refetch } = useGetNotifications(1, 100)
   const markReadMutation = useMarkNotificationRead()
@@ -74,6 +75,7 @@ export function NotificationsPage() {
   }
 
   async function deleteNotification(id: string) {
+    setDeletingId(id)
     setOptimisticNotifications((prev) => {
       const list = prev ?? notifications
       return list.filter((n) => n._id !== id)
@@ -83,6 +85,8 @@ export function NotificationsPage() {
       setSuccess("Notification deleted")
     } catch {
       setOptimisticNotifications(null)
+    } finally {
+      setDeletingId(null)
     }
   }
 
@@ -151,7 +155,7 @@ export function NotificationsPage() {
             <NotificationItem
               key={n._id}
               notification={n}
-              deletingId={null}
+              deletingId={deletingId}
               onMarkRead={markAsRead}
               onDelete={deleteNotification}
             />

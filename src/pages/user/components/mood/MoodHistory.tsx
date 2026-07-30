@@ -1,3 +1,4 @@
+import { TriangleAlert } from "lucide-react"
 import { Skeleton } from "@/components/ui/skeleton"
 import { cn } from "@/lib/utils"
 import { moodOptions, type MoodEntry } from "./useMoodState"
@@ -5,6 +6,7 @@ import { moodOptions, type MoodEntry } from "./useMoodState"
 interface MoodHistoryProps {
   moods: MoodEntry[]
   loading: boolean
+  error?: string | null
 }
 
 function MoodEntrySkeleton() {
@@ -31,10 +33,16 @@ function MoodEntrySkeleton() {
   )
 }
 
-export function MoodHistory({ moods, loading }: MoodHistoryProps) {
+export function MoodHistory({ moods, loading, error }: MoodHistoryProps) {
   return (
     <div>
       <h2 className="mb-4 text-lg font-semibold text-gray-900 dark:text-white">Recent entries</h2>
+      {error && (
+        <div className="mb-4 flex items-center gap-2 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-900/50 dark:bg-red-950/40 dark:text-red-400">
+          <TriangleAlert className="size-4 shrink-0" />
+          {error}
+        </div>
+      )}
       {loading ? (
         <div className="space-y-2">
           {Array.from({ length: 5 }).map((_, i) => <MoodEntrySkeleton key={i} />)}

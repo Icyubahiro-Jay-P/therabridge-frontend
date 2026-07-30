@@ -96,6 +96,8 @@ export function useChatEffects(state: {
     if (!state.partner) return
     let mounted = true
     let since: string | null = null
+    let delay = 1000
+    const MAX_DELAY = 30000
 
     async function poll() {
       if (!mounted) return
@@ -105,14 +107,27 @@ export function useChatEffects(state: {
 
         if (!mounted) return
         if (response.status === 200) {
-          state.setMessages(response.data)
-          since = response.headers["x-last-updated"] || new Date().toISOString()
+          delay = 1000
+          const newMessages = Array.isArray(response.data) ? response.data : []
+          state.setMessages((prev) => {
+            const existingIds = new Set(prev.map((m) => m._id))
+            const merged = [...prev]
+            for (const msg of newMessages) {
+              if (!existingIds.has(msg._id)) {
+                merged.push(msg)
+                existingIds.add(msg._id)
+              }
+            }
+            return merged
+          })
+          since = response.headers?.["x-last-updated"] || new Date().toISOString()
         }
-      } catch (error) {
+      } catch {
         if (!mounted) return
+        delay = Math.min(delay * 2, MAX_DELAY)
       }
       if (mounted) {
-        void poll()
+        setTimeout(() => void poll(), delay)
       }
     }
 

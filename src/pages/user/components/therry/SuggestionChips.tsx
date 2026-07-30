@@ -1,4 +1,4 @@
-const suggestions = [
+export const suggestions = [
   "I'm feeling anxious about...",
   "I've been feeling sad lately",
   "I'm stressed about work/school",

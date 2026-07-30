@@ -1,4 +1,4 @@
-import { lazy, Suspense } from "react"
+import { lazy, Suspense, useEffect } from "react"
 import { BrowserRouter, Route, Routes } from "react-router-dom"
 
 import { GuestRoute, ProtectedRoute } from "@/components/auth/ProtectedRoute"
@@ -54,8 +54,13 @@ function AuthInitializer({ children }: { children: React.ReactNode }) {
   const initialize = useAuthStore((state) => state.initialize)
   const isInitialized = useAuthStore((state) => state.isInitialized)
 
+  useEffect(() => {
+    if (!isInitialized) {
+      initialize()
+    }
+  }, [])
+
   if (!isInitialized) {
-    void initialize()
     return (
       <div className="flex min-h-svh items-center justify-center bg-linear-to-br from-emerald-50 to-teal-50 dark:from-gray-950 dark:to-gray-900">
         <div className="flex flex-col items-center gap-3">

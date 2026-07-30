@@ -23,7 +23,7 @@ export function getAuthToken(): string | null {
 
 export const api = axios.create({
   baseURL: API_BASE_URL,
-  timeout: 10000,
+  timeout: 30000, // increased timeout for slower backend operations like email/password reset
   headers: {
     "Content-Type": "application/json",
   },

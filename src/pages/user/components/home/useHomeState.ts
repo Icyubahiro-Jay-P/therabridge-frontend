@@ -44,41 +44,17 @@ export function useHomeState() {
   const [scoreStreak, setScoreStreak] = useState<ScoreStreak | null>(null)
   const [showCompleted, setShowCompleted] = useState(false)
 
-  async function fetchScoreStreak() {
-    const endpoints = [
-      "/api/users/score-streak",
-      "/api/users/stats/score-streak",
-      "/api/users/streak-score",
-      "/api/users/stats/streak-score",
-    ]
-
-    for (const endpoint of endpoints) {
-      try {
-        const response = await api.get<ScoreStreak>(endpoint)
-        if (response.data) return response.data
-      } catch (error) {
-        const status = error?.response?.status
-        if (status && status !== 404) {
-          throw error
-        }
-      }
-    }
-    return null
-  }
-
   useEffect(() => {
     async function load() {
       try {
-        const [exRes, logsRes, scoreData] = await Promise.all([
+        const [exRes, logsRes] = await Promise.all([
           api.get<Exercise[]>("/api/exercises"),
           api
             .get<ExerciseLogEntry[]>("/api/exercises/logs/mine")
             .catch(() => ({ data: [] })),
-          fetchScoreStreak(),
         ])
         setExercises(exRes.data)
         setLogs(logsRes.data)
-        if (scoreData) setScoreStreak(scoreData)
       } catch {
         setError("Could not load exercises. Make sure the backend is running.")
       } finally {
@@ -87,6 +63,18 @@ export function useHomeState() {
     }
     void load()
   }, [])
+
+  useEffect(() => {
+    if (user) {
+      setScoreStreak({
+        exerciseScore: user.exerciseScore ?? 0,
+        loginStreak: user.loginStreak ?? 0,
+        exerciseStreak: user.exerciseStreak ?? 0,
+        longestLoginStreak: user.longestLoginStreak ?? 0,
+        longestExerciseStreak: user.longestExerciseStreak ?? 0,
+      })
+    }
+  }, [user])
 
   const completedExerciseIds = new Set(
     logs.filter((l) => l.completed).map((l) => l.exercise._id)

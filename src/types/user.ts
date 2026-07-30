@@ -14,6 +14,11 @@ export interface User {
   updatedAt?: string
   privacySettings?: PrivacySettings
   chatSettings?: ChatSettings
+  exerciseScore?: number
+  loginStreak?: number
+  exerciseStreak?: number
+  longestLoginStreak?: number
+  longestExerciseStreak?: number
 }
 
 export interface ChatSettings {

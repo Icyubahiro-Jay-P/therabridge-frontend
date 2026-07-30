@@ -5,7 +5,6 @@ import { GuestRoute, ProtectedRoute } from "@/components/auth/ProtectedRoute"
 import { AppLayout } from "@/components/layout/AppLayout"
 import { useAuthStore } from "@/store/auth-store"
 import { ErrorBoundary } from "@/components/auth/ErrorBoundary"
-import { api } from "@/lib/api"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Leaf } from "lucide-react"
 
@@ -95,7 +94,7 @@ function PageSkeleton() {
   )
 }
 
-function RouteErrorFallback({ error, retry }: { error: Error | null; retry: () => void }) {
+function RouteErrorFallback({ retry }: { error: Error | null; retry: () => void }) {
   return (
     <div className="flex min-h-[50vh] items-center justify-center p-4">
       <div className="max-w-md space-y-4 text-center">

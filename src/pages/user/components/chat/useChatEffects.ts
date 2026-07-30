@@ -12,7 +12,7 @@ export function useChatEffects(state: {
   setConversations: (v: Conversation[]) => void
   setError: (v: string | null) => void
   setPartner: (v: ChatUser | null) => void
-  setMessages: (v: DirectMessage[]) => void
+  setMessages: (v: DirectMessage[] | ((prev: DirectMessage[]) => DirectMessage[])) => void
   setLoadingMessages: (v: boolean) => void
 }) {
   useEffect(() => {

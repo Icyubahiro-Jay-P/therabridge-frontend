@@ -35,7 +35,7 @@ export function NotificationsPage() {
   const [confirmDeleteAll, setConfirmDeleteAll] = useState(false)
   const [deletingId, setDeletingId] = useState<string | null>(null)
 
-  const { data, isLoading, isError, error, refetch } = useGetNotifications(1, 100)
+  const { data, isLoading, isError, error } = useGetNotifications(1, 100)
   const markReadMutation = useMarkNotificationRead()
 
   const notifications: NotificationItemData[] = data?.data ?? []

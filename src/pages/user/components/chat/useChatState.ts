@@ -33,7 +33,7 @@ export function useChatState() {
 
   useEffect(() => { messagesEndRef.current?.scrollIntoView({ behavior: "smooth" }) }, [messages])
   useEffect(() => {
-    if (searchQuery.length < 2) { setSearchResults([]); return }
+    if (searchQuery.length < 3) { setSearchResults([]); return }
     const timeout = setTimeout(async () => {
       setSearching(true)
       try {
@@ -41,7 +41,7 @@ export function useChatState() {
         setSearchResults(data)
       } catch { setSearchResults([]) }
       finally { setSearching(false) }
-    }, 350)
+    }, 500)
     return () => clearTimeout(timeout)
   }, [searchQuery])
   useEffect(() => {

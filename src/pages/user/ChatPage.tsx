@@ -1,3 +1,5 @@
+import { Menu } from "lucide-react"
+
 import { useChatState } from "./components/chat/useChatState"
 import { useChatEffects } from "./components/chat/useChatEffects"
 import { Sidebar } from "./components/chat/Sidebar"
@@ -30,9 +32,20 @@ export function ChatPage() {
         onSelectConv={c.openDM}
         showPreviews={c.showPreviews}
       />
-      <div className="flex flex-1 flex-col">
+      <div className="relative flex flex-1 flex-col">
         {!c.partner ? (
-          <EmptyState />
+          <>
+            <div className="flex items-center border-b border-gray-200 px-4 py-3.5 md:hidden dark:border-gray-700/60">
+              <button
+                onClick={() => c.setMobileSidebarOpen(true)}
+                className="flex size-8 shrink-0 items-center justify-center rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
+              >
+                <Menu className="size-4 text-gray-500" />
+              </button>
+              <span className="ml-2 text-sm font-medium text-gray-500">Chats</span>
+            </div>
+            <EmptyState />
+          </>
         ) : (
           <ChatView
             partner={c.partner}

@@ -69,9 +69,11 @@ api.interceptors.response.use(
     }
 
     const status = error.response.status
+    const errData = error.response?.data
     const serverMessage =
-      error.response?.data?.message ||
-      error.response?.data?.error ||
+      (typeof errData?.message === "string" ? errData.message : null) ||
+      (typeof errData?.error?.message === "string" ? errData.error.message : null) ||
+      (typeof errData?.error === "string" ? errData.error : null) ||
       error.message ||
       "Something went wrong"
 

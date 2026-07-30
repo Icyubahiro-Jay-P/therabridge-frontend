@@ -1,32 +1,44 @@
-import { useEffect, useState } from "react"
-import { Loader2, TriangleAlert } from "lucide-react"
+import { useState, useEffect } from "react"
+import { TriangleAlert } from "lucide-react"
 
 import { api } from "@/lib/api"
+import { useGetNotifications, useMarkNotificationRead } from "@/lib/query-hooks"
 import { NotificationItem } from "./components/notifications/NotificationItem"
 import { NotificationsHeader } from "./components/notifications/NotificationsHeader"
 import { NotificationsEmptyState } from "./components/notifications/NotificationsEmptyState"
+import { Skeleton } from "@/components/ui/skeleton"
 
-interface NotificationItemData { _id: string; type: string; title: string; body: string; read: boolean; createdAt: string }
+interface NotificationItemData {
+  _id: string
+  type: string
+  title: string
+  body: string
+  read: boolean
+  createdAt: string
+}
+
+function NotificationSkeleton() {
+  return (
+    <div className="flex items-start gap-3 rounded-xl border p-4">
+      <Skeleton className="size-8 rounded-full" />
+      <div className="flex-1 space-y-2">
+        <Skeleton className="h-4 w-48" />
+        <Skeleton className="h-3 w-64" />
+        <Skeleton className="h-3 w-20" />
+      </div>
+    </div>
+  )
+}
 
 export function NotificationsPage() {
-  const [notifications, setNotifications] = useState<NotificationItemData[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState<string | null>(null)
-  const [deletingId, setDeletingId] = useState<string | null>(null)
   const [confirmDeleteAll, setConfirmDeleteAll] = useState(false)
 
-  useEffect(() => {
-    async function load() {
-      try {
-        const { data } = await api.get<NotificationItemData[]>("/api/notifications")
-        setNotifications(data)
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "Failed to load")
-      } finally { setLoading(false) }
-    }
-    void load()
-  }, [])
+  const { data, isLoading, isError, error, refetch } = useGetNotifications(1, 100)
+  const markReadMutation = useMarkNotificationRead()
+
+  const notifications: NotificationItemData[] = data?.data ?? []
+  const [optimisticNotifications, setOptimisticNotifications] = useState<NotificationItemData[] | null>(null)
 
   useEffect(() => {
     if (!success) return
@@ -34,61 +46,92 @@ export function NotificationsPage() {
     return () => clearTimeout(timer)
   }, [success])
 
+  const displayList = optimisticNotifications ?? notifications
+
   async function markAsRead(id: string) {
+    setOptimisticNotifications((prev) => {
+      const list = prev ?? notifications
+      return list.map((n) => (n._id === id ? { ...n, read: true } : n))
+    })
     try {
-      await api.put(`/api/notifications/${id}/read`)
-      setNotifications((prev) => prev.map((n) => n._id === id ? { ...n, read: true } : n))
-    } catch {}
+      await markReadMutation.mutateAsync(id)
+    } catch {
+      setOptimisticNotifications(null)
+    }
   }
 
   async function markAllAsRead() {
+    setOptimisticNotifications((prev) => {
+      const list = prev ?? notifications
+      return list.map((n) => ({ ...n, read: true }))
+    })
     try {
       await api.put("/api/notifications/read-all")
-      setNotifications((prev) => prev.map((n) => ({ ...n, read: true })))
       setSuccess("All marked as read")
-    } catch {}
+    } catch {
+      setOptimisticNotifications(null)
+    }
   }
 
   async function deleteNotification(id: string) {
-    setDeletingId(id)
+    setOptimisticNotifications((prev) => {
+      const list = prev ?? notifications
+      return list.filter((n) => n._id !== id)
+    })
     try {
       await api.delete(`/api/notifications/${id}`)
-      setNotifications((prev) => prev.filter((n) => n._id !== id))
       setSuccess("Notification deleted")
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to delete")
-    } finally { setDeletingId(null) }
+    } catch {
+      setOptimisticNotifications(null)
+    }
   }
 
   async function deleteAll() {
     try {
       await api.delete("/api/notifications")
-      setNotifications([])
+      setOptimisticNotifications([])
       setSuccess("All notifications deleted")
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to delete")
+    } catch {
+      setOptimisticNotifications(null)
     }
     setConfirmDeleteAll(false)
   }
 
-  const unreadCount = notifications.filter((n) => !n.read).length
+  const unreadCount = displayList.filter((n) => !n.read).length
+
+  if (isLoading) {
+    return (
+      <div className="mx-auto max-w-2xl space-y-6 p-6">
+        <NotificationsHeader unreadCount={0} totalCount={0} onMarkAllRead={() => {}} onDeleteAll={() => {}} />
+        <div className="space-y-2">
+          {Array.from({ length: 5 }).map((_, i) => <NotificationSkeleton key={i} />)}
+        </div>
+      </div>
+    )
+  }
+
+  if (isError) {
+    return (
+      <div className="mx-auto max-w-2xl space-y-6 p-6">
+        <div className="flex items-center gap-2 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-900/50 dark:bg-red-950/40 dark:text-red-400">
+          <TriangleAlert className="size-4 shrink-0" />
+          {error instanceof Error ? error.message : "Failed to load notifications"}
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="mx-auto max-w-2xl space-y-6 p-6">
       <NotificationsHeader
         unreadCount={unreadCount}
-        totalCount={notifications.length}
+        totalCount={displayList.length}
         onMarkAllRead={markAllAsRead}
         onDeleteAll={() => setConfirmDeleteAll(true)}
       />
       {success && (
         <div className="flex items-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700 dark:border-emerald-900/50 dark:bg-emerald-950/40 dark:text-emerald-300">
           {success}
-        </div>
-      )}
-      {error && (
-        <div className="flex items-center gap-2 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-900/50 dark:bg-red-950/40 dark:text-red-400">
-          <TriangleAlert className="size-4 shrink-0" /> {error}
         </div>
       )}
       {confirmDeleteAll && (
@@ -100,13 +143,19 @@ export function NotificationsPage() {
           </div>
         </div>
       )}
-      {loading ? (
-        <div className="flex justify-center py-16"><Loader2 className="size-6 animate-spin text-gray-400" /></div>
-      ) : notifications.length === 0 ? (
+      {displayList.length === 0 ? (
         <NotificationsEmptyState />
       ) : (
         <div className="space-y-2">
-          {notifications.map((n) => <NotificationItem key={n._id} notification={n} deletingId={deletingId} onMarkRead={markAsRead} onDelete={deleteNotification} />)}
+          {displayList.map((n) => (
+            <NotificationItem
+              key={n._id}
+              notification={n}
+              deletingId={null}
+              onMarkRead={markAsRead}
+              onDelete={deleteNotification}
+            />
+          ))}
         </div>
       )}
     </div>

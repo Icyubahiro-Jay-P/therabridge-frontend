@@ -3,6 +3,13 @@
  * Display placeholder animations while content is loading
  */
 
+import React from "react"
+import { cn } from "@/lib/utils"
+
+export function Skeleton({ className, ...props }: React.HTMLAttributes<HTMLDivElement> & { className?: string }) {
+  return <div className={cn("animate-pulse rounded-md bg-gray-200 dark:bg-gray-700", className)} {...props} />
+}
+
 export function SkeletonLoader() {
   return (
     <div className="animate-pulse space-y-4">

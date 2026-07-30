@@ -1,4 +1,4 @@
-import { Loader2 } from "lucide-react"
+import { Skeleton } from "@/components/ui/skeleton"
 import { cn } from "@/lib/utils"
 import { moodOptions, type MoodEntry } from "./useMoodState"
 
@@ -7,12 +7,38 @@ interface MoodHistoryProps {
   loading: boolean
 }
 
+function MoodEntrySkeleton() {
+  return (
+    <div className="flex items-start gap-3 rounded-xl border border-gray-100 bg-white p-4 dark:border-gray-800 dark:bg-gray-900">
+      <Skeleton className="size-8 rounded" />
+      <div className="min-w-0 flex-1 space-y-2">
+        <div className="flex items-center gap-2">
+          <Skeleton className="h-4 w-16" />
+          <Skeleton className="h-3 w-20" />
+        </div>
+        <Skeleton className="h-3 w-48" />
+        <div className="flex gap-1">
+          <Skeleton className="h-5 w-12 rounded-full" />
+          <Skeleton className="h-5 w-14 rounded-full" />
+        </div>
+      </div>
+      <div className="flex items-center gap-1">
+        {Array.from({ length: 5 }).map((_, i) => (
+          <Skeleton key={i} className="size-1.5 rounded-full" />
+        ))}
+      </div>
+    </div>
+  )
+}
+
 export function MoodHistory({ moods, loading }: MoodHistoryProps) {
   return (
     <div>
       <h2 className="mb-4 text-lg font-semibold text-gray-900 dark:text-white">Recent entries</h2>
       {loading ? (
-        <div className="flex justify-center py-8"><Loader2 className="size-5 animate-spin text-gray-400" /></div>
+        <div className="space-y-2">
+          {Array.from({ length: 5 }).map((_, i) => <MoodEntrySkeleton key={i} />)}
+        </div>
       ) : moods.length === 0 ? (
         <p className="text-sm text-gray-400">No mood entries yet.</p>
       ) : (

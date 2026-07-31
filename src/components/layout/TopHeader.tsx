@@ -77,6 +77,7 @@ export function TopHeader({
                 avatar: user.avatar,
               }}
               size="sm"
+              fallbackClassName="bg-linear-to-br from-emerald-500 to-teal-600"
             />
           )}
           <span className="hidden max-w-28 truncate text-sm font-medium text-gray-700 sm:block dark:text-gray-200">

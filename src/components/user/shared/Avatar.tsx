@@ -6,9 +6,11 @@ import type { ChatUser } from "../chat/types"
 export function Avatar({
   user,
   size = "md",
+  fallbackClassName,
 }: {
   user: ChatUser
   size?: "sm" | "md"
+  fallbackClassName?: string
 }) {
   const [imgError, setImgError] = useState(false)
   const baseUrl: string =
@@ -48,7 +50,7 @@ export function Avatar({
     <span
       className={cn(
         "inline-flex shrink-0 items-center justify-center rounded-full text-white",
-        color,
+        fallbackClassName ?? color,
         size === "sm" ? "size-8" : "size-10"
       )}
     >

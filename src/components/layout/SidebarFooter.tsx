@@ -1,6 +1,5 @@
 import { LogOut, PanelLeftClose, PanelLeftOpen } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { ModeToggle } from "@/components/shared/mode-toggle"
 import { cn } from "@/lib/utils"
 
 export function SidebarFooter({
@@ -26,12 +25,6 @@ export function SidebarFooter({
       {!isMinimized && (
         <div className="mb-1 flex items-center justify-between gap-2 px-1">
           <span className="truncate text-sm text-gray-500 dark:text-gray-400">@{username}</span>
-          <ModeToggle />
-        </div>
-      )}
-      {isMinimized && (
-        <div className="flex justify-center">
-          <ModeToggle />
         </div>
       )}
       <Button

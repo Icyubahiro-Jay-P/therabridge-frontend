@@ -35,8 +35,10 @@ export function useChatState() {
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => { messagesEndRef.current?.scrollIntoView({ behavior: "smooth" }) }, [messages])
+  const suggestionsLoadedRef = useRef(false)
   useEffect(() => {
-    if (loadingList || suggestions.length > 0) return
+    if (loadingList || suggestionsLoadedRef.current) return
+    suggestionsLoadedRef.current = true
     let mounted = true
     void (async () => {
       setLoadingSuggestions(true)
@@ -52,7 +54,7 @@ export function useChatState() {
     return () => {
       mounted = false
     }
-  }, [loadingList, suggestions])
+  }, [loadingList])
   useEffect(() => {
     if (searchQuery.length < 3) { setSearchResults([]); return }
     const timeout = setTimeout(async () => {

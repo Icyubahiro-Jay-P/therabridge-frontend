@@ -29,6 +29,8 @@ export function TherryChat({ onToggleSidebar }: { onToggleSidebar: () => void })
   const [input, setInput] = useState("")
   const [sending, setSending] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [editingId, setEditingId] = useState<string | null>(null)
+  const [editingContent, setEditingContent] = useState("")
   const endRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -36,7 +38,7 @@ export function TherryChat({ onToggleSidebar }: { onToggleSidebar: () => void })
     async function load() {
       try {
         const { data } = await api.get<
-          { _id: string; role: "user" | "assistant"; content: string; category?: string; createdAt: string }[]
+          { _id: string; role: "user" | "assistant"; content: string; category?: string; createdAt: string; edited?: boolean; editCount?: number }[]
         >("/api/therry/messages")
         if (!mounted) return
         setMessages(
@@ -46,6 +48,8 @@ export function TherryChat({ onToggleSidebar }: { onToggleSidebar: () => void })
             content: m.content,
             category: m.category,
             timestamp: m.createdAt,
+            edited: m.edited,
+            editCount: m.editCount,
           }))
         )
       } catch {
@@ -66,6 +70,12 @@ export function TherryChat({ onToggleSidebar }: { onToggleSidebar: () => void })
 
   async function handleSend(content: string) {
     if (!content.trim() || sending) return
+
+    if (editingId) {
+      await handleSaveEdit()
+      return
+    }
+
     const userMsg: TherryMessageData = {
       id: `user-${Date.now()}`,
       role: "user",
@@ -106,6 +116,47 @@ export function TherryChat({ onToggleSidebar }: { onToggleSidebar: () => void })
   }
 
   const showWelcome = messages.length === 0 && !loadingHistory
+
+  function startEdit(msg: TherryMessageData) {
+    setEditingId(msg.id)
+    setEditingContent(msg.content)
+    setError(null)
+  }
+
+  function cancelEdit() {
+    setEditingId(null)
+    setEditingContent("")
+  }
+
+  async function handleSaveEdit() {
+    if (!editingId || !editingContent.trim() || sending) return
+    setSending(true)
+    setError(null)
+    try {
+      const { data } = await api.put<
+        { _id: string; content: string; edited?: boolean; editCount?: number }
+      >(`/api/therry/messages/${editingId}`, { content: editingContent.trim() })
+      setMessages((prev) =>
+        prev.map((m) =>
+          m.id === editingId
+            ? {
+                ...m,
+                content: data.content,
+                edited: data.edited,
+                editCount: data.editCount,
+              }
+            : m
+        )
+      )
+      setEditingId(null)
+      setEditingContent("")
+      setInput("")
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to edit message")
+    } finally {
+      setSending(false)
+    }
+  }
 
   return (
     <div className="flex h-full min-h-0 flex-col">
@@ -152,7 +203,12 @@ export function TherryChat({ onToggleSidebar }: { onToggleSidebar: () => void })
           <>
             {showWelcome && <ChatMessage message={WELCOME_MESSAGE} />}
             {messages.map((msg) => (
-              <ChatMessage key={msg.id} message={msg} />
+              <ChatMessage
+                key={msg.id}
+                message={msg}
+                isEditing={editingId === msg.id}
+                onEdit={startEdit}
+              />
             ))}
             {sending && <TypingIndicator />}
             <div ref={endRef} />
@@ -163,12 +219,14 @@ export function TherryChat({ onToggleSidebar }: { onToggleSidebar: () => void })
       {showWelcome && !error && <SuggestionChips onSelect={handleSend} />}
 
       <ChatInput
-        value={input}
+        value={editingId ? editingContent : input}
         loading={sending || loadingHistory}
-        onChange={setInput}
+        onChange={editingId ? setEditingContent : setInput}
+        editing={!!editingId}
+        onCancelEdit={cancelEdit}
         onSubmit={(e) => {
           e.preventDefault()
-          void handleSend(input)
+          void handleSend(editingId ? editingContent : input)
         }}
       />
     </div>

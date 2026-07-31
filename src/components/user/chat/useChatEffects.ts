@@ -16,6 +16,8 @@ export function useChatEffects(state: {
   setPartner: (v: ChatUser | null) => void
   setMessages: (v: DirectMessage[] | ((prev: DirectMessage[]) => DirectMessage[])) => void
   setLoadingMessages: (v: boolean) => void
+  setEditingId: (v: string | null) => void
+  setEditingContent: (v: string) => void
 }) {
   useEffect(() => {
     function reload() {

@@ -10,7 +10,12 @@ import { TherryChat } from "@/components/user/chat/TherryChat"
 
 export function ChatPage() {
   const c = useChatState()
-  useChatEffects({ ...c, currentUserId: c.currentUser?.id })
+  useChatEffects({
+    ...c,
+    currentUserId: c.currentUser?.id,
+    setEditingId: c.setEditingId,
+    setEditingContent: c.setEditingContent,
+  })
 
   return (
     <div className="flex min-h-0 flex-1 overflow-hidden">

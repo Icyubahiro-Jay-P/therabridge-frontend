@@ -54,12 +54,16 @@ export function useChatEffects(state: {
       state.setPartner(null)
       state.setMessages([])
       state.setError(null)
+      state.setEditingId(null)
+      state.setEditingContent("")
       return
     }
     if (state.username === "therry") {
       state.setPartner(null)
       state.setMessages([])
       state.setError(null)
+      state.setEditingId(null)
+      state.setEditingContent("")
       return
     }
     let mounted = true

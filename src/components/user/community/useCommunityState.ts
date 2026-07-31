@@ -58,7 +58,7 @@ export function useCommunityState() {
       await api.delete(`/api/chat/communities/${active._id}/messages/${messageId}`)
       setMessages((prev) =>
         prev.map((m) =>
-          m._id === messageId ? { ...m, unsent: true, content: "[Message unsent]" } : m
+          m._id === messageId ? { ...m, unsent: true, content: "Message unsent" } : m
         )
       )
     } catch (err) {

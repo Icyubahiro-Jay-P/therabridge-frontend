@@ -85,7 +85,7 @@ export function useChatState() {
     setDeleting(messageId)
     try {
       await api.delete(`/api/chat/unsend/${messageId}`)
-      setMessages((prev) => prev.map((m) => m._id === messageId ? { ...m, unsent: true, content: "[Message unsent]" } : m))
+      setMessages((prev) => prev.map((m) => m._id === messageId ? { ...m, unsent: true, content: "Message unsent" } : m))
     } catch (err) { setError(getErrorMessage(err)) }
     finally { setDeleting(null) }
   }

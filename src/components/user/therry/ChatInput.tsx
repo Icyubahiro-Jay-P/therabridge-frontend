@@ -21,14 +21,14 @@ export function ChatInput({
   return (
     <div className="border-t border-gray-200 px-4 py-3.5 dark:border-gray-700/60">
       {editing && (
-        <div className="mb-2 flex items-center justify-between gap-2 rounded-lg border border-amber-300 bg-amber-50 px-3 py-2 dark:border-amber-700/70 dark:bg-amber-950/40">
-          <p className="flex items-center gap-1.5 text-xs font-medium text-amber-700 dark:text-amber-300">
+        <div className="mb-2 flex items-center justify-between gap-2 rounded-lg border border-teal-300 bg-teal-50 px-3 py-2 dark:border-teal-700/70 dark:bg-teal-950/40">
+          <p className="flex items-center gap-1.5 text-xs font-medium text-teal-700 dark:text-teal-300">
             <PencilLine className="size-3.5" /> Editing message
           </p>
           <button
             type="button"
             onClick={onCancelEdit}
-            className="flex cursor-pointer items-center gap-1 rounded-md px-2 py-1 text-xs font-medium text-amber-700 hover:bg-amber-100 dark:text-amber-300 dark:hover:bg-amber-900/40"
+            className="flex cursor-pointer items-center gap-1 rounded-md px-2 py-1 text-xs font-medium text-teal-700 hover:bg-teal-100 dark:text-teal-300 dark:hover:bg-teal-900/40"
           >
             <X className="size-3.5" /> Cancel
           </button>
@@ -43,7 +43,7 @@ export function ChatInput({
           className={cn(
             "flex-1 rounded-xl",
             editing &&
-              "border-amber-400 bg-amber-50/70 placeholder:text-amber-700/60 focus-visible:border-amber-500 focus-visible:ring-[3px] focus-visible:ring-amber-500/30 dark:border-amber-700 dark:bg-amber-950/30 dark:placeholder:text-amber-300/50"
+              "border-teal-400 bg-teal-50/70 placeholder:text-teal-700/60 focus-visible:border-teal-500 focus-visible:ring-[3px] focus-visible:ring-teal-500/30 dark:border-teal-700 dark:bg-teal-950/30 dark:placeholder:text-teal-300/50"
           )}
         />
         <Button
@@ -51,7 +51,7 @@ export function ChatInput({
           disabled={loading || !value.trim()}
           className={cn(
             "shrink-0",
-            editing ? "bg-amber-600 hover:bg-amber-700" : "bg-emerald-600 hover:bg-emerald-700"
+            editing ? "bg-teal-600 hover:bg-teal-700" : "bg-emerald-600 hover:bg-emerald-700"
           )}
           size="icon"
         >

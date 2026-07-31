@@ -37,7 +37,7 @@ export function ChatMessage({
           ? "bg-emerald-600 text-white rounded-br-md"
           : "bg-gray-300 text-gray-900 dark:bg-gray-800 dark:text-gray-100 rounded-bl-md",
         isEditing &&
-          "ring-2 ring-amber-400 ring-offset-2 ring-offset-gray-50 dark:ring-offset-gray-950"
+          "ring-2 ring-teal-400 ring-offset-2 ring-offset-gray-50 dark:ring-offset-gray-950"
       )}>
         {message.role === "therry" && (
           <p className="mb-1 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
@@ -60,7 +60,7 @@ export function ChatMessage({
           )}
         </p>
         {isUser && isEditing && (
-          <p className="mt-1 flex items-center gap-1 text-[10px] font-medium text-amber-200">
+          <p className="mt-1 flex items-center gap-1 text-[10px] font-medium text-teal-200">
             <PencilLine className="size-2.5" /> Editing...
           </p>
         )}

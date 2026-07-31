@@ -79,8 +79,8 @@ export function MessageBubble({
                   : "rounded-bl-md bg-gray-300 text-gray-900 dark:bg-gray-800 dark:text-gray-100",
                 isEditing &&
                   (isMe
-                    ? "ring-2 ring-amber-400 ring-offset-1 ring-offset-gray-50 dark:ring-offset-gray-950"
-                    : "ring-2 ring-amber-400 ring-offset-1 ring-offset-gray-50 dark:ring-offset-gray-950")
+                    ? "ring-2 ring-teal-400 ring-offset-1 ring-offset-gray-50 dark:ring-offset-gray-950"
+                    : "ring-2 ring-teal-400 ring-offset-1 ring-offset-gray-50 dark:ring-offset-gray-950")
               )}
             >
               <div
@@ -100,7 +100,7 @@ export function MessageBubble({
                   <span
                     className={cn(
                       "inline-flex items-center gap-1 text-[10px] font-medium",
-                      isMe ? "text-amber-200" : "text-amber-600 dark:text-amber-400"
+                      isMe ? "text-teal-200" : "text-teal-600 dark:text-teal-400"
                     )}
                   >
                     <PencilLine className="size-2.5" /> Editing...

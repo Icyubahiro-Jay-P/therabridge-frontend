@@ -13,7 +13,7 @@ import {
   updateChatSettings as updateChatSettingsRequest,
   updatePrivacy as updatePrivacyRequest,
 } from "@/lib/auth-api"
-import { AuthError, NetworkError, setAuthToken } from "@/lib/api"
+import { AuthError, NetworkError, setAuthHandlers, setAuthToken } from "@/lib/api"
 import type {
   ChangePasswordPayload,
   ChatSettings,
@@ -205,3 +205,14 @@ export const useAuthStore = create<AuthState>()(
     }
   )
 )
+
+// Keep the persisted token in sync when the api layer silently refreshes it,
+// and force a clean logout when a session genuinely expires.
+setAuthHandlers({
+  onTokenRefreshed: (token) => {
+    useAuthStore.setState({ token })
+  },
+  onAuthExpired: () => {
+    useAuthStore.setState({ user: null, token: null })
+  },
+})

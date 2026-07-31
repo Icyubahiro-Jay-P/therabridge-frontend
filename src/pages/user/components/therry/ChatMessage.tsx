@@ -23,7 +23,7 @@ export function ChatMessage({ message }: { message: ChatMessageData }) {
         "max-w-[80%] rounded-2xl px-4 py-3 shadow-sm",
         message.role === "user"
           ? "bg-emerald-600 text-white rounded-br-md"
-          : "bg-gray-100 text-gray-900 dark:bg-gray-800 dark:text-gray-100 rounded-bl-md"
+          : "bg-gray-300 text-gray-900 dark:bg-gray-800 dark:text-gray-100 rounded-bl-md"
       )}>
         {message.role === "therry" && (
           <p className="mb-1 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
@@ -33,11 +33,11 @@ export function ChatMessage({ message }: { message: ChatMessageData }) {
         <p className="wrap-break-words whitespace-pre-wrap text-sm leading-relaxed">{message.content}</p>
         <p className={cn(
           "mt-1.5 text-[10px]",
-          message.role === "user" ? "text-emerald-200" : "text-gray-400"
+          message.role === "user" ? "text-emerald-200" : "text-gray-700"
         )}>
           {timeAgo(message.timestamp)}
           {message.category && message.role === "therry" && (
-            <span className="ml-2 rounded-full bg-gray-200 px-2 py-0.5 text-[9px] text-gray-500 dark:bg-gray-700 dark:text-gray-400">
+            <span className="ml-2 rounded-full bg-gray-200 px-2 py-0.5 text-[9px] text-gray-700 dark:bg-gray-700 dark:text-gray-400">
               {message.category}
             </span>
           )}

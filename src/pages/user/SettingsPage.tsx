@@ -136,10 +136,11 @@ export function SettingsPage() {
               max={100}
               value={settings.soundVolume}
               onChange={(e) => updateSetting("soundVolume", Number(e.target.value))}
-              className="w-32 accent-emerald-600"
+              disabled={!settings.soundEnabled}
+              className="w-32 accent-emerald-600 disabled:cursor-not-allowed disabled:opacity-40"
               aria-label="Sound volume"
             />
-            <span className="w-8 text-right text-xs text-gray-500">
+            <span className={`w-8 text-right text-xs ${settings.soundEnabled ? "text-gray-500" : "text-gray-300 dark:text-gray-600"}`}>
               {settings.soundVolume}%
             </span>
             <button

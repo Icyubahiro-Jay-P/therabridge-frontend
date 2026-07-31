@@ -7,6 +7,7 @@ interface ScoreStreak {
   exerciseStreak: number
   longestLoginStreak: number
   longestExerciseStreak: number
+  talkingPointsToday: number
 }
 
 interface Meta {
@@ -26,13 +27,13 @@ function nextMilestone(value: number): Meta {
 }
 
 function exLevel(score: number): Meta {
-  if (score >= 1200) return { level: 7, title: "Legend", fill: "100%", next: 1200 }
-  if (score >= 800) return { level: 6, title: "Master", fill: `${((score - 800) / 400) * 100}%`, next: 1200 }
-  if (score >= 500) return { level: 5, title: "Expert", fill: `${((score - 500) / 300) * 100}%`, next: 800 }
-  if (score >= 300) return { level: 4, title: "Dedicated", fill: `${((score - 300) / 200) * 100}%`, next: 500 }
-  if (score >= 150) return { level: 3, title: "Committed", fill: `${((score - 150) / 150) * 100}%`, next: 300 }
-  if (score >= 50) return { level: 2, title: "Growing", fill: `${((score - 50) / 100) * 100}%`, next: 150 }
-  return { level: 1, title: "Beginner", fill: `${(score / 50) * 100}%`, next: 50 }
+  if (score >= 1200) return { level: 7, title: "Voice of Therabridge", fill: "100%", next: 1200 }
+  if (score >= 800) return { level: 6, title: "Connection Coach", fill: `${((score - 800) / 400) * 100}%`, next: 1200 }
+  if (score >= 500) return { level: 5, title: "Heart of the Group", fill: `${((score - 500) / 300) * 100}%`, next: 800 }
+  if (score >= 300) return { level: 4, title: "Storyteller", fill: `${((score - 300) / 200) * 100}%`, next: 500 }
+  if (score >= 150) return { level: 3, title: "Conversationalist", fill: `${((score - 150) / 150) * 100}%`, next: 300 }
+  if (score >= 50) return { level: 2, title: "Warming Up", fill: `${((score - 50) / 100) * 100}%`, next: 150 }
+  return { level: 1, title: "First Step", fill: `${(score / 50) * 100}%`, next: 50 }
 }
 
 function streakLabel(value: number) {
@@ -68,7 +69,7 @@ export function StreakCards({ scoreStreak }: { scoreStreak: ScoreStreak }) {
       </div>
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {([
-          { label: "EX Score", value: scoreStreak.exerciseScore, unit: "pts", Icon: Zap, meta: exLevel(scoreStreak.exerciseScore) },
+          { label: "Wellness Score", value: scoreStreak.exerciseScore, unit: "pts", Icon: Zap, meta: exLevel(scoreStreak.exerciseScore) },
           { label: "Exercise Streak", value: scoreStreak.exerciseStreak, unit: scoreStreak.exerciseStreak === 1 ? "day" : "days", Icon: TrendingUp, meta: nextMilestone(scoreStreak.exerciseStreak), tier: streakLabel(scoreStreak.exerciseStreak) },
           { label: "Login Streak", value: scoreStreak.loginStreak, unit: scoreStreak.loginStreak === 1 ? "day" : "days", Icon: Flame, meta: nextMilestone(scoreStreak.loginStreak), tier: streakLabel(scoreStreak.loginStreak) },
           { label: "Best Streak", value: best, unit: "days", Icon: Layers, meta: nextMilestone(best), tier: streakLabel(best) },
@@ -145,6 +146,23 @@ export function StreakCards({ scoreStreak }: { scoreStreak: ScoreStreak }) {
             </div>
           )
         })}
+      </div>
+
+      <div className="mt-4 rounded-2xl border border-amber-200/60 bg-linear-to-br from-amber-50 to-orange-50/50 p-4 dark:border-amber-800/40 dark:from-amber-950/30 dark:to-orange-950/20">
+        <div className="flex items-center justify-between text-xs">
+          <span className="font-medium text-amber-700 dark:text-amber-300">
+            Talking Points today
+          </span>
+          <span className="text-gray-400 dark:text-gray-500">
+            {scoreStreak.talkingPointsToday}/20
+          </span>
+        </div>
+        <div className="mt-1.5 h-2 overflow-hidden rounded-full bg-amber-200 dark:bg-amber-800/50">
+          <div
+            className="h-full rounded-full bg-amber-500 transition-all duration-500"
+            style={{ width: `${Math.min(100, (scoreStreak.talkingPointsToday / 20) * 100)}%` }}
+          />
+        </div>
       </div>
     </section>
   )

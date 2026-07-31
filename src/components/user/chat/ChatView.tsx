@@ -65,10 +65,7 @@ export function ChatView({
         messages={messages}
         currentUserId={currentUserId}
         editingId={editingId}
-        editingContent={editingContent}
-        setEditingContent={setEditingContent}
         onStartEdit={onStartEdit}
-        onSaveEdit={onSaveEdit}
         onCancelEdit={onCancelEdit}
         onUnsend={onUnsend}
         menuOpenId={menuOpenId}
@@ -82,10 +79,12 @@ export function ChatView({
       <MessageInput
         partnerName={partner.firstName}
         sending={sending}
-        value={newMessage}
-        onChange={setNewMessage}
-        onSend={onSend}
+        value={editingId ? editingContent : newMessage}
+        onChange={editingId ? setEditingContent : setNewMessage}
+        onSend={editingId ? onSaveEdit : onSend}
         enterToSend={enterToSend}
+        editing={!!editingId}
+        onCancelEdit={onCancelEdit}
       />
     </>
   )

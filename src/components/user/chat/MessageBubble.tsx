@@ -1,22 +1,18 @@
 import { useState } from "react"
 import { Link } from "react-router-dom"
-import { CheckCheck, History, MoreVertical, TriangleAlert } from "lucide-react"
+import { CheckCheck, History, MoreVertical, PencilLine, TriangleAlert } from "lucide-react"
 import { cn } from "@/lib/utils"
 import type { DirectMessage } from "./types"
 import { Avatar } from "./Avatar"
 import { MessageActions } from "./MessageActions"
 import { EditHistory } from "./EditHistory"
-import { EditMessageForm } from "./EditMessageForm"
 import { formatTime, timeAgo } from "../shared/utils"
 
 export function MessageBubble({
   msg,
   isMe,
   editingId,
-  editingContent,
-  setEditingContent,
   onStartEdit,
-  onSaveEdit,
   onCancelEdit,
   onUnsend,
   menuOpenId,
@@ -30,10 +26,7 @@ export function MessageBubble({
   msg: DirectMessage
   isMe: boolean
   editingId: string | null
-  editingContent: string
-  setEditingContent: (v: string) => void
   onStartEdit: (msg: DirectMessage) => void
-  onSaveEdit: () => void
   onCancelEdit: () => void
   onUnsend: (id: string) => void
   menuOpenId: string | null
@@ -85,33 +78,37 @@ export function MessageBubble({
                 "wrap-break-words relative cursor-pointer rounded-2xl text-sm",
                 isMe
                   ? "rounded-br-md bg-emerald-600 text-white"
-                  : "rounded-bl-md bg-gray-300 text-gray-900 dark:bg-gray-800 dark:text-gray-100"
+                  : "rounded-bl-md bg-gray-300 text-gray-900 dark:bg-gray-800 dark:text-gray-100",
+                isEditing &&
+                  (isMe
+                    ? "ring-2 ring-amber-400 ring-offset-1 ring-offset-gray-50 dark:ring-offset-gray-950"
+                    : "ring-2 ring-amber-400 ring-offset-1 ring-offset-gray-50 dark:ring-offset-gray-950")
               )}
             >
-              {isEditing ? (
-                <EditMessageForm
-                  content={editingContent}
-                  onChange={setEditingContent}
-                  onSave={onSaveEdit}
-                  onCancel={onCancelEdit}
-                />
-              ) : (
-                <>
-                  <div
-                    className={cn("px-3.5 pt-2.5", isUnsent && "italic opacity-60")}
-                  >
-                    <p className="wrap-break-words whitespace-pre-wrap">
-                      {isUnsent ? "Message unsent" : msg.content}
-                    </p>
-                  </div>
-                  <div
+              <div
+                className={cn("px-3.5 pt-2.5", isUnsent && "italic opacity-60")}
+              >
+                <p className="wrap-break-words whitespace-pre-wrap">
+                  {isUnsent ? "Message unsent" : msg.content}
+                </p>
+              </div>
+              <div
+                className={cn(
+                  "flex items-center gap-2 px-3.5 pb-2",
+                  isMe ? "justify-end" : "justify-start"
+                )}
+              >
+                {isEditing && (
+                  <span
                     className={cn(
-                      "flex items-center gap-2 px-3.5 pb-2",
-                      isMe ? "justify-end" : "justify-start"
+                      "inline-flex items-center gap-1 text-[10px] font-medium",
+                      isMe ? "text-amber-200" : "text-amber-600 dark:text-amber-400"
                     )}
-                  />
-                </>
-              )}
+                  >
+                    <PencilLine className="size-2.5" /> Editing...
+                  </span>
+                )}
+              </div>
             </div>
           </div>
           {!isUnsent && showTime && (

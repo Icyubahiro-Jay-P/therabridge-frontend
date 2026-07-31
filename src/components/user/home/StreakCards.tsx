@@ -7,7 +7,6 @@ interface ScoreStreak {
   exerciseStreak: number
   longestLoginStreak: number
   longestExerciseStreak: number
-  talkingPointsToday: number
 }
 
 interface Meta {
@@ -146,23 +145,6 @@ export function StreakCards({ scoreStreak }: { scoreStreak: ScoreStreak }) {
             </div>
           )
         })}
-      </div>
-
-      <div className="mt-4 rounded-2xl border border-amber-200/60 bg-linear-to-br from-amber-50 to-orange-50/50 p-4 dark:border-amber-800/40 dark:from-amber-950/30 dark:to-orange-950/20">
-        <div className="flex items-center justify-between text-xs">
-          <span className="font-medium text-amber-700 dark:text-amber-300">
-            Talking Points today
-          </span>
-          <span className="text-gray-400 dark:text-gray-500">
-            {scoreStreak.talkingPointsToday}/20
-          </span>
-        </div>
-        <div className="mt-1.5 h-2 overflow-hidden rounded-full bg-amber-200 dark:bg-amber-800/50">
-          <div
-            className="h-full rounded-full bg-amber-500 transition-all duration-500"
-            style={{ width: `${Math.min(100, (scoreStreak.talkingPointsToday / 20) * 100)}%` }}
-          />
-        </div>
       </div>
     </section>
   )

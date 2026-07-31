@@ -24,7 +24,6 @@ interface ScoreStreak {
   exerciseStreak: number
   longestLoginStreak: number
   longestExerciseStreak: number
-  talkingPointsToday: number
 }
 
 export function getGreeting() {
@@ -76,7 +75,6 @@ export function useHomeState() {
           exerciseStreak: data.exerciseStreak ?? 0,
           longestLoginStreak: data.longestLoginStreak ?? 0,
           longestExerciseStreak: data.longestExerciseStreak ?? 0,
-          talkingPointsToday: data.talkingPointsToday ?? 0,
         })
       } catch {
         setScoreStreak({
@@ -85,7 +83,6 @@ export function useHomeState() {
           exerciseStreak: user.exerciseStreak ?? 0,
           longestLoginStreak: user.longestLoginStreak ?? 0,
           longestExerciseStreak: user.longestExerciseStreak ?? 0,
-          talkingPointsToday: 0,
         })
       }
     }

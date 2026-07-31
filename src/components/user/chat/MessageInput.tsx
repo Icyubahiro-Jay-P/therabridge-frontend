@@ -7,6 +7,8 @@ export function MessageInput({
   onChange,
   onSend,
   enterToSend,
+  editing = false,
+  onCancelEdit,
 }: {
   partnerName: string
   sending: boolean
@@ -14,6 +16,8 @@ export function MessageInput({
   onChange: (v: string) => void
   onSend: () => void
   enterToSend: boolean
+  editing?: boolean
+  onCancelEdit?: () => void
 }) {
   return (
     <SharedMessageInput
@@ -23,6 +27,8 @@ export function MessageInput({
       sending={sending}
       placeholder={`Message ${partnerName}...`}
       enterToSend={enterToSend}
+      editing={editing}
+      onCancelEdit={onCancelEdit}
     />
   )
 }

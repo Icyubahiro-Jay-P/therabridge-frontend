@@ -3,9 +3,9 @@ import { useParams } from "react-router-dom"
 import { Leaf, TriangleAlert } from "lucide-react"
 
 import { api } from "@/lib/api"
-import { InvalidToken } from "@/pages/components/auth/InvalidToken"
-import { ResetPasswordForm } from "@/pages/components/auth/ResetPasswordForm"
-import { ResetPasswordSuccess } from "@/pages/components/auth/ResetPasswordSuccess"
+import { InvalidToken } from "@/components/shared/auth/InvalidToken"
+import { ResetPasswordForm } from "@/components/shared/auth/ResetPasswordForm"
+import { ResetPasswordSuccess } from "@/components/shared/auth/ResetPasswordSuccess"
 
 function getErrorMessage(err: unknown): string {
   if (err instanceof Error) return err.message

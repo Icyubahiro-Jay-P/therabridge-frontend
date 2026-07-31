@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import type { Exercise } from "@/components/exercises/types"
+import type { Exercise } from "@/components/user/exercises/types"
 import { useAuthStore } from "@/store/auth-store"
 import { api } from "@/lib/api"
 

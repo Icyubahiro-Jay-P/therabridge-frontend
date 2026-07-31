@@ -1,5 +1,5 @@
-import { ExerciseCard } from "@/components/exercises/ExerciseCard"
-import type { Exercise } from "@/components/exercises/types"
+import { ExerciseCard } from "@/components/user/exercises/ExerciseCard"
+import type { Exercise } from "@/components/user/exercises/types"
 
 interface ResourceCardProps {
   exercise: Exercise

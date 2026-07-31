@@ -1,11 +1,11 @@
 import { CheckCircle2 } from "lucide-react"
 
-import { AccountOverview } from "./components/profile/AccountOverview"
-import { AvatarUpload } from "./components/profile/AvatarUpload"
-import { PasswordForm } from "./components/profile/PasswordForm"
-import { ProfileForm } from "./components/profile/ProfileForm"
-import { ProfileHeader } from "./components/profile/ProfileHeader"
-import { useProfileState } from "./components/profile/useProfileState"
+import { AccountOverview } from "@/components/user/profile/AccountOverview"
+import { AvatarUpload } from "@/components/user/profile/AvatarUpload"
+import { PasswordForm } from "@/components/user/profile/PasswordForm"
+import { ProfileForm } from "@/components/user/profile/ProfileForm"
+import { ProfileHeader } from "@/components/user/profile/ProfileHeader"
+import { useProfileState } from "@/components/user/profile/useProfileState"
 
 export function ProfilePage() {
   const {

@@ -1,10 +1,10 @@
-import { ExerciseModal } from "@/components/exercises/ExerciseModal"
-import { useHomeState } from "./components/home/useHomeState"
-import { GreetingHeader } from "./components/home/GreetingHeader"
-import { ResourcesSection } from "./components/home/ResourcesSection"
-import { UpcomingAppointments } from "./components/home/UpcomingAppointments"
-import { TherapistList } from "./components/home/TherapistList"
-import { StreakCards } from "./components/home/StreakCards"
+import { ExerciseModal } from "@/components/user/exercises/ExerciseModal"
+import { useHomeState } from "@/components/user/home/useHomeState"
+import { GreetingHeader } from "@/components/user/home/GreetingHeader"
+import { ResourcesSection } from "@/components/user/home/ResourcesSection"
+import { UpcomingAppointments } from "@/components/user/home/UpcomingAppointments"
+import { TherapistList } from "@/components/user/home/TherapistList"
+import { StreakCards } from "@/components/user/home/StreakCards"
 
 export function HomePage() {
   const {

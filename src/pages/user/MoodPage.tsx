@@ -1,8 +1,8 @@
 import { TriangleAlert } from "lucide-react"
-import { useMoodState } from "./components/mood/useMoodState"
-import { MoodSelector } from "./components/mood/MoodSelector"
-import { MoodChart } from "./components/mood/MoodChart"
-import { MoodHistory } from "./components/mood/MoodHistory"
+import { useMoodState } from "@/components/user/mood/useMoodState"
+import { MoodSelector } from "@/components/user/mood/MoodSelector"
+import { MoodChart } from "@/components/user/mood/MoodChart"
+import { MoodHistory } from "@/components/user/mood/MoodHistory"
 
 export function MoodPage() {
   const {

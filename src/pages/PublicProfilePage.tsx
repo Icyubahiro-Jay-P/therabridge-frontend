@@ -5,11 +5,11 @@ import { ArrowLeft, CalendarDays, Lock, Mail, MessageCircle, Shield } from "luci
 import { Button } from "@/components/ui/button"
 import { fetchPublicProfile } from "@/lib/auth-api"
 import type { PublicProfile } from "@/types/user"
-import { ProfileHeader } from "@/pages/components/profile/ProfileHeader"
-import { ProfileInfoCard } from "@/pages/components/profile/ProfileInfoCard"
-import { PrivateFieldBadge } from "@/pages/components/profile/PrivateFieldBadge"
-import { ProfileLoading } from "@/pages/components/profile/ProfileLoading"
-import { ProfileError } from "@/pages/components/profile/ProfileError"
+import { ProfileHeader } from "@/components/shared/profile/ProfileHeader"
+import { ProfileInfoCard } from "@/components/shared/profile/ProfileInfoCard"
+import { PrivateFieldBadge } from "@/components/shared/profile/PrivateFieldBadge"
+import { ProfileLoading } from "@/components/shared/profile/ProfileLoading"
+import { ProfileError } from "@/components/shared/profile/ProfileError"
 
 export function PublicProfilePage() {
   const { username } = useParams<{ username: string }>()

@@ -2,8 +2,8 @@ import { useState } from "react"
 import { Leaf, TriangleAlert } from "lucide-react"
 
 import { api } from "@/lib/api"
-import { ForgotPasswordForm } from "@/pages/components/auth/ForgotPasswordForm"
-import { ForgotPasswordSuccess } from "@/pages/components/auth/ForgotPasswordSuccess"
+import { ForgotPasswordForm } from "@/components/shared/auth/ForgotPasswordForm"
+import { ForgotPasswordSuccess } from "@/components/shared/auth/ForgotPasswordSuccess"
 
 function getErrorMessage(err: unknown): string {
   if (err instanceof Error) return err.message

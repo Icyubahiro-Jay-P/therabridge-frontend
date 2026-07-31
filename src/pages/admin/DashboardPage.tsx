@@ -3,7 +3,7 @@ import { Loader2, Shield, Users, Hash, AlertTriangle } from "lucide-react"
 
 import { useAuthStore } from "@/store/auth-store"
 import { api } from "@/lib/api"
-import { AdminStatCard } from "./components/AdminStatCard"
+import { AdminStatCard } from "@/components/admin/AdminStatCard"
 
 export function AdminDashboardPage() {
   const user = useAuthStore((state) => state.user)

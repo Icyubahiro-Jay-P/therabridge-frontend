@@ -4,11 +4,11 @@ import { Loader2, TriangleAlert, AlertCircle } from "lucide-react"
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
 import { api } from "@/lib/api"
-import { CrisisHeader } from "./components/crisis/CrisisHeader"
-import { EmergencyContacts } from "./components/crisis/EmergencyContacts"
-import { AlertTypeSelector } from "./components/crisis/AlertTypeSelector"
-import { CrisisAlertSuccess } from "./components/crisis/CrisisAlertSuccess"
-import { AlertHistory } from "./components/crisis/AlertHistory"
+import { CrisisHeader } from "@/components/user/crisis/CrisisHeader"
+import { EmergencyContacts } from "@/components/user/crisis/EmergencyContacts"
+import { AlertTypeSelector } from "@/components/user/crisis/AlertTypeSelector"
+import { CrisisAlertSuccess } from "@/components/user/crisis/CrisisAlertSuccess"
+import { AlertHistory } from "@/components/user/crisis/AlertHistory"
 
 interface CrisisAlert {
   _id: string

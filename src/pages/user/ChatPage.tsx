@@ -1,11 +1,11 @@
 import { Loader2, Menu } from "lucide-react"
 
-import { useChatState } from "./components/chat/useChatState"
-import { useChatEffects } from "./components/chat/useChatEffects"
-import { Sidebar } from "./components/chat/Sidebar"
-import { EmptyState } from "./components/chat/EmptyState"
-import { ChatView } from "./components/chat/ChatView"
-import { TherryChat } from "./components/chat/TherryChat"
+import { useChatState } from "@/components/user/chat/useChatState"
+import { useChatEffects } from "@/components/user/chat/useChatEffects"
+import { Sidebar } from "@/components/user/chat/Sidebar"
+import { EmptyState } from "@/components/user/chat/EmptyState"
+import { ChatView } from "@/components/user/chat/ChatView"
+import { TherryChat } from "@/components/user/chat/TherryChat"
 
 export function ChatPage() {
   const c = useChatState()

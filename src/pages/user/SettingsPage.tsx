@@ -1,11 +1,11 @@
 import { TriangleAlert, User, Sun, Moon, Bell, Fingerprint, Volume2, Play } from "lucide-react"
 import { Switch } from "@/components/ui/switch"
-import { useSettingsState } from "./components/settings/useSettingsState"
-import { ChatSettings } from "./components/settings/ChatSettings"
-import { PrivacySettings } from "./components/settings/PrivacySettings"
-import { SettingRow } from "./components/settings/SettingRow"
-import { PrivacyToggles } from "./components/settings/PrivacyToggles"
-import { DeleteAccountModal } from "./components/settings/DeleteAccountModal"
+import { useSettingsState } from "@/components/user/settings/useSettingsState"
+import { ChatSettings } from "@/components/user/settings/ChatSettings"
+import { PrivacySettings } from "@/components/user/settings/PrivacySettings"
+import { SettingRow } from "@/components/user/settings/SettingRow"
+import { PrivacyToggles } from "@/components/user/settings/PrivacyToggles"
+import { DeleteAccountModal } from "@/components/user/settings/DeleteAccountModal"
 import { playTestSound } from "@/lib/sound"
 
 export function SettingsPage() {

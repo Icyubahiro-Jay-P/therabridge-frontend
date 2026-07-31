@@ -1,10 +1,10 @@
 import { lazy, Suspense, useEffect } from "react"
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom"
 
-import { GuestRoute, ProtectedRoute } from "@/components/auth/ProtectedRoute"
+import { GuestRoute, ProtectedRoute } from "@/components/shared/auth/ProtectedRoute"
 import { AppLayout } from "@/components/layout/AppLayout"
 import { useAuthStore } from "@/store/auth-store"
-import { ErrorBoundary } from "@/components/auth/ErrorBoundary"
+import { ErrorBoundary } from "@/components/shared/auth/ErrorBoundary"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Leaf } from "lucide-react"
 

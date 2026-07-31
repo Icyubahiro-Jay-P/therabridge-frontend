@@ -3,9 +3,9 @@ import { Loader2, Search } from "lucide-react"
 
 import { Input } from "@/components/ui/input"
 import { api } from "@/lib/api"
-import { ClientListItem } from "./components/ClientListItem"
-import { ClientProfilePanel } from "./components/ClientProfilePanel"
-import { ClientsEmptyState } from "./components/ClientsEmptyState"
+import { ClientListItem } from "@/components/therapist/ClientListItem"
+import { ClientProfilePanel } from "@/components/therapist/ClientProfilePanel"
+import { ClientsEmptyState } from "@/components/therapist/ClientsEmptyState"
 
 interface ChatUser {
   _id: string

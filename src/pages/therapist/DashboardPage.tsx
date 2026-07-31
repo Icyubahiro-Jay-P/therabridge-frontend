@@ -3,8 +3,8 @@ import { Hash, Loader2, MessageCircle, Users } from "lucide-react"
 
 import { useAuthStore } from "@/store/auth-store"
 import { api } from "@/lib/api"
-import { TherapistStatCard } from "./components/TherapistStatCard"
-import { TherapistCommunityCard } from "./components/TherapistCommunityCard"
+import { TherapistStatCard } from "@/components/therapist/TherapistStatCard"
+import { TherapistCommunityCard } from "@/components/therapist/TherapistCommunityCard"
 
 interface TherapistCommunity {
   _id: string

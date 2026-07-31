@@ -2,11 +2,11 @@ import { useEffect, useState } from "react"
 import { Loader2, Users } from "lucide-react"
 
 import { api } from "@/lib/api"
-import { AdminCommunityCard } from "./components/AdminCommunityCard"
-import { AdminEmptyState } from "./components/AdminEmptyState"
-import { FeedbackBanner } from "./components/FeedbackBanner"
-import { SearchBar } from "./components/SearchBar"
-import { PageHeader } from "./components/PageHeader"
+import { AdminCommunityCard } from "@/components/admin/AdminCommunityCard"
+import { AdminEmptyState } from "@/components/admin/AdminEmptyState"
+import { FeedbackBanner } from "@/components/admin/FeedbackBanner"
+import { SearchBar } from "@/components/admin/SearchBar"
+import { PageHeader } from "@/components/admin/PageHeader"
 
 interface AdminCommunity {
   _id: string; name: string; description: string; inviteKey: string

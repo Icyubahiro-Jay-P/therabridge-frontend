@@ -4,8 +4,8 @@ import { Toaster } from "sonner"
 
 import "./index.css"
 import App from "./App.tsx"
-import { ThemeProvider } from "@/components/theme-provider.tsx"
-import { ErrorBoundary } from "@/components/auth/ErrorBoundary"
+import { ThemeProvider } from "@/components/shared/theme-provider.tsx"
+import { ErrorBoundary } from "@/components/shared/auth/ErrorBoundary"
 import { TooltipProvider } from "@/components/ui/tooltip"
 import { queryClient } from "@/lib/query-client"
 

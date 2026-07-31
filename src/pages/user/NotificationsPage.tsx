@@ -3,9 +3,9 @@ import { TriangleAlert } from "lucide-react"
 
 import { api } from "@/lib/api"
 import { useGetNotifications, useMarkNotificationRead } from "@/lib/query-hooks"
-import { NotificationItem } from "./components/notifications/NotificationItem"
-import { NotificationsHeader } from "./components/notifications/NotificationsHeader"
-import { NotificationsEmptyState } from "./components/notifications/NotificationsEmptyState"
+import { NotificationItem } from "@/components/user/notifications/NotificationItem"
+import { NotificationsHeader } from "@/components/user/notifications/NotificationsHeader"
+import { NotificationsEmptyState } from "@/components/user/notifications/NotificationsEmptyState"
 import { Skeleton } from "@/components/ui/skeleton"
 
 interface NotificationItemData {

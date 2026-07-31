@@ -1,10 +1,10 @@
 import { Link } from "react-router-dom"
 import { Leaf } from "lucide-react"
 
-import { ModeToggle } from "@/components/mode-toggle"
-import { useLoginState } from "@/pages/components/auth/useLoginState"
-import { LoginForm } from "@/pages/components/auth/LoginForm"
-import { LoginFooter } from "@/pages/components/auth/LoginFooter"
+import { ModeToggle } from "@/components/shared/mode-toggle"
+import { useLoginState } from "@/components/shared/auth/useLoginState"
+import { LoginForm } from "@/components/shared/auth/LoginForm"
+import { LoginFooter } from "@/components/shared/auth/LoginFooter"
 
 export function LoginPage() {
   const {

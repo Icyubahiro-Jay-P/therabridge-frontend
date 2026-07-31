@@ -2,11 +2,11 @@ import { useEffect, useState } from "react"
 import { Loader2, UserCog } from "lucide-react"
 
 import { api } from "@/lib/api"
-import { AdminUserRow } from "./components/AdminUserRow"
-import { AdminEmptyState } from "./components/AdminEmptyState"
-import { FeedbackBanner } from "./components/FeedbackBanner"
-import { SearchBar } from "./components/SearchBar"
-import { PageHeader } from "./components/PageHeader"
+import { AdminUserRow } from "@/components/admin/AdminUserRow"
+import { AdminEmptyState } from "@/components/admin/AdminEmptyState"
+import { FeedbackBanner } from "@/components/admin/FeedbackBanner"
+import { SearchBar } from "@/components/admin/SearchBar"
+import { PageHeader } from "@/components/admin/PageHeader"
 
 interface AppUser {
   _id: string; username: string; firstName: string; lastName: string

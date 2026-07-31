@@ -1,6 +1,6 @@
 import { LogOut, PanelLeftClose, PanelLeftOpen } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { ModeToggle } from "@/components/mode-toggle"
+import { ModeToggle } from "@/components/shared/mode-toggle"
 import { cn } from "@/lib/utils"
 
 export function SidebarFooter({

@@ -1,6 +1,6 @@
 import { CheckCircle2, TriangleAlert } from "lucide-react"
 
-import type { Exercise } from "@/components/exercises/types"
+import type { Exercise } from "@/components/user/exercises/types"
 import { cn } from "@/lib/utils"
 
 import { ResourceCard } from "./ResourceCard"

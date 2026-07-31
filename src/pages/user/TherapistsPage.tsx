@@ -2,9 +2,9 @@ import { useState } from "react"
 import { TriangleAlert } from "lucide-react"
 
 import { useGetTherapists } from "@/lib/query-hooks"
-import { TherapistSearchFilters } from "./components/therapists/TherapistSearchFilters"
-import { TherapistCard } from "./components/therapists/TherapistCard"
-import { TherapistsEmptyState } from "./components/therapists/TherapistsEmptyState"
+import { TherapistSearchFilters } from "@/components/user/therapists/TherapistSearchFilters"
+import { TherapistCard } from "@/components/user/therapists/TherapistCard"
+import { TherapistsEmptyState } from "@/components/user/therapists/TherapistsEmptyState"
 import { Skeleton } from "@/components/ui/skeleton"
 
 interface Therapist {

@@ -14,6 +14,7 @@ export function ConversationItem({
   onClick: () => void
   showPreviews: boolean
 }) {
+  const isMine = conv.lastMessage.sender._id !== conv.partner._id
   return (
     <button
       onClick={onClick}
@@ -24,7 +25,7 @@ export function ConversationItem({
           : "hover:bg-gray-50 dark:hover:bg-gray-800"
       )}
     >
-      <div className="relative">
+      <div className="relative shrink-0">
         <Avatar user={conv.partner} size="sm" />
         {conv.unread > 0 && (
           <span className="absolute -top-1 -right-1 flex size-4 items-center justify-center rounded-full bg-emerald-600 text-[10px] font-bold text-white">
@@ -33,17 +34,19 @@ export function ConversationItem({
         )}
       </div>
       <div className="min-w-0 flex-1">
-        <div className="flex items-baseline justify-between gap-2">
-          <p className="truncate text-sm font-medium text-gray-900 dark:text-white">
-            {conv.partner.firstName} {conv.partner.lastName}
+        <p className="truncate text-sm font-medium text-gray-900 dark:text-white">
+          {conv.partner.firstName} {conv.partner.lastName}
+        </p>
+        <div className="flex items-center gap-2">
+          <p className="min-w-0 flex-1 truncate text-xs text-gray-400">
+            {showPreviews
+              ? `${isMine ? "You" : conv.partner.firstName}: ${conv.lastMessage.content}`
+              : "New message"}
           </p>
           <span className="shrink-0 text-[11px] text-gray-400">
             {timeAgo(conv.lastMessage.createdAt)}
           </span>
         </div>
-        <p className="truncate text-xs text-gray-400">
-          {showPreviews ? conv.lastMessage.content : "New message"}
-        </p>
       </div>
     </button>
   )

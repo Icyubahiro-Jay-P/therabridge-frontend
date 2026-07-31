@@ -2,6 +2,7 @@ import { cn } from "@/lib/utils"
 import { X } from "lucide-react"
 import { SearchSection } from "./SearchSection"
 import { ConversationList } from "./ConversationList"
+import { SuggestedUsers } from "./SuggestedUsers"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import type { ChatUser, Conversation } from "./types"
 
@@ -20,6 +21,8 @@ export function Sidebar({
   showPreviews,
   isTherry,
   onTherryClick,
+  suggestions,
+  loadingSuggestions,
 }: {
   mobileSidebarOpen: boolean
   onCloseSidebar: () => void
@@ -35,6 +38,8 @@ export function Sidebar({
   showPreviews: boolean
   isTherry: boolean
   onTherryClick: () => void
+  suggestions: ChatUser[]
+  loadingSuggestions: boolean
 }) {
   return (
     <aside
@@ -55,15 +60,24 @@ export function Sidebar({
       />
       <ScrollArea className="flex-1">
         {!searchQuery && (
-          <ConversationList
-            loadingList={loadingList}
-            conversations={conversations}
-            partner={partner}
-            onSelectConv={onSelectConv}
-            showPreviews={showPreviews}
-            isTherry={isTherry}
-            onTherryClick={onTherryClick}
-          />
+          <>
+            <ConversationList
+              loadingList={loadingList}
+              conversations={conversations}
+              partner={partner}
+              onSelectConv={onSelectConv}
+              showPreviews={showPreviews}
+              isTherry={isTherry}
+              onTherryClick={onTherryClick}
+            />
+            <div className="px-4 pb-4">
+              <SuggestedUsers
+                loading={loadingSuggestions}
+                suggestions={suggestions}
+                onSelectUser={onSelectUser}
+              />
+            </div>
+          </>
         )}
       </ScrollArea>
       <div className="flex items-center justify-between border-t border-gray-200 px-3 py-2 md:hidden dark:border-gray-700/60">

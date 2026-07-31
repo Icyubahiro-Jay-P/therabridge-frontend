@@ -40,6 +40,8 @@ export function ChatPage() {
         showPreviews={c.showPreviews}
         isTherry={c.isTherry}
         onTherryClick={() => c.navigate("/chat/therry")}
+        suggestions={c.suggestions}
+        loadingSuggestions={c.loadingSuggestions}
       />
       <div className="relative flex min-h-0 flex-1 flex-col">
         {c.isTherry ? (

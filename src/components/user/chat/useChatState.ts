@@ -36,7 +36,7 @@ export function useChatState() {
 
   useEffect(() => { messagesEndRef.current?.scrollIntoView({ behavior: "smooth" }) }, [messages])
   useEffect(() => {
-    if (loadingList || conversations.length > 0) return
+    if (loadingList || suggestions.length > 0) return
     let mounted = true
     void (async () => {
       setLoadingSuggestions(true)
@@ -52,7 +52,7 @@ export function useChatState() {
     return () => {
       mounted = false
     }
-  }, [loadingList, conversations])
+  }, [loadingList, suggestions])
   useEffect(() => {
     if (searchQuery.length < 3) { setSearchResults([]); return }
     const timeout = setTimeout(async () => {

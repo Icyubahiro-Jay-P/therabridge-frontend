@@ -70,7 +70,7 @@ export function MessageBubble({
                 <MoreVertical className="size-3.5" />
               </button>
             )}
-            <div className="flex flex-col items-end">
+            <div className={cn("flex flex-col", isMe ? "items-end" : "items-start")}>
               <div
                 onClick={() => onToggleTimestamp(msg._id)}
                 className={cn(
@@ -110,7 +110,12 @@ export function MessageBubble({
                 </div>
               </div>
               {(showTime || hasEdits) && (
-                <div className="mt-1 flex flex-col items-end gap-1 text-[10px]">
+                <div
+                  className={cn(
+                    "mt-1 flex flex-col gap-1 text-[10px]",
+                    isMe ? "items-end" : "items-start"
+                  )}
+                >
                   {!isUnsent && showTime && (
                     <div className="flex items-center gap-1">
                       {isMe && seen && (

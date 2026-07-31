@@ -30,10 +30,15 @@ export default defineConfig({
       output: {
         manualChunks(id) {
           if (id.includes("node_modules")) {
-            if (id.includes("react")) return "vendor-react"
             if (id.includes("@tanstack/react-query"))
               return "vendor-react-query"
             if (id.includes("lucide-react")) return "vendor-icons"
+            if (id.includes("react-router"))
+              return "vendor-router"
+            if (id.includes("@radix-ui") || id.includes("radix-ui"))
+              return "vendor-radix"
+            if (id.includes("react") || id.includes("scheduler"))
+              return "vendor-react"
             if (id.includes("@/")) return "app"
             return "vendor"
           }

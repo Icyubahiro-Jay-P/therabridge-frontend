@@ -70,82 +70,82 @@ export function MessageBubble({
                 <MoreVertical className="size-3.5" />
               </button>
             )}
-            <div
-              onClick={() => onToggleTimestamp(msg._id)}
-              className={cn(
-                "wrap-break-words relative cursor-pointer rounded-2xl text-sm",
-                isMe
-                  ? "rounded-br-md bg-emerald-600 text-white"
-                  : "rounded-bl-md bg-gray-300 text-gray-900 dark:bg-gray-800 dark:text-gray-100",
-                isEditing &&
-                  (isMe
-                    ? "ring-2 ring-teal-400 ring-offset-1 ring-offset-gray-50 dark:ring-offset-gray-950"
-                    : "ring-2 ring-teal-400 ring-offset-1 ring-offset-gray-50 dark:ring-offset-gray-950")
-              )}
-            >
+            <div className="flex flex-col items-end">
               <div
-                className={cn("px-3.5 pt-2.5", isUnsent && "italic opacity-60")}
-              >
-                <p className="wrap-break-words whitespace-pre-wrap">
-                  {isUnsent ? "Message unsent" : msg.content}
-                </p>
-              </div>
-              <div
+                onClick={() => onToggleTimestamp(msg._id)}
                 className={cn(
-                  "flex items-center gap-2 px-3.5 pb-2",
-                  isMe ? "justify-end" : "justify-start"
+                  "wrap-break-words relative cursor-pointer rounded-2xl text-sm",
+                  isMe
+                    ? "rounded-br-md bg-emerald-600 text-white"
+                    : "rounded-bl-md bg-gray-300 text-gray-900 dark:bg-gray-800 dark:text-gray-100",
+                  isEditing &&
+                    (isMe
+                      ? "ring-2 ring-teal-400 ring-offset-1 ring-offset-gray-50 dark:ring-offset-gray-950"
+                      : "ring-2 ring-teal-400 ring-offset-1 ring-offset-gray-50 dark:ring-offset-gray-950")
                 )}
               >
-                {isEditing && (
-                  <span
-                    className={cn(
-                      "inline-flex items-center gap-1 text-[10px] font-medium",
-                      isMe ? "text-teal-200" : "text-teal-600 dark:text-teal-400"
-                    )}
-                  >
-                    <PencilLine className="size-2.5" /> Editing...
-                  </span>
-                )}
-              </div>
-            </div>
-          </div>
-          {(showTime || hasEdits) && (
-            <div
-              className="mt-1 flex flex-col items-end gap-1 text-[10px] w-max"
-            >
-              {!isUnsent && showTime && (
-                <div className="flex items-center gap-1">
-                  {isMe && seen && (
-                    <span className="inline-flex items-center gap-0.5 text-[11px] leading-none text-emerald-400">
-                      <CheckCheck className="size-3" />
+                <div
+                  className={cn("px-3.5 pt-2.5", isUnsent && "italic opacity-60")}
+                >
+                  <p className="wrap-break-words whitespace-pre-wrap">
+                    {isUnsent ? "Message unsent" : msg.content}
+                  </p>
+                </div>
+                <div
+                  className={cn(
+                    "flex items-center gap-2 px-3.5 pb-2",
+                    isMe ? "justify-end" : "justify-start"
+                  )}
+                >
+                  {isEditing && (
+                    <span
+                      className={cn(
+                        "inline-flex items-center gap-1 text-[10px] font-medium",
+                        isMe ? "text-teal-200" : "text-teal-600 dark:text-teal-400"
+                      )}
+                    >
+                      <PencilLine className="size-2.5" /> Editing...
                     </span>
                   )}
-                  <span
-                    className={cn(
-                      "text-[11px] leading-none",
-                      isMe
-                        ? "text-emerald-700 dark:text-emerald-600"
-                        : "text-gray-500 dark:text-gray-400"
-                    )}
-                  >
-                    {timeAgo(msg.createdAt)}
-                  </span>
+                </div>
+              </div>
+              {(showTime || hasEdits) && (
+                <div className="mt-1 flex flex-col items-end gap-1 text-[10px]">
+                  {!isUnsent && showTime && (
+                    <div className="flex items-center gap-1">
+                      {isMe && seen && (
+                        <span className="inline-flex items-center gap-0.5 text-[11px] leading-none text-emerald-400">
+                          <CheckCheck className="size-3" />
+                        </span>
+                      )}
+                      <span
+                        className={cn(
+                          "text-[11px] leading-none",
+                          isMe
+                            ? "text-emerald-700 dark:text-emerald-600"
+                            : "text-gray-500 dark:text-gray-400"
+                        )}
+                      >
+                        {timeAgo(msg.createdAt)}
+                      </span>
+                    </div>
+                  )}
+                  {hasEdits && (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        setShowHistoryFor(showHistoryFor === msg._id ? null : msg._id)
+                      }}
+                      title="Show edit history"
+                      className="flex cursor-pointer items-center gap-1 rounded px-1.5 py-0.5 text-[10px] text-gray-500 transition-colors duration-150 hover:text-emerald-600 hover:underline dark:text-gray-400 dark:hover:text-emerald-400"
+                    >
+                      <History className="size-2.5" /> edited ({msg.editCount})
+                    </button>
+                  )}
                 </div>
               )}
-              {hasEdits && (
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    setShowHistoryFor(showHistoryFor === msg._id ? null : msg._id)
-                  }}
-                  title="Show edit history"
-                  className="flex cursor-pointer items-center gap-1 rounded px-1.5 py-0.5 text-[10px] text-gray-500 transition-colors duration-150 hover:text-emerald-600 hover:underline dark:text-gray-400 dark:hover:text-emerald-400"
-                >
-                  <History className="size-2.5" /> edited ({msg.editCount})
-                </button>
-              )}
             </div>
-          )}
+          </div>
         </div>
       </div>
       {menuOpen && canEdit && (

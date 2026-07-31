@@ -48,7 +48,6 @@ export function MessageArea({
             isMe={isMe}
             editingId={editingId}
             onStartEdit={onStartEdit}
-            onCancelEdit={onCancelEdit}
             onUnsend={onUnsend}
             menuOpenId={menuOpenId}
             setMenuOpenId={setMenuOpenId}

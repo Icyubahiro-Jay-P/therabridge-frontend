@@ -1,6 +1,5 @@
 import { ExerciseModal } from "@/components/user/exercises/ExerciseModal"
 import { useHomeState } from "@/components/user/home/useHomeState"
-import { GreetingHeader } from "@/components/user/home/GreetingHeader"
 import { ResourcesSection } from "@/components/user/home/ResourcesSection"
 import { UpcomingAppointments } from "@/components/user/home/UpcomingAppointments"
 import { TherapistList } from "@/components/user/home/TherapistList"
@@ -25,8 +24,6 @@ export function HomePage() {
       )}
 
       <div className="space-y-10 p-6">
-        <GreetingHeader user={user} />
-
         {scoreStreak && <StreakCards scoreStreak={scoreStreak} />}
 
         <ResourcesSection

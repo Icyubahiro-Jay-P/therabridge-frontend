@@ -9,6 +9,7 @@ import { MobileSidebar } from "./MobileSidebar"
 import { MobileDock } from "./MobileDock"
 import { LogoutModal } from "./LogoutModal"
 import { ScreenshotProtection } from "./ScreenshotProtection"
+import { TopHeader } from "./TopHeader"
 
 export function AppLayout() {
   const { user } = useAuthStore()
@@ -68,9 +69,16 @@ export function AppLayout() {
         />
       </aside>
 
-      <main className="flex min-h-0 flex-1 flex-col overflow-y-auto pb-16 md:pb-0">
-        <Outlet />
-      </main>
+      <div className="flex min-h-0 flex-1 flex-col">
+        <TopHeader
+          notificationCount={notificationCount}
+          onOpenMenu={() => setMobileOpen(true)}
+        />
+
+        <main className="min-h-0 flex-1 overflow-y-auto pb-16 md:pb-0">
+          <Outlet />
+        </main>
+      </div>
 
       <MobileDock
         role={role}

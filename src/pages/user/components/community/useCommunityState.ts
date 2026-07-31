@@ -18,7 +18,6 @@ export function useCommunityState() {
   const [loadingMessages, setLoadingMessages] = useState(false)
   const [newMessage, setNewMessage] = useState("")
   const [sending, setSending] = useState(false)
-  const [showCreate, setShowCreate] = useState(false)
   const [showJoin, setShowJoin] = useState(false)
   const [showSettings, setShowSettings] = useState(false)
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false)
@@ -104,7 +103,7 @@ export function useCommunityState() {
     communities, setCommunities, loading, setLoading, error, setError,
     active, setActive, messages, setMessages, loadingMessages, setLoadingMessages,
     newMessage, setNewMessage, sending, setSending,
-    showCreate, setShowCreate, showJoin, setShowJoin,
+    showJoin, setShowJoin,
     showSettings, setShowSettings,
     mobileSidebarOpen, setMobileSidebarOpen,
     selectedTimestampMessage, setSelectedTimestampMessage,

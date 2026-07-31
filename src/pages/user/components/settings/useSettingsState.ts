@@ -6,8 +6,9 @@ export interface Settings {
   fontSize: "normal" | "large"
   calmMode: boolean
   soundEnabled: boolean
+  soundVolume: number
   focusMode: boolean
-  communityScreenshotProtection: boolean
+  screenshotProtection: boolean
   accountVisibility: "visible" | "anonymous"
   enterToSend: boolean
 }
@@ -17,8 +18,9 @@ const DEFAULT_SETTINGS: Settings = {
   fontSize: "normal",
   calmMode: false,
   soundEnabled: true,
+  soundVolume: 70,
   focusMode: false,
-  communityScreenshotProtection: false,
+  screenshotProtection: false,
   accountVisibility: "visible",
   enterToSend: true,
 }
@@ -26,7 +28,15 @@ const DEFAULT_SETTINGS: Settings = {
 function loadSettings(): Settings {
   try {
     const stored = localStorage.getItem("therabridge-settings")
-    if (stored) return { ...DEFAULT_SETTINGS, ...JSON.parse(stored) }
+    if (stored) {
+      const parsed = JSON.parse(stored)
+      if (parsed.communityScreenshotProtection && parsed.screenshotProtection === undefined) {
+        parsed.screenshotProtection = parsed.communityScreenshotProtection
+        delete parsed.communityScreenshotProtection
+        localStorage.setItem("therabridge-settings", JSON.stringify(parsed))
+      }
+      return { ...DEFAULT_SETTINGS, ...parsed }
+    }
   } catch {}
   return DEFAULT_SETTINGS
 }
@@ -55,7 +65,7 @@ export function useSettingsState() {
     const next = { ...settings, [key]: value }
     setSettings(next)
     saveSettings(next)
-    if (key === "communityScreenshotProtection") {
+    if (key === "screenshotProtection") {
       window.dispatchEvent(new CustomEvent("screenshot-protection-change", { detail: value }))
     }
     window.dispatchEvent(new Event("storage"))

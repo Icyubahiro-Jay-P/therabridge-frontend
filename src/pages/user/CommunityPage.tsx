@@ -7,27 +7,17 @@ import { MessageArea } from "./components/community/MessageArea"
 import { MessageInput } from "./components/community/MessageInput"
 import { EmptyState } from "./components/community/EmptyState"
 import { ScreenshotOverlay } from "./components/community/ScreenshotOverlay"
-import { CreateCommunityModal } from "./components/community/CreateCommunityModal"
 import { JoinCommunityModal } from "./components/community/JoinCommunityModal"
 import { CommunitySettingsModal } from "./components/community/CommunitySettingsModal"
 
 export function CommunityPage() {
   const c = useCommunityState()
   useCommunityEffects(c)
-  useMessagePolling(c)
+  useMessagePolling({ ...c, currentUserId: c.currentUser?.id })
 
   return (
     <div className="flex h-full overflow-hidden select-none">
       <ScreenshotOverlay screenshotProtected={c.screenshotProtected} active={c.active} />
-      {c.showCreate && (
-        <CreateCommunityModal
-          onClose={() => c.setShowCreate(false)}
-          onCreate={(c2) => {
-            c.setCommunities((prev) => [c2, ...prev])
-            c.selectCommunity(c2)
-          }}
-        />
-      )}
       {c.showJoin && (
         <JoinCommunityModal
           onClose={() => c.setShowJoin(false)}
@@ -59,7 +49,6 @@ export function CommunityPage() {
         loading={c.loading}
         active={c.active}
         onSelectCommunity={c.selectCommunity}
-        onCreateClick={() => c.setShowCreate(true)}
         onJoinClick={() => c.setShowJoin(true)}
         mobileSidebarOpen={c.mobileSidebarOpen}
         onCloseMobile={() => c.setMobileSidebarOpen(false)}

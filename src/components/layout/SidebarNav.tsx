@@ -1,5 +1,5 @@
 import {
-  Home, LayoutDashboard, MessageCircle, Users, BotIcon, Heart,
+  Home, LayoutDashboard, MessageCircle, Users, Heart,
   Stethoscope, User, Shield, AlertTriangle, Bell, Settings,
 } from "lucide-react"
 import { NavItem, NavItemWithBadge } from "./NavItem"
@@ -23,7 +23,6 @@ export function SidebarNav({
       <NavItem to="/community" icon={<Users className="size-4" />} label="Community" minimized={isMinimized} onClick={closeMobile} />
       {role === "user" && (
         <>
-          <NavItem to="/therry" icon={<BotIcon className="size-4" />} label="Therry" minimized={isMinimized} onClick={closeMobile} />
           <NavItem to="/mood" icon={<Heart className="size-4" />} label="Mood" minimized={isMinimized} onClick={closeMobile} />
           <NavItem to="/therapists" icon={<Stethoscope className="size-4" />} label="Therapists" minimized={isMinimized} onClick={closeMobile} />
         </>

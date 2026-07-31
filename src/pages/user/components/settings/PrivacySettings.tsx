@@ -20,12 +20,12 @@ export function PrivacySettings({
       <SettingRow
         icon={EyeOff}
         label="Screenshot protection"
-        description="Blur screen when switching away from communities"
+        description="Block screenshots and blur the screen when you switch away from chats"
       >
         <Switch
-          checked={settings.communityScreenshotProtection}
+          checked={settings.screenshotProtection}
           onCheckedChange={(v) =>
-            updateSetting("communityScreenshotProtection", v)
+            updateSetting("screenshotProtection", v)
           }
         />
       </SettingRow>

@@ -1,10 +1,12 @@
 import { useEffect } from "react"
 import { api } from "@/lib/api"
+import { playMessageSound } from "@/lib/sound"
 import { getErrorMessage } from "./utils"
 import type { Community, CommunityMessage } from "./types"
 
 export function useMessagePolling(state: {
   active: Community | null
+  currentUserId?: string
   setMessages: React.Dispatch<React.SetStateAction<CommunityMessage[]>>
   setLoadingMessages: (v: boolean) => void
   setError: (v: string | null) => void
@@ -17,6 +19,7 @@ export function useMessagePolling(state: {
 
     let mounted = true
     let since: string | null = null
+    const knownIds = new Set<string>()
 
     async function pollCommunity() {
       if (!mounted) return
@@ -28,7 +31,13 @@ export function useMessagePolling(state: {
 
         if (!mounted) return
         if (response.status === 200) {
-          state.setMessages(response.data.messages)
+          const newMessages = Array.isArray(response.data.messages) ? response.data.messages : []
+          const hasNewIncoming = newMessages.some(
+            (m) => !knownIds.has(m._id) && m.sender?._id !== state.currentUserId
+          )
+          for (const m of newMessages) knownIds.add(m._id)
+          state.setMessages(newMessages)
+          if (since && hasNewIncoming) playMessageSound()
           since = response.headers["x-last-updated"] || new Date().toISOString()
           await api.post(`/api/chat/communities/${c._id}/read`)
         }

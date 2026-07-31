@@ -26,6 +26,11 @@ type RawUser = {
   updatedAt?: string
   privacySettings?: PrivacySettings
   chatSettings?: ChatSettings
+  exerciseScore?: number
+  loginStreak?: number
+  exerciseStreak?: number
+  longestLoginStreak?: number
+  longestExerciseStreak?: number
 }
 
 function normalizeUser(raw: RawUser): User {
@@ -43,6 +48,11 @@ function normalizeUser(raw: RawUser): User {
     updatedAt: raw.updatedAt,
     privacySettings: raw.privacySettings,
     chatSettings: raw.chatSettings,
+    exerciseScore: raw.exerciseScore,
+    loginStreak: raw.loginStreak,
+    exerciseStreak: raw.exerciseStreak,
+    longestLoginStreak: raw.longestLoginStreak,
+    longestExerciseStreak: raw.longestExerciseStreak,
   }
 }
 

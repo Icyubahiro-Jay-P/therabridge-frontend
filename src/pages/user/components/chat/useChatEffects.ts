@@ -1,10 +1,12 @@
 import { useEffect } from "react"
 import { api } from "@/lib/api"
+import { playMessageSound } from "@/lib/sound"
 import { getErrorMessage, loadSetting } from "./utils"
 import type { ChatUser, Conversation, DirectMessage } from "./types"
 
 export function useChatEffects(state: {
   username?: string
+  currentUserId?: string
   partner: ChatUser | null
   setShowPreviews: (v: boolean) => void
   setEnterToSend: (v: boolean) => void
@@ -47,6 +49,12 @@ export function useChatEffects(state: {
 
   useEffect(() => {
     if (!state.username) {
+      state.setPartner(null)
+      state.setMessages([])
+      state.setError(null)
+      return
+    }
+    if (state.username === "therry") {
       state.setPartner(null)
       state.setMessages([])
       state.setError(null)
@@ -95,6 +103,7 @@ export function useChatEffects(state: {
     let mounted = true
     let since: string | null = null
     let delay = 1000
+    const knownIds = new Set<string>()
     const MAX_DELAY = 30000
 
     async function poll() {
@@ -107,17 +116,16 @@ export function useChatEffects(state: {
         if (response.status === 200) {
           delay = 1000
           const newMessages = Array.isArray(response.data) ? response.data : []
+          const hasNewIncoming = newMessages.some(
+            (m) => !knownIds.has(m._id) && m.sender?._id !== state.currentUserId
+          )
+          for (const m of newMessages) knownIds.add(m._id)
           state.setMessages((prev) => {
-            const existingIds = new Set(prev.map((m) => m._id))
-            const merged = [...prev]
-            for (const msg of newMessages) {
-              if (!existingIds.has(msg._id)) {
-                merged.push(msg)
-                existingIds.add(msg._id)
-              }
-            }
-            return merged
+            const map = new Map(prev.map((m) => [m._id, m]))
+            for (const msg of newMessages) map.set(msg._id, msg)
+            return [...map.values()]
           })
+          if (since && hasNewIncoming) playMessageSound()
           since = response.headers?.["x-last-updated"] || new Date().toISOString()
         }
       } catch {

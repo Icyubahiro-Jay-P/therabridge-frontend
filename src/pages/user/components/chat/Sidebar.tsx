@@ -18,6 +18,8 @@ export function Sidebar({
   partner,
   onSelectConv,
   showPreviews,
+  isTherry,
+  onTherryClick,
 }: {
   mobileSidebarOpen: boolean
   onCloseSidebar: () => void
@@ -31,6 +33,8 @@ export function Sidebar({
   partner: ChatUser | null
   onSelectConv: (user: ChatUser) => void
   showPreviews: boolean
+  isTherry: boolean
+  onTherryClick: () => void
 }) {
   return (
     <aside
@@ -57,6 +61,8 @@ export function Sidebar({
             partner={partner}
             onSelectConv={onSelectConv}
             showPreviews={showPreviews}
+            isTherry={isTherry}
+            onTherryClick={onTherryClick}
           />
         )}
       </ScrollArea>

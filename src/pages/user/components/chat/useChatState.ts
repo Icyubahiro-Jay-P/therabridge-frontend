@@ -9,6 +9,7 @@ export function useChatState() {
   const { username } = useParams<{ username: string }>()
   const navigate = useNavigate()
   const currentUser = useAuthStore((state) => state.user)
+  const isTherry = username === "therry"
   const [conversations, setConversations] = useState<Conversation[]>([])
   const [loadingList, setLoadingList] = useState(true)
   const [searchQuery, setSearchQuery] = useState("")
@@ -82,7 +83,7 @@ export function useChatState() {
   function toggleTimestamp(id: string) { setSelectedTimestampMessage((prev) => (prev === id ? null : id)) }
 
   return {
-    currentUser, username, navigate, conversations, setConversations, loadingList, setLoadingList,
+    currentUser, username, isTherry, navigate, conversations, setConversations, loadingList, setLoadingList,
     searchQuery, setSearchQuery, searchResults, setSearchResults, searching, setSearching,
     partner, setPartner, messages, setMessages, loadingMessages, setLoadingMessages,
     newMessage, setNewMessage, sending, setSending, error, setError,

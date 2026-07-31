@@ -46,9 +46,12 @@ export function ResourcesSection({
                 ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-400"
                 : "bg-gray-100 text-gray-500 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700"
             )}
+            title={showCompleted ? "Hide completed" : `Show completed (${completedExerciseIds.size})`}
           >
             <CheckCircle2 className="size-3.5" />
-            {showCompleted ? "Hide completed" : `Show completed (${completedExerciseIds.size})`}
+            <span className="hidden sm:inline">
+              {showCompleted ? "Hide completed" : `Show completed (${completedExerciseIds.size})`}
+            </span>
           </button>
         )}
       </div>

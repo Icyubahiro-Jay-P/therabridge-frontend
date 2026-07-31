@@ -8,6 +8,7 @@ import { SidebarFooter } from "./SidebarFooter"
 import { MobileSidebar } from "./MobileSidebar"
 import { MobileDock } from "./MobileDock"
 import { LogoutModal } from "./LogoutModal"
+import { ScreenshotProtection } from "./ScreenshotProtection"
 
 export function AppLayout() {
   const { user } = useAuthStore()
@@ -84,6 +85,8 @@ export function AppLayout() {
         onCancel={() => setLogoutModalOpen(false)}
         loading={loggingOut}
       />
+
+      <ScreenshotProtection />
     </div>
   )
 }

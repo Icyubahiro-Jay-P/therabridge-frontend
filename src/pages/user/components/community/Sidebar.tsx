@@ -1,4 +1,4 @@
-import { KeyRound, Plus, X } from "lucide-react"
+import { KeyRound, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { cn } from "@/lib/utils"
@@ -10,7 +10,6 @@ export function Sidebar({
   loading,
   active,
   onSelectCommunity,
-  onCreateClick,
   onJoinClick,
   mobileSidebarOpen,
   onCloseMobile,
@@ -19,7 +18,6 @@ export function Sidebar({
   loading: boolean
   active: Community | null
   onSelectCommunity: (c: Community) => void
-  onCreateClick: () => void
   onJoinClick: () => void
   mobileSidebarOpen: boolean
   onCloseMobile: () => void
@@ -34,21 +32,14 @@ export function Sidebar({
           : "hidden"
       )}
     >
-      <div className="flex gap-2 p-3">
-        <Button
-          size="sm"
-          onClick={onCreateClick}
-          className="flex-1 bg-emerald-600 text-xs hover:bg-emerald-700"
-        >
-          <Plus className="size-3.5" /> New
-        </Button>
+      <div className="p-3">
         <Button
           size="sm"
           variant="outline"
           onClick={onJoinClick}
-          className="flex-1 text-xs"
+          className="w-full text-xs"
         >
-          <KeyRound className="size-3.5" /> Join
+          <KeyRound className="size-3.5" /> Join community
         </Button>
       </div>
       <ScrollArea className="flex-1">

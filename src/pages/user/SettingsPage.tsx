@@ -1,4 +1,4 @@
-import { TriangleAlert, User, Sun, Moon, Bell, Fingerprint } from "lucide-react"
+import { TriangleAlert, User, Sun, Moon, Bell, Fingerprint, Volume2, Play } from "lucide-react"
 import { Switch } from "@/components/ui/switch"
 import { useSettingsState } from "./components/settings/useSettingsState"
 import { ChatSettings } from "./components/settings/ChatSettings"
@@ -6,6 +6,7 @@ import { PrivacySettings } from "./components/settings/PrivacySettings"
 import { SettingRow } from "./components/settings/SettingRow"
 import { PrivacyToggles } from "./components/settings/PrivacyToggles"
 import { DeleteAccountModal } from "./components/settings/DeleteAccountModal"
+import { playTestSound } from "@/lib/sound"
 
 export function SettingsPage() {
   const {
@@ -122,6 +123,34 @@ export function SettingsPage() {
             checked={settings.soundEnabled}
             onCheckedChange={(v) => updateSetting("soundEnabled", v)}
           />
+        </SettingRow>
+        <SettingRow
+          icon={Volume2}
+          label="Volume"
+          description="Lower automatically in calm mode"
+        >
+          <div className="flex items-center gap-2">
+            <input
+              type="range"
+              min={0}
+              max={100}
+              value={settings.soundVolume}
+              onChange={(e) => updateSetting("soundVolume", Number(e.target.value))}
+              className="w-32 accent-emerald-600"
+              aria-label="Sound volume"
+            />
+            <span className="w-8 text-right text-xs text-gray-500">
+              {settings.soundVolume}%
+            </span>
+            <button
+              onClick={playTestSound}
+              disabled={!settings.soundEnabled}
+              className="flex size-7 items-center justify-center rounded-lg border border-gray-200 text-gray-500 hover:bg-gray-50 disabled:opacity-40 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-800"
+              title="Test sound"
+            >
+              <Play className="size-3.5" />
+            </button>
+          </div>
         </SettingRow>
       </section>
 

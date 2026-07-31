@@ -5,10 +5,11 @@ import { useChatEffects } from "./components/chat/useChatEffects"
 import { Sidebar } from "./components/chat/Sidebar"
 import { EmptyState } from "./components/chat/EmptyState"
 import { ChatView } from "./components/chat/ChatView"
+import { TherryChat } from "./components/chat/TherryChat"
 
 export function ChatPage() {
   const c = useChatState()
-  useChatEffects(c)
+  useChatEffects({ ...c, currentUserId: c.currentUser?.id })
 
   return (
     <div className="flex min-h-0 flex-1 overflow-hidden">
@@ -31,9 +32,13 @@ export function ChatPage() {
         partner={c.partner}
         onSelectConv={c.openDM}
         showPreviews={c.showPreviews}
+        isTherry={c.isTherry}
+        onTherryClick={() => c.navigate("/chat/therry")}
       />
       <div className="relative flex min-h-0 flex-1 flex-col">
-        {!c.partner ? (
+        {c.isTherry ? (
+          <TherryChat onToggleSidebar={() => c.setMobileSidebarOpen(true)} />
+        ) : !c.partner ? (
           c.username ? (
             <div className="flex flex-1 items-center justify-center">
               <Loader2 className="size-6 animate-spin text-gray-400" />

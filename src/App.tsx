@@ -1,5 +1,5 @@
 import { lazy, Suspense, useEffect } from "react"
-import { BrowserRouter, Route, Routes } from "react-router-dom"
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom"
 
 import { GuestRoute, ProtectedRoute } from "@/components/auth/ProtectedRoute"
 import { AppLayout } from "@/components/layout/AppLayout"
@@ -21,7 +21,6 @@ const UserCommunityPage = lazy(() => import("@/pages/user/CommunityPage").then((
 const UserTherapistsPage = lazy(() => import("@/pages/user/TherapistsPage").then((mod) => ({ default: mod.TherapistsPage })))
 const UserSettingsPage = lazy(() => import("@/pages/user/SettingsPage").then((mod) => ({ default: mod.SettingsPage })))
 const UserProfilePage = lazy(() => import("@/pages/user/ProfilePage").then((mod) => ({ default: mod.ProfilePage })))
-const UserTherryPage = lazy(() => import("@/pages/user/TherryPage").then((mod) => ({ default: mod.TherryPage })))
 const UserNotificationsPage = lazy(() => import("@/pages/user/NotificationsPage").then((mod) => ({ default: mod.NotificationsPage })))
 const UserMoodPage = lazy(() => import("@/pages/user/MoodPage").then((mod) => ({ default: mod.MoodPage })))
 const UserCrisisPage = lazy(() => import("@/pages/user/CrisisPage").then((mod) => ({ default: mod.CrisisPage })))
@@ -48,6 +47,20 @@ function RoleRoute({
   if (role === "admin" && AdminPage) return <AdminPage />
   if (role === "therapist" && TherapistPage) return <TherapistPage />
   return <UserPage />
+}
+
+function RequireRole({
+  roles,
+  children,
+}: {
+  roles: string[]
+  children: React.ReactNode
+}) {
+  const user = useAuthStore((state) => state.user)
+  const role = user?.role ?? "user"
+
+  if (!roles.includes(role)) return <Navigate to="/" replace />
+  return <>{children}</>
 }
 
 function AuthInitializer({ children }: { children: React.ReactNode }) {
@@ -159,13 +172,13 @@ export function App() {
               <Route path="/therapists" element={<ErrorBoundaryRoute><UserTherapistsPage /></ErrorBoundaryRoute>} />
               <Route path="/settings" element={<ErrorBoundaryRoute><UserSettingsPage /></ErrorBoundaryRoute>} />
               <Route path="/profile" element={<ErrorBoundaryRoute><UserProfilePage /></ErrorBoundaryRoute>} />
-              <Route path="/therry" element={<ErrorBoundaryRoute><UserTherryPage /></ErrorBoundaryRoute>} />
+              <Route path="/therry" element={<Navigate to="/chat/therry" replace />} />
               <Route path="/notifications" element={<ErrorBoundaryRoute><UserNotificationsPage /></ErrorBoundaryRoute>} />
               <Route path="/mood" element={<ErrorBoundaryRoute><UserMoodPage /></ErrorBoundaryRoute>} />
               <Route path="/crisis" element={<ErrorBoundaryRoute><UserCrisisPage /></ErrorBoundaryRoute>} />
-              <Route path="/clients" element={<ErrorBoundaryRoute><TherapistClientsPage /></ErrorBoundaryRoute>} />
-              <Route path="/users" element={<ErrorBoundaryRoute><AdminUsersPage /></ErrorBoundaryRoute>} />
-              <Route path="/communities" element={<ErrorBoundaryRoute><AdminCommunitiesPage /></ErrorBoundaryRoute>} />
+              <Route path="/clients" element={<ErrorBoundaryRoute><RequireRole roles={["admin", "therapist"]}><TherapistClientsPage /></RequireRole></ErrorBoundaryRoute>} />
+              <Route path="/users" element={<ErrorBoundaryRoute><RequireRole roles={["admin"]}><AdminUsersPage /></RequireRole></ErrorBoundaryRoute>} />
+              <Route path="/communities" element={<ErrorBoundaryRoute><RequireRole roles={["admin"]}><AdminCommunitiesPage /></RequireRole></ErrorBoundaryRoute>} />
             </Route>
           </Route>
 

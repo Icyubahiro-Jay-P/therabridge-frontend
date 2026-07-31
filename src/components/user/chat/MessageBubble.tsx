@@ -120,7 +120,7 @@ export function MessageBubble({
                       )}
                       <span
                         className={cn(
-                          "text-[11px] leading-none",
+                          "text-[11px] leading-none pr-2",
                           isMe
                             ? "text-emerald-700 dark:text-emerald-600"
                             : "text-gray-500 dark:text-gray-400"

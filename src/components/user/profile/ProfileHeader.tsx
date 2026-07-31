@@ -1,6 +1,5 @@
-import { Camera } from "lucide-react"
+import { Camera, UserCircle } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { getInitials } from "./types"
 import type { User } from "@/types/user"
 
 interface Props {
@@ -16,8 +15,8 @@ export function ProfileHeader({ user, avatarUrl, onCameraClick, children }: Prop
       <div className="relative shrink-0">
         <Avatar className="size-24 border-2 border-gray-200 shadow-sm dark:border-gray-700">
           <AvatarImage src={avatarUrl || undefined} />
-          <AvatarFallback className="bg-emerald-100 text-lg font-semibold text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-400">
-            {getInitials(user.firstName, user.lastName)}
+          <AvatarFallback className="bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-400">
+            <UserCircle className="size-14" strokeWidth={1.5} />
           </AvatarFallback>
         </Avatar>
         <button

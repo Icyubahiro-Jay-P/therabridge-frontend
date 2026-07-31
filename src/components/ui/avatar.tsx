@@ -16,10 +16,19 @@ function Avatar({ className, ...props }: React.ComponentProps<"div">) {
 }
 
 function AvatarImage({ className, ...props }: React.ComponentProps<"img">) {
+  const [status, setStatus] = React.useState<"loading" | "loaded" | "error">(
+    "loading"
+  )
   return (
     <img
       data-slot="avatar-image"
-      className={cn("aspect-square size-full object-cover", className)}
+      onLoad={() => setStatus("loaded")}
+      onError={() => setStatus("error")}
+      className={cn(
+        "aspect-square size-full object-cover",
+        status !== "loaded" && "hidden",
+        className
+      )}
       {...props}
     />
   )

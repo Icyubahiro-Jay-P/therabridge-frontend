@@ -1,15 +1,10 @@
-import { User as UserIcon } from "lucide-react"
+import { User as UserIcon, UserCircle } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import type { PublicProfile } from "@/types/user"
 
 const API_BASE_URL =
   import.meta.env.VITE_API_URL ||
   (typeof window !== "undefined" ? window.location.origin : "")
-
-function getInitials(firstName?: string | null, lastName?: string | null) {
-  if (!firstName && !lastName) return "?"
-  return `${(firstName || "?")[0]}${(lastName || "")[0] || ""}`.toUpperCase()
-}
 
 export function ProfileHeader({ profile }: { profile: PublicProfile }) {
   return (
@@ -25,8 +20,8 @@ export function ProfileHeader({ profile }: { profile: PublicProfile }) {
                 : undefined
             }
           />
-          <AvatarFallback className="bg-emerald-100 text-lg font-semibold text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-400">
-            {getInitials(profile.firstName, profile.lastName)}
+          <AvatarFallback className="bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-400">
+            <UserCircle className="size-14" strokeWidth={1.5} />
           </AvatarFallback>
         </Avatar>
       </div>

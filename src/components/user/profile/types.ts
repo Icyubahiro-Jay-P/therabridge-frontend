@@ -5,10 +5,6 @@ export function toDateInputValue(value?: string) {
   return date.toISOString().slice(0, 10)
 }
 
-export function getInitials(firstName: string, lastName: string) {
-  return `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase()
-}
-
 export interface ProfileForm {
   firstName: string
   lastName: string

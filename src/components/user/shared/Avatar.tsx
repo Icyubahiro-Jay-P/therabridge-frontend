@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { UserCircle } from "lucide-react"
 import { cn } from "@/lib/utils"
 import type { ChatUser } from "../chat/types"
 
@@ -33,7 +34,6 @@ export function Avatar({
     )
   }
 
-  const initials = (user.firstName[0] ?? "") + (user.lastName[0] ?? "")
   const colors = [
     "bg-emerald-500",
     "bg-teal-500",
@@ -47,12 +47,15 @@ export function Avatar({
   return (
     <span
       className={cn(
-        "inline-flex shrink-0 items-center justify-center rounded-full font-semibold text-white",
+        "inline-flex shrink-0 items-center justify-center rounded-full text-white",
         color,
-        size === "sm" ? "size-8 text-xs" : "size-10 text-sm"
+        size === "sm" ? "size-8" : "size-10"
       )}
     >
-      {initials.toUpperCase()}
+      <UserCircle
+        className={size === "sm" ? "size-6" : "size-7"}
+        strokeWidth={1.75}
+      />
     </span>
   )
 }

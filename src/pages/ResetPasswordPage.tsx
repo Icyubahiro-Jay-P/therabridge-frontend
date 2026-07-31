@@ -41,7 +41,7 @@ export function ResetPasswordPage() {
   if (!token) return <InvalidToken />
 
   return (
-    <div className="flex min-h-svh items-center justify-center bg-linear-to-br from-emerald-50 to-teal-50 p-4 dark:from-gray-950 dark:to-gray-900">
+    <main className="flex min-h-svh items-center justify-center bg-linear-to-br from-emerald-50 to-teal-50 p-4 dark:from-gray-950 dark:to-gray-900">
       <div className="w-full max-w-md">
         <div className="rounded-2xl border border-gray-200 bg-white p-8 shadow-lg dark:border-gray-700/60 dark:bg-gray-900">
           <div className="flex flex-col items-center text-center">
@@ -76,6 +76,6 @@ export function ResetPasswordPage() {
           )}
         </div>
       </div>
-    </div>
+    </main>
   )
 }

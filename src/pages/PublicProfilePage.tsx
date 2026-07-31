@@ -38,7 +38,7 @@ export function PublicProfilePage() {
   if (error || !profile) return <ProfileError error={error || "Could not load profile"} />
 
   return (
-    <div className="space-y-8 p-6">
+    <main className="space-y-8 p-6">
       <Button variant="ghost" onClick={() => navigate(-1)} className="gap-2">
         <ArrowLeft className="size-4" /> Back
       </Button>
@@ -85,6 +85,6 @@ export function PublicProfilePage() {
           Send message
         </Button>
       </div>
-    </div>
+    </main>
   )
 }

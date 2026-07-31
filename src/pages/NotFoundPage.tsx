@@ -4,7 +4,7 @@ import { Leaf } from "lucide-react"
 
 export function NotFoundPage() {
   return (
-    <div className="flex min-h-svh flex-col items-center justify-center bg-linear-to-br from-emerald-50 to-teal-50 px-4 dark:from-gray-950 dark:to-gray-900">
+    <main className="flex min-h-svh flex-col items-center justify-center bg-linear-to-br from-emerald-50 to-teal-50 px-4 dark:from-gray-950 dark:to-gray-900">
       <span className="mb-6 inline-flex size-16 items-center justify-center rounded-2xl bg-emerald-600 shadow-lg shadow-emerald-700/30">
         <Leaf className="size-8 text-white" />
       </span>
@@ -18,6 +18,6 @@ export function NotFoundPage() {
       <Button asChild className="mt-8 bg-emerald-600 hover:bg-emerald-700">
         <Link to="/">Take me home</Link>
       </Button>
-    </div>
+    </main>
   )
 }

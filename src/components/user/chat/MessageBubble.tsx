@@ -108,26 +108,52 @@ export function MessageBubble({
                 )}
               </div>
             </div>
-          </div>
-          {!isUnsent && showTime && (
-            <div className={cn("mt-0.5 flex items-center gap-1 text-[10px]", isMe ? "flex-row-reverse" : "flex-row")}>
-              {isMe && seen && (
-                <span className="inline-flex items-center gap-0.5 text-[11px] leading-none text-emerald-400">
-                  <CheckCheck className="size-3" />
-                </span>
-              )}
-              <span
+            {(showTime || hasEdits) && (
+              <div
                 className={cn(
-                  "text-[11px] leading-none",
-                  isMe
-                    ? "text-emerald-700 dark:text-emerald-600"
-                    : "text-gray-500 dark:text-gray-400"
+                  "mt-1 flex flex-col gap-1 text-[10px] w-max",
+                  isMe ? "self-end items-end" : "self-start items-start"
                 )}
               >
-                {timeAgo(msg.createdAt)}
-              </span>
-            </div>
-          )}
+                {!isUnsent && showTime && (
+                  <div className={cn("flex items-center gap-1", isMe ? "flex-row-reverse" : "flex-row")}>
+                    {isMe && seen && (
+                      <span className="inline-flex items-center gap-0.5 text-[11px] leading-none text-emerald-400">
+                        <CheckCheck className="size-3" />
+                      </span>
+                    )}
+                    <span
+                      className={cn(
+                        "text-[11px] leading-none",
+                        isMe
+                          ? "text-emerald-700 dark:text-emerald-600"
+                          : "text-gray-500 dark:text-gray-400"
+                      )}
+                    >
+                      {timeAgo(msg.createdAt)}
+                    </span>
+                  </div>
+                )}
+                {hasEdits && (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      setShowHistoryFor(showHistoryFor === msg._id ? null : msg._id)
+                    }}
+                    title="Show edit history"
+                    className={cn(
+                      "flex cursor-pointer items-center gap-1 rounded px-1.5 py-0.5 text-[10px] transition-colors duration-150 hover:underline",
+                      isMe
+                        ? "self-end text-gray-300 hover:text-emerald-200"
+                        : "self-start text-gray-600 hover:text-emerald-600 dark:text-gray-400 dark:hover:text-emerald-400"
+                    )}
+                  >
+                    <History className="size-2.5" /> edited ({msg.editCount})
+                  </button>
+                )}
+              </div>
+            )}
+          </div>
         </div>
       </div>
       {menuOpen && canEdit && (
@@ -165,16 +191,6 @@ export function MessageBubble({
             </div>
           </div>
         </div>
-      )}
-      {hasEdits && (
-        <button
-          onClick={() =>
-            setShowHistoryFor(showHistoryFor === msg._id ? null : msg._id)
-          }
-          className="flex cursor-pointer items-center gap-1 rounded px-1.5 py-0.5 text-[10px] dark:text-gray-400 text-gray-600 hover:text-emerald-600 hover:underline dark:hover:text-emerald-400"
-        >
-          <History className="size-2.5" /> edited ({msg.editCount})
-        </button>
       )}
       {showHistoryFor === msg._id && hasEdits && (
         <EditHistory

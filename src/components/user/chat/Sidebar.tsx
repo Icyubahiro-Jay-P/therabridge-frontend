@@ -70,7 +70,7 @@ export function Sidebar({
               isTherry={isTherry}
               onTherryClick={onTherryClick}
             />
-            <div className="px-4 pb-4">
+            <div className="mt-2 border-t border-gray-200 px-4 pt-3 pb-4 dark:border-gray-700/60">
               <SuggestedUsers
                 loading={loadingSuggestions}
                 suggestions={suggestions}

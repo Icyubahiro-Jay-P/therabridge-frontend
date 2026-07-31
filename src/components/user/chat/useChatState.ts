@@ -12,6 +12,8 @@ export function useChatState() {
   const isTherry = username === "therry"
   const [conversations, setConversations] = useState<Conversation[]>([])
   const [loadingList, setLoadingList] = useState(true)
+  const [suggestions, setSuggestions] = useState<ChatUser[]>([])
+  const [loadingSuggestions, setLoadingSuggestions] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
   const [searchResults, setSearchResults] = useState<ChatUser[]>([])
   const [searching, setSearching] = useState(false)
@@ -33,6 +35,24 @@ export function useChatState() {
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => { messagesEndRef.current?.scrollIntoView({ behavior: "smooth" }) }, [messages])
+  useEffect(() => {
+    if (loadingList || conversations.length > 0) return
+    let mounted = true
+    void (async () => {
+      setLoadingSuggestions(true)
+      try {
+        const { data } = await api.get<ChatUser[]>("/api/chat/suggestions")
+        if (mounted) setSuggestions(Array.isArray(data) ? data : [])
+      } catch {
+        if (mounted) setSuggestions([])
+      } finally {
+        if (mounted) setLoadingSuggestions(false)
+      }
+    })()
+    return () => {
+      mounted = false
+    }
+  }, [loadingList, conversations])
   useEffect(() => {
     if (searchQuery.length < 3) { setSearchResults([]); return }
     const timeout = setTimeout(async () => {
@@ -84,6 +104,7 @@ export function useChatState() {
 
   return {
     currentUser, username, isTherry, navigate, conversations, setConversations, loadingList, setLoadingList,
+    suggestions, setSuggestions, loadingSuggestions, setLoadingSuggestions,
     searchQuery, setSearchQuery, searchResults, setSearchResults, searching, setSearching,
     partner, setPartner, messages, setMessages, loadingMessages, setLoadingMessages,
     newMessage, setNewMessage, sending, setSending, error, setError,

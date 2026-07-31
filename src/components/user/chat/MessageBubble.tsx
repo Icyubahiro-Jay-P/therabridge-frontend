@@ -13,7 +13,6 @@ export function MessageBubble({
   isMe,
   editingId,
   onStartEdit,
-  onCancelEdit,
   onUnsend,
   menuOpenId,
   setMenuOpenId,
@@ -27,7 +26,6 @@ export function MessageBubble({
   isMe: boolean
   editingId: string | null
   onStartEdit: (msg: DirectMessage) => void
-  onCancelEdit: () => void
   onUnsend: (id: string) => void
   menuOpenId: string | null
   setMenuOpenId: (id: string | null) => void

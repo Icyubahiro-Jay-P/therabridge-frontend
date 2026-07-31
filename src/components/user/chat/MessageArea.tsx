@@ -9,7 +9,6 @@ export function MessageArea({
   currentUserId,
   editingId,
   onStartEdit,
-  onCancelEdit,
   onUnsend,
   menuOpenId,
   setMenuOpenId,
@@ -25,7 +24,6 @@ export function MessageArea({
   currentUserId: string | undefined
   editingId: string | null
   onStartEdit: (msg: DirectMessage) => void
-  onCancelEdit: () => void
   onUnsend: (id: string) => void
   menuOpenId: string | null
   setMenuOpenId: (id: string | null) => void

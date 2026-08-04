@@ -11,10 +11,19 @@ import { PageHeader } from "@/components/admin/PageHeader"
 interface AppUser {
   _id: string; username: string; firstName: string; lastName: string
   email: string; role: string; isDisabled?: boolean
+  therapist?: { _id: string; firstName: string; lastName: string; username: string } | null
+}
+
+interface TherapistOption {
+  _id: string
+  firstName: string
+  lastName: string
+  username: string
 }
 
 export function AdminUsersPage() {
   const [users, setUsers] = useState<AppUser[]>([])
+  const [therapists, setTherapists] = useState<TherapistOption[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState<string | null>(null)
@@ -24,8 +33,12 @@ export function AdminUsersPage() {
   useEffect(() => {
     async function load() {
       try {
-        const { data } = await api.get<AppUser[]>("/api/users/users")
-        setUsers(data)
+        const [{ data: usersData }, { data: therapistsData }] = await Promise.all([
+          api.get<AppUser[]>("/api/users/users"),
+          api.get<{ data: TherapistOption[] }>("/api/users/therapists"),
+        ])
+        setUsers(usersData)
+        setTherapists(therapistsData.data)
       } catch (err) {
         setError(err instanceof Error ? err.message : "Failed to load users")
       } finally { setLoading(false) }
@@ -61,6 +74,23 @@ export function AdminUsersPage() {
     } finally { setActionLoading(null) }
   }
 
+  async function assignTherapist(id: string, therapistId: string) {
+    setActionLoading(id); setError(null); setSuccess(null)
+    try {
+      const { data } = await api.put("/api/users/admin/therapist", {
+        userId: id,
+        therapistId: therapistId || null,
+      })
+      const therapist = therapistId
+        ? therapists.find((t) => t._id === therapistId) ?? null
+        : null
+      setUsers((prev) => prev.map((u) => u._id === id ? { ...u, therapist } : u))
+      setSuccess(data.message)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Action failed")
+    } finally { setActionLoading(null) }
+  }
+
   async function deleteUser(id: string) {
     if (!confirm("Are you sure you want to delete this user? This cannot be undone.")) return
     setActionLoading(id); setError(null); setSuccess(null)
@@ -84,7 +114,7 @@ export function AdminUsersPage() {
       ) : (
         <div className="overflow-hidden rounded-2xl border border-gray-200 dark:border-gray-700/60">
           <div className="divide-y divide-gray-100 dark:divide-gray-800">
-            {filtered.map((u) => <AdminUserRow key={u._id} user={u} actionLoading={actionLoading} onToggleDisable={toggleDisable} onChangeRole={changeRole} onDelete={deleteUser} />)}
+            {filtered.map((u) => <AdminUserRow key={u._id} user={u} therapists={therapists} actionLoading={actionLoading} onToggleDisable={toggleDisable} onChangeRole={changeRole} onAssignTherapist={assignTherapist} onDelete={deleteUser} />)}
           </div>
           {filtered.length === 0 && <AdminEmptyState icon={UserCog} message="No users match your search." />}
         </div>

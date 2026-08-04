@@ -55,23 +55,18 @@ export function setAuthHandlers(handlers: {
 }
 
 type RefreshResult =
-  | { ok: true; token: string }
-  | { ok: false; reason: "expired" | "network" }
+  { ok: true; token: string } | { ok: false; reason: "expired" | "network" }
 
 let refreshPromise: Promise<RefreshResult> | null = null
 
 function performRefresh(): Promise<RefreshResult> {
   // Use a bare axios call (not `api`) so this never recurses into interceptors
   return axios
-    .post<{ token: string }>(
-      `${API_BASE_URL}/api/users/refresh`,
-      null,
-      {
-        headers: { "Content-Type": "application/json" },
-        withCredentials: true,
-        timeout: 15000,
-      }
-    )
+    .post<{ token: string }>(`${API_BASE_URL}/api/users/refresh`, null, {
+      headers: { "Content-Type": "application/json" },
+      withCredentials: true,
+      timeout: 15000,
+    })
     .then(({ data }): RefreshResult => {
       setAuthToken(data.token)
       onTokenRefreshed?.(data.token)
@@ -129,8 +124,7 @@ api.interceptors.response.use(
 
     const status = error.response.status
     const config = error.config as
-      | (InternalAxiosRequestConfig & { _retry?: boolean })
-      | undefined
+      (InternalAxiosRequestConfig & { _retry?: boolean }) | undefined
     const url = config?.url ?? ""
 
     // On an expired access token, silently refresh and retry the original request.
@@ -160,7 +154,9 @@ api.interceptors.response.use(
     const errData = error.response?.data
     const serverMessage =
       (typeof errData?.message === "string" ? errData.message : null) ||
-      (typeof errData?.error?.message === "string" ? errData.error.message : null) ||
+      (typeof errData?.error?.message === "string"
+        ? errData.error.message
+        : null) ||
       (typeof errData?.error === "string" ? errData.error : null) ||
       error.message ||
       "Something went wrong"

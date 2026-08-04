@@ -1,4 +1,4 @@
-import { Hash, Loader2, Trash2, Users } from "lucide-react"
+import { Hash, Loader2, Lock, Trash2, Users } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 interface AdminCommunity {
@@ -8,6 +8,8 @@ interface AdminCommunity {
   inviteKey: string
   members: { _id: string; firstName: string; lastName: string }[]
   owner: { _id: string; firstName: string; lastName: string }
+  category?: string
+  isPrivate?: boolean
 }
 
 export function AdminCommunityCard({

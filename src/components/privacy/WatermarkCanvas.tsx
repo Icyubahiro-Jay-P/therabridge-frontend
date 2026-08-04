@@ -57,8 +57,7 @@ export function WatermarkCanvas({ enabled, seed, label, className }: WatermarkCa
     }
 
     draw()
-    const observer = new ResizeObserver(() => {
-      frame++
+    observer = new ResizeObserver(() => {
       draw()
     })
     observer.observe(parent)

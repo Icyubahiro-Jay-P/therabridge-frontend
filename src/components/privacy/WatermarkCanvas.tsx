@@ -23,7 +23,7 @@ export function WatermarkCanvas({ enabled, seed, label, className }: WatermarkCa
     const ctx = canvas?.getContext("2d")
     if (!canvas || !parent || !ctx) return
 
-    let frame = 0
+    let observer: ResizeObserver | null = null
     const draw = () => {
       const rect = parent.getBoundingClientRect()
       const width = rect.width

@@ -6,7 +6,7 @@ export function EmptyState() {
     <SharedEmptyState
       icon={Users}
       title="Select a community"
-      description="Choose a room from the sidebar or join one with an invite key."
+      description="Choose a room from the sidebar, create your own, or join one with an invite key."
     />
   )
 }

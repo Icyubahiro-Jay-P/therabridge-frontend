@@ -39,10 +39,7 @@ export function ScreenshotProtection() {
   }, [])
 
   useEffect(() => {
-    if (!enabled) {
-      setBlurred(false)
-      return
-    }
+    if (!enabled) return
 
     function onKeyDown(e: KeyboardEvent) {
       if (isScreenshotShortcut(e)) {

@@ -14,6 +14,7 @@ import {
   updatePrivacy as updatePrivacyRequest,
 } from "@/lib/auth-api"
 import { AuthError, NetworkError, setAuthHandlers, setAuthToken } from "@/lib/api"
+import { connectSocket, disconnectSocket } from "@/lib/socket"
 import type {
   ChangePasswordPayload,
   ChatSettings,
@@ -67,12 +68,15 @@ export const useAuthStore = create<AuthState>()(
           if (user) {
             const chatSettings = await fetchChatSettingsRequest()
             set({ user: { ...user, chatSettings } })
+            connectSocket()
           } else {
             set({ user: null })
             set({ token: null })
+            disconnectSocket()
           }
         } catch {
           set({ user: null, token: null })
+          disconnectSocket()
         } finally {
           set({ isInitialized: true })
         }
@@ -84,6 +88,7 @@ export const useAuthStore = create<AuthState>()(
           const { user, token, message } = await loginRequest(payload)
           set({ user, token })
           setAuthToken(token)
+          connectSocket()
           return message
         } catch (error) {
           const message = getErrorMessage(error, "Login failed")
@@ -100,6 +105,7 @@ export const useAuthStore = create<AuthState>()(
           const { user, token, message } = await registerRequest(payload)
           set({ user, token })
           setAuthToken(token)
+          connectSocket()
           return message
         } catch (error) {
           const message = getErrorMessage(error, "Registration failed")
@@ -116,6 +122,7 @@ export const useAuthStore = create<AuthState>()(
           await logoutRequest()
           set({ user: null, token: null })
           setAuthToken(null)
+          disconnectSocket()
         } catch (error) {
           const message = getErrorMessage(error, "Logout failed")
           set({ error: message })
@@ -214,5 +221,6 @@ setAuthHandlers({
   },
   onAuthExpired: () => {
     useAuthStore.setState({ user: null, token: null })
+    disconnectSocket()
   },
 })

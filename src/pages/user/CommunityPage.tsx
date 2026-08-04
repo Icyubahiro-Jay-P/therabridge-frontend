@@ -10,11 +10,22 @@ import { ScreenshotOverlay } from "@/components/user/community/ScreenshotOverlay
 import { JoinCommunityModal } from "@/components/user/community/JoinCommunityModal"
 import { CreateCommunityModal } from "@/components/user/community/CreateCommunityModal"
 import { CommunitySettingsModal } from "@/components/user/community/CommunitySettingsModal"
+import { GuardOverlay } from "@/components/privacy/GuardOverlay"
+import { WatermarkCanvas } from "@/components/privacy/WatermarkCanvas"
+import { useScreenshotGuard } from "@/hooks/useScreenshotGuard"
+import { loadSetting } from "@/components/user/chat/utils"
 
 export function CommunityPage() {
   const c = useCommunityState()
   useCommunityEffects(c)
   useMessagePolling({ ...c, currentUserId: c.currentUser?.id })
+
+  const watermarkEnabled = loadSetting("watermarkEnabled", false)
+  const guard = useScreenshotGuard({
+    mode: "blackout",
+    enabled: c.screenshotProtected,
+    active: !!c.active,
+  })
 
   return (
     <div className="flex h-full overflow-hidden select-none">
@@ -87,7 +98,7 @@ export function CommunityPage() {
         {!c.active ? (
           <EmptyState />
         ) : (
-          <>
+          <div className="relative flex min-h-0 flex-1 flex-col">
             <ChatHeader
               community={c.active}
               screenshotProtected={c.screenshotProtected}
@@ -110,7 +121,13 @@ export function CommunityPage() {
               sending={c.sending}
               communityName={c.active.name}
             />
-          </>
+            <GuardOverlay mode="blackout" visible={guard.guarded} />
+            <WatermarkCanvas
+              enabled={watermarkEnabled}
+              seed={c.currentUser?.id ?? ""}
+              label={c.currentUser?.username}
+            />
+          </div>
         )}
       </div>
     </div>

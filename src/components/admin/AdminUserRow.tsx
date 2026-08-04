@@ -10,19 +10,31 @@ interface AppUser {
   email: string
   role: string
   isDisabled?: boolean
+  therapist?: { _id: string; firstName: string; lastName: string; username: string } | null
+}
+
+interface TherapistOption {
+  _id: string
+  firstName: string
+  lastName: string
+  username: string
 }
 
 export function AdminUserRow({
   user,
+  therapists,
   actionLoading,
   onToggleDisable,
   onChangeRole,
+  onAssignTherapist,
   onDelete,
 }: {
   user: AppUser
+  therapists: TherapistOption[]
   actionLoading: string | null
   onToggleDisable: (id: string) => void
   onChangeRole: (id: string, role: string) => void
+  onAssignTherapist: (id: string, therapistId: string) => void
   onDelete: (id: string) => void
 }) {
   return (
@@ -45,6 +57,23 @@ export function AdminUserRow({
         </p>
         <p className="truncate text-xs text-gray-400">@{user.username} · {user.email}</p>
       </div>
+
+      {user.role === "user" && (
+        <select
+          value={user.therapist?._id ?? ""}
+          onChange={(e) => onAssignTherapist(user._id, e.target.value)}
+          disabled={actionLoading === user._id}
+          className="max-w-40 rounded-lg border border-gray-300 bg-white px-2 py-1 text-xs outline-none focus:border-emerald-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white"
+          title="Assign a therapist who manages this user"
+        >
+          <option value="">No therapist</option>
+          {therapists.map((t) => (
+            <option key={t._id} value={t._id}>
+              {t.firstName} {t.lastName}
+            </option>
+          ))}
+        </select>
+      )}
 
       <select
         value={user.role}

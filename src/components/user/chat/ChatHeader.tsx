@@ -1,14 +1,19 @@
 import { Link } from "react-router-dom"
-import { Menu } from "lucide-react"
+import { Menu, Shield, ShieldOff } from "lucide-react"
+import { cn } from "@/lib/utils"
 import { Avatar } from "./Avatar"
 import type { ChatUser } from "./types"
 
 export function ChatHeader({
   partner,
   onToggleSidebar,
+  screenshotProtected,
+  onToggleScreenshot,
 }: {
   partner: ChatUser
   onToggleSidebar: () => void
+  screenshotProtected: boolean
+  onToggleScreenshot: () => void
 }) {
   return (
     <div className="flex items-center justify-between border-b border-gray-200 px-4 py-3.5 dark:border-gray-700/60">
@@ -31,6 +36,20 @@ export function ChatHeader({
             <p className="truncate text-xs text-gray-400">@{partner.username}</p>
           </div>
         </Link>
+      </div>
+      <div className="flex items-center gap-1">
+        <button
+          onClick={onToggleScreenshot}
+          className={cn(
+            "rounded-lg p-2 transition-colors",
+            screenshotProtected
+              ? "bg-emerald-100 text-emerald-600 dark:bg-emerald-900/40 dark:text-emerald-400"
+              : "text-gray-400 hover:bg-gray-100 hover:text-gray-600 dark:hover:bg-gray-800"
+          )}
+          title={screenshotProtected ? "Screenshot protection on" : "Screenshot protection off"}
+        >
+          {screenshotProtected ? <Shield className="size-4" /> : <ShieldOff className="size-4" />}
+        </button>
       </div>
     </div>
   )

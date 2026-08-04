@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import { ShieldAlert } from "lucide-react"
+import { isScreenshotShortcut } from "@/lib/screenshotShortcuts"
 
 function loadSetting<T>(key: string, fallback: T): T {
   try {
@@ -12,16 +13,6 @@ function loadSetting<T>(key: string, fallback: T): T {
     return fallback
   }
   return fallback
-}
-
-function isScreenshotShortcut(e: KeyboardEvent): boolean {
-  const k = e.key.toLowerCase()
-  if (e.key === "PrintScreen") return true
-  if (e.altKey && e.key === "PrintScreen") return true
-  if (e.metaKey && e.shiftKey && (k === "s" || k === "3" || k === "4" || k === "5"))
-    return true
-  if (e.ctrlKey && e.metaKey && e.shiftKey && (k === "3" || k === "4")) return true
-  return false
 }
 
 export function ScreenshotProtection() {

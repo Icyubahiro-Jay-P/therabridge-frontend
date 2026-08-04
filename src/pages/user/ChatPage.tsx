@@ -103,6 +103,9 @@ export function ChatPage() {
             sending={c.sending}
             onSend={c.sendMessage}
             enterToSend={c.enterToSend}
+            onLoadOlder={c.loadOlderMessages}
+            loadingOlder={c.loadingOlder}
+            hasOlder={c.hasOlderMessages}
           />
         )}
       </div>

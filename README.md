@@ -102,6 +102,7 @@ Stored in `localStorage` under key `therabridge-settings` (managed by `useSettin
 | `soundEnabled` | `true` | Play sounds for incoming messages |
 | `soundVolume` | `70` | Volume % (0–100) |
 | `screenshotProtection` | `false` | Block screenshot shortcuts + blur on unfocus |
+| `watermarkEnabled` | `false` | Overlay tiled username/timestamp watermark on chats |
 | `accountVisibility` | `visible` | `visible` \| `anonymous` |
 | `focusMode` | `false` | Hide distracting UI |
 

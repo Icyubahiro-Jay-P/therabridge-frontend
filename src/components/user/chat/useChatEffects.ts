@@ -1,5 +1,6 @@
 import { useEffect } from "react"
 import { api } from "@/lib/api"
+import { getSocket } from "@/lib/socket"
 import { playMessageSound } from "@/lib/sound"
 import { getErrorMessage, loadSetting, CHAT_PAGE_SIZE } from "./utils"
 import type { ChatUser, Conversation, DirectMessage } from "./types"
@@ -120,46 +121,65 @@ export function useChatEffects(state: {
 
   useEffect(() => {
     if (!state.partner) return
-    let mounted = true
-    let since: string | null = null
-    let delay = 1000
-    const knownIds = new Set<string>()
-    const MAX_DELAY = 30000
+    const socket = getSocket()
+    if (!socket) return
+    const partnerId = state.partner._id
+    const currentUserId = state.currentUserId
 
-    async function poll() {
-      if (!mounted) return
-      try {
-        const url = `/api/chat/conversation/${state.partner!._id}/updates${since ? `?since=${encodeURIComponent(since)}` : ""}`
-        const response = await api.get<DirectMessage[]>(url, { timeout: 35000 })
-
-        if (!mounted) return
-        if (response.status === 200) {
-          delay = 1000
-          const newMessages = Array.isArray(response.data) ? response.data : []
-          const hasNewIncoming = newMessages.some(
-            (m) => !knownIds.has(m._id) && m.sender?._id !== state.currentUserId
-          )
-          for (const m of newMessages) knownIds.add(m._id)
-          state.setMessages((prev) => {
-            const map = new Map(prev.map((m) => [m._id, m]))
-            for (const msg of newMessages) map.set(msg._id, msg)
-            return [...map.values()]
-          })
-          if (since && hasNewIncoming) playMessageSound()
-          since = response.headers?.["x-last-updated"] || new Date().toISOString()
-        }
-      } catch {
-        if (!mounted) return
-        delay = Math.min(delay * 2, MAX_DELAY)
-      }
-      if (mounted) {
-        setTimeout(() => void poll(), delay)
-      }
+    function isForThisConversation(message: DirectMessage) {
+      return (
+        message.sender?._id === partnerId ||
+        message.recipient?._id === partnerId
+      )
     }
 
-    void poll()
+    function onDmMessage(message: DirectMessage) {
+      if (!isForThisConversation(message)) return
+      state.setMessages((prev) => {
+        const map = new Map(prev.map((m) => [m._id, m]))
+        const isNew = !map.has(message._id)
+        map.set(message._id, message)
+        if (isNew && message.sender?._id !== currentUserId)
+          playMessageSound()
+        return [...map.values()]
+      })
+    }
+
+    function onDmUpdated(message: DirectMessage) {
+      if (!isForThisConversation(message)) return
+      state.setMessages((prev) =>
+        prev.map((m) => (m._id === message._id ? message : m))
+      )
+    }
+
+    function onDmUnsent({ messageId }: { messageId: string }) {
+      state.setMessages((prev) =>
+        prev.map((m) =>
+          m._id === messageId
+            ? { ...m, unsent: true, content: "Message unsent" }
+            : m
+        )
+      )
+    }
+
+    function onConversationsUpdated() {
+      void api
+        .get<{ data: Conversation[] }>("/api/chat/conversations")
+        .then(({ data }) => {
+          state.setConversations(Array.isArray(data.data) ? data.data : [])
+        })
+        .catch(() => {})
+    }
+
+    socket.on("dm_message", onDmMessage)
+    socket.on("dm_message_updated", onDmUpdated)
+    socket.on("dm_message_unsent", onDmUnsent)
+    socket.on("conversations_updated", onConversationsUpdated)
     return () => {
-      mounted = false
+      socket.off("dm_message", onDmMessage)
+      socket.off("dm_message_updated", onDmUpdated)
+      socket.off("dm_message_unsent", onDmUnsent)
+      socket.off("conversations_updated", onConversationsUpdated)
     }
-  }, [state.partner])
+  }, [state.partner, state.currentUserId, state.setMessages, state.setConversations])
 }

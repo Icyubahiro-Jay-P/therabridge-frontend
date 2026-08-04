@@ -2,10 +2,7 @@ import { io, type Socket } from "socket.io-client"
 import { getAuthToken } from "@/lib/api"
 
 const SOCKET_URL =
-  import.meta.env.VITE_SOCKET_URL ||
-  (import.meta.env.DEV
-    ? window.location.origin
-    : "https://therabridge-backend.onrender.com")
+  import.meta.env.VITE_SOCKET_URL || window.location.origin
 
 let socket: Socket | null = null
 

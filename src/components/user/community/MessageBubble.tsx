@@ -1,3 +1,4 @@
+import { memo } from "react"
 import { Link } from "react-router-dom"
 import { CheckCheck } from "lucide-react"
 import { cn } from "@/lib/utils"
@@ -5,7 +6,7 @@ import type { CommunityMessage } from "./types"
 import { Avatar } from "./Avatar"
 import { timeAgo } from "../shared/utils"
 
-export function MessageBubble({
+export const MessageBubble = memo(function MessageBubble({
   msg,
   isMe,
   onToggleTimestamp,
@@ -66,4 +67,4 @@ export function MessageBubble({
       </div>
     </div>
   )
-}
+})

@@ -10,7 +10,7 @@ interface WatermarkCanvasProps {
 
 /**
  * Tiles a low-opacity diagonal "<label> · <seed> · timestamp" watermark across
- * the parent element on a canvas. Deters casual copying only — it cannot stop
+ * the parent element on a canvas. Deters casual copying only - it cannot stop
  * screenshots.
  */
 export function WatermarkCanvas({ enabled, seed, label, className }: WatermarkCanvasProps) {

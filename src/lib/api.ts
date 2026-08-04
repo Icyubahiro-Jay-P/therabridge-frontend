@@ -5,20 +5,24 @@ const API_BASE_URL =
   (typeof window !== "undefined" && import.meta.env.DEV
     ? window.location.origin
     : "https://therabridge-backend.onrender.com")
-const AUTH_TOKEN_KEY = "therabridge_auth_token"
 
-export function setAuthToken(token: string | null) {
-  if (typeof window === "undefined") return
-  if (token) {
-    localStorage.setItem(AUTH_TOKEN_KEY, token)
-  } else {
-    localStorage.removeItem(AUTH_TOKEN_KEY)
-  }
+export function setAuthToken(_token: string | null) {
+  // Token is managed via Zustand persist (auth-store) and httpOnly cookies.
+  // This function is kept for backward compatibility but is now a no-op.
 }
 
 export function getAuthToken(): string | null {
   if (typeof window === "undefined") return null
-  return localStorage.getItem(AUTH_TOKEN_KEY)
+  try {
+    const stored = localStorage.getItem("auth-storage")
+    if (stored) {
+      const parsed = JSON.parse(stored)
+      return parsed?.state?.token ?? null
+    }
+  } catch {
+    // Ignore parse errors
+  }
+  return null
 }
 
 export const api = axios.create({

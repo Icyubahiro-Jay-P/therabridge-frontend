@@ -4,15 +4,17 @@ import type { Community } from "./types"
 
 export function MemberList({
   community,
-  isOwner,
+  canModerate,
   removing,
   onRemoveMember,
 }: {
   community: Community
-  isOwner: boolean
+  canModerate: boolean
   removing: string | null
   onRemoveMember: (userId: string) => void
 }) {
+  const moderatorIds = new Set(community.moderators.map((m) => m._id))
+
   return (
     <div>
       <h3 className="mb-3 text-sm font-semibold text-gray-900 dark:text-white">
@@ -21,6 +23,7 @@ export function MemberList({
       <div className="space-y-2">
         {community.members.map((member) => {
           const isMemberOwner = member._id === community.owner._id
+          const isModerator = moderatorIds.has(member._id)
           return (
             <div
               key={member._id}
@@ -36,13 +39,18 @@ export function MemberList({
                         (owner)
                       </span>
                     )}
+                    {isModerator && (
+                      <span className="ml-1.5 text-xs text-amber-600 dark:text-amber-400">
+                        (moderator)
+                      </span>
+                    )}
                   </p>
                   <p className="text-xs text-gray-400">
                     @{member.username}
                   </p>
                 </div>
               </div>
-              {isOwner && !isMemberOwner && (
+              {canModerate && !isMemberOwner && (
                 <Button
                   variant="ghost"
                   size="xs"

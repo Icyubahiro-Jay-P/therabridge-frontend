@@ -71,7 +71,7 @@ export function ChatPage() {
         const s = stored ? JSON.parse(stored) : {}
         s.screenshotProtection = next
         localStorage.setItem("therabridge-settings", JSON.stringify(s))
-      } catch {}
+      } catch { /* localStorage unavailable */ }
       window.dispatchEvent(new CustomEvent("screenshot-protection-change", { detail: next }))
       return { ...prev, screenshotProtected: next }
     })

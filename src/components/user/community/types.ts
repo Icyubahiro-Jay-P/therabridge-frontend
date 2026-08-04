@@ -32,6 +32,7 @@ export interface Community {
   pendingMembers: ChatUser[]
   inviteKey: string
   isPrivate: boolean
+  isDisabled?: boolean
   category: CommunityCategory
   rules: string
   messages: CommunityMessage[]

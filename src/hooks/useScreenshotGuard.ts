@@ -44,7 +44,10 @@ export function useScreenshotGuard({
   const [guarded, setGuarded] = useState(false)
   const clearTimerRef = useRef<number | null>(null)
   const onEventRef = useRef(onSensitivityEvent)
-  onEventRef.current = onSensitivityEvent
+
+  useEffect(() => {
+    onEventRef.current = onSensitivityEvent
+  }, [onSensitivityEvent])
 
   const clearTimer = useCallback(() => {
     if (clearTimerRef.current !== null) {
@@ -89,7 +92,6 @@ export function useScreenshotGuard({
   useEffect(() => {
     if (!enabled || !active) {
       clearTimer()
-      setGuarded(false)
       return
     }
 

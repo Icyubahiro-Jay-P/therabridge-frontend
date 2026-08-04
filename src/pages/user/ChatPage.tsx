@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { Loader2, Menu } from "lucide-react"
 
 import { useChatState } from "@/components/user/chat/useChatState"
@@ -15,6 +15,7 @@ import { WatermarkCanvas } from "@/components/privacy/WatermarkCanvas"
 import { useScreenshotGuard } from "@/hooks/useScreenshotGuard"
 import { loadSetting } from "@/components/user/chat/utils"
 import { getSocket } from "@/lib/socket"
+import type { DirectMessage } from "@/components/user/chat/types"
 
 export function ChatPage() {
   const c = useChatState()
@@ -25,9 +26,47 @@ export function ChatPage() {
     setEditingContent: c.setEditingContent,
   })
 
+  const partnerIdRef = useRef<string | null>(null)
   useEffect(() => {
-    getSocket()
-  }, [])
+    partnerIdRef.current = c.partner?._id ?? null
+  })
+
+  useEffect(() => {
+    const socket = getSocket()
+    if (!socket) return
+
+    const currentUserId = c.currentUser?.id
+    const setMessages = c.setMessages
+
+    function onScreenshotNotice(data: {
+      messageId: string
+      initiatorId: string
+      initiatorName: string
+      conversationId: string
+      timestamp: string
+    }) {
+      if (data.conversationId !== partnerIdRef.current) return
+      if (data.initiatorId === currentUserId) return
+
+      const notice: DirectMessage = {
+        _id: data.messageId,
+        sender: { _id: data.initiatorId, username: "", firstName: data.initiatorName, lastName: "" },
+        recipient: { _id: data.conversationId, username: "", firstName: "", lastName: "" },
+        content: `${data.initiatorName} may have taken a screenshot`,
+        read: false,
+        createdAt: data.timestamp,
+        kind: "screenshot-notice",
+        noticeType: "possible_screenshot",
+      }
+      setMessages((prev) => {
+        if (prev.some((m) => m._id === notice._id)) return prev
+        return [...prev, notice]
+      })
+    }
+
+    socket.on("possible_screenshot", onScreenshotNotice)
+    return () => { socket.off("possible_screenshot", onScreenshotNotice) }
+  }, [c.partner?._id, c.currentUser?.id, c.setMessages])
 
   const [privacyShield, setPrivacyShield] = useState(() => ({
     screenshotProtected: loadSetting("screenshotProtection", false),

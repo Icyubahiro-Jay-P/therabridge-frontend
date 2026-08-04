@@ -19,6 +19,8 @@ export interface DirectMessage {
   read: boolean
   readAt?: string
   createdAt: string
+  kind?: "message" | "screenshot-notice"
+  noticeType?: string | null
   unsent?: boolean
   edited?: boolean
   editCount?: number

@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react"
+import { isScreenshotShortcut } from "@/lib/screenshotShortcuts"
 
 export type ScreenshotGuardMode = "blur" | "blackout"
 
@@ -16,16 +17,6 @@ export interface UseScreenshotGuardOptions {
   /** How long a pure shortcut press keeps the guard up before revealing. */
   shortcutHideDelay?: number
   onSensitivityEvent?: (event: SensitivityEvent) => void
-}
-
-function isScreenshotShortcut(e: KeyboardEvent): boolean {
-  const k = e.key.toLowerCase()
-  if (e.key === "PrintScreen") return true
-  if (e.altKey && e.key === "PrintScreen") return true
-  if (e.metaKey && e.shiftKey && (k === "s" || k === "3" || k === "4" || k === "5"))
-    return true
-  if (e.ctrlKey && e.metaKey && e.shiftKey && (k === "3" || k === "4")) return true
-  return false
 }
 
 /**

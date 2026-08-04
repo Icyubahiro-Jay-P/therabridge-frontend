@@ -109,6 +109,7 @@ Stored in `localStorage` under key `therabridge-settings` (managed by `useSettin
 ## Key Features
 
 - **Therry in chat** (`/chat/therry`): Gemini-powered (`gemini-3.5-flash`) wellness companion; every message is persisted server-side and replayed as history. Crisis keywords trigger a dedicated response with helpline info.
+- **Privacy shield** — blur-on-blur, screenshot-attempt blackout, possible-screenshot notices, and watermarking. See the section below. These features raise the bar and leave a paper trail but **cannot prevent screenshots**.
 - **Screenshot protection** (`components/layout/ScreenshotProtection.tsx`): blocks `PrintScreen`/`Cmd+Shift+S/3/4/5` and blurs the whole app when the tab loses focus.
 - **Message sounds** (`lib/sound.ts`): plays `src/assets/ding.mp3` for new incoming DMs and community messages; volume lowers automatically in calm mode.
 - **Join-only communities**: the create form was removed from the UI; users join via invite key.

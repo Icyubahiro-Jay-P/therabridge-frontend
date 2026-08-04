@@ -9,6 +9,7 @@ export interface Settings {
   soundVolume: number
   focusMode: boolean
   screenshotProtection: boolean
+  watermarkEnabled: boolean
   accountVisibility: "visible" | "anonymous"
   enterToSend: boolean
 }
@@ -21,6 +22,7 @@ const DEFAULT_SETTINGS: Settings = {
   soundVolume: 70,
   focusMode: false,
   screenshotProtection: false,
+  watermarkEnabled: false,
   accountVisibility: "visible",
   enterToSend: true,
 }

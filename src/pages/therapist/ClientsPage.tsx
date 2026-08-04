@@ -56,7 +56,7 @@ export function TherapistClientsPage() {
             .filter((p) => !rosterIds.has(p._id))
         )
       } catch {
-        // Ignore — page renders with whatever data loaded.
+        // Ignore - page renders with whatever data loaded.
       } finally {
         setLoading(false)
       }
@@ -110,7 +110,7 @@ export function TherapistClientsPage() {
       setClients((prev) => [...prev, data.client])
       setDiscover((prev) => prev.filter((p) => p._id !== userId))
     } catch {
-      // Backend rejects (e.g. user already has a therapist) — ignore for now.
+      // Backend rejects (e.g. user already has a therapist) - ignore for now.
     } finally {
       setAdding(null)
     }

@@ -10,6 +10,7 @@ React 19 + TypeScript SPA for Therabridge, a mental wellness platform.
 - **Zustand 5** — Global state (auth store with `persist`)
 - **TanStack Query 5** — Data fetching hooks (therapists, notifications)
 - **Axios** — HTTP client with auth interceptors
+- **Socket.io-client** — real-time possible-screenshot notices (`lib/socket.ts`)
 - **Tailwind CSS 4** — Utility-first styling (with `tw-animate-css`)
 - **Radix UI** + **Shadcn/ui** — Headless primitives
 - **Lucide React** — Icons
@@ -114,6 +115,16 @@ Stored in `localStorage` under key `therabridge-settings` (managed by `useSettin
 - **Message sounds** (`lib/sound.ts`): plays `src/assets/ding.mp3` for new incoming DMs and community messages; volume lowers automatically in calm mode.
 - **Join-only communities**: the create form was removed from the UI; users join via invite key.
 - **Talking Points**: messaging is a wellness exercise — DMs/community messages earn +2 Wellness points, Therry chats earn +5 (capped 20/day). The Home streak cards show a "Talking Points today" meter. The earning mechanics are deliberately not explained in the UI so users discover them on their own.
+
+## Privacy Shield
+
+A set of features that discourage casual screenshots of sensitive views (chat DMs, community rooms) and keep an audit trail.
+
+- **`useScreenshotGuard`** (`hooks/useScreenshotGuard.ts`) — a reusable hook for any sensitive view. In `"blur"` mode it blurs the container while the tab is unfocused; in `"blackout"` mode it shows a Snapchat-style black overlay that stays up briefly (default 250 ms) after the view becomes visible again. It also detects screenshot shortcuts (PrintScreen / `Cmd+Shift+S/3/4/5`) and calls `onSensitivityEvent`. Pair it with `<GuardOverlay />` (`components/privacy/GuardOverlay.tsx`) inside a `relative` container.
+- **Possible-screenshot notices** — when a guard fires on a DM thread, the client emits `possible_screenshot` over Socket.io (see `lib/socket.ts`; falls back to `POST /api/chat/screenshot-notice` when disconnected). The server rate-limits to **1 per 10 s per user**, persists a `screenshot-notice` system message into the thread (both sides see it, it survives reloads), and pushes a real-time event to the peer's sockets.
+- **Watermarking** — `components/privacy/WatermarkCanvas.tsx` tiles a low-opacity `username · timestamp` diagonal watermark across a view (client-side canvas). A server-side Sharp stamp (`POST /api/chat/watermark-stamp`) renders text to a PNG with a per-viewer watermark for flagged content.
+
+**Honest limitation:** blur, blackout, notices, and watermarks deter casual copying and create a paper trail. They do **not** and cannot prevent screenshots — someone with another device, OS-level capture, or developer tools can still record content.
 
 ## Adding shadcn Components
 

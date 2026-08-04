@@ -4,6 +4,7 @@ export interface ChatUser {
   firstName: string
   lastName: string
   avatar?: string | null
+  isDisabled?: boolean
 }
 
 export interface EditEntry {

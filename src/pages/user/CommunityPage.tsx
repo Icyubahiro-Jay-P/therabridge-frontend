@@ -26,6 +26,8 @@ export function CommunityPage() {
     enabled: c.screenshotProtected,
     active: !!c.active,
   })
+  const canCreate =
+    c.currentUser?.role === "therapist" || c.currentUser?.role === "admin"
 
   return (
     <div className="flex h-full overflow-hidden select-none">
@@ -88,6 +90,7 @@ export function CommunityPage() {
         loading={c.loading}
         active={c.active}
         currentUserId={c.currentUser?.id}
+        canCreate={canCreate}
         onSelectCommunity={c.selectCommunity}
         onJoinClick={() => c.setShowJoin(true)}
         onCreateClick={() => c.setShowCreate(true)}

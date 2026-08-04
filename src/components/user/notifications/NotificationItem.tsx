@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom"
 import {
   Bell, MessageCircle, Heart, AlertTriangle, TrendingUp, Shield, Loader2, X,
 } from "lucide-react"
@@ -33,6 +34,7 @@ interface NotificationData {
   body: string
   read: boolean
   createdAt: string
+  data?: { url?: string }
 }
 
 export function NotificationItem({
@@ -46,12 +48,17 @@ export function NotificationItem({
   onMarkRead: (id: string) => void
   onDelete: (id: string) => void
 }) {
+  const navigate = useNavigate()
   const Icon = typeIcons[notification.type] || Bell
   const colorClass = typeColors[notification.type] || "bg-gray-100 text-gray-600 dark:bg-gray-800"
 
   return (
     <div
-      onClick={() => !notification.read && onMarkRead(notification._id)}
+      onClick={() => {
+        if (!notification.read) onMarkRead(notification._id)
+        const url = notification.data?.url
+        if (url) navigate(url)
+      }}
       className={cn(
         "group flex items-start gap-4 rounded-2xl border p-4 transition-colors cursor-pointer",
         notification.read

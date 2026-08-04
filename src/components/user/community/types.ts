@@ -1,5 +1,15 @@
 import type { ChatUser, EditEntry } from "../chat/types"
 
+export type CommunityCategory =
+  | "general"
+  | "anxiety"
+  | "depression"
+  | "stress"
+  | "mindfulness"
+  | "support"
+  | "therapy"
+  | "wellness"
+
 export interface CommunityMessage {
   _id: string
   sender: ChatUser
@@ -18,6 +28,11 @@ export interface Community {
   description: string
   owner: ChatUser
   members: ChatUser[]
+  moderators: ChatUser[]
+  pendingMembers: ChatUser[]
   inviteKey: string
+  isPrivate: boolean
+  category: CommunityCategory
+  rules: string
   messages: CommunityMessage[]
 }

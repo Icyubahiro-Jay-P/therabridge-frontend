@@ -6,14 +6,37 @@ const SOCKET_URL =
 
 let socket: Socket | null = null
 
+function createSocket(): Socket {
+  const s = io(SOCKET_URL, {
+    auth: (cb) => cb({ token: getAuthToken() }),
+    withCredentials: true,
+    transports: ["websocket", "polling"],
+    reconnection: true,
+    reconnectionDelay: 1000,
+    reconnectionDelayMax: 5000,
+  })
+  s.on("connect_error", (err) => {
+    if (err?.message === "unauthorized" || err?.message === "disabled") {
+      s.disconnect()
+      socket = null
+    }
+  })
+  return s
+}
+
+export function connectSocket(): Socket | null {
+  if (typeof window === "undefined") return null
+  if (!socket || !socket.connected) {
+    socket?.disconnect()
+    socket = createSocket()
+  }
+  return socket
+}
+
 export function getSocket(): Socket | null {
   if (typeof window === "undefined") return null
   if (!socket) {
-    socket = io(SOCKET_URL, {
-      auth: (cb) => cb({ token: getAuthToken() }),
-      withCredentials: true,
-      transports: ["websocket", "polling"],
-    })
+    socket = createSocket()
   }
   return socket
 }

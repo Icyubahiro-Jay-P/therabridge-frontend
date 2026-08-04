@@ -130,5 +130,5 @@ export function useScreenshotGuard({
     }
   }, [enabled, active, hide, reveal, shortcut, clearTimer])
 
-  return { guarded }
+  return { guarded: enabled && active && guarded }
 }

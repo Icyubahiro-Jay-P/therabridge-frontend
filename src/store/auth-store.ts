@@ -15,6 +15,10 @@ import {
 } from "@/lib/auth-api"
 import { AuthError, NetworkError, setAuthHandlers, setAuthToken } from "@/lib/api"
 import { connectSocket, disconnectSocket } from "@/lib/socket"
+import {
+  syncPushSubscription,
+  unregisterServiceWorker,
+} from "@/lib/push"
 import type {
   ChangePasswordPayload,
   ChatSettings,
@@ -69,6 +73,7 @@ export const useAuthStore = create<AuthState>()(
             const chatSettings = await fetchChatSettingsRequest()
             set({ user: { ...user, chatSettings } })
             connectSocket()
+            void syncPushSubscription()
           } else {
             set({ user: null })
             set({ token: null })
@@ -89,6 +94,7 @@ export const useAuthStore = create<AuthState>()(
           set({ user, token })
           setAuthToken(token)
           connectSocket()
+          void syncPushSubscription()
           return message
         } catch (error) {
           const message = getErrorMessage(error, "Login failed")
@@ -106,6 +112,7 @@ export const useAuthStore = create<AuthState>()(
           set({ user, token })
           setAuthToken(token)
           connectSocket()
+          void syncPushSubscription()
           return message
         } catch (error) {
           const message = getErrorMessage(error, "Registration failed")
@@ -120,6 +127,7 @@ export const useAuthStore = create<AuthState>()(
         set({ isLoading: true, error: null })
         try {
           await logoutRequest()
+          void unregisterServiceWorker()
           set({ user: null, token: null })
           setAuthToken(null)
           disconnectSocket()
@@ -222,5 +230,6 @@ setAuthHandlers({
   onAuthExpired: () => {
     useAuthStore.setState({ user: null, token: null })
     disconnectSocket()
+    void unregisterServiceWorker()
   },
 })

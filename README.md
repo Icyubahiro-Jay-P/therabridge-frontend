@@ -6,30 +6,30 @@ React 19 + TypeScript SPA for Therabridge, a mental wellness platform connecting
 
 ## Features
 
-- **Direct Messaging** — Private DMs between users and therapists with privacy shields (blur, watermark, screenshot detection)
-- **AI Wellness Companion** — "Therry" powered by Google Gemini for 24/7 mental health support
-- **Community Chat** — Group rooms with invite-only access, moderation, and member management
-- **Mood Tracking** — Daily mood logging with visual charts and statistics
-- **Wellness Exercises** — Guided breathing, mindfulness, gratitude, grounding, and movement exercises
-- **Crisis Alerts** — Real-time emergency notifications to therapists and admins
-- **Therapist Management** — Client roster management, role-based access control
-- **Gamification** — Exercise scores, login streaks, and talking points for engagement
-- **Privacy Shield** — Screenshot protection, watermarking, and audit trails for sensitive content
+- **Direct Messaging** - Private DMs between users and therapists with privacy shields (blur, watermark, screenshot detection)
+- **AI Wellness Companion** - "Therry" powered by Google Gemini for 24/7 mental health support
+- **Community Chat** - Group rooms with invite-only access, moderation, and member management
+- **Mood Tracking** - Daily mood logging with visual charts and statistics
+- **Wellness Exercises** - Guided breathing, mindfulness, gratitude, grounding, and movement exercises
+- **Crisis Alerts** - Real-time emergency notifications to therapists and admins
+- **Therapist Management** - Client roster management, role-based access control
+- **Gamification** - Exercise scores, login streaks, and talking points for engagement
+- **Privacy Shield** - Screenshot protection, watermarking, and audit trails for sensitive content
 
 ## Stack
 
 - **React 19** + **TypeScript 6** (`strict`, `noUnusedLocals`)
-- **Vite 8** — Build tool (with Tailwind CSS 4 plugin)
-- **React Router 7** — Client routing
-- **Zustand 5** — Global state (auth store with `persist`)
-- **TanStack Query 5** — Data fetching hooks (therapists, notifications)
-- **Axios** — HTTP client with auth interceptors
-- **Socket.io-client** — real-time DMs, community messages, notifications, and possible-screenshot notices (`lib/socket.ts`)
-- **Web Push (PWA)** — device notifications via a service worker (`public/sw.js`) + Push API (`lib/push.ts`); manifest at `public/manifest.webmanifest`
-- **Tailwind CSS 4** — Utility-first styling (with `tw-animate-css`)
-- **Radix UI** + **Shadcn/ui** — Headless primitives
-- **Lucide React** — Icons
-- **Sonner** — Toasts
+- **Vite 8** - Build tool (with Tailwind CSS 4 plugin)
+- **React Router 7** - Client routing
+- **Zustand 5** - Global state (auth store with `persist`)
+- **TanStack Query 5** - Data fetching hooks (therapists, notifications)
+- **Axios** - HTTP client with auth interceptors
+- **Socket.io-client** - real-time DMs, community messages, notifications, and possible-screenshot notices (`lib/socket.ts`)
+- **Web Push (PWA)** - device notifications via a service worker (`public/sw.js`) + Push API (`lib/push.ts`); manifest at `public/manifest.webmanifest`
+- **Tailwind CSS 4** - Utility-first styling (with `tw-animate-css`)
+- **Radix UI** + **Shadcn/ui** - Headless primitives
+- **Lucide React** - Icons
+- **Sonner** - Toasts
 
 ## Scripts
 
@@ -83,7 +83,7 @@ npm run dev      # Starts on http://localhost:5173 (Vite proxies /api → http:/
 | `/users` | Users | Admin panel |
 | `/communities` | Communities | Admin panel |
 | `/user/:username` | Public Profile | View other users |
-| `/therry` | — | Redirects to `/chat/therry` |
+| `/therry` | - | Redirects to `/chat/therry` |
 | `/404`, `*` | Not Found | Fallback page |
 
 ## Project Structure
@@ -127,9 +127,9 @@ src/
 
 ## State Management
 
-- **Global**: `store/auth-store.ts` (Zustand + persist) — user, auth status, initialization.
-- **Chat DMs**: `pages/user/components/chat/useChatState.ts` + `useChatEffects.ts` — conversations, edit/unsend, message sounds. Incoming DMs arrive over Socket.io (`dm_message`, `dm_message_updated`, `dm_message_unsent`); the conversation list refreshes on `conversations_updated`.
-- **Therry**: `pages/user/components/chat/TherryChat.tsx` — loads history from `/api/therry/messages`, sends via `/api/therry/chat`.
+- **Global**: `store/auth-store.ts` (Zustand + persist) - user, auth status, initialization.
+- **Chat DMs**: `pages/user/components/chat/useChatState.ts` + `useChatEffects.ts` - conversations, edit/unsend, message sounds. Incoming DMs arrive over Socket.io (`dm_message`, `dm_message_updated`, `dm_message_unsent`); the conversation list refreshes on `conversations_updated`.
+- **Therry**: `pages/user/components/chat/TherryChat.tsx` - loads history from `/api/therry/messages`, sends via `/api/therry/chat`.
 - **Community**: `useCommunityState.ts` + `useCommunityEffects.ts` + `useMessagePolling.ts`. The client joins a Socket.io room per community (`join_community` / `leave_community`) and receives `community_message`, `community_message_updated`, `community_message_unsent` events.
 - **Home / Mood / Settings / Profile**: `useHomeState.ts`, `useMoodState.ts`, `useSettingsState.ts`, `useProfileState.ts`.
 - **Server state**: `lib/query-hooks.ts` (therapists, notifications) via TanStack Query.
@@ -155,11 +155,11 @@ Stored in `localStorage` under key `therabridge-settings` (managed by `useSettin
 ## Key Features
 
 - **Therry in chat** (`/chat/therry`): Gemini-powered (`gemini-3.5-flash`) wellness companion; every message is persisted server-side and replayed as history. Crisis keywords trigger a dedicated response with helpline info.
-- **Privacy shield** — blur-on-blur, screenshot-attempt blackout, possible-screenshot notices, and watermarking. See the section below. These features raise the bar and leave a paper trail but **cannot prevent screenshots**.
+- **Privacy shield** - blur-on-blur, screenshot-attempt blackout, possible-screenshot notices, and watermarking. See the section below. These features raise the bar and leave a paper trail but **cannot prevent screenshots**.
 - **Screenshot protection** (`components/layout/ScreenshotProtection.tsx`): blocks `PrintScreen`/`Cmd+Shift+S/3/4/5` and blurs the whole app when the tab loses focus.
 - **Message sounds** (`lib/sound.ts`): plays `src/assets/ding.mp3` for new incoming DMs and community messages; volume lowers automatically in calm mode.
 - **Join-only communities**: the create form was removed from the UI; users join via invite key.
-- **Talking Points**: messaging is a wellness exercise — DMs/community messages earn +2 Wellness points, Therry chats earn +5 (capped 20/day). The Home streak cards show a "Talking Points today" meter. The earning mechanics are deliberately not explained in the UI so users discover them on their own.
+- **Talking Points**: messaging is a wellness exercise - DMs/community messages earn +2 Wellness points, Therry chats earn +5 (capped 20/day). The Home streak cards show a "Talking Points today" meter. The earning mechanics are deliberately not explained in the UI so users discover them on their own.
 
 ## Real-time Updates (Socket.io)
 
@@ -192,17 +192,17 @@ Beyond the in-app notification center, the app can alert you on the device itsel
 - **Enabling:** Settings → Notifications → **Device notifications**. The toggle registers `public/sw.js`, requests browser permission, fetches the public VAPID key from `GET /api/push/vapid-public-key`, subscribes, and stores it via `POST /api/push/subscribe`.
 - **Sync:** after login/register/initialize, `syncPushSubscription()` re-wires an already-granted permission without prompting (never nags returning users). On logout/session expiry the device is unsubscribed and the service worker is unregistered.
 - **Receiving:** `public/sw.js` shows the push notification and, on tap, opens/navigates to the event's deep link (chat thread, community, crisis, mood, …). Payload: `{ title, body, data: { url, type, notificationId } }`.
-- **What triggers it:** DMs, community messages, crisis alerts, exercise/streak milestones, mood reminders, and community invites — the same events as the in-app notification center. Chat pushes are skipped while you're actively online (Socket.io delivers in-app instead).
+- **What triggers it:** DMs, community messages, crisis alerts, exercise/streak milestones, mood reminders, and community invites - the same events as the in-app notification center. Chat pushes are skipped while you're actively online (Socket.io delivers in-app instead).
 
 ## Privacy Shield
 
 A set of features that discourage casual screenshots of sensitive views (chat DMs, community rooms) and keep an audit trail.
 
-- **`useScreenshotGuard`** (`hooks/useScreenshotGuard.ts`) — a reusable hook for any sensitive view. In `"blur"` mode it blurs the container while the tab is unfocused; in `"blackout"` mode it shows a Snapchat-style black overlay that stays up briefly (default 250 ms) after the view becomes visible again. It also detects screenshot shortcuts (PrintScreen / `Cmd+Shift+S/3/4/5`) and calls `onSensitivityEvent`. Pair it with `<GuardOverlay />` (`components/privacy/GuardOverlay.tsx`) inside a `relative` container.
-- **Possible-screenshot notices** — when a guard fires on a DM thread, the client emits `possible_screenshot` over Socket.io (see `lib/socket.ts`; falls back to `POST /api/chat/screenshot-notice` when disconnected). The server rate-limits to **1 per 10 s per user**, persists a `screenshot-notice` system message into the thread (both sides see it, it survives reloads), and pushes a real-time event to the peer's sockets.
-- **Watermarking** — `components/privacy/WatermarkCanvas.tsx` tiles a low-opacity `username · timestamp` diagonal watermark across a view (client-side canvas). A server-side Sharp stamp (`POST /api/chat/watermark-stamp`) renders text to a PNG with a per-viewer watermark for flagged content.
+- **`useScreenshotGuard`** (`hooks/useScreenshotGuard.ts`) - a reusable hook for any sensitive view. In `"blur"` mode it blurs the container while the tab is unfocused; in `"blackout"` mode it shows a Snapchat-style black overlay that stays up briefly (default 250 ms) after the view becomes visible again. It also detects screenshot shortcuts (PrintScreen / `Cmd+Shift+S/3/4/5`) and calls `onSensitivityEvent`. Pair it with `<GuardOverlay />` (`components/privacy/GuardOverlay.tsx`) inside a `relative` container.
+- **Possible-screenshot notices** - when a guard fires on a DM thread, the client emits `possible_screenshot` over Socket.io (see `lib/socket.ts`; falls back to `POST /api/chat/screenshot-notice` when disconnected). The server rate-limits to **1 per 10 s per user**, persists a `screenshot-notice` system message into the thread (both sides see it, it survives reloads), and pushes a real-time event to the peer's sockets.
+- **Watermarking** - `components/privacy/WatermarkCanvas.tsx` tiles a low-opacity `username · timestamp` diagonal watermark across a view (client-side canvas). A server-side Sharp stamp (`POST /api/chat/watermark-stamp`) renders text to a PNG with a per-viewer watermark for flagged content.
 
-**Honest limitation:** blur, blackout, notices, and watermarks deter casual copying and create a paper trail. They do **not** and cannot prevent screenshots — someone with another device, OS-level capture, or developer tools can still record content.
+**Honest limitation:** blur, blackout, notices, and watermarks deter casual copying and create a paper trail. They do **not** and cannot prevent screenshots - someone with another device, OS-level capture, or developer tools can still record content.
 
 ## Adding shadcn Components
 

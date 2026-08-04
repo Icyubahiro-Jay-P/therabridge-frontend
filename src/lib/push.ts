@@ -89,7 +89,7 @@ export async function disablePush(): Promise<void> {
         endpoint: subscription.endpoint,
       })
     } catch {
-      // best-effort — still unsubscribe locally
+      // best-effort - still unsubscribe locally
     }
     await subscription.unsubscribe()
   }
@@ -119,7 +119,7 @@ export async function unregisterServiceWorker(): Promise<void> {
       await api.post("/api/push/unsubscribe", { endpoint: subscription.endpoint })
     }
   } catch {
-    // best-effort — proceed to unregister locally
+    // best-effort - proceed to unregister locally
   }
   await registration.unregister()
 }

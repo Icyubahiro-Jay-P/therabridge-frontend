@@ -16,16 +16,25 @@ export function JoinCommunityModal({
   const [key, setKey] = useState("")
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [pendingNotice, setPendingNotice] = useState<string | null>(null)
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setLoading(true)
     setError(null)
+    setPendingNotice(null)
     try {
-      const { data } = await api.post<{ community: Community }>(
+      const { data } = await api.post<{ community: Community; pending?: boolean }>(
         "/api/chat/communities/join",
         { inviteKey: key.trim().toUpperCase() }
       )
+      if (data.pending) {
+        setPendingNotice(
+          "This is a private community. Your request has been sent — a moderator will approve it shortly."
+        )
+        setKey("")
+        return
+      }
       onJoin(data.community)
       onClose()
     } catch (err) {
@@ -52,6 +61,11 @@ export function JoinCommunityModal({
         {error && (
           <div className="mb-4 rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700 dark:border-red-900/50 dark:bg-red-950/40 dark:text-red-400">
             <TriangleAlert className="inline size-4 shrink-0" /> {error}
+          </div>
+        )}
+        {pendingNotice && (
+          <div className="mb-4 rounded-xl border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-700 dark:border-amber-900/50 dark:bg-amber-950/40 dark:text-amber-400">
+            <TriangleAlert className="inline size-4 shrink-0" /> {pendingNotice}
           </div>
         )}
         <form onSubmit={handleSubmit} className="space-y-4">

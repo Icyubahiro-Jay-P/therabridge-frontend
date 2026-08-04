@@ -8,6 +8,7 @@ import { EmptyState } from "@/components/user/chat/EmptyState"
 import { SuggestedUsers } from "@/components/user/chat/SuggestedUsers"
 import { ChatView } from "@/components/user/chat/ChatView"
 import { TherryChat } from "@/components/user/chat/TherryChat"
+import { ScreenshotOverlay } from "@/components/user/community/ScreenshotOverlay"
 import { useScreenshotNotices } from "@/components/user/chat/useScreenshotNotices"
 import { GuardOverlay } from "@/components/privacy/GuardOverlay"
 import { WatermarkCanvas } from "@/components/privacy/WatermarkCanvas"
@@ -62,8 +63,16 @@ export function ChatPage() {
     },
   })
 
+  function toggleScreenshotProtection() {
+    setPrivacyShield((prev) => {
+      const next = !prev.screenshotProtected
+      return { ...prev, screenshotProtected: next }
+    })
+  }
+
   return (
     <div className="flex min-h-0 flex-1 overflow-hidden">
+      <ScreenshotOverlay screenshotProtected={privacyShield.screenshotProtected} active={!!c.partner} />
       {c.mobileSidebarOpen && (
         <div
           className="fixed inset-0 z-40 bg-black/50 md:hidden"
@@ -126,6 +135,8 @@ export function ChatPage() {
             <ChatView
               partner={c.partner}
               onToggleSidebar={() => c.setMobileSidebarOpen(true)}
+              screenshotProtected={privacyShield.screenshotProtected}
+              onToggleScreenshot={toggleScreenshotProtection}
               error={c.error}
               loadingMessages={c.loadingMessages}
               messages={c.messages}

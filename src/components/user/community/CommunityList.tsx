@@ -1,4 +1,4 @@
-import { Hash, Loader2, Users } from "lucide-react"
+import { Hash, Loader2, Lock, Users } from "lucide-react"
 import { cn } from "@/lib/utils"
 import type { Community } from "./types"
 
@@ -6,11 +6,13 @@ export function CommunityList({
   communities,
   loading,
   active,
+  currentUserId,
   onSelect,
 }: {
   communities: Community[]
   loading: boolean
   active: Community | null
+  currentUserId?: string
   onSelect: (c: Community) => void
 }) {
   if (loading) {
@@ -33,7 +35,11 @@ export function CommunityList({
   }
   return (
     <>
-      {communities.map((community) => (
+      {communities.map((community) => {
+        const isPending = community.pendingMembers?.some(
+          (m) => m._id === currentUserId
+        )
+        return (
         <button
           key={community._id}
           onClick={() => onSelect(community)}
@@ -48,8 +54,14 @@ export function CommunityList({
             <Hash className="size-4 text-emerald-600 dark:text-emerald-400" />
           </span>
           <div className="min-w-0">
-            <p className="truncate text-sm font-medium text-gray-900 dark:text-white">
+            <p className="flex items-center gap-1 truncate text-sm font-medium text-gray-900 dark:text-white">
+              {community.isPrivate && <Lock className="size-3 shrink-0 text-gray-400" />}
               {community.name}
+              {isPending && (
+                <span className="rounded-full bg-amber-100 px-1.5 py-0.5 text-[10px] font-medium text-amber-700 dark:bg-amber-900/40 dark:text-amber-300">
+                  pending
+                </span>
+              )}
             </p>
             <p className="text-xs text-gray-400">
               {community.members.length} member
@@ -58,7 +70,8 @@ export function CommunityList({
             </p>
           </div>
         </button>
-      ))}
+        )
+      })}
     </>
   )
 }

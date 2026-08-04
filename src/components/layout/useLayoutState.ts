@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { useAuthStore } from "@/store/auth-store"
 import { api } from "@/lib/api"
+import { getSocket } from "@/lib/socket"
 import type { SidebarMode } from "./types"
 
 export function useLayoutState() {

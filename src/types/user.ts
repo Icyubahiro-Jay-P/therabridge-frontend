@@ -10,6 +10,7 @@ export interface User {
   role: UserRole
   avatar?: string | null
   bio?: string
+  isDisabled?: boolean
   createdAt?: string
   updatedAt?: string
   privacySettings?: PrivacySettings

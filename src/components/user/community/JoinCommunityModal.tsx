@@ -30,7 +30,7 @@ export function JoinCommunityModal({
       )
       if (data.pending) {
         setPendingNotice(
-          "This is a private community. Your request has been sent — a moderator will approve it shortly."
+          "This is a private community. Your request has been sent - a moderator will approve it shortly."
         )
         setKey("")
         return

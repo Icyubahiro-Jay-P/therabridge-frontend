@@ -14,6 +14,7 @@ const ForgotPasswordPage = lazy(() => import("@/pages/ForgotPasswordPage").then(
 const ResetPasswordPage = lazy(() => import("@/pages/ResetPasswordPage").then((mod) => ({ default: mod.ResetPasswordPage })))
 const PublicProfilePage = lazy(() => import("@/pages/PublicProfilePage").then((mod) => ({ default: mod.PublicProfilePage })))
 const NotFoundPage = lazy(() => import("@/pages/NotFoundPage").then((mod) => ({ default: mod.NotFoundPage })))
+const AccountDisabledPage = lazy(() => import("@/pages/AccountDisabledPage").then((mod) => ({ default: mod.AccountDisabledPage })))
 
 const UserHomePage = lazy(() => import("@/pages/user/HomePage").then((mod) => ({ default: mod.HomePage })))
 const UserChatPage = lazy(() => import("@/pages/user/ChatPage").then((mod) => ({ default: mod.ChatPage })))
@@ -150,6 +151,7 @@ export function App() {
 
           <Route path="/forgot-password" element={<ErrorBoundaryRoute><ForgotPasswordPage /></ErrorBoundaryRoute>} />
           <Route path="/reset-password/:token" element={<ErrorBoundaryRoute><ResetPasswordPage /></ErrorBoundaryRoute>} />
+          <Route path="/account-disabled" element={<ErrorBoundaryRoute><AccountDisabledPage /></ErrorBoundaryRoute>} />
 
           <Route element={<ProtectedRoute />}>
             <Route element={<AppLayout />}>

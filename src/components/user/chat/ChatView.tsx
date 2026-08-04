@@ -29,6 +29,9 @@ export function ChatView({
   sending,
   onSend,
   enterToSend,
+  onLoadOlder,
+  loadingOlder,
+  hasOlder,
 }: {
   partner: ChatUser
   onToggleSidebar: () => void
@@ -55,6 +58,9 @@ export function ChatView({
   sending: boolean
   onSend: () => void
   enterToSend: boolean
+  onLoadOlder: () => void
+  loadingOlder: boolean
+  hasOlder: boolean
 }) {
   return (
     <>
@@ -74,6 +80,9 @@ export function ChatView({
         showHistoryFor={showHistoryFor}
         setShowHistoryFor={setShowHistoryFor}
         deleting={deleting}
+        onLoadOlder={onLoadOlder}
+        loadingOlder={loadingOlder}
+        hasOlder={hasOlder}
       />
       <MessageInput
         partnerName={partner.firstName}

@@ -25,6 +25,7 @@ React 19 + TypeScript SPA for Therabridge, a mental wellness platform connecting
 - **TanStack Query 5** — Data fetching hooks (therapists, notifications)
 - **Axios** — HTTP client with auth interceptors
 - **Socket.io-client** — real-time DMs, community messages, notifications, and possible-screenshot notices (`lib/socket.ts`)
+- **Web Push (PWA)** — device notifications via a service worker (`public/sw.js`) + Push API (`lib/push.ts`); manifest at `public/manifest.webmanifest`
 - **Tailwind CSS 4** — Utility-first styling (with `tw-animate-css`)
 - **Radix UI** + **Shadcn/ui** — Headless primitives
 - **Lucide React** — Icons
@@ -183,6 +184,15 @@ The frontend uses Socket.io instead of long-polling for live data. The socket co
 | `possible_screenshot` | `{ conversationId }` | possible-screenshot notice (falls back to `POST /api/chat/screenshot-notice` when disconnected) |
 
 The REST long-poll endpoints (`/api/chat/conversation/:id/updates`, `/api/chat/communities/:id/updates`) are kept server-side for backwards compatibility but are no longer used by the client.
+
+## Device Notifications (Web Push)
+
+Beyond the in-app notification center, the app can alert you on the device itself (desktop browsers, Android Chrome, iOS Safari 16.4+) via Web Push.
+
+- **Enabling:** Settings → Notifications → **Device notifications**. The toggle registers `public/sw.js`, requests browser permission, fetches the public VAPID key from `GET /api/push/vapid-public-key`, subscribes, and stores it via `POST /api/push/subscribe`.
+- **Sync:** after login/register/initialize, `syncPushSubscription()` re-wires an already-granted permission without prompting (never nags returning users). On logout/session expiry the device is unsubscribed and the service worker is unregistered.
+- **Receiving:** `public/sw.js` shows the push notification and, on tap, opens/navigates to the event's deep link (chat thread, community, crisis, mood, …). Payload: `{ title, body, data: { url, type, notificationId } }`.
+- **What triggers it:** DMs, community messages, crisis alerts, exercise/streak milestones, mood reminders, and community invites — the same events as the in-app notification center. Chat pushes are skipped while you're actively online (Socket.io delivers in-app instead).
 
 ## Privacy Shield
 

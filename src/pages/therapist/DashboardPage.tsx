@@ -37,7 +37,7 @@ export function TherapistDashboardPage() {
         setCommunities(communitiesData)
         setClients(clientsData)
       } catch {
-        // Ignore — dashboard renders with whatever data loaded.
+        // Ignore - dashboard renders with whatever data loaded.
       } finally {
         setLoading(false)
       }

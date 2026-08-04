@@ -66,6 +66,13 @@ export function ChatPage() {
   function toggleScreenshotProtection() {
     setPrivacyShield((prev) => {
       const next = !prev.screenshotProtected
+      try {
+        const stored = localStorage.getItem("therabridge-settings")
+        const s = stored ? JSON.parse(stored) : {}
+        s.screenshotProtection = next
+        localStorage.setItem("therabridge-settings", JSON.stringify(s))
+      } catch {}
+      window.dispatchEvent(new CustomEvent("screenshot-protection-change", { detail: next }))
       return { ...prev, screenshotProtected: next }
     })
   }

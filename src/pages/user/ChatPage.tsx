@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react"
 import { Loader2, Menu } from "lucide-react"
 
 import { useChatState } from "@/components/user/chat/useChatState"
@@ -7,6 +8,12 @@ import { EmptyState } from "@/components/user/chat/EmptyState"
 import { SuggestedUsers } from "@/components/user/chat/SuggestedUsers"
 import { ChatView } from "@/components/user/chat/ChatView"
 import { TherryChat } from "@/components/user/chat/TherryChat"
+import { useScreenshotNotices } from "@/components/user/chat/useScreenshotNotices"
+import { GuardOverlay } from "@/components/privacy/GuardOverlay"
+import { WatermarkCanvas } from "@/components/privacy/WatermarkCanvas"
+import { useScreenshotGuard } from "@/hooks/useScreenshotGuard"
+import { loadSetting } from "@/components/user/chat/utils"
+import { getSocket } from "@/lib/socket"
 
 export function ChatPage() {
   const c = useChatState()
@@ -15,6 +22,44 @@ export function ChatPage() {
     currentUserId: c.currentUser?.id,
     setEditingId: c.setEditingId,
     setEditingContent: c.setEditingContent,
+  })
+
+  useEffect(() => {
+    getSocket()
+  }, [])
+
+  const [privacyShield, setPrivacyShield] = useState(() => ({
+    screenshotProtected: loadSetting("screenshotProtection", false),
+    watermarkEnabled: loadSetting("watermarkEnabled", false),
+  }))
+
+  useEffect(() => {
+    function refresh() {
+      setPrivacyShield({
+        screenshotProtected: loadSetting("screenshotProtection", false),
+        watermarkEnabled: loadSetting("watermarkEnabled", false),
+      })
+    }
+    window.addEventListener("storage", refresh)
+    window.addEventListener("screenshot-protection-change", refresh)
+    const interval = setInterval(refresh, 2000)
+    return () => {
+      window.removeEventListener("storage", refresh)
+      window.removeEventListener("screenshot-protection-change", refresh)
+      clearInterval(interval)
+    }
+  }, [])
+
+  const { reportPossibleScreenshot } = useScreenshotNotices()
+  const guard = useScreenshotGuard({
+    mode: "blackout",
+    enabled: privacyShield.screenshotProtected,
+    active: !!c.partner && !c.isTherry,
+    onSensitivityEvent: (e) => {
+      if ((e.type === "shortcut" || e.type === "hidden") && c.partner) {
+        reportPossibleScreenshot(c.partner._id)
+      }
+    },
   })
 
   return (
@@ -77,36 +122,44 @@ export function ChatPage() {
             </>
           )
         ) : (
-          <ChatView
-            partner={c.partner}
-            onToggleSidebar={() => c.setMobileSidebarOpen(true)}
-            error={c.error}
-            loadingMessages={c.loadingMessages}
-            messages={c.messages}
-            currentUserId={c.currentUser?.id}
-            editingId={c.editingId}
-            editingContent={c.editingContent}
-            setEditingContent={c.setEditingContent}
-            onStartEdit={c.startEdit}
-            onSaveEdit={c.handleSaveEdit}
-            onCancelEdit={c.cancelEdit}
-            onUnsend={c.handleUnsend}
-            menuOpenId={c.menuOpenId}
-            setMenuOpenId={c.setMenuOpenId}
-            onToggleTimestamp={c.toggleTimestamp}
-            selectedTimestampMessage={c.selectedTimestampMessage}
-            showHistoryFor={c.showHistoryFor}
-            setShowHistoryFor={c.setShowHistoryFor}
-            deleting={c.deleting}
-            newMessage={c.newMessage}
-            setNewMessage={c.setNewMessage}
-            sending={c.sending}
-            onSend={c.sendMessage}
-            enterToSend={c.enterToSend}
-            onLoadOlder={c.loadOlderMessages}
-            loadingOlder={c.loadingOlder}
-            hasOlder={c.hasOlderMessages}
-          />
+          <div className="relative flex min-h-0 flex-1 flex-col">
+            <ChatView
+              partner={c.partner}
+              onToggleSidebar={() => c.setMobileSidebarOpen(true)}
+              error={c.error}
+              loadingMessages={c.loadingMessages}
+              messages={c.messages}
+              currentUserId={c.currentUser?.id}
+              editingId={c.editingId}
+              editingContent={c.editingContent}
+              setEditingContent={c.setEditingContent}
+              onStartEdit={c.startEdit}
+              onSaveEdit={c.handleSaveEdit}
+              onCancelEdit={c.cancelEdit}
+              onUnsend={c.handleUnsend}
+              menuOpenId={c.menuOpenId}
+              setMenuOpenId={c.setMenuOpenId}
+              onToggleTimestamp={c.toggleTimestamp}
+              selectedTimestampMessage={c.selectedTimestampMessage}
+              showHistoryFor={c.showHistoryFor}
+              setShowHistoryFor={c.setShowHistoryFor}
+              deleting={c.deleting}
+              newMessage={c.newMessage}
+              setNewMessage={c.setNewMessage}
+              sending={c.sending}
+              onSend={c.sendMessage}
+              enterToSend={c.enterToSend}
+              onLoadOlder={c.loadOlderMessages}
+              loadingOlder={c.loadingOlder}
+              hasOlder={c.hasOlderMessages}
+            />
+            <GuardOverlay mode="blackout" visible={guard.guarded} />
+            <WatermarkCanvas
+              enabled={privacyShield.watermarkEnabled}
+              seed={c.currentUser?.id ?? ""}
+              label={c.currentUser?.username}
+            />
+          </div>
         )}
       </div>
     </div>

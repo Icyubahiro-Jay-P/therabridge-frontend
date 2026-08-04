@@ -72,7 +72,7 @@ function performRefresh(): Promise<RefreshResult> {
     })
     .catch((err): RefreshResult => {
       if (!err?.response) {
-        // Transient network failure — keep the session, surface a network error
+        // Transient network failure - keep the session, surface a network error
         return { ok: false, reason: "network" }
       }
       setAuthToken(null)

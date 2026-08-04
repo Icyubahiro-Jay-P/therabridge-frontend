@@ -17,6 +17,10 @@ export function ProtectedRoute() {
     return <Navigate to="/login" replace />
   }
 
+  if (user.isDisabled) {
+    return <Navigate to="/account-disabled" replace />
+  }
+
   return <Outlet />
 }
 

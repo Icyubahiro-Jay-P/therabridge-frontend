@@ -1,3 +1,4 @@
+import { ShieldOff } from "lucide-react"
 import { useCommunityState } from "@/components/user/community/useCommunityState"
 import { useCommunityEffects } from "@/components/user/community/useCommunityEffects"
 import { useMessagePolling } from "@/components/user/community/useMessagePolling"
@@ -117,12 +118,19 @@ export function CommunityPage() {
               onToggleTimestamp={c.toggleTimestamp}
               selectedTimestampMessage={c.selectedTimestampMessage}
             />
+            {c.active.isDisabled && (
+              <div className="flex items-center gap-2 border-t border-red-200 bg-red-50 px-4 py-2.5 text-sm text-red-600 dark:border-red-900/50 dark:bg-red-950/30 dark:text-red-400">
+                <ShieldOff className="size-4 shrink-0" />
+                This community has been disabled. Messaging is disabled.
+              </div>
+            )}
             <MessageInput
               value={c.newMessage}
               onChange={c.setNewMessage}
               onSend={c.sendMessage}
               sending={c.sending}
               communityName={c.active.name}
+              disabled={c.active.isDisabled}
             />
             <GuardOverlay mode="blackout" visible={guard.guarded} />
             <WatermarkCanvas

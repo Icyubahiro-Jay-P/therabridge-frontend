@@ -52,10 +52,12 @@ export function useLoginState() {
       setFeedback({ type: "success", message })
       setTimeout(() => navigate("/", { replace: true }), 900)
     } catch (err) {
-      setFeedback({
-        type: "error",
-        message: err instanceof Error ? err.message : "Login failed",
-      })
+      const msg = err instanceof Error ? err.message : "Login failed"
+      if (msg.toLowerCase().includes("disabled")) {
+        navigate("/account-disabled", { replace: true })
+        return
+      }
+      setFeedback({ type: "error", message: msg })
     }
   }
 

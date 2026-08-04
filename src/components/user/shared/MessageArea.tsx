@@ -35,10 +35,13 @@ export function MessageArea({
   const onLoadOlderRef = useRef(onLoadOlder)
   const loadingOlderRef = useRef(loadingOlder)
   const hasOlderRef = useRef(hasOlder)
-  scrollToBottomRef.current = scrollToBottom
-  onLoadOlderRef.current = onLoadOlder
-  loadingOlderRef.current = loadingOlder
-  hasOlderRef.current = hasOlder
+
+  useEffect(() => {
+    scrollToBottomRef.current = scrollToBottom
+    onLoadOlderRef.current = onLoadOlder
+    loadingOlderRef.current = loadingOlder
+    hasOlderRef.current = hasOlder
+  })
 
   function handleScroll() {
     const viewport = viewportRef.current
@@ -61,7 +64,6 @@ export function MessageArea({
     if (!viewport) return
     viewport.addEventListener("scroll", handleScroll, { passive: true })
     return () => viewport.removeEventListener("scroll", handleScroll)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {

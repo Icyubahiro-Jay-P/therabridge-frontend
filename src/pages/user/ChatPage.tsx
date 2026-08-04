@@ -52,7 +52,7 @@ export function ChatPage() {
         _id: data.messageId,
         sender: { _id: data.initiatorId, username: "", firstName: data.initiatorName, lastName: "" },
         recipient: { _id: data.conversationId, username: "", firstName: "", lastName: "" },
-        content: `${data.initiatorName} may have taken a screenshot`,
+        content: `${data.initiatorName} took a screenshot`,
         read: false,
         createdAt: data.timestamp,
         kind: "screenshot-notice",

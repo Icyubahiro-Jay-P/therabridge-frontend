@@ -1,7 +1,7 @@
 import { useEffect } from "react"
 import { api } from "@/lib/api"
 import { playMessageSound } from "@/lib/sound"
-import { getErrorMessage, loadSetting } from "./utils"
+import { getErrorMessage, loadSetting, CHAT_PAGE_SIZE } from "./utils"
 import type { ChatUser, Conversation, DirectMessage } from "./types"
 
 export function useChatEffects(state: {
@@ -18,6 +18,9 @@ export function useChatEffects(state: {
   setLoadingMessages: (v: boolean) => void
   setEditingId: (v: string | null) => void
   setEditingContent: (v: string) => void
+  setNextCursor: (v: string | null) => void
+  setHasOlderMessages: (v: boolean) => void
+  setLoadingOlder: (v: boolean) => void
 }) {
   useEffect(() => {
     function reload() {
@@ -53,6 +56,9 @@ export function useChatEffects(state: {
     if (!state.username) {
       state.setPartner(null)
       state.setMessages([])
+      state.setNextCursor(null)
+      state.setHasOlderMessages(false)
+      state.setLoadingOlder(false)
       state.setError(null)
       state.setEditingId(null)
       state.setEditingContent("")
@@ -61,6 +67,9 @@ export function useChatEffects(state: {
     if (state.username === "therry") {
       state.setPartner(null)
       state.setMessages([])
+      state.setNextCursor(null)
+      state.setHasOlderMessages(false)
+      state.setLoadingOlder(false)
       state.setError(null)
       state.setEditingId(null)
       state.setEditingContent("")
@@ -70,6 +79,9 @@ export function useChatEffects(state: {
     async function resolveAndFetch() {
       state.setLoadingMessages(true)
       state.setMessages([])
+      state.setNextCursor(null)
+      state.setHasOlderMessages(false)
+      state.setLoadingOlder(false)
       state.setError(null)
       try {
         const { data } = await api.get(`/api/users/${state.username}`)
@@ -82,11 +94,13 @@ export function useChatEffects(state: {
         }
         if (!mounted) return
         state.setPartner(user)
-        const response = await api.get<{ data: DirectMessage[] }>(
-          `/api/chat/conversation/${user._id}`
+        const response = await api.get<{ data: DirectMessage[]; nextCursor: string | null }>(
+          `/api/chat/conversation/${user._id}?limit=${CHAT_PAGE_SIZE}`
         )
         if (mounted) {
           state.setMessages(Array.isArray(response.data.data) ? response.data.data : [])
+          state.setNextCursor(response.data.nextCursor ?? null)
+          state.setHasOlderMessages(!!response.data.nextCursor)
           state.setLoadingMessages(false)
         }
       } catch {

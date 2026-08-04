@@ -31,7 +31,7 @@ export function DeviceNotificationsToggle() {
           : null
         if (!cancelled) setSubscribed(!!sub)
       } catch {
-        // best-effort — leave state as-is
+        // best-effort - leave state as-is
       }
     }
     void checkSubscription()
@@ -63,7 +63,7 @@ export function DeviceNotificationsToggle() {
   const description = unsupported
     ? "Your browser doesn't support push notifications"
     : permission === "denied"
-      ? "Blocked by your browser — allow notifications in the site settings"
+      ? "Blocked by your browser - allow notifications in the site settings"
       : "Get alerts on this device for messages & activity"
 
   return (

@@ -39,7 +39,7 @@ export function TherapistClientsPage() {
   const [loading, setLoading] = useState(true)
   const [adding, setAdding] = useState<string | null>(null)
   const [search, setSearch] = useState("")
-  const [selectedUser, setSelectedUser] = useState<FullUserData | null>(null)
+  const [selectedUser, setSelectedUser] = useState<ProfileData | null>(null)
   const [loadingProfile, setLoadingProfile] = useState(false)
   const [profileError, setProfileError] = useState<string | null>(null)
 

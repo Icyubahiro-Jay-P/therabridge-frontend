@@ -63,18 +63,13 @@ export function useLayoutState() {
     function onNotification() {
       void refresh()
     }
-    function onDmMessage() {
-      void refresh()
-    }
 
     socket.on("conversations_updated", onConversationsUpdated)
     socket.on("notification", onNotification)
-    socket.on("dm_message", onDmMessage)
     return () => {
       mounted = false
       socket.off("conversations_updated", onConversationsUpdated)
       socket.off("notification", onNotification)
-      socket.off("dm_message", onDmMessage)
     }
   }, [])
 

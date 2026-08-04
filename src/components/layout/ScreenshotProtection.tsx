@@ -47,7 +47,7 @@ export function ScreenshotProtection() {
     function onKeyDown(e: KeyboardEvent) {
       if (isScreenshotShortcut(e)) {
         e.preventDefault()
-        e.stopImmediatePropagation()
+        e.stopPropagation()
         setBlurred(true)
       }
     }

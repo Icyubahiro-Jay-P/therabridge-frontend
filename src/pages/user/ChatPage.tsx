@@ -96,7 +96,7 @@ export function ChatPage() {
     enabled: privacyShield.screenshotProtected,
     active: !!c.partner && !c.isTherry,
     onSensitivityEvent: (e) => {
-      if ((e.type === "shortcut" || e.type === "hidden") && c.partner) {
+      if (e.type === "shortcut" && c.partner) {
         reportPossibleScreenshot(c.partner._id)
       }
     },

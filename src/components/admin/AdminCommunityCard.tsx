@@ -44,6 +44,12 @@ export function AdminCommunityCard({
       <div className="mt-4 flex items-center gap-2 text-xs text-gray-400">
         <Users className="size-3.5" />
         {community.members.length} member{community.members.length !== 1 ? "s" : ""}
+        {community.isPrivate && <Lock className="size-3.5" />}
+        {community.category && community.category !== "general" && (
+          <span className="rounded-full bg-gray-100 px-2 py-0.5 text-[10px] capitalize dark:bg-gray-800">
+            {community.category}
+          </span>
+        )}
         <span className="ml-auto font-mono">{community.inviteKey}</span>
       </div>
       <Button

@@ -6,6 +6,8 @@ import type { ChatUser, DirectMessage } from "./types"
 export function ChatView({
   partner,
   onToggleSidebar,
+  screenshotProtected,
+  onToggleScreenshot,
   error,
   loadingMessages,
   messages,
@@ -35,6 +37,8 @@ export function ChatView({
 }: {
   partner: ChatUser
   onToggleSidebar: () => void
+  screenshotProtected: boolean
+  onToggleScreenshot: () => void
   error: string | null
   loadingMessages: boolean
   messages: DirectMessage[]
@@ -64,7 +68,12 @@ export function ChatView({
 }) {
   return (
     <>
-      <ChatHeader partner={partner} onToggleSidebar={onToggleSidebar} />
+      <ChatHeader
+        partner={partner}
+        onToggleSidebar={onToggleSidebar}
+        screenshotProtected={screenshotProtected}
+        onToggleScreenshot={onToggleScreenshot}
+      />
       <MessageArea
         error={error}
         loadingMessages={loadingMessages}

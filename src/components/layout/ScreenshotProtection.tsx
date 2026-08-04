@@ -63,10 +63,12 @@ export function ScreenshotProtection() {
 
   if (!enabled) return null
 
+  const show = enabled && blurred
+
   return (
     <div
       className={`fixed inset-0 z-[150] transition-opacity duration-200 ${
-        blurred ? "opacity-100" : "pointer-events-none opacity-0"
+        show ? "opacity-100" : "pointer-events-none opacity-0"
       }`}
       aria-hidden="true"
     >

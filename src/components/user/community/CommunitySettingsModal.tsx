@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { LogOut, Trash2, TriangleAlert, X } from "lucide-react"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import { Button } from "@/components/ui/button"
 import { api } from "@/lib/api"
 import { getErrorMessage } from "./utils"
 import type { Community, CommunityCategory } from "./types"

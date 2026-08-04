@@ -17,6 +17,9 @@ export function MessageArea({
   showHistoryFor,
   setShowHistoryFor,
   deleting,
+  onLoadOlder,
+  loadingOlder,
+  hasOlder,
 }: {
   error: string | null
   loadingMessages: boolean
@@ -32,12 +35,18 @@ export function MessageArea({
   showHistoryFor: string | null
   setShowHistoryFor: (id: string | null) => void
   deleting: string | null
+  onLoadOlder: () => void
+  loadingOlder: boolean
+  hasOlder: boolean
 }) {
   return (
     <SharedMessageArea
       error={error}
       loadingMessages={loadingMessages}
       messages={messages}
+      onLoadOlder={onLoadOlder}
+      loadingOlder={loadingOlder}
+      hasOlder={hasOlder}
       renderMessage={(msg) => {
         const m = msg as DirectMessage
         const isMe = m.sender._id === (currentUserId ?? "")

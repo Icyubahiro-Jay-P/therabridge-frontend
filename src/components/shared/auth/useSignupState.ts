@@ -1,6 +1,7 @@
-import { useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { useEffect, useState } from "react"
+import { useNavigate, useParams } from "react-router-dom"
 import { useAuthStore } from "@/store/auth-store"
+import { STEP_COUNT, STEP_ITEMS, getStepIndex } from "./signupSteps"
 
 export type FieldName = "firstName" | "lastName" | "username" | "email" | "password" | "dateOfBirth"
 export type FieldErrors = Partial<Record<FieldName, string>>
@@ -24,16 +25,69 @@ function validate(form: Record<FieldName, string>): FieldErrors {
   return e
 }
 
+export function validateField(field: FieldName, value: string, date?: Date): string | undefined {
+  if (field === "firstName" || field === "lastName") {
+    if (!value.trim() || value.trim().length < 2) {
+      return `${field === "firstName" ? "First" : "Last"} name must be at least 2 characters.`
+    }
+  }
+
+  if (field === "username") {
+    if (!value.trim()) return "Username is required."
+    if (!/^[a-zA-Z0-9_]{3,30}$/.test(value.trim())) {
+      return "Letters, numbers, underscores only (3–30 chars)."
+    }
+  }
+
+  if (field === "email") {
+    if (!value.trim()) return "Email is required."
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim())) {
+      return "Invalid email format."
+    }
+  }
+
+  if (field === "dateOfBirth") {
+    if (!date) return "Date of birth is required."
+    const age = new Date().getFullYear() - date.getFullYear()
+    if (age < 18 || age > 120)
+      return "You must be between 18 and 120 years old."
+  }
+
+  if (field === "password") {
+    if (!value) return "Password is required."
+    if (value.length < 8) return "Password must be at least 8 characters."
+  }
+
+  return undefined
+}
+
 export function useSignupState() {
   const register = useAuthStore((state) => state.register)
   const isLoading = useAuthStore((state) => state.isLoading)
   const navigate = useNavigate()
+  const { step: stepSlug } = useParams<{ step: string }>()
   const [form, setForm] = useState({ firstName: "", lastName: "", username: "", email: "", password: "", dateOfBirth: "" })
   const [date, setDate] = useState<Date | undefined>()
   const [showPassword, setShowPassword] = useState(false)
   const [feedback, setFeedback] = useState<Feedback | null>(null)
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({})
   const [touched, setTouched] = useState<Partial<Record<FieldName, boolean>>>({})
+
+  const stepIndex = getStepIndex(stepSlug)
+  const stepItem = STEP_ITEMS[stepIndex] ?? STEP_ITEMS[0]
+  const isLastStep = stepIndex === STEP_COUNT - 1
+  const isFirstStep = stepIndex === 0
+
+  useEffect(() => {
+    if (stepIndex === -1) {
+      navigate(`/signup/${STEP_ITEMS[0].slug}`, { replace: true })
+    }
+  }, [stepIndex, navigate])
+
+  function goToStep(index: number) {
+    const next = Math.min(Math.max(index, 0), STEP_COUNT - 1)
+    navigate(`/signup/${STEP_ITEMS[next].slug}`)
+  }
 
   function updateField(field: FieldName, value: string) {
     setForm((current) => {
@@ -56,12 +110,25 @@ export function useSignupState() {
     if (touched.dateOfBirth) setFieldErrors(validate(next))
   }
 
-  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  async function handleStepSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
+    if (stepIndex === -1) return
+
+    const fieldError = validateField(stepItem.field, stepItem.field === "dateOfBirth" ? form.dateOfBirth : form[stepItem.field], date)
+    if (fieldError) {
+      setTouched((prev) => ({ ...prev, [stepItem.field]: true }))
+      setFieldErrors((prev) => ({ ...prev, [stepItem.field]: fieldError }))
+      return
+    }
+
+    if (!isLastStep) {
+      goToStep(stepIndex + 1)
+      return
+    }
+
     setFeedback(null)
     const errors = validate(form)
     setFieldErrors(errors)
-    setTouched({ firstName: true, lastName: true, username: true, email: true, password: true, dateOfBirth: true })
     if (Object.keys(errors).length > 0) return
     try {
       const message = await register(form)
@@ -72,5 +139,22 @@ export function useSignupState() {
     }
   }
 
-  return { form, date, showPassword, feedback, fieldErrors, isLoading, updateField, handleBlur, handleDateSelect, handleSubmit, setShowPassword }
+  return {
+    form,
+    date,
+    showPassword,
+    feedback,
+    fieldErrors,
+    isLoading,
+    stepIndex,
+    stepItem,
+    isLastStep,
+    isFirstStep,
+    updateField,
+    handleBlur,
+    handleDateSelect,
+    handleStepSubmit,
+    setShowPassword,
+    goToStep,
+  }
 }

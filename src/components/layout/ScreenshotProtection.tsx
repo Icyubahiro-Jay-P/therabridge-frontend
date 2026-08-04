@@ -8,7 +8,9 @@ function loadSetting<T>(key: string, fallback: T): T {
       const s = JSON.parse(stored)
       return s[key] ?? fallback
     }
-  } catch {}
+  } catch {
+    return fallback
+  }
   return fallback
 }
 

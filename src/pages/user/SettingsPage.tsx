@@ -6,6 +6,7 @@ import { PrivacySettings } from "@/components/user/settings/PrivacySettings"
 import { SettingRow } from "@/components/user/settings/SettingRow"
 import { PrivacyToggles } from "@/components/user/settings/PrivacyToggles"
 import { DeleteAccountModal } from "@/components/user/settings/DeleteAccountModal"
+import { DeviceNotificationsToggle } from "@/components/user/settings/DeviceNotificationsToggle"
 import { playTestSound } from "@/lib/sound"
 
 export function SettingsPage() {
@@ -114,6 +115,7 @@ export function SettingsPage() {
         <h2 className="text-sm font-semibold tracking-wider text-gray-400 uppercase">
           Notifications
         </h2>
+        <DeviceNotificationsToggle />
         <SettingRow
           icon={Bell}
           label="Sound effects"

@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { memo, useState } from "react"
 import { Link } from "react-router-dom"
 import { CheckCheck, History, MoreVertical, PencilLine, TriangleAlert } from "lucide-react"
 import { cn } from "@/lib/utils"
@@ -8,7 +8,7 @@ import { MessageActions } from "./MessageActions"
 import { EditHistory } from "./EditHistory"
 import { formatTime, timeAgo } from "../shared/utils"
 
-export function MessageBubble({
+export const MessageBubble = memo(function MessageBubble({
   msg,
   isMe,
   editingId,
@@ -198,4 +198,4 @@ export function MessageBubble({
       )}
     </div>
   )
-}
+})

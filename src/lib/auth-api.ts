@@ -22,6 +22,7 @@ type RawUser = {
   role: User["role"]
   avatar?: string | null
   bio?: string
+  isDisabled?: boolean
   createdAt?: string
   updatedAt?: string
   privacySettings?: PrivacySettings
@@ -44,6 +45,7 @@ function normalizeUser(raw: RawUser): User {
     role: raw.role,
     avatar: raw.avatar,
     bio: raw.bio,
+    isDisabled: raw.isDisabled,
     createdAt: raw.createdAt,
     updatedAt: raw.updatedAt,
     privacySettings: raw.privacySettings,

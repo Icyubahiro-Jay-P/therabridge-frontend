@@ -2,9 +2,7 @@ import axios, { type InternalAxiosRequestConfig } from "axios"
 
 const API_BASE_URL =
   import.meta.env.VITE_API_URL ||
-  (typeof window !== "undefined" && import.meta.env.DEV
-    ? window.location.origin
-    : "https://therabridge-backend.onrender.com")
+  (typeof window !== "undefined" ? window.location.origin : "")
 
 export function setAuthToken(_token: string | null) {
   // Token is managed via Zustand persist (auth-store) and httpOnly cookies.

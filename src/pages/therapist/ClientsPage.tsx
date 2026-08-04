@@ -10,7 +10,6 @@ import {
   type ProfileData,
 } from "@/components/therapist/ClientProfilePanel"
 import { ClientsEmptyState } from "@/components/therapist/ClientsEmptyState"
-import { useAuthStore } from "@/store/auth-store"
 
 interface ChatUser {
   _id: string
@@ -33,7 +32,6 @@ interface FullUserData {
 }
 
 export function TherapistClientsPage() {
-  const currentUser = useAuthStore((state) => state.user)
   const [clients, setClients] = useState<ChatUser[]>([])
   const [discover, setDiscover] = useState<ChatUser[]>([])
   const [loading, setLoading] = useState(true)
@@ -104,22 +102,6 @@ export function TherapistClientsPage() {
       setLoadingProfile(false)
     }
   }
-
-  const self: ProfileData | null = currentUser
-    ? {
-        id: currentUser.id,
-        username: currentUser.username,
-        firstName: currentUser.firstName,
-        lastName: currentUser.lastName,
-        email: currentUser.email,
-        dateOfBirth: currentUser.dateOfBirth,
-        bio: currentUser.bio,
-        role: currentUser.role,
-        createdAt: currentUser.createdAt,
-        exerciseScore: currentUser.exerciseScore,
-        exerciseStreak: currentUser.exerciseStreak,
-      }
-    : null
 
   async function addClient(userId: string) {
     setAdding(userId)
@@ -211,7 +193,6 @@ export function TherapistClientsPage() {
               loading={loadingProfile}
               error={profileError}
               user={selectedUser}
-              self={self}
               onClose={() => setSelectedUser(null)}
             />
           </div>

@@ -36,6 +36,7 @@ export function useChatState() {
   const [selectedTimestampMessage, setSelectedTimestampMessage] = useState<string | null>(null)
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
+  const loadingOlderRef = useRef(false)
 
   useEffect(() => { messagesEndRef.current?.scrollIntoView({ behavior: "smooth" }) }, [messages])
   const suggestionsLoadedRef = useRef(false)

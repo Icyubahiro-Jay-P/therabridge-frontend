@@ -69,6 +69,11 @@ export function MessageArea({
   useEffect(() => {
     const viewport = viewportRef.current
     if (!viewport) return
+    if (messages.length === 0) {
+      prevScrollHeightRef.current = 0
+      stickToBottomRef.current = scrollToBottomRef.current
+      return
+    }
     const prev = prevScrollHeightRef.current
     if (prev > 0) {
       const added = viewport.scrollHeight - prev

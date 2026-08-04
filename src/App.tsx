@@ -8,30 +8,100 @@ import { ErrorBoundary } from "@/components/shared/auth/ErrorBoundary"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Leaf } from "lucide-react"
 
-const LoginPage = lazy(() => import("@/pages/LoginPage").then((mod) => ({ default: mod.LoginPage })))
-const SignupPage = lazy(() => import("@/pages/SignupPage").then((mod) => ({ default: mod.SignupPage })))
-const ForgotPasswordPage = lazy(() => import("@/pages/ForgotPasswordPage").then((mod) => ({ default: mod.ForgotPasswordPage })))
-const ResetPasswordPage = lazy(() => import("@/pages/ResetPasswordPage").then((mod) => ({ default: mod.ResetPasswordPage })))
-const PublicProfilePage = lazy(() => import("@/pages/PublicProfilePage").then((mod) => ({ default: mod.PublicProfilePage })))
-const NotFoundPage = lazy(() => import("@/pages/NotFoundPage").then((mod) => ({ default: mod.NotFoundPage })))
-const AccountDisabledPage = lazy(() => import("@/pages/AccountDisabledPage").then((mod) => ({ default: mod.AccountDisabledPage })))
+const LoginPage = lazy(() =>
+  import("@/pages/LoginPage").then((mod) => ({ default: mod.LoginPage }))
+)
+const SignupPage = lazy(() =>
+  import("@/pages/SignupPage").then((mod) => ({ default: mod.SignupPage }))
+)
+const ForgotPasswordPage = lazy(() =>
+  import("@/pages/ForgotPasswordPage").then((mod) => ({
+    default: mod.ForgotPasswordPage,
+  }))
+)
+const ResetPasswordPage = lazy(() =>
+  import("@/pages/ResetPasswordPage").then((mod) => ({
+    default: mod.ResetPasswordPage,
+  }))
+)
+const PublicProfilePage = lazy(() =>
+  import("@/pages/PublicProfilePage").then((mod) => ({
+    default: mod.PublicProfilePage,
+  }))
+)
+const NotFoundPage = lazy(() =>
+  import("@/pages/NotFoundPage").then((mod) => ({ default: mod.NotFoundPage }))
+)
+const AccountDisabledPage = lazy(() =>
+  import("@/pages/AccountDisabledPage").then((mod) => ({
+    default: mod.AccountDisabledPage,
+  }))
+)
 
-const UserHomePage = lazy(() => import("@/pages/user/HomePage").then((mod) => ({ default: mod.HomePage })))
-const UserChatPage = lazy(() => import("@/pages/user/ChatPage").then((mod) => ({ default: mod.ChatPage })))
-const UserCommunityPage = lazy(() => import("@/pages/user/CommunityPage").then((mod) => ({ default: mod.CommunityPage })))
-const UserTherapistsPage = lazy(() => import("@/pages/user/TherapistsPage").then((mod) => ({ default: mod.TherapistsPage })))
-const UserSettingsPage = lazy(() => import("@/pages/user/SettingsPage").then((mod) => ({ default: mod.SettingsPage })))
-const UserProfilePage = lazy(() => import("@/pages/user/ProfilePage").then((mod) => ({ default: mod.ProfilePage })))
-const UserNotificationsPage = lazy(() => import("@/pages/user/NotificationsPage").then((mod) => ({ default: mod.NotificationsPage })))
-const UserMoodPage = lazy(() => import("@/pages/user/MoodPage").then((mod) => ({ default: mod.MoodPage })))
-const UserCrisisPage = lazy(() => import("@/pages/user/CrisisPage").then((mod) => ({ default: mod.CrisisPage })))
+const UserHomePage = lazy(() =>
+  import("@/pages/user/HomePage").then((mod) => ({ default: mod.HomePage }))
+)
+const UserChatPage = lazy(() =>
+  import("@/pages/user/ChatPage").then((mod) => ({ default: mod.ChatPage }))
+)
+const UserCommunityPage = lazy(() =>
+  import("@/pages/user/CommunityPage").then((mod) => ({
+    default: mod.CommunityPage,
+  }))
+)
+const UserTherapistsPage = lazy(() =>
+  import("@/pages/user/TherapistsPage").then((mod) => ({
+    default: mod.TherapistsPage,
+  }))
+)
+const UserSettingsPage = lazy(() =>
+  import("@/pages/user/SettingsPage").then((mod) => ({
+    default: mod.SettingsPage,
+  }))
+)
+const UserProfilePage = lazy(() =>
+  import("@/pages/user/ProfilePage").then((mod) => ({
+    default: mod.ProfilePage,
+  }))
+)
+const UserNotificationsPage = lazy(() =>
+  import("@/pages/user/NotificationsPage").then((mod) => ({
+    default: mod.NotificationsPage,
+  }))
+)
+const UserMoodPage = lazy(() =>
+  import("@/pages/user/MoodPage").then((mod) => ({ default: mod.MoodPage }))
+)
+const UserCrisisPage = lazy(() =>
+  import("@/pages/user/CrisisPage").then((mod) => ({ default: mod.CrisisPage }))
+)
 
-const AdminDashboardPage = lazy(() => import("@/pages/admin/DashboardPage").then((mod) => ({ default: mod.AdminDashboardPage })))
-const AdminUsersPage = lazy(() => import("@/pages/admin/UsersPage").then((mod) => ({ default: mod.AdminUsersPage })))
-const AdminCommunitiesPage = lazy(() => import("@/pages/admin/CommunitiesPage").then((mod) => ({ default: mod.AdminCommunitiesPage })))
+const AdminDashboardPage = lazy(() =>
+  import("@/pages/admin/DashboardPage").then((mod) => ({
+    default: mod.AdminDashboardPage,
+  }))
+)
+const AdminUsersPage = lazy(() =>
+  import("@/pages/admin/UsersPage").then((mod) => ({
+    default: mod.AdminUsersPage,
+  }))
+)
+const AdminCommunitiesPage = lazy(() =>
+  import("@/pages/admin/CommunitiesPage").then((mod) => ({
+    default: mod.AdminCommunitiesPage,
+  }))
+)
 
-const TherapistDashboardPage = lazy(() => import("@/pages/therapist/DashboardPage").then((mod) => ({ default: mod.TherapistDashboardPage })))
-const TherapistClientsPage = lazy(() => import("@/pages/therapist/ClientsPage").then((mod) => ({ default: mod.TherapistClientsPage })))
+const TherapistDashboardPage = lazy(() =>
+  import("@/pages/therapist/DashboardPage").then((mod) => ({
+    default: mod.TherapistDashboardPage,
+  }))
+)
+const TherapistClientsPage = lazy(() =>
+  import("@/pages/therapist/ClientsPage").then((mod) => ({
+    default: mod.TherapistClientsPage,
+  }))
+)
 
 function RoleRoute({
   userPage: UserPage,
@@ -81,7 +151,9 @@ function AuthInitializer({ children }: { children: React.ReactNode }) {
           <span className="inline-flex size-12 animate-pulse items-center justify-center rounded-xl bg-emerald-600">
             <Leaf />
           </span>
-          <p className="text-sm text-gray-500 dark:text-gray-400">Loading Therabridge...</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400">
+            Loading Therabridge...
+          </p>
         </div>
       </div>
     )
@@ -113,13 +185,23 @@ function PageSkeleton() {
   )
 }
 
-function RouteErrorFallback({ retry }: { error: Error | null; retry: () => void }) {
+function RouteErrorFallback({
+  retry,
+}: {
+  error: Error | null
+  retry: () => void
+}) {
   return (
     <div className="flex min-h-[50vh] items-center justify-center p-4">
       <div className="max-w-md space-y-4 text-center">
         <h2 className="text-xl font-semibold">Something went wrong</h2>
-        <p className="text-sm text-gray-500">This section encountered an error. Please try again.</p>
-        <button onClick={retry} className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary/90">
+        <p className="text-sm text-gray-500">
+          This section encountered an error. Please try again.
+        </p>
+        <button
+          onClick={retry}
+          className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary/90"
+        >
           Retry
         </button>
       </div>
@@ -131,10 +213,12 @@ const suspenseFallback = <PageSkeleton />
 
 function ErrorBoundaryRoute({ children }: { children: React.ReactNode }) {
   return (
-    <ErrorBoundary fallback={(error, retry) => <RouteErrorFallback error={error} retry={retry} />}>
-      <Suspense fallback={suspenseFallback}>
-        {children}
-      </Suspense>
+    <ErrorBoundary
+      fallback={(error, retry) => (
+        <RouteErrorFallback error={error} retry={retry} />
+      )}
+    >
+      <Suspense fallback={suspenseFallback}>{children}</Suspense>
     </ErrorBoundary>
   )
 }
@@ -145,13 +229,52 @@ export function App() {
       <AuthInitializer>
         <Routes>
           <Route element={<GuestRoute />}>
-            <Route path="/login" element={<ErrorBoundaryRoute><LoginPage /></ErrorBoundaryRoute>} />
-            <Route path="/signup" element={<ErrorBoundaryRoute><SignupPage /></ErrorBoundaryRoute>} />
+            <Route
+              path="/login"
+              element={
+                <ErrorBoundaryRoute>
+                  <LoginPage />
+                </ErrorBoundaryRoute>
+              }
+            />
+            <Route
+              path="/signup"
+              element={<Navigate to="/signup/first-name" replace />}
+            />
+            <Route
+              path="/signup/:step"
+              element={
+                <ErrorBoundaryRoute>
+                  <SignupPage />
+                </ErrorBoundaryRoute>
+              }
+            />
           </Route>
 
-          <Route path="/forgot-password" element={<ErrorBoundaryRoute><ForgotPasswordPage /></ErrorBoundaryRoute>} />
-          <Route path="/reset-password/:token" element={<ErrorBoundaryRoute><ResetPasswordPage /></ErrorBoundaryRoute>} />
-          <Route path="/account-disabled" element={<ErrorBoundaryRoute><AccountDisabledPage /></ErrorBoundaryRoute>} />
+          <Route
+            path="/forgot-password"
+            element={
+              <ErrorBoundaryRoute>
+                <ForgotPasswordPage />
+              </ErrorBoundaryRoute>
+            }
+          />
+          <Route
+            path="/reset-password/:token"
+            element={
+              <ErrorBoundaryRoute>
+                <ResetPasswordPage />
+              </ErrorBoundaryRoute>
+            }
+          />
+          <Route
+            path="/account-disabled"
+            element={
+              <ErrorBoundaryRoute>
+                <AccountDisabledPage />
+              </ErrorBoundaryRoute>
+            }
+          />
 
           <Route element={<ProtectedRoute />}>
             <Route element={<AppLayout />}>
@@ -167,24 +290,131 @@ export function App() {
                   </ErrorBoundaryRoute>
                 }
               />
-              <Route path="/chat" element={<ErrorBoundaryRoute><UserChatPage /></ErrorBoundaryRoute>} />
-              <Route path="/chat/:username" element={<ErrorBoundaryRoute><UserChatPage /></ErrorBoundaryRoute>} />
-              <Route path="/community" element={<ErrorBoundaryRoute><UserCommunityPage /></ErrorBoundaryRoute>} />
-              <Route path="/community/:inviteKey" element={<ErrorBoundaryRoute><UserCommunityPage /></ErrorBoundaryRoute>} />
-              <Route path="/therapists" element={<ErrorBoundaryRoute><UserTherapistsPage /></ErrorBoundaryRoute>} />
-              <Route path="/settings" element={<ErrorBoundaryRoute><UserSettingsPage /></ErrorBoundaryRoute>} />
-              <Route path="/profile" element={<ErrorBoundaryRoute><UserProfilePage /></ErrorBoundaryRoute>} />
-              <Route path="/therry" element={<Navigate to="/chat/therry" replace />} />
-              <Route path="/notifications" element={<ErrorBoundaryRoute><UserNotificationsPage /></ErrorBoundaryRoute>} />
-              <Route path="/mood" element={<ErrorBoundaryRoute><UserMoodPage /></ErrorBoundaryRoute>} />
-              <Route path="/crisis" element={<ErrorBoundaryRoute><UserCrisisPage /></ErrorBoundaryRoute>} />
-              <Route path="/clients" element={<ErrorBoundaryRoute><RequireRole roles={["admin", "therapist"]}><TherapistClientsPage /></RequireRole></ErrorBoundaryRoute>} />
-              <Route path="/users" element={<ErrorBoundaryRoute><RequireRole roles={["admin"]}><AdminUsersPage /></RequireRole></ErrorBoundaryRoute>} />
-              <Route path="/communities" element={<ErrorBoundaryRoute><RequireRole roles={["admin"]}><AdminCommunitiesPage /></RequireRole></ErrorBoundaryRoute>} />
+              <Route
+                path="/chat"
+                element={
+                  <ErrorBoundaryRoute>
+                    <UserChatPage />
+                  </ErrorBoundaryRoute>
+                }
+              />
+              <Route
+                path="/chat/:username"
+                element={
+                  <ErrorBoundaryRoute>
+                    <UserChatPage />
+                  </ErrorBoundaryRoute>
+                }
+              />
+              <Route
+                path="/community"
+                element={
+                  <ErrorBoundaryRoute>
+                    <UserCommunityPage />
+                  </ErrorBoundaryRoute>
+                }
+              />
+              <Route
+                path="/community/:inviteKey"
+                element={
+                  <ErrorBoundaryRoute>
+                    <UserCommunityPage />
+                  </ErrorBoundaryRoute>
+                }
+              />
+              <Route
+                path="/therapists"
+                element={
+                  <ErrorBoundaryRoute>
+                    <UserTherapistsPage />
+                  </ErrorBoundaryRoute>
+                }
+              />
+              <Route
+                path="/settings"
+                element={
+                  <ErrorBoundaryRoute>
+                    <UserSettingsPage />
+                  </ErrorBoundaryRoute>
+                }
+              />
+              <Route
+                path="/profile"
+                element={
+                  <ErrorBoundaryRoute>
+                    <UserProfilePage />
+                  </ErrorBoundaryRoute>
+                }
+              />
+              <Route
+                path="/therry"
+                element={<Navigate to="/chat/therry" replace />}
+              />
+              <Route
+                path="/notifications"
+                element={
+                  <ErrorBoundaryRoute>
+                    <UserNotificationsPage />
+                  </ErrorBoundaryRoute>
+                }
+              />
+              <Route
+                path="/mood"
+                element={
+                  <ErrorBoundaryRoute>
+                    <UserMoodPage />
+                  </ErrorBoundaryRoute>
+                }
+              />
+              <Route
+                path="/crisis"
+                element={
+                  <ErrorBoundaryRoute>
+                    <UserCrisisPage />
+                  </ErrorBoundaryRoute>
+                }
+              />
+              <Route
+                path="/clients"
+                element={
+                  <ErrorBoundaryRoute>
+                    <RequireRole roles={["admin", "therapist"]}>
+                      <TherapistClientsPage />
+                    </RequireRole>
+                  </ErrorBoundaryRoute>
+                }
+              />
+              <Route
+                path="/users"
+                element={
+                  <ErrorBoundaryRoute>
+                    <RequireRole roles={["admin"]}>
+                      <AdminUsersPage />
+                    </RequireRole>
+                  </ErrorBoundaryRoute>
+                }
+              />
+              <Route
+                path="/communities"
+                element={
+                  <ErrorBoundaryRoute>
+                    <RequireRole roles={["admin"]}>
+                      <AdminCommunitiesPage />
+                    </RequireRole>
+                  </ErrorBoundaryRoute>
+                }
+              />
             </Route>
           </Route>
 
-          <Route path="/user/:username" element={<ErrorBoundaryRoute><PublicProfilePage /></ErrorBoundaryRoute>} />
+          <Route
+            path="/user/:username"
+            element={
+              <ErrorBoundaryRoute>
+                <PublicProfilePage />
+              </ErrorBoundaryRoute>
+            }
+          />
           <Route path="/404" element={<NotFoundPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>

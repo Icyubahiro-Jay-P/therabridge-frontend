@@ -1,6 +1,20 @@
 # Therabridge Frontend
 
-React 19 + TypeScript SPA for Therabridge, a mental wellness platform.
+React 19 + TypeScript SPA for Therabridge, a mental wellness platform connecting users, therapists, and admins in a secure environment for mental health support.
+
+**Production:** [therabridge.vercel.app](https://therabridge.vercel.app)
+
+## Features
+
+- **Direct Messaging** — Private DMs between users and therapists with privacy shields (blur, watermark, screenshot detection)
+- **AI Wellness Companion** — "Therry" powered by Google Gemini for 24/7 mental health support
+- **Community Chat** — Group rooms with invite-only access, moderation, and member management
+- **Mood Tracking** — Daily mood logging with visual charts and statistics
+- **Wellness Exercises** — Guided breathing, mindfulness, gratitude, grounding, and movement exercises
+- **Crisis Alerts** — Real-time emergency notifications to therapists and admins
+- **Therapist Management** — Client roster management, role-based access control
+- **Gamification** — Exercise scores, login streaks, and talking points for engagement
+- **Privacy Shield** — Screenshot protection, watermarking, and audit trails for sensitive content
 
 ## Stack
 
@@ -25,6 +39,19 @@ React 19 + TypeScript SPA for Therabridge, a mental wellness platform.
 | `npm run typecheck` | `tsc --noEmit` |
 | `npm run lint` | ESLint over the project |
 | `npm run preview` | Preview the production build |
+
+## Getting Started
+
+### Prerequisites
+- Node.js 18+
+- The backend running on `http://localhost:5000` (see `../backend/README.md`)
+
+### Setup
+
+```bash
+npm install
+npm run dev      # Starts on http://localhost:5173 (Vite proxies /api → http://localhost:5000)
+```
 
 ## Environment
 

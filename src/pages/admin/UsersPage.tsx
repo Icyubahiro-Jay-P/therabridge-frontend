@@ -105,7 +105,7 @@ export function AdminUsersPage() {
 
   return (
     <div className="space-y-8 p-6">
-      <PageHeader title="User management" description="Manage all platform users — change roles, disable accounts, or remove users." />
+      <PageHeader title="User management" description="Manage all platform users - change roles, disable accounts, or remove users." />
       {error && <FeedbackBanner type="error" message={error} />}
       {success && <FeedbackBanner type="success" message={success} />}
       <SearchBar value={search} onChange={setSearch} placeholder="Search by name, username or email..." />

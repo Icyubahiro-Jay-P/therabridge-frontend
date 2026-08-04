@@ -1,4 +1,4 @@
-import { Hash } from "lucide-react"
+import { Hash, Lock } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 
 interface TherapistCommunity {
@@ -8,6 +8,9 @@ interface TherapistCommunity {
   members: { _id: string; firstName: string; lastName: string }[]
   owner: { _id: string; firstName: string; lastName: string }
   description?: string
+  category?: string
+  isPrivate?: boolean
+  rules?: string
 }
 
 export function TherapistCommunityCard({
@@ -29,9 +32,15 @@ export function TherapistCommunityCard({
           <Hash className={`size-5 ${isOwner ? "text-emerald-600 dark:text-emerald-400" : "text-gray-500"}`} />
         </span>
         <div className="min-w-0">
-          <p className="truncate font-semibold text-gray-900 dark:text-white">{community.name}</p>
+          <p className="flex items-center gap-1 truncate font-semibold text-gray-900 dark:text-white">
+            {community.isPrivate && <Lock className="size-3.5 shrink-0 text-gray-400" />}
+            {community.name}
+          </p>
           <p className="text-xs text-gray-400">
             {community.members.length} member{community.members.length !== 1 ? "s" : ""}
+            {community.category && community.category !== "general"
+              ? ` · ${community.category}`
+              : ""}
           </p>
         </div>
       </div>

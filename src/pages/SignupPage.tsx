@@ -14,11 +14,15 @@ export function SignupPage() {
     feedback,
     fieldErrors,
     isLoading,
+    stepIndex,
+    isLastStep,
+    isFirstStep,
     updateField,
     handleBlur,
     handleDateSelect,
-    handleSubmit,
+    handleStepSubmit,
     setShowPassword,
+    goToStep,
   } = useSignupState()
 
   return (
@@ -64,11 +68,15 @@ export function SignupPage() {
             feedback={feedback}
             fieldErrors={fieldErrors}
             isLoading={isLoading}
+            stepIndex={stepIndex}
+            isLastStep={isLastStep}
+            isFirstStep={isFirstStep}
             updateField={updateField}
             handleBlur={handleBlur}
             handleDateSelect={handleDateSelect}
-            handleSubmit={handleSubmit}
+            handleStepSubmit={handleStepSubmit}
             setShowPassword={setShowPassword}
+            goToStep={goToStep}
           />
 
           <AuthFooter />

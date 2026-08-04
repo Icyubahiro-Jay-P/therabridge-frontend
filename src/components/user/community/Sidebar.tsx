@@ -10,6 +10,7 @@ export function Sidebar({
   loading,
   active,
   currentUserId,
+  canCreate,
   onSelectCommunity,
   onJoinClick,
   onCreateClick,
@@ -20,6 +21,7 @@ export function Sidebar({
   loading: boolean
   active: Community | null
   currentUserId?: string
+  canCreate?: boolean
   onSelectCommunity: (c: Community) => void
   onJoinClick: () => void
   onCreateClick: () => void
@@ -37,13 +39,15 @@ export function Sidebar({
       )}
     >
       <div className="space-y-2 p-3">
-        <Button
-          size="sm"
-          onClick={onCreateClick}
-          className="w-full bg-emerald-600 text-xs hover:bg-emerald-700"
-        >
-          <Plus className="size-3.5" /> Create community
-        </Button>
+        {canCreate && (
+          <Button
+            size="sm"
+            onClick={onCreateClick}
+            className="w-full bg-emerald-600 text-xs hover:bg-emerald-700"
+          >
+            <Plus className="size-3.5" /> Create community
+          </Button>
+        )}
         <Button
           size="sm"
           variant="outline"

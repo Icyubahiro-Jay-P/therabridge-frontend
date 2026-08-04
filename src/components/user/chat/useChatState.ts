@@ -109,7 +109,8 @@ export function useChatState() {
   function toggleTimestamp(id: string) { setSelectedTimestampMessage((prev) => (prev === id ? null : id)) }
 
   async function loadOlderMessages() {
-    if (!partner || !nextCursor || loadingOlder) return
+    if (!partner || !nextCursor || loadingOlderRef.current) return
+    loadingOlderRef.current = true
     setLoadingOlder(true)
     try {
       const { data } = await api.get<{ data: DirectMessage[]; nextCursor: string | null }>(
@@ -125,7 +126,10 @@ export function useChatState() {
       setNextCursor(data.nextCursor ?? null)
       setHasOlderMessages(!!data.nextCursor)
     } catch (err) { setError(getErrorMessage(err)) }
-    finally { setLoadingOlder(false) }
+    finally {
+      loadingOlderRef.current = false
+      setLoadingOlder(false)
+    }
   }
 
   return {

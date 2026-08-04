@@ -21,6 +21,7 @@ export function ChatHeader({
         <button
           onClick={onOpenMobile}
           className="flex size-8 shrink-0 items-center justify-center rounded-lg hover:bg-gray-100 md:hidden dark:hover:bg-gray-800"
+          aria-label="Open sidebar"
         >
           <Menu className="size-4 text-gray-500" />
         </button>
@@ -45,7 +46,7 @@ export function ChatHeader({
         <button
           onClick={onOpenSettings}
           className="rounded-lg p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-600 dark:hover:bg-gray-800"
-          title="Community settings"
+          aria-label="Community settings"
         >
           <Settings className="size-4" />
         </button>
@@ -57,6 +58,7 @@ export function ChatHeader({
               ? "bg-emerald-100 text-emerald-600 dark:bg-emerald-900/40 dark:text-emerald-400"
               : "text-gray-400 hover:bg-gray-100 hover:text-gray-600 dark:hover:bg-gray-800"
           )}
+          aria-label={screenshotProtected ? "Disable screenshot protection" : "Enable screenshot protection"}
         >
           {screenshotProtected ? (
             <Shield className="size-4" />

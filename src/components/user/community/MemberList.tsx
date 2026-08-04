@@ -13,7 +13,7 @@ export function MemberList({
   removing: string | null
   onRemoveMember: (userId: string) => void
 }) {
-  const moderatorIds = new Set(community.moderators.map((m) => m._id))
+  const moderatorIds = new Set((community.moderators ?? []).map((m) => m._id))
 
   return (
     <div>

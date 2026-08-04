@@ -71,6 +71,7 @@ export function Sidebar({
         <button
           onClick={onCloseMobile}
           className="flex size-7 items-center justify-center rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"
+          aria-label="Close sidebar"
         >
           <X className="size-4 text-gray-500" />
         </button>

@@ -10,7 +10,7 @@ React 19 + TypeScript SPA for Therabridge, a mental wellness platform.
 - **Zustand 5** — Global state (auth store with `persist`)
 - **TanStack Query 5** — Data fetching hooks (therapists, notifications)
 - **Axios** — HTTP client with auth interceptors
-- **Socket.io-client** — real-time possible-screenshot notices (`lib/socket.ts`)
+- **Socket.io-client** — real-time DMs, community messages, notifications, and possible-screenshot notices (`lib/socket.ts`)
 - **Tailwind CSS 4** — Utility-first styling (with `tw-animate-css`)
 - **Radix UI** + **Shadcn/ui** — Headless primitives
 - **Lucide React** — Icons
@@ -100,9 +100,9 @@ src/
 ## State Management
 
 - **Global**: `store/auth-store.ts` (Zustand + persist) — user, auth status, initialization.
-- **Chat DMs**: `pages/user/components/chat/useChatState.ts` + `useChatEffects.ts` — conversations, polling with `useMessagePolling`-style updates, edit/unsend, message sounds.
+- **Chat DMs**: `pages/user/components/chat/useChatState.ts` + `useChatEffects.ts` — conversations, edit/unsend, message sounds. Incoming DMs arrive over Socket.io (`dm_message`, `dm_message_updated`, `dm_message_unsent`); the conversation list refreshes on `conversations_updated`.
 - **Therry**: `pages/user/components/chat/TherryChat.tsx` — loads history from `/api/therry/messages`, sends via `/api/therry/chat`.
-- **Community**: `useCommunityState.ts` + `useCommunityEffects.ts` + `useMessagePolling.ts`.
+- **Community**: `useCommunityState.ts` + `useCommunityEffects.ts` + `useMessagePolling.ts`. The client joins a Socket.io room per community (`join_community` / `leave_community`) and receives `community_message`, `community_message_updated`, `community_message_unsent` events.
 - **Home / Mood / Settings / Profile**: `useHomeState.ts`, `useMoodState.ts`, `useSettingsState.ts`, `useProfileState.ts`.
 - **Server state**: `lib/query-hooks.ts` (therapists, notifications) via TanStack Query.
 
@@ -132,6 +132,30 @@ Stored in `localStorage` under key `therabridge-settings` (managed by `useSettin
 - **Message sounds** (`lib/sound.ts`): plays `src/assets/ding.mp3` for new incoming DMs and community messages; volume lowers automatically in calm mode.
 - **Join-only communities**: the create form was removed from the UI; users join via invite key.
 - **Talking Points**: messaging is a wellness exercise — DMs/community messages earn +2 Wellness points, Therry chats earn +5 (capped 20/day). The Home streak cards show a "Talking Points today" meter. The earning mechanics are deliberately not explained in the UI so users discover them on their own.
+
+## Real-time Updates (Socket.io)
+
+The frontend uses Socket.io instead of long-polling for live data. The socket connects once on login/initialize (`store/auth-store.ts`) and reconnects automatically; it disconnects on logout/session expiry.
+
+**Server → client events** (authenticated via JWT, delivered to `user:<id>` rooms):
+
+| Event | Payload | Effect |
+|-------|---------|--------|
+| `dm_message` | populated message | merge into open conversation, play sound if incoming |
+| `dm_message_updated` / `dm_message_unsent` | message / `{ messageId }` | update the message in place |
+| `conversations_updated` | `{ partnerId }` | refresh conversation list + unread badge |
+| `community_message` | `{ communityId, message }` | merge into open community room, play sound |
+| `community_message_updated` / `community_message_unsent` | `{ communityId, message }` | update the message in place |
+| `notification` | notification doc | refresh notification count |
+
+**Client → server events:**
+
+| Event | Payload | Purpose |
+|-------|---------|---------|
+| `join_community` / `leave_community` | `{ communityId }` | join/leave the room for a community being viewed (re-joined automatically on reconnect) |
+| `possible_screenshot` | `{ conversationId }` | possible-screenshot notice (falls back to `POST /api/chat/screenshot-notice` when disconnected) |
+
+The REST long-poll endpoints (`/api/chat/conversation/:id/updates`, `/api/chat/communities/:id/updates`) are kept server-side for backwards compatibility but are no longer used by the client.
 
 ## Privacy Shield
 

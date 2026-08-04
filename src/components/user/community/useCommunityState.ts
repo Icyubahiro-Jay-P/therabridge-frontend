@@ -19,6 +19,7 @@ export function useCommunityState() {
   const [newMessage, setNewMessage] = useState("")
   const [sending, setSending] = useState(false)
   const [showJoin, setShowJoin] = useState(false)
+  const [showCreate, setShowCreate] = useState(false)
   const [showSettings, setShowSettings] = useState(false)
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false)
   const [selectedTimestampMessage, setSelectedTimestampMessage] = useState<string | null>(null)
@@ -49,6 +50,41 @@ export function useCommunityState() {
   function selectCommunity(c: Community) {
     setActive(c)
     navigate(`/community/${c.inviteKey}`)
+  }
+
+  function onCreated(c: Community) {
+    setCommunities((prev) => (prev.find((p) => p._id === c._id) ? prev : [c, ...prev]))
+    selectCommunity(c)
+  }
+
+  async function leaveActive() {
+    if (!active) return
+    setDeleting(active._id)
+    try {
+      await api.post(`/api/chat/communities/${active._id}/leave`)
+      setCommunities((prev) => prev.filter((c) => c._id !== active._id))
+      setActive(null)
+      navigate("/community")
+    } catch (err) {
+      setError(getErrorMessage(err))
+    } finally {
+      setDeleting(null)
+    }
+  }
+
+  async function deleteActive() {
+    if (!active) return
+    setDeleting(active._id)
+    try {
+      await api.delete(`/api/chat/communities/${active._id}`)
+      setCommunities((prev) => prev.filter((c) => c._id !== active._id))
+      setActive(null)
+      navigate("/community")
+    } catch (err) {
+      setError(getErrorMessage(err))
+    } finally {
+      setDeleting(null)
+    }
   }
 
   async function handleUnsend(messageId: string) {
@@ -104,12 +140,13 @@ export function useCommunityState() {
     active, setActive, messages, setMessages, loadingMessages, setLoadingMessages,
     newMessage, setNewMessage, sending, setSending,
     showJoin, setShowJoin,
+    showCreate, setShowCreate,
     showSettings, setShowSettings,
     mobileSidebarOpen, setMobileSidebarOpen,
     selectedTimestampMessage, setSelectedTimestampMessage,
     toggleTimestamp,
     screenshotProtected, setScreenshotProtected,
-    sendMessage, selectCommunity,
+    sendMessage, selectCommunity, onCreated, leaveActive, deleteActive,
     deleting, editingId, editingContent, setEditingContent,
     showHistoryFor, setShowHistoryFor, menuOpenId, setMenuOpenId,
     handleUnsend, startEdit, handleSaveEdit, cancelEdit,

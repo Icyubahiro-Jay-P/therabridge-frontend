@@ -8,6 +8,7 @@ import { MessageInput } from "@/components/user/community/MessageInput"
 import { EmptyState } from "@/components/user/community/EmptyState"
 import { ScreenshotOverlay } from "@/components/user/community/ScreenshotOverlay"
 import { JoinCommunityModal } from "@/components/user/community/JoinCommunityModal"
+import { CreateCommunityModal } from "@/components/user/community/CreateCommunityModal"
 import { CommunitySettingsModal } from "@/components/user/community/CommunitySettingsModal"
 
 export function CommunityPage() {
@@ -27,14 +28,41 @@ export function CommunityPage() {
           }}
         />
       )}
+      {c.showCreate && (
+        <CreateCommunityModal
+          onClose={() => c.setShowCreate(false)}
+          onCreate={c.onCreated}
+        />
+      )}
       {c.showSettings && c.active && c.currentUser && (
         <CommunitySettingsModal
           community={c.active}
           currentUserId={c.currentUser.id}
+          canModerate={
+            c.currentUser.role === "admin" ||
+            c.active.owner._id === c.currentUser.id ||
+            c.active.moderators?.some(
+              (m) => m._id === c.currentUser?.id
+            ) === true
+          }
+          canLeave={
+            c.active.owner._id !== c.currentUser.id &&
+            c.currentUser.role !== "admin"
+          }
           onClose={() => c.setShowSettings(false)}
           onUpdate={(updated) => {
             c.setActive(updated)
             c.setCommunities((prev) => prev.map((p) => (p._id === updated._id ? updated : p)))
+          }}
+          onLeave={() => {
+            void c.leaveActive()
+            c.setShowSettings(false)
+          }}
+          onDelete={() => {
+            if (confirm("Delete this community? This cannot be undone.")) {
+              void c.deleteActive()
+            }
+            c.setShowSettings(false)
           }}
         />
       )}
@@ -48,8 +76,10 @@ export function CommunityPage() {
         communities={c.communities}
         loading={c.loading}
         active={c.active}
+        currentUserId={c.currentUser?.id}
         onSelectCommunity={c.selectCommunity}
         onJoinClick={() => c.setShowJoin(true)}
+        onCreateClick={() => c.setShowCreate(true)}
         mobileSidebarOpen={c.mobileSidebarOpen}
         onCloseMobile={() => c.setMobileSidebarOpen(false)}
       />

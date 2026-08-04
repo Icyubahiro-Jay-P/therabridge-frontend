@@ -111,9 +111,11 @@ export function MessageArea({
       ) : (
         <>
           {hasOlder && (
-            <div className="mb-2 flex items-center justify-center">
+            <div className="mb-2 flex items-center justify-center py-1">
               {loadingOlder ? (
-                <Loader2 className="size-4 animate-spin text-gray-400" />
+                <div className="flex items-center gap-2 text-xs text-gray-400">
+                  <Loader2 className="size-4 animate-spin" /> Loading earlier messages...
+                </div>
               ) : (
                 <button
                   onClick={() => onLoadOlder?.()}

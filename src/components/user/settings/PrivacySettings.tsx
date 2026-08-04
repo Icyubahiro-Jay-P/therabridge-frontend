@@ -1,5 +1,5 @@
 import { Switch } from "@/components/ui/switch"
-import { EyeOff } from "lucide-react"
+import { Droplets, EyeOff } from "lucide-react"
 import { SettingRow } from "./SettingRow"
 import type { Settings } from "./useSettingsState"
 
@@ -27,6 +27,16 @@ export function PrivacySettings({
           onCheckedChange={(v) =>
             updateSetting("screenshotProtection", v)
           }
+        />
+      </SettingRow>
+      <SettingRow
+        icon={Droplets}
+        label="Watermark chats"
+        description="Overlay your username and a timestamp across chat views"
+      >
+        <Switch
+          checked={settings.watermarkEnabled}
+          onCheckedChange={(v) => updateSetting("watermarkEnabled", v)}
         />
       </SettingRow>
     </section>

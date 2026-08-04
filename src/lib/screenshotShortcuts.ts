@@ -5,7 +5,7 @@
 export function isScreenshotShortcut(e: KeyboardEvent): boolean {
   const k = e.key.toLowerCase()
 
-  // PrintScreen (PrtScr) with ANY combination of modifiers — covers bare,
+  // PrintScreen (PrtScr) with ANY combination of modifiers - covers bare,
   // Alt+PrtScr (active window), Win/Super+PrintScreen, Win+Alt+PrtScr,
   // Win+Ctrl+PrtScr, and Shift/Ctrl variants across Windows/Linux. Some
   // platforms report the key as "PrintScreen" or "PrtScr".

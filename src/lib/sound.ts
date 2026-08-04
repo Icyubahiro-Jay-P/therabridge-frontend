@@ -9,7 +9,9 @@ function loadSetting<T>(key: string, fallback: T): T {
       const s = JSON.parse(stored)
       return s[key] ?? fallback
     }
-  } catch {}
+  } catch {
+    return fallback
+  }
   return fallback
 }
 
@@ -18,20 +20,27 @@ function getAudio(): HTMLAudioElement {
   return audioEl
 }
 
-export function playMessageSound() {
-  if (!loadSetting("soundEnabled", true)) return
+// Effective volume for a message sound. The user's volume slider always
+// applies; calm mode reduces it proportionally instead of pinning it, so the
+// slider keeps working while calm mode still plays quieter.
+function resolveVolume(): number {
   const volume = Math.max(0, Math.min(100, loadSetting("soundVolume", 70)))
-  const calm = loadSetting("calmMode", false)
-  const audio = getAudio()
-  audio.volume = calm ? 0.15 : volume / 100
+  const calmFactor = loadSetting("calmMode", false) ? 0.3 : 1
+  return (volume / 100) * calmFactor
+}
+
+function play(audio: HTMLAudioElement) {
+  audio.volume = resolveVolume()
   audio.currentTime = 0
   void audio.play().catch(() => {})
 }
 
+export function playMessageSound() {
+  if (!loadSetting("soundEnabled", true)) return
+  play(getAudio())
+}
+
 export function playTestSound() {
   if (typeof window === "undefined") return
-  const audio = getAudio()
-  audio.volume = 0.8
-  audio.currentTime = 0
-  void audio.play().catch(() => {})
+  play(getAudio())
 }

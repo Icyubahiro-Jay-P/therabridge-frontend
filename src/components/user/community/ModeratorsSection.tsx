@@ -17,13 +17,14 @@ export function ModeratorsSection({
   onToggle: (userId: string, makeModerator: boolean) => void
 }) {
   const [expanded, setExpanded] = useState(false)
-  const moderatorIds = new Set(community.moderators.map((m) => m._id))
+  const moderators = community.moderators ?? []
+  const moderatorIds = new Set(moderators.map((m) => m._id))
 
   return (
     <div>
       <div className="mb-3 flex items-center justify-between">
         <h3 className="text-sm font-semibold text-gray-900 dark:text-white">
-          Moderators ({community.moderators.length})
+          Moderators ({moderators.length})
         </h3>
         {isOwner && (
           <Button
@@ -36,7 +37,7 @@ export function ModeratorsSection({
         )}
       </div>
       <div className="space-y-2">
-        {community.moderators.map((mod) => (
+        {moderators.map((mod) => (
           <div
             key={mod._id}
             className="flex items-center justify-between rounded-lg border border-gray-100 px-3 py-2 dark:border-gray-800"
@@ -107,7 +108,7 @@ export function ModeratorsSection({
         )}
       </div>
 
-      {community.moderators.length === 0 && (
+      {moderators.length === 0 && (
         <p className="flex items-center gap-1.5 text-xs text-gray-400">
           <Crown className="size-3.5" /> The owner runs this room alone for now.
         </p>

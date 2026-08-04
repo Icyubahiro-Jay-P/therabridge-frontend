@@ -35,7 +35,8 @@ React 19 + TypeScript SPA for Therabridge, a mental wellness platform.
 | Route | Page | Description |
 |-------|------|-------------|
 | `/login` | Login | Email/username + password |
-| `/signup` | Register | Full registration form |
+| `/signup` | Register | Redirects to `/signup/first-name` |
+| `/signup/:step` | Register | One field per step (`first-name`, `last-name`, `username`, `email`, `date-of-birth`, `password`) |
 | `/forgot-password` | Forgot Password | Email reset request |
 | `/reset-password/:token` | Reset Password | New password form |
 | `/` | Home/Dashboard | Greeting, streaks, exercises, appointments |

@@ -62,22 +62,38 @@ React 19 + TypeScript SPA for Therabridge, a mental wellness platform.
 ```
 src/
 ├── components/
-│   ├── auth/            # ProtectedRoute, ErrorBoundary
-│   ├── exercises/       # ExerciseCard, ExerciseModal, types
-│   ├── layout/          # AppLayout, SidebarNav, MobileDock, ScreenshotProtection, ...
-│   └── ui/              # Shadcn/ui primitives
-├── lib/                 # api, auth-api, query-client, query-hooks, sound, utils
+│   ├── admin/              # Admin panel components (AdminStatCard, SearchBar, ...)
+│   ├── crisis/             # Crisis support (AlertHistory, EmergencyContacts, ...)
+│   ├── exercises/          # ExerciseCard, ExerciseModal, types
+│   ├── home/               # ResourceCard, StreakCards, TherapistList, ...
+│   ├── layout/             # AppLayout, SidebarNav, MobileDock, ScreenshotProtection, ...
+│   ├── mood/               # MoodChart, MoodSelector, MoodHistory
+│   ├── notifications/      # NotificationItem, NotificationsHeader
+│   ├── privacy/            # GuardOverlay, WatermarkCanvas
+│   ├── shared/             # Shared auth & profile components
+│   │   ├── auth/           # ProtectedRoute, ErrorBoundary, LoginForm, SignupForm, ...
+│   │   └── profile/        # ProfileHeader, ProfileInfoCard, PrivateFieldBadge
+│   ├── therapist/          # Therapist dashboard components
+│   ├── ui/                 # Shadcn/ui primitives
+│   ├── user/
+│   │   ├── chat/           # DM chat components
+│   │   ├── community/      # Community group chat
+│   │   ├── settings/       # Settings panels
+│   │   ├── therapists/     # Therapist browsing
+│   │   ├── therry/         # AI companion UI
+│   │   └── shared/         # Shared user components (Avatar, MessageArea, ...)
+│   └── shared/
+├── hooks/                  # useScreenshotGuard
+├── lib/                    # api, auth-api, query-client, query-hooks, sound, socket, utils
 ├── pages/
-│   ├── user/            # User pages (chat, community, mood, settings, profile, ...)
-│   ├── admin/           # Dashboard, Users, Communities
-│   ├── therapist/       # Dashboard, Clients
-│   ├── components/      # Shared auth & profile components
-│   └── ...              # Login, Signup, Forgot/Reset, PublicProfile, NotFound
-├── store/auth-store.ts  # Zustand auth store
-├── types/               # Shared types
-├── assets/              # ding.mp3 (notification sound)
-├── App.tsx              # Routes
-└── main.tsx             # Entry (ThemeProvider, QueryClient, Toaster)
+│   ├── admin/              # Dashboard, Users, Communities
+│   ├── therapist/          # Dashboard, Clients
+│   └── user/               # Home, Chat, Community, Mood, Settings, Profile, ...
+├── store/auth-store.ts     # Zustand auth store
+├── types/                  # Shared TypeScript types
+├── assets/                 # ding.mp3 (notification sound)
+├── App.tsx                 # Routes
+└── main.tsx                # Entry (ThemeProvider, QueryClient, Toaster)
 ```
 
 ## State Management

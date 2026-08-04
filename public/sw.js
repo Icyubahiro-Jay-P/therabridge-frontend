@@ -14,7 +14,7 @@ self.addEventListener("push", (event) => {
   try {
     payload = event.data ? event.data.json() : {};
   } catch {
-    // Non-JSON payload — fall back to empty
+    // Non-JSON payload - fall back to empty
   }
 
   const title = payload.title || "Therabridge";

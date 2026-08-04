@@ -1,7 +1,7 @@
 {
   "name": "Therabridge",
   "short_name": "Therabridge",
-  "description": "Your mental wellness companion — secure chat, community support, mood tracking, exercises, and crisis support.",
+  "description": "Your mental wellness companion - secure chat, community support, mood tracking, exercises, and crisis support.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",

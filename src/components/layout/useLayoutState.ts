@@ -35,7 +35,9 @@ export function useLayoutState() {
   }, [sidebarMode])
 
   useEffect(() => {
-    async function poll() {
+    let mounted = true
+
+    async function refresh() {
       try {
         const [chatRes, notifRes] = await Promise.all([
           api.get<{ data: { unread: number }[] }>("/api/chat/conversations"),
@@ -43,15 +45,37 @@ export function useLayoutState() {
             .get("/api/notifications/unread-count")
             .catch(() => ({ data: { count: 0 } })),
         ])
+        if (!mounted) return
         const convs = chatRes.data.data
         const total = convs.reduce((sum, c) => sum + (c.unread ?? 0), 0)
         setUnreadCount(total)
         setNotificationCount(notifRes.data.count ?? 0)
       } catch {}
     }
-    void poll()
-    const interval = setInterval(poll, 10000)
-    return () => clearInterval(interval)
+    void refresh()
+
+    const socket = getSocket()
+    if (!socket) return
+
+    function onConversationsUpdated() {
+      void refresh()
+    }
+    function onNotification() {
+      void refresh()
+    }
+    function onDmMessage() {
+      void refresh()
+    }
+
+    socket.on("conversations_updated", onConversationsUpdated)
+    socket.on("notification", onNotification)
+    socket.on("dm_message", onDmMessage)
+    return () => {
+      mounted = false
+      socket.off("conversations_updated", onConversationsUpdated)
+      socket.off("notification", onNotification)
+      socket.off("dm_message", onDmMessage)
+    }
   }, [])
 
   function closeMobile() {

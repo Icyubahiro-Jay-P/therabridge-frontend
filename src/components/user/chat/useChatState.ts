@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import { useAuthStore } from "@/store/auth-store"
 import { api } from "@/lib/api"
-import { getErrorMessage, loadSetting } from "./utils"
+import { getErrorMessage, loadSetting, CHAT_PAGE_SIZE } from "./utils"
 import type { ChatUser, Conversation, DirectMessage } from "./types"
 
 export function useChatState() {
@@ -20,6 +20,9 @@ export function useChatState() {
   const [partner, setPartner] = useState<ChatUser | null>(null)
   const [messages, setMessages] = useState<DirectMessage[]>([])
   const [loadingMessages, setLoadingMessages] = useState(false)
+  const [nextCursor, setNextCursor] = useState<string | null>(null)
+  const [hasOlderMessages, setHasOlderMessages] = useState(false)
+  const [loadingOlder, setLoadingOlder] = useState(false)
   const [newMessage, setNewMessage] = useState("")
   const [sending, setSending] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -104,16 +107,38 @@ export function useChatState() {
   function cancelEdit() { setEditingId(null); setEditingContent("") }
   function toggleTimestamp(id: string) { setSelectedTimestampMessage((prev) => (prev === id ? null : id)) }
 
+  async function loadOlderMessages() {
+    if (!partner || !nextCursor || loadingOlder) return
+    setLoadingOlder(true)
+    try {
+      const { data } = await api.get<{ data: DirectMessage[]; nextCursor: string | null }>(
+        `/api/chat/conversation/${partner._id}?cursor=${encodeURIComponent(nextCursor)}&limit=${CHAT_PAGE_SIZE}`
+      )
+      const older = Array.isArray(data.data) ? data.data : []
+      setMessages((prev) => {
+        const map = new Map<string, DirectMessage>()
+        for (const m of older) map.set(m._id, m)
+        for (const m of prev) map.set(m._id, m)
+        return [...map.values()]
+      })
+      setNextCursor(data.nextCursor ?? null)
+      setHasOlderMessages(!!data.nextCursor)
+    } catch (err) { setError(getErrorMessage(err)) }
+    finally { setLoadingOlder(false) }
+  }
+
   return {
     currentUser, username, isTherry, navigate, conversations, setConversations, loadingList, setLoadingList,
     suggestions, setSuggestions, loadingSuggestions, setLoadingSuggestions,
     searchQuery, setSearchQuery, searchResults, setSearchResults, searching, setSearching,
     partner, setPartner, messages, setMessages, loadingMessages, setLoadingMessages,
+    nextCursor, setNextCursor, hasOlderMessages, setHasOlderMessages, loadingOlder, setLoadingOlder,
     newMessage, setNewMessage, sending, setSending, error, setError,
     showPreviews, setShowPreviews, enterToSend, setEnterToSend,
     deleting, setDeleting, editingId, setEditingId, editingContent, setEditingContent,
     showHistoryFor, setShowHistoryFor, menuOpenId, setMenuOpenId,
     selectedTimestampMessage, setSelectedTimestampMessage, mobileSidebarOpen, setMobileSidebarOpen,
     messagesEndRef, sendMessage, handleUnsend, startEdit, handleSaveEdit, openDM, cancelEdit, toggleTimestamp,
+    loadOlderMessages,
   }
 }

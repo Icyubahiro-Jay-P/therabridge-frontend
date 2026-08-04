@@ -1,5 +1,6 @@
 import { useEffect } from "react"
 import { api } from "@/lib/api"
+import { getSocket } from "@/lib/socket"
 import { playMessageSound } from "@/lib/sound"
 import { getErrorMessage } from "./utils"
 import type { Community, CommunityMessage } from "./types"
@@ -17,49 +18,98 @@ export function useMessagePolling(state: {
       return
     }
 
+    const communityId = state.active._id
+    const currentUserId = state.currentUserId
     let mounted = true
-    let since: string | null = null
-    const knownIds = new Set<string>()
-
-    async function pollCommunity() {
-      if (!mounted) return
-
-      try {
-        const c = state.active!
-        const url = `/api/chat/communities/${c._id}/updates${since ? `?since=${encodeURIComponent(since)}` : ""}`
-        const response = await api.get<Community>(url, { timeout: 35000 })
-
-        if (!mounted) return
-        if (response.status === 200) {
-          const newMessages = Array.isArray(response.data.messages) ? response.data.messages : []
-          const hasNewIncoming = newMessages.some(
-            (m) => !knownIds.has(m._id) && m.sender?._id !== state.currentUserId
-          )
-          for (const m of newMessages) knownIds.add(m._id)
-          state.setMessages(newMessages)
-          if (since && hasNewIncoming) playMessageSound()
-          since = response.headers["x-last-updated"] || new Date().toISOString()
-          await api.post(`/api/chat/communities/${c._id}/read`)
-        }
-      } catch (err) {
-        if (!mounted) return
-        state.setError(getErrorMessage(err))
-      }
-
-      if (mounted) {
-        void pollCommunity()
-      }
-    }
 
     state.setLoadingMessages(true)
     state.setMessages([])
 
-    void pollCommunity().finally(() => {
-      if (mounted) state.setLoadingMessages(false)
-    })
+    async function load() {
+      try {
+        const { data } = await api.get<Community>(
+          `/api/chat/communities/${communityId}`
+        )
+        if (!mounted) return
+        state.setMessages(Array.isArray(data.messages) ? data.messages : [])
+      } catch (err) {
+        if (!mounted) return
+        state.setError(getErrorMessage(err))
+      } finally {
+        if (mounted) state.setLoadingMessages(false)
+      }
+    }
+    void load()
+
+    const socket = getSocket()
+
+    function join() {
+      socket?.emit("join_community", { communityId })
+    }
+
+    function leave() {
+      socket?.emit("leave_community", { communityId })
+    }
+
+    function onCommunityMessage(payload: {
+      communityId: string
+      message: CommunityMessage
+    }) {
+      if (!payload || payload.communityId !== communityId) return
+      state.setMessages((prev) => {
+        const map = new Map(prev.map((m) => [m._id, m]))
+        const isNew = !map.has(payload.message._id)
+        map.set(payload.message._id, payload.message)
+        if (isNew && payload.message.sender?._id !== currentUserId)
+          playMessageSound()
+        return [...map.values()]
+      })
+      void api
+        .post(`/api/chat/communities/${communityId}/read`)
+        .catch(() => {})
+    }
+
+    function onCommunityMessageUpdated(payload: {
+      communityId: string
+      message: CommunityMessage
+    }) {
+      if (!payload || payload.communityId !== communityId) return
+      state.setMessages((prev) =>
+        prev.map((m) =>
+          m._id === payload.message._id ? payload.message : m
+        )
+      )
+    }
+
+    function onCommunityMessageUnsent(payload: {
+      communityId: string
+      message: CommunityMessage
+    }) {
+      if (!payload || payload.communityId !== communityId) return
+      state.setMessages((prev) =>
+        prev.map((m) =>
+          m._id === payload.message._id ? payload.message : m
+        )
+      )
+    }
+
+    if (socket) {
+      if (socket.connected) join()
+      socket.on("connect", join)
+      socket.on("community_message", onCommunityMessage)
+      socket.on("community_message_updated", onCommunityMessageUpdated)
+      socket.on("community_message_unsent", onCommunityMessageUnsent)
+    }
 
     return () => {
       mounted = false
+      if (socket) {
+        socket.off("connect", join)
+        leave()
+        socket.off("community_message", onCommunityMessage)
+        socket.off("community_message_updated", onCommunityMessageUpdated)
+        socket.off("community_message_unsent", onCommunityMessageUnsent)
+      }
     }
-  }, [state.active])
+  }, [state.active, state.currentUserId, state.setMessages])
 }

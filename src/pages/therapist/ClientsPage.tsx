@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react"
-import { Loader2, Search } from "lucide-react"
+import { Loader2, Plus, Search, UserPlus } from "lucide-react"
 
 import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
 import { api } from "@/lib/api"
 import { ClientListItem } from "@/components/therapist/ClientListItem"
 import { ClientProfilePanel } from "@/components/therapist/ClientProfilePanel"
@@ -29,7 +30,9 @@ interface FullUserData {
 
 export function TherapistClientsPage() {
   const [clients, setClients] = useState<ChatUser[]>([])
+  const [discover, setDiscover] = useState<ChatUser[]>([])
   const [loading, setLoading] = useState(true)
+  const [adding, setAdding] = useState<string | null>(null)
   const [search, setSearch] = useState("")
   const [selectedUser, setSelectedUser] = useState<FullUserData | null>(null)
   const [loadingProfile, setLoadingProfile] = useState(false)
@@ -38,11 +41,19 @@ export function TherapistClientsPage() {
   useEffect(() => {
     async function load() {
       try {
-        const { data } = await api.get<{ data: { partner: ChatUser }[] }>(
-          "/api/chat/conversations"
+        const [roster, conversations] = await Promise.all([
+          api.get<ChatUser[]>("/api/users/therapist/clients"),
+          api.get<{ data: { partner: ChatUser }[] }>("/api/chat/conversations"),
+        ])
+        const rosterIds = new Set(roster.data.map((c) => c._id))
+        setClients(roster.data)
+        setDiscover(
+          conversations.data.data
+            .map((c) => c.partner)
+            .filter((p) => !rosterIds.has(p._id))
         )
-        setClients(data.data.map((c) => c.partner))
       } catch {
+        // Ignore — page renders with whatever data loaded.
       } finally {
         setLoading(false)
       }
@@ -77,14 +88,63 @@ export function TherapistClientsPage() {
     }
   }
 
+  async function addClient(userId: string) {
+    setAdding(userId)
+    try {
+      const { data } = await api.post<{ client: ChatUser }>("/api/users/therapist/clients", { userId })
+      setClients((prev) => [...prev, data.client])
+      setDiscover((prev) => prev.filter((p) => p._id !== userId))
+    } catch {
+      // Backend rejects (e.g. user already has a therapist) — ignore for now.
+    } finally {
+      setAdding(null)
+    }
+  }
+
   return (
     <div className="space-y-8 p-6">
       <div>
         <h1 className="text-3xl font-semibold tracking-tight">My clients</h1>
         <p className="mt-2 text-muted-foreground">
-          People you have been in conversation with. View their full profiles.
+          The users you manage. Add people you've chatted with to your client roster to bring them into your communities.
         </p>
       </div>
+
+      {discover.length > 0 && (
+        <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-700/60 dark:bg-gray-900">
+          <h2 className="mb-3 flex items-center gap-2 text-sm font-semibold text-gray-900 dark:text-white">
+            <UserPlus className="size-4 text-emerald-600" /> Add from conversations
+          </h2>
+          <div className="flex flex-wrap gap-2">
+            {discover.map((p) => (
+              <span
+                key={p._id}
+                className="inline-flex items-center gap-2 rounded-full border border-gray-200 py-1 pr-1.5 pl-1 text-sm dark:border-gray-700/60"
+              >
+                <span className="flex size-6 items-center justify-center rounded-full bg-gray-100 text-xs font-bold text-gray-500 dark:bg-gray-800">
+                  {p.firstName[0]}{p.lastName[0]}
+                </span>
+                {p.firstName} {p.lastName}
+                <Button
+                  variant="ghost"
+                  size="xs"
+                  onClick={() => addClient(p._id)}
+                  disabled={adding === p._id}
+                  className="text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-950/40"
+                >
+                  {adding === p._id ? (
+                    <Loader2 className="size-3.5 animate-spin" />
+                  ) : (
+                    <Plus className="size-3.5" />
+                  )}
+                  Add
+                </Button>
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
+
       <div className="relative max-w-md">
         <Search className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-gray-400" />
         <Input

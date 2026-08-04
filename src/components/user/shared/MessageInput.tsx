@@ -12,6 +12,7 @@ export function MessageInput({
   enterToSend = true,
   editing = false,
   onCancelEdit,
+  disabled = false,
 }: {
   value: string
   onChange: (v: string) => void
@@ -21,6 +22,7 @@ export function MessageInput({
   enterToSend?: boolean
   editing?: boolean
   onCancelEdit?: () => void
+  disabled?: boolean
 }) {
   const textareaRef = useRef<HTMLTextAreaElement>(null)
 
@@ -60,7 +62,7 @@ export function MessageInput({
           value={value}
           onChange={(e) => onChange(e.target.value)}
           placeholder={editing ? "Edit your message..." : (placeholder ?? "Type a message...")}
-          disabled={sending}
+          disabled={sending || disabled}
           rows={1}
           className={cn(
             "flex-1 resize-none rounded-xl border px-3 py-2 text-base outline-none transition-colors disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm [&::-webkit-scrollbar]:hidden [scrollbar-width:none]",
@@ -81,7 +83,7 @@ export function MessageInput({
         />
         <Button
           type="submit"
-          disabled={sending || !value.trim()}
+          disabled={sending || disabled || !value.trim()}
           className={cn(
             "mb-0.5 shrink-0",
             editing

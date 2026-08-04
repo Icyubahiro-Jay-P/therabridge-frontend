@@ -3,7 +3,9 @@ import { getAuthToken } from "@/lib/api"
 
 const SOCKET_URL =
   import.meta.env.VITE_SOCKET_URL ||
-  (import.meta.env.DEV ? window.location.origin : "https://therabridge-backend.onrender.com")
+  (import.meta.env.DEV
+    ? window.location.origin
+    : "https://therabridge-backend.onrender.com")
 
 let socket: Socket | null = null
 

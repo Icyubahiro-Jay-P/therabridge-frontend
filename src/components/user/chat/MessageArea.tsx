@@ -49,6 +49,15 @@ export function MessageArea({
       hasOlder={hasOlder}
       renderMessage={(msg) => {
         const m = msg as DirectMessage
+        if (m.kind === "screenshot-notice") {
+          return (
+            <div key={m._id} className="mb-2 flex items-center justify-center">
+              <span className="rounded-full bg-gray-100 px-3 py-1 text-[11px] text-gray-500 dark:bg-gray-800/80 dark:text-gray-400">
+                {m.content}
+              </span>
+            </div>
+          )
+        }
         const isMe = m.sender._id === (currentUserId ?? "")
         return (
           <MessageBubble

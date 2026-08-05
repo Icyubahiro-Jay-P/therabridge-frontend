@@ -2,6 +2,7 @@ import { useRef, useEffect } from "react"
 import { CheckCheck, Loader2, PencilLine, Send, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { CharCounter } from "@/components/ui/char-counter"
+import { useMessageAutoFocus } from "@/hooks/useMessageAutoFocus"
 import { cn } from "@/lib/utils"
 import { LIMITS } from "@/lib/limits"
 
@@ -29,6 +30,8 @@ export function MessageInput({
   maxLength?: number
 }) {
   const textareaRef = useRef<HTMLTextAreaElement>(null)
+
+  useMessageAutoFocus(textareaRef, { value, disabled: sending || disabled })
 
   useEffect(() => {
     const el = textareaRef.current
@@ -71,7 +74,7 @@ export function MessageInput({
           maxLength={maxLength}
           aria-label={editing ? "Edit message" : "Message"}
           className={cn(
-            "flex-1 resize-none rounded-xl border px-3 py-2 text-base outline-none transition-colors disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm [&::-webkit-scrollbar]:hidden [scrollbar-width:none]",
+            "flex-1 resize-none rounded-xl border px-3 py-2 text-base outline-none transition-colors disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm [&::-webkit-scrollbar]:hidden scrollbar-none",
             editing
               ? "border-teal-400 bg-teal-50/70 placeholder:text-teal-700/60 focus-visible:border-teal-500 focus-visible:ring-[3px] focus-visible:ring-teal-500/30 dark:border-teal-700 dark:bg-teal-950/30 dark:placeholder:text-teal-300/50"
               : "border-input bg-input/30 placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"

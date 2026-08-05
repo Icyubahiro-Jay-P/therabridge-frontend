@@ -27,6 +27,8 @@ export function ClientProfilePanel({
   user: ProfileData | null
   onClose: () => void
 }) {
+  const [safetyPlanOpen, setSafetyPlanOpen] = useState(false)
+
   if (loading) {
     return (
       <div className="flex h-full items-center justify-center">

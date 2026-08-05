@@ -104,7 +104,7 @@ export function useChatState() {
       setEditingId(null); setEditingContent("")
     } catch (err) { setError(getErrorMessage(err)) }
   }
-  function openDM(user: ChatUser) { navigate(`/chat/${user.username}`); setSearchQuery(""); setSearchResults([]) }
+  function openDM(user: ChatUser) { navigate(`/chat/${user.username}`); setSearchQuery(""); setSearchResults([]); setMobileSidebarOpen(false) }
   function cancelEdit() { setEditingId(null); setEditingContent("") }
   function toggleTimestamp(id: string) { setSelectedTimestampMessage((prev) => (prev === id ? null : id)) }
 

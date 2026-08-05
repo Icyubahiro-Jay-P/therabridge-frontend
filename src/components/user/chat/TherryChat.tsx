@@ -1,11 +1,13 @@
 import { useEffect, useRef, useState } from "react"
-import { BotIcon, Loader2, Menu, TriangleAlert } from "lucide-react"
+import { BotIcon, LifeBuoy, Loader2, Menu, TriangleAlert } from "lucide-react"
 
 import { api } from "@/lib/api"
 import { ChatMessage } from "../therry/ChatMessage"
 import { TypingIndicator } from "../therry/TypingIndicator"
 import { SuggestionChips } from "../therry/SuggestionChips"
 import { ChatInput } from "../therry/ChatInput"
+import { AiDisclosureModal } from "../therry/AiDisclosureModal"
+import { CrisisActions, type Hotline } from "../therry/CrisisActions"
 
 interface TherryMessageData {
   id: string
@@ -14,6 +16,15 @@ interface TherryMessageData {
   category?: string
   timestamp: string
 }
+
+interface TherryCrisisInfo {
+  detected: boolean
+  alertType?: string
+  hotlines?: Hotline[]
+  therapistNotified?: boolean
+}
+
+const DISCLOSURE_SESSION_KEY = "therry-disclosure-acknowledged"
 
 const WELCOME_MESSAGE: TherryMessageData = {
   id: "welcome",
@@ -31,7 +42,11 @@ export function TherryChat({ onToggleSidebar }: { onToggleSidebar: () => void })
   const [error, setError] = useState<string | null>(null)
   const [editingId, setEditingId] = useState<string | null>(null)
   const [editingContent, setEditingContent] = useState("")
+  const [disclosureOpen, setDisclosureOpen] = useState(false)
+  const [crisisOpen, setCrisisOpen] = useState(false)
+  const [hotlines, setHotlines] = useState<Hotline[]>([])
   const endRef = useRef<HTMLDivElement>(null)
+  const localIdRef = useRef(0)
 
   useEffect(() => {
     let mounted = true
@@ -64,6 +79,49 @@ export function TherryChat({ onToggleSidebar }: { onToggleSidebar: () => void })
     }
   }, [])
 
+  // Show the AI disclosure until the user acknowledges it (persisted server-side).
+  // sessionStorage keeps it from re-prompting every navigation within a session.
+  useEffect(() => {
+    let mounted = true
+    async function checkDisclosure() {
+      try {
+        const { data } = await api.get<{ aiDisclosureAcknowledgedAt?: string | null }>(
+          "/api/users/profile"
+        )
+        if (data.aiDisclosureAcknowledgedAt) {
+          sessionStorage.setItem(DISCLOSURE_SESSION_KEY, "true")
+        } else if (mounted && !sessionStorage.getItem(DISCLOSURE_SESSION_KEY)) {
+          setDisclosureOpen(true)
+        }
+      } catch {
+        if (mounted && !sessionStorage.getItem(DISCLOSURE_SESSION_KEY)) {
+          setDisclosureOpen(true)
+        }
+      }
+    }
+    if (!sessionStorage.getItem(DISCLOSURE_SESSION_KEY)) void checkDisclosure()
+    return () => {
+      mounted = false
+    }
+  }, [])
+
+  // Preload region-appropriate hotlines for the "Need help now" pill.
+  useEffect(() => {
+    let mounted = true
+    async function loadHotlines() {
+      try {
+        const { data } = await api.get<Hotline[]>("/api/crisis/hotlines")
+        if (mounted && Array.isArray(data)) setHotlines(data)
+      } catch {
+        /* fall back to inline 911/988 text */
+      }
+    }
+    void loadHotlines()
+    return () => {
+      mounted = false
+    }
+  }, [])
+
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: "smooth" })
   }, [messages, sending])
@@ -77,7 +135,7 @@ export function TherryChat({ onToggleSidebar }: { onToggleSidebar: () => void })
     }
 
     const userMsg: TherryMessageData = {
-      id: `user-${Date.now()}`,
+      id: `user-${++localIdRef.current}`,
       role: "user",
       content: content.trim(),
       timestamp: new Date().toISOString(),
@@ -91,12 +149,13 @@ export function TherryChat({ onToggleSidebar }: { onToggleSidebar: () => void })
         reply: string
         category: string
         isCrisis: boolean
+        crisis?: TherryCrisisInfo
         timestamp: string
       }>("/api/therry/chat", { message: content.trim() })
       setMessages((prev) => [
         ...prev,
         {
-          id: `therry-${Date.now()}`,
+          id: `therry-${++localIdRef.current}`,
           role: "therry",
           content: data.reply,
           category: data.category,
@@ -104,9 +163,15 @@ export function TherryChat({ onToggleSidebar }: { onToggleSidebar: () => void })
         },
       ])
       if (data.isCrisis) {
+        if (Array.isArray(data.crisis?.hotlines) && data.crisis.hotlines.length > 0) {
+          setHotlines(data.crisis.hotlines)
+        }
+        setCrisisOpen(true)
         setError(
           "If you're in crisis, please reach out to emergency services immediately: 911 or 988."
         )
+      } else {
+        setCrisisOpen(false)
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to get response")
@@ -178,6 +243,12 @@ export function TherryChat({ onToggleSidebar }: { onToggleSidebar: () => void })
             </p>
           </div>
         </div>
+        <button
+          onClick={() => setCrisisOpen(true)}
+          className="flex items-center gap-1.5 rounded-full border border-red-200 px-3 py-1.5 text-xs font-medium text-red-600 transition-colors hover:bg-red-50 dark:border-red-900/50 dark:text-red-400 dark:hover:bg-red-950/40"
+        >
+          <LifeBuoy className="size-3.5" /> Need help now
+        </button>
       </div>
 
       <div className="flex-1 space-y-4 overflow-y-auto px-4 py-4">
@@ -210,6 +281,13 @@ export function TherryChat({ onToggleSidebar }: { onToggleSidebar: () => void })
                 onEdit={startEdit}
               />
             ))}
+            {crisisOpen && (
+              <CrisisActions
+                open={crisisOpen}
+                hotlines={hotlines}
+                onClose={() => setCrisisOpen(false)}
+              />
+            )}
             {sending && <TypingIndicator />}
             <div ref={endRef} />
           </>
@@ -227,6 +305,14 @@ export function TherryChat({ onToggleSidebar }: { onToggleSidebar: () => void })
         onSubmit={(e) => {
           e.preventDefault()
           void handleSend(editingId ? editingContent : input)
+        }}
+      />
+
+      <AiDisclosureModal
+        open={disclosureOpen}
+        onAcknowledge={() => {
+          sessionStorage.setItem(DISCLOSURE_SESSION_KEY, "true")
+          setDisclosureOpen(false)
         }}
       />
     </div>

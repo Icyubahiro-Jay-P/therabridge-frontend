@@ -83,7 +83,7 @@ export function NotificationItem({
       <button
         onClick={(e) => { e.stopPropagation(); void onDelete(notification._id) }}
         disabled={deletingId === notification._id}
-        className="shrink-0 rounded-lg p-1.5 text-gray-300 opacity-0 transition-opacity hover:bg-red-50 hover:text-red-500 group-hover:opacity-100 dark:hover:bg-red-950/30 dark:hover:text-red-400"
+        className="shrink-0 rounded-lg p-1.5 text-gray-300 transition-opacity hover:bg-red-50 hover:text-red-500 dark:hover:bg-red-950/30 dark:hover:text-red-400 hover-hover:opacity-0 hover-hover:group-hover:opacity-100"
       >
         {deletingId === notification._id ? <Loader2 className="size-3.5 animate-spin" /> : <X className="size-3.5" />}
       </button>

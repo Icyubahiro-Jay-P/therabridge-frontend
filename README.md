@@ -165,6 +165,8 @@ Stored in `localStorage` under key `therabridge-settings` (managed by `useSettin
 - **Message sounds** (`lib/sound.ts`): plays `src/assets/ding.mp3` for new incoming DMs and community messages; volume lowers automatically in calm mode.
 - **Join-only communities**: the create form was removed from the UI; users join via invite key.
 - **Talking Points**: messaging is a wellness exercise - DMs/community messages earn +2 Wellness points, Therry chats earn +5 (capped 20/day). The Home streak cards show a "Talking Points today" meter. The earning mechanics are deliberately not explained in the UI so users discover them on their own.
+- **Crisis severity** (`/crisis`): pick an alert type, rate severity (mild/moderate/severe), optionally request to be contacted, then send. The alert history shows severity + status chips, and alert type cards use neutral hints instead of baked-in severity labels.
+- **Signup date of birth**: the `date-of-birth` step uses three selects (day/month/year) — the day list is leap/month-aware and the year range enforces the 18–120 rule, replacing the calendar popover.
 - **Input limits & counters**: every free-text field (messages, Therry chats, mood notes, crisis descriptions, bio, community fields) is capped from a single shared constant `src/lib/limits.ts` — the backend re-validates with the same caps, so the client limit is a hard stop (typing is sliced) with a live `CharCounter` (`components/ui/char-counter.tsx`, amber near 80%, red over). Keep `limits.ts` in sync with `backend/utils/validation.js` and the Mongoose validators.
 
 ## Real-time Updates (Socket.io)

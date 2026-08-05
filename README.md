@@ -15,6 +15,8 @@ React 19 + TypeScript SPA for Therabridge, a mental wellness platform connecting
 - **Therapist Management** - Client roster management, role-based access control
 - **Gamification** - Exercise scores, login streaks, and talking points for engagement
 - **Privacy Shield** - Screenshot protection, watermarking, and audit trails for sensitive content
+- **Data Privacy & Compliance** - Persistent AI-disclosure modal, self-serve data export, account deletion, and retention notices
+- **Live Crisis Escalation** - Therry auto-detects crisis language and surfaces an in-chat crisis card with region hotlines and one-tap therapist notification
 
 ## Stack
 
@@ -82,6 +84,7 @@ npm run dev      # Starts on http://localhost:5173 (Vite proxies /api → http:/
 | `/clients` | Clients | Therapist panel |
 | `/users` | Users | Admin panel |
 | `/communities` | Communities | Admin panel |
+| `/audit` | Audit Log | Admin panel (privacy audit trail) |
 | `/user/:username` | Public Profile | View other users |
 | `/therry` | - | Redirects to `/chat/therry` |
 | `/404`, `*` | Not Found | Fallback page |
@@ -107,15 +110,15 @@ src/
 │   ├── user/
 │   │   ├── chat/           # DM chat components
 │   │   ├── community/      # Community group chat
-│   │   ├── settings/       # Settings panels
+│   │   ├── settings/       # Settings panels (incl. DataPrivacySection)
 │   │   ├── therapists/     # Therapist browsing
-│   │   ├── therry/         # AI companion UI
+│   │   ├── therry/         # AI companion UI (ChatMessage, SuggestionChips, ChatInput, AiDisclosureModal, CrisisActions, ...)
 │   │   └── shared/         # Shared user components (Avatar, MessageArea, ...)
 │   └── shared/
 ├── hooks/                  # useScreenshotGuard
 ├── lib/                    # api, auth-api, query-client, query-hooks, sound, socket, utils
 ├── pages/
-│   ├── admin/              # Dashboard, Users, Communities
+│   ├── admin/              # Dashboard, Users, Communities, AuditLog
 │   ├── therapist/          # Dashboard, Clients
 │   └── user/               # Home, Chat, Community, Mood, Settings, Profile, ...
 ├── store/auth-store.ts     # Zustand auth store
@@ -128,8 +131,8 @@ src/
 ## State Management
 
 - **Global**: `store/auth-store.ts` (Zustand + persist) - user, auth status, initialization.
-- **Chat DMs**: `pages/user/components/chat/useChatState.ts` + `useChatEffects.ts` - conversations, edit/unsend, message sounds. Incoming DMs arrive over Socket.io (`dm_message`, `dm_message_updated`, `dm_message_unsent`); the conversation list refreshes on `conversations_updated`.
-- **Therry**: `pages/user/components/chat/TherryChat.tsx` - loads history from `/api/therry/messages`, sends via `/api/therry/chat`.
+- **Chat DMs**: `components/user/chat/useChatState.ts` + `useChatEffects.ts` - conversations, edit/unsend, message sounds. Incoming DMs arrive over Socket.io (`dm_message`, `dm_message_updated`, `dm_message_unsent`); the conversation list refreshes on `conversations_updated`.
+- **Therry**: `components/user/chat/TherryChat.tsx` - loads history from `/api/therry/messages`, sends via `/api/therry/chat`, gates first use behind the AI-disclosure modal, and opens the crisis card when a reply is classified as a crisis.
 - **Community**: `useCommunityState.ts` + `useCommunityEffects.ts` + `useMessagePolling.ts`. The client joins a Socket.io room per community (`join_community` / `leave_community`) and receives `community_message`, `community_message_updated`, `community_message_unsent` events.
 - **Home / Mood / Settings / Profile**: `useHomeState.ts`, `useMoodState.ts`, `useSettingsState.ts`, `useProfileState.ts`.
 - **Server state**: `lib/query-hooks.ts` (therapists, notifications) via TanStack Query.
@@ -154,7 +157,9 @@ Stored in `localStorage` under key `therabridge-settings` (managed by `useSettin
 
 ## Key Features
 
-- **Therry in chat** (`/chat/therry`): Gemini-powered (`gemini-3.5-flash`) wellness companion; every message is persisted server-side and replayed as history. Crisis keywords trigger a dedicated response with helpline info.
+- **Therry in chat** (`/chat/therry`): Gemini-powered (`gemini-3.5-flash`) wellness companion; every message is persisted server-side and replayed as history. Crisis keywords trigger a dedicated response with helpline info, an in-chat **crisis card** (`CrisisActions`) with region hotlines and a "Notify my therapist" button (`POST /api/crisis/message-therapist`), and a "Need help now" header pill that surfaces the same card on demand.
+- **AI disclosure** (`AiDisclosureModal`): shown on first Therry visit until acknowledged (`POST /api/users/ai-disclosure`), persisted server-side and deduped per session via sessionStorage.
+- **Data privacy** (Settings → Your Data): download a decrypted JSON export (`GET /api/users/export`) plus an encryption/retention explainer; account deletion stays in the Settings Danger Zone.
 - **Privacy shield** - blur-on-blur, screenshot-attempt blackout, possible-screenshot notices, and watermarking. See the section below. These features raise the bar and leave a paper trail but **cannot prevent screenshots**.
 - **Screenshot protection** (`components/layout/ScreenshotProtection.tsx`): blocks `PrintScreen`/`Cmd+Shift+S/3/4/5` and blurs the whole app when the tab loses focus.
 - **Message sounds** (`lib/sound.ts`): plays `src/assets/ding.mp3` for new incoming DMs and community messages; volume lowers automatically in calm mode.

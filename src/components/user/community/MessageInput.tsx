@@ -1,4 +1,5 @@
 import { MessageInput as SharedMessageInput } from "../shared/MessageInput"
+import { LIMITS } from "@/lib/limits"
 
 export function MessageInput({
   value,
@@ -24,6 +25,7 @@ export function MessageInput({
       placeholder={disabled ? "Messaging is disabled" : `Message #${communityName}...`}
       enterToSend={true}
       disabled={disabled}
+      maxLength={LIMITS.message.community}
     />
   )
 }

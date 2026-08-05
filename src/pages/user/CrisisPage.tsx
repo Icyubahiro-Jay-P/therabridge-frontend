@@ -12,6 +12,8 @@ import { EmergencyContacts } from "@/components/user/crisis/EmergencyContacts"
 import { AlertTypeSelector } from "@/components/user/crisis/AlertTypeSelector"
 import { CrisisAlertSuccess } from "@/components/user/crisis/CrisisAlertSuccess"
 import { AlertHistory } from "@/components/user/crisis/AlertHistory"
+import { ExerciseModal } from "@/components/user/exercises/ExerciseModal"
+import type { Exercise } from "@/components/user/exercises/types"
 
 interface CrisisAlert {
   _id: string
@@ -40,6 +42,7 @@ export function CrisisPage() {
   const [myAlerts, setMyAlerts] = useState<CrisisAlert[]>([])
   const [loadingAlerts, setLoadingAlerts] = useState(true)
   const [loadError, setLoadError] = useState<string | null>(null)
+  const [activeExercise, setActiveExercise] = useState<Exercise | null>(null)
 
   useEffect(() => {
     async function load() {
@@ -64,6 +67,9 @@ export function CrisisPage() {
       setSent(true)
       setResources(data.resources || [])
       setMyAlerts((prev) => [data.crisis, ...prev])
+      if (data.panicExercise) {
+        setActiveExercise(data.panicExercise)
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to send alert")
     } finally {
@@ -72,7 +78,14 @@ export function CrisisPage() {
   }
 
   return (
-    <div className="mx-auto max-w-2xl space-y-8 p-6">
+    <>
+      {activeExercise && (
+        <ExerciseModal
+          exercise={activeExercise}
+          onClose={() => setActiveExercise(null)}
+        />
+      )}
+      <div className="mx-auto max-w-2xl space-y-8 p-6">
       <CrisisHeader />
       <EmergencyContacts />
 
@@ -182,6 +195,7 @@ export function CrisisPage() {
       )}
 
       <AlertHistory alerts={myAlerts} loading={loadingAlerts} />
-    </div>
+      </div>
+    </>
   )
 }

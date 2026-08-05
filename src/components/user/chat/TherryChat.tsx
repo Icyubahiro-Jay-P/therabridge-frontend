@@ -8,6 +8,8 @@ import { SuggestionChips } from "../therry/SuggestionChips"
 import { ChatInput } from "../therry/ChatInput"
 import { AiDisclosureModal } from "../therry/AiDisclosureModal"
 import { CrisisActions, type Hotline } from "../therry/CrisisActions"
+import { ExerciseModal } from "../exercises/ExerciseModal"
+import type { Exercise } from "../exercises/types"
 
 interface TherryMessageData {
   id: string
@@ -22,6 +24,7 @@ interface TherryCrisisInfo {
   alertType?: string
   hotlines?: Hotline[]
   therapistNotified?: boolean
+  panicExercise?: Exercise
 }
 
 const DISCLOSURE_SESSION_KEY = "therry-disclosure-acknowledged"
@@ -45,6 +48,7 @@ export function TherryChat({ onToggleSidebar }: { onToggleSidebar: () => void })
   const [disclosureOpen, setDisclosureOpen] = useState(false)
   const [crisisOpen, setCrisisOpen] = useState(false)
   const [hotlines, setHotlines] = useState<Hotline[]>([])
+  const [activeExercise, setActiveExercise] = useState<Exercise | null>(null)
   const endRef = useRef<HTMLDivElement>(null)
   const localIdRef = useRef(0)
 
@@ -170,6 +174,14 @@ export function TherryChat({ onToggleSidebar }: { onToggleSidebar: () => void })
         setError(
           "If you're in crisis, please reach out to emergency services immediately: 911 or 988."
         )
+        // Panic attacks launch the exercise engine (grounding/breathing) as the
+        // first response, alongside the crisis card (B2).
+        if (
+          data.crisis?.alertType === "panic_attack" &&
+          data.crisis?.panicExercise
+        ) {
+          setActiveExercise(data.crisis.panicExercise)
+        }
       } else {
         setCrisisOpen(false)
       }
@@ -315,6 +327,13 @@ export function TherryChat({ onToggleSidebar }: { onToggleSidebar: () => void })
           setDisclosureOpen(false)
         }}
       />
+
+      {activeExercise && (
+        <ExerciseModal
+          exercise={activeExercise}
+          onClose={() => setActiveExercise(null)}
+        />
+      )}
     </div>
   )
 }

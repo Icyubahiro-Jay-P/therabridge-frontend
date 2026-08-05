@@ -3,6 +3,7 @@ import { KeyRound, Loader2, TriangleAlert, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { api } from "@/lib/api"
+import { LIMITS } from "@/lib/limits"
 import { getErrorMessage } from "./utils"
 import type { Community } from "./types"
 
@@ -82,7 +83,7 @@ export function JoinCommunityModal({
                 required
                 disabled={loading}
                 className="pl-9 tracking-widest uppercase"
-                maxLength={8}
+                maxLength={LIMITS.community.inviteKey}
               />
             </div>
           </div>

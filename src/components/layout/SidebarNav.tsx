@@ -1,6 +1,6 @@
 import {
   Home, LayoutDashboard, MessageCircle, Users, Heart,
-  Stethoscope, User, Shield, AlertTriangle, Bell, Settings,
+  Stethoscope, User, Shield, ShieldCheck, AlertTriangle, Bell, Settings,
 } from "lucide-react"
 import { NavItem, NavItemWithBadge } from "./NavItem"
 
@@ -34,6 +34,7 @@ export function SidebarNav({
         <>
           <NavItem to="/users" icon={<User className="size-4" />} label="Users" minimized={isMinimized} onClick={closeMobile} />
           <NavItem to="/communities" icon={<Shield className="size-4" />} label="Communities" minimized={isMinimized} onClick={closeMobile} />
+          <NavItem to="/audit" icon={<ShieldCheck className="size-4" />} label="Audit log" minimized={isMinimized} onClick={closeMobile} />
         </>
       )}
       <div className="mt-auto" />

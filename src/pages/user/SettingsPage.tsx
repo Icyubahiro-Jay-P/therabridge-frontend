@@ -1,4 +1,5 @@
-import { TriangleAlert, User, Sun, Moon, Bell, Fingerprint, Volume2, Play } from "lucide-react"
+import { TriangleAlert, User, Sun, Moon, Bell, Fingerprint, Volume2, Play, ShieldCheck, ChevronRight } from "lucide-react"
+import { Link } from "react-router-dom"
 import { Switch } from "@/components/ui/switch"
 import { useSettingsState } from "@/components/user/settings/useSettingsState"
 import { ChatSettings } from "@/components/user/settings/ChatSettings"

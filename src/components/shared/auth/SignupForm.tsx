@@ -1,5 +1,4 @@
 import {
-  Calendar as CalendarIcon,
   CheckCircle2,
   Eye,
   EyeOff,
@@ -11,13 +10,6 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { cn } from "@/lib/utils"
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover"
-import { Calendar } from "@/components/ui/calendar"
-import { format } from "date-fns"
 import type { FieldName, FieldErrors, Feedback } from "./useSignupState"
 import { validateField } from "./useSignupState"
 import { STEP_COUNT, STEP_ITEMS } from "./signupSteps"
@@ -34,7 +26,7 @@ export function SignupForm({
   isFirstStep,
   updateField: uf,
   handleBlur: hb,
-  handleDateSelect: hds,
+  handleDateParts: hdp,
   handleStepSubmit: hss,
   setShowPassword: sp,
   goToStep,
@@ -50,7 +42,7 @@ export function SignupForm({
   isFirstStep: boolean
   updateField: (f: FieldName, v: string) => void
   handleBlur: (f: FieldName) => void
-  handleDateSelect: (d: Date | undefined) => void
+  handleDateParts: (day: string, month: string, year: string) => void
   handleStepSubmit: (e: React.FormEvent<HTMLFormElement>) => void
   setShowPassword: React.Dispatch<React.SetStateAction<boolean>>
   goToStep: (index: number) => void
@@ -62,6 +54,23 @@ export function SignupForm({
       : form[stepItem.field]
   const currentError =
     fe[stepItem.field] ?? validateField(stepItem.field, currentValue, date)
+
+  // Date-of-birth selects: year range mirrors the 18–120 server rule, and the
+  // day list clamps to the selected month/year so Feb 29 / Apr 31 can't happen.
+  const currentYear = new Date().getFullYear()
+  const [dobYear, dobMonth, dobDay] = (form.dateOfBirth || "").split("-")
+  const daysInMonth =
+    dobYear && dobMonth
+      ? new Date(parseInt(dobYear, 10), parseInt(dobMonth, 10), 0).getDate()
+      : 31
+  const yearOptions = Array.from(
+    { length: currentYear - 18 - (currentYear - 120) + 1 },
+    (_, i) => currentYear - 18 - i
+  )
+  const MONTH_NAMES = [
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December",
+  ]
 
   const progress = useMemo(
     () => ((stepIndex + 1) / STEP_COUNT) * 100,
@@ -114,40 +123,68 @@ export function SignupForm({
           </Label>
 
           {stepItem.field === "dateOfBirth" ? (
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  type="button"
-                  variant="outline"
+            <div className="grid grid-cols-3 gap-3">
+              <div className="space-y-1">
+                <select
+                  id="dob-day"
+                  aria-label="Day"
+                  value={dobDay ?? ""}
                   disabled={l}
-                  autoFocus
+                  onChange={(e) => hdp(e.target.value, dobMonth ?? "", dobYear ?? "")}
                   className={cn(
-                    "relative w-full justify-start pl-9 text-left font-normal",
-                    !date && "text-muted-foreground",
-                    fe.dateOfBirth &&
-                      "border-red-400 dark:border-red-600"
+                    "h-9 w-full cursor-pointer rounded-4xl border border-input bg-input/30 px-3 text-base text-gray-900 outline-none transition-colors focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm dark:text-white",
+                    fe.dateOfBirth && "border-red-400 dark:border-red-600"
                   )}
                 >
-                  <CalendarIcon className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-gray-400" />
-                  {date ? (
-                    format(date, "PPP")
-                  ) : (
-                    <span>Pick a date</span>
+                  <option value="">Day</option>
+                  {Array.from({ length: daysInMonth }, (_, i) => i + 1).map((d) => (
+                    <option key={d} value={d}>
+                      {d}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="space-y-1">
+                <select
+                  id="dob-month"
+                  aria-label="Month"
+                  value={dobMonth ?? ""}
+                  disabled={l}
+                  onChange={(e) => hdp(dobDay ?? "", e.target.value, dobYear ?? "")}
+                  className={cn(
+                    "h-9 w-full cursor-pointer rounded-4xl border border-input bg-input/30 px-3 text-base text-gray-900 outline-none transition-colors focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm dark:text-white",
+                    fe.dateOfBirth && "border-red-400 dark:border-red-600"
                   )}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0" align="start">
-                <Calendar
-                  mode="single"
-                  selected={date}
-                  onSelect={hds}
-                  captionLayout="dropdown"
-                  disabled={(d) =>
-                    d > new Date() || d < new Date("1900-01-01")
-                  }
-                />
-              </PopoverContent>
-            </Popover>
+                >
+                  <option value="">Month</option>
+                  {MONTH_NAMES.map((name, i) => (
+                    <option key={name} value={i + 1}>
+                      {name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="space-y-1">
+                <select
+                  id="dob-year"
+                  aria-label="Year"
+                  value={dobYear ?? ""}
+                  disabled={l}
+                  onChange={(e) => hdp(dobDay ?? "", dobMonth ?? "", e.target.value)}
+                  className={cn(
+                    "h-9 w-full cursor-pointer rounded-4xl border border-input bg-input/30 px-3 text-base text-gray-900 outline-none transition-colors focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm dark:text-white",
+                    fe.dateOfBirth && "border-red-400 dark:border-red-600"
+                  )}
+                >
+                  <option value="">Year</option>
+                  {yearOptions.map((y) => (
+                    <option key={y} value={y}>
+                      {y}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
           ) : (
             <div className="relative">
               <stepItem.icon className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-gray-400" />

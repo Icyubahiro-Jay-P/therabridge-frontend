@@ -58,6 +58,31 @@ export function SettingsPage() {
 
       <PrivacySettings settings={settings} updateSetting={updateSetting} />
 
+      <section className="space-y-3">
+        <h2 className="text-sm font-semibold tracking-wider text-gray-400 uppercase">
+          Safety
+        </h2>
+        <Link
+          to="/safety-plan"
+          className="flex items-center justify-between gap-4 rounded-xl border border-gray-200 px-4 py-3.5 transition-colors hover:bg-gray-50 dark:border-gray-700/60 dark:hover:bg-gray-800"
+        >
+          <div className="flex items-center gap-3">
+            <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-emerald-100 dark:bg-emerald-900/30">
+              <ShieldCheck className="size-4 text-emerald-600" />
+            </div>
+            <div>
+              <p className="text-sm font-medium text-gray-900 dark:text-white">
+                Safety plan
+              </p>
+              <p className="text-xs text-gray-400">
+                Build the plan that appears first when you ask for help
+              </p>
+            </div>
+          </div>
+          <ChevronRight className="size-4 shrink-0 text-gray-400" />
+        </Link>
+      </section>
+
       <DataPrivacySection />
 
       <section className="space-y-3">

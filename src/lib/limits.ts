@@ -1,0 +1,34 @@
+// Single source of truth for input character limits. These MUST match the
+// backend Zod schemas + Mongoose validators in backend/utils/validation.js.
+// The backend remains the authority — these enforce a friendlier client-side
+// UX (hard stop + counter) but the server re-validates everything.
+export const LIMITS = {
+  message: {
+    dm: 2000,
+    community: 2000,
+    therry: 4000,
+  },
+  mood: {
+    note: 500,
+    factors: 20,
+  },
+  crisis: {
+    description: 1000,
+  },
+  profile: {
+    firstName: 50,
+    lastName: 50,
+    bio: 300,
+    avatar: 500,
+  },
+  community: {
+    name: 60,
+    description: 200,
+    rules: 500,
+    inviteKey: 8,
+  },
+} as const
+
+export type CharLimit = number
+
+export const charCount = (value: string): number => value.length

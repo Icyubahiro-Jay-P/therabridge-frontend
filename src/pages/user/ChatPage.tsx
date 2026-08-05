@@ -139,7 +139,7 @@ export function ChatPage() {
         onSelectConv={c.openDM}
         showPreviews={c.showPreviews}
         isTherry={c.isTherry}
-        onTherryClick={() => c.navigate("/chat/therry")}
+        onTherryClick={() => { c.setMobileSidebarOpen(false); c.navigate("/chat/therry") }}
         suggestions={c.suggestions}
         loadingSuggestions={c.loadingSuggestions}
       />

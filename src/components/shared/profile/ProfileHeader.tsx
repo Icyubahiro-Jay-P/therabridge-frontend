@@ -1,5 +1,5 @@
-import { User as UserIcon, UserCircle } from "lucide-react"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { User as UserIcon } from "lucide-react"
+import AvatarActions from "@/components/user/shared/AvatarActions"
 import type { PublicProfile } from "@/types/user"
 
 const API_BASE_URL =
@@ -7,23 +7,19 @@ const API_BASE_URL =
   (typeof window !== "undefined" ? window.location.origin : "")
 
 export function ProfileHeader({ profile }: { profile: PublicProfile }) {
+  const avatarUrl = profile.avatar
+    ? profile.avatar.startsWith("http")
+      ? profile.avatar
+      : `${API_BASE_URL}${profile.avatar}`
+    : ""
+
   return (
     <div className="flex flex-col items-center gap-5 sm:flex-row sm:items-start">
       <div className="relative shrink-0">
-        <Avatar className="size-24 border-2 border-gray-200 shadow-sm dark:border-gray-700">
-          <AvatarImage
-            src={
-              profile.avatar
-                ? profile.avatar.startsWith("http")
-                  ? profile.avatar
-                  : `${API_BASE_URL}${profile.avatar}`
-                : undefined
-            }
-          />
-          <AvatarFallback className="bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-400">
-            <UserCircle className="size-14" strokeWidth={1.5} />
-          </AvatarFallback>
-        </Avatar>
+        <AvatarActions
+          avatarUrl={avatarUrl}
+          name={`${profile.firstName} ${profile.lastName}`}
+        />
       </div>
 
       <div className="flex flex-1 flex-col items-center text-center sm:items-start sm:text-left">

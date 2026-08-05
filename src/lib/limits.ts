@@ -15,6 +15,10 @@ export const LIMITS = {
   crisis: {
     description: 1000,
   },
+  safetyPlan: {
+    item: 120,
+    maxItems: 10,
+  },
   profile: {
     firstName: 50,
     lastName: 50,

@@ -1,4 +1,6 @@
-import { EyeOff, Loader2, X } from "lucide-react"
+import { useState } from "react"
+import { EyeOff, Loader2, ShieldCheck, X } from "lucide-react"
+import { SafetyPlanModal } from "./SafetyPlanModal"
 
 export interface ProfileData {
   id: string

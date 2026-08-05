@@ -91,6 +91,11 @@ const AdminCommunitiesPage = lazy(() =>
     default: mod.AdminCommunitiesPage,
   }))
 )
+const AdminAuditLogPage = lazy(() =>
+  import("@/pages/admin/AuditLogPage").then((mod) => ({
+    default: mod.AdminAuditLogPage,
+  }))
+)
 
 const TherapistDashboardPage = lazy(() =>
   import("@/pages/therapist/DashboardPage").then((mod) => ({
@@ -400,6 +405,16 @@ export function App() {
                   <ErrorBoundaryRoute>
                     <RequireRole roles={["admin"]}>
                       <AdminCommunitiesPage />
+                    </RequireRole>
+                  </ErrorBoundaryRoute>
+                }
+              />
+              <Route
+                path="/audit"
+                element={
+                  <ErrorBoundaryRoute>
+                    <RequireRole roles={["admin"]}>
+                      <AdminAuditLogPage />
                     </RequireRole>
                   </ErrorBoundaryRoute>
                 }

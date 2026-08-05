@@ -2,6 +2,7 @@ import { KeyRound, Lock, Globe } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Switch } from "@/components/ui/switch"
+import { LIMITS } from "@/lib/limits"
 import type { CommunityCategory } from "./types"
 
 const CATEGORIES: { value: CommunityCategory; label: string }[] = [
@@ -53,16 +54,18 @@ export function SettingsForm({
       </label>
       <Input
         value={name}
-        onChange={(e) => onNameChange(e.target.value)}
+        onChange={(e) => onNameChange(e.target.value.slice(0, LIMITS.community.name))}
         disabled={!isOwner}
+        maxLength={LIMITS.community.name}
       />
       <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
         Description
       </label>
       <Input
         value={description}
-        onChange={(e) => onDescriptionChange(e.target.value)}
+        onChange={(e) => onDescriptionChange(e.target.value.slice(0, LIMITS.community.description))}
         disabled={!isOwner}
+        maxLength={LIMITS.community.description}
       />
       <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
         Category
@@ -84,9 +87,10 @@ export function SettingsForm({
       </label>
       <Input
         value={rules}
-        onChange={(e) => onRulesChange(e.target.value)}
+        onChange={(e) => onRulesChange(e.target.value.slice(0, LIMITS.community.rules))}
         disabled={!isOwner}
         placeholder="Guidelines for members..."
+        maxLength={LIMITS.community.rules}
       />
       <div className="flex items-center justify-between rounded-lg border border-gray-200 px-3 py-2 dark:border-gray-700">
         <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">

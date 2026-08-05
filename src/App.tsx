@@ -75,6 +75,9 @@ const UserMoodPage = lazy(() =>
 const UserCrisisPage = lazy(() =>
   import("@/pages/user/CrisisPage").then((mod) => ({ default: mod.CrisisPage }))
 )
+const UserSafetyPlanPage = lazy(() =>
+  import("@/pages/user/SafetyPlanPage").then((mod) => ({ default: mod.SafetyPlanPage }))
+)
 
 const AdminDashboardPage = lazy(() =>
   import("@/pages/admin/DashboardPage").then((mod) => ({

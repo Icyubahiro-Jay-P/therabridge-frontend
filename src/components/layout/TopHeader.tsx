@@ -15,6 +15,7 @@ function getPageTitle(pathname: string, role: string): string {
   if (pathname.startsWith("/profile")) return "Profile"
   if (pathname.startsWith("/notifications")) return "Notifications"
   if (pathname.startsWith("/crisis")) return "Crisis Support"
+  if (pathname.startsWith("/safety-plan")) return "Safety Plan"
   if (pathname.startsWith("/clients")) return "Clients"
   if (pathname.startsWith("/users")) return "Users"
   if (pathname.startsWith("/communities")) return "Communities"

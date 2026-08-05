@@ -4,6 +4,7 @@ import { Loader2, TriangleAlert, AlertCircle } from "lucide-react"
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
 import { api } from "@/lib/api"
+import { LIMITS } from "@/lib/limits"
 import { CrisisHeader } from "@/components/user/crisis/CrisisHeader"
 import { EmergencyContacts } from "@/components/user/crisis/EmergencyContacts"
 import { AlertTypeSelector } from "@/components/user/crisis/AlertTypeSelector"
@@ -82,13 +83,17 @@ export function CrisisPage() {
             <AlertTypeSelector value={alertType} onChange={setAlertType} />
             <Textarea
               value={description}
-              onChange={(e) => setDescription(e.target.value)}
+              onChange={(e) => setDescription(e.target.value.slice(0, LIMITS.crisis.description))}
               placeholder="Describe what you're feeling (optional)..."
-              maxLength={1000}
+              maxLength={LIMITS.crisis.description}
               rows={3}
-              className="mb-4"
+              className="mb-1"
             />
-            <p className="mb-4 text-xs text-gray-400 text-right">{description.length}/1000</p>
+            <div className="mb-4 flex justify-end">
+              <span className="text-xs tabular-nums text-gray-400 dark:text-gray-500">
+                {description.length}/{LIMITS.crisis.description}
+              </span>
+            </div>
             <Button
               onClick={handleSubmit}
               disabled={!alertType || sending}

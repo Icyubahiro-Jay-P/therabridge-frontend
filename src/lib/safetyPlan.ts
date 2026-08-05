@@ -2,7 +2,6 @@ import {
   Users,
   Building2,
   HandHeart,
-  Hash,
   Heart,
   Lightbulb,
   ShieldAlert,

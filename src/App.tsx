@@ -383,6 +383,14 @@ export function App() {
                 }
               />
               <Route
+                path="/safety-plan"
+                element={
+                  <ErrorBoundaryRoute>
+                    <UserSafetyPlanPage />
+                  </ErrorBoundaryRoute>
+                }
+              />
+              <Route
                 path="/clients"
                 element={
                   <ErrorBoundaryRoute>

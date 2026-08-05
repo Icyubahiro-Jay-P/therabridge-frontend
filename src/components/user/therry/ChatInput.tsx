@@ -1,7 +1,9 @@
+import { useRef } from "react"
 import { CheckCheck, PencilLine, Send, X } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { CharCounter } from "@/components/ui/char-counter"
+import { useMessageAutoFocus } from "@/hooks/useMessageAutoFocus"
 import { cn } from "@/lib/utils"
 import { LIMITS } from "@/lib/limits"
 
@@ -21,6 +23,8 @@ export function ChatInput({
   onCancelEdit?: () => void
 }) {
   const maxLength = LIMITS.message.therry
+  const inputRef = useRef<HTMLInputElement>(null)
+  useMessageAutoFocus(inputRef, { value, disabled: loading })
   return (
     <div className="border-t border-gray-200 px-4 py-3.5 dark:border-gray-700/60">
       {editing && (
@@ -39,6 +43,7 @@ export function ChatInput({
       )}
       <form onSubmit={onSubmit} className="flex items-center gap-2">
         <Input
+          ref={inputRef}
           value={value}
           onChange={(e) => onChange(e.target.value.slice(0, maxLength))}
           placeholder={editing ? "Edit your message..." : "Share what's on your mind..."}

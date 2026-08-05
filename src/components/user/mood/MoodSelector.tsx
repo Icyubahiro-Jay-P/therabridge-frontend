@@ -1,7 +1,9 @@
 import { CheckCircle2, Loader2, TriangleAlert } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
+import { CharCounter } from "@/components/ui/char-counter"
 import { cn } from "@/lib/utils"
+import { LIMITS } from "@/lib/limits"
 import { moodOptions, factorOptions, intensityLabels } from "./useMoodState"
 
 interface MoodSelectorProps {
@@ -65,8 +67,13 @@ export function MoodSelector({
           ))}
         </div>
       </div>
-      <Textarea value={note} onChange={(e) => onNoteChange(e.target.value)}
-        placeholder="Add a note (optional)..." maxLength={500} rows={2} className="mb-4" />
+      <div className="mb-4">
+        <Textarea value={note} onChange={(e) => onNoteChange(e.target.value.slice(0, LIMITS.mood.note))}
+          placeholder="Add a note (optional)..." maxLength={LIMITS.mood.note} rows={2} className="mb-1" />
+        <div className="flex justify-end">
+          <CharCounter count={note.length} limit={LIMITS.mood.note} />
+        </div>
+      </div>
       <Button onClick={onLog} disabled={!selectedMood || saving} className="bg-emerald-600 hover:bg-emerald-700">
         {saving ? <Loader2 className="size-4 animate-spin" /> : "Log mood"}
       </Button>

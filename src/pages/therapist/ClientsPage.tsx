@@ -10,6 +10,7 @@ import {
   type ProfileData,
 } from "@/components/therapist/ClientProfilePanel"
 import { ClientsEmptyState } from "@/components/therapist/ClientsEmptyState"
+import type { ClientRiskSummary } from "@/lib/riskSummary"
 
 interface ChatUser {
   _id: string
@@ -40,13 +41,19 @@ export function TherapistClientsPage() {
   const [selectedUser, setSelectedUser] = useState<ProfileData | null>(null)
   const [loadingProfile, setLoadingProfile] = useState(false)
   const [profileError, setProfileError] = useState<string | null>(null)
+  const [riskSummaries, setRiskSummaries] = useState<
+    Record<string, ClientRiskSummary>
+  >({})
 
   useEffect(() => {
     async function load() {
       try {
-        const [roster, conversations] = await Promise.all([
+        const [roster, conversations, risk] = await Promise.all([
           api.get<ChatUser[]>("/api/users/therapist/clients"),
           api.get<{ data: { partner: ChatUser }[] }>("/api/chat/conversations"),
+          api.get<{ clients: ClientRiskSummary[] }>(
+            "/api/therapist/clients/risk-summary"
+          ),
         ])
         const rosterIds = new Set(roster.data.map((c) => c._id))
         setClients(roster.data)
@@ -54,6 +61,11 @@ export function TherapistClientsPage() {
           conversations.data.data
             .map((c) => c.partner)
             .filter((p) => !rosterIds.has(p._id))
+        )
+        setRiskSummaries(
+          Object.fromEntries(
+            risk.data.clients.map((summary) => [summary.userId, summary])
+          )
         )
       } catch {
         // Ignore - page renders with whatever data loaded.
@@ -183,6 +195,7 @@ export function TherapistClientsPage() {
                 <ClientListItem
                   key={client._id}
                   client={client}
+                  summary={riskSummaries[client._id]}
                   onViewProfile={viewProfile}
                 />
               ))}

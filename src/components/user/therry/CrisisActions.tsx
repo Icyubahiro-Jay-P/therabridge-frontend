@@ -1,6 +1,19 @@
-import { useState } from "react"
-import { HeartHandshake, Loader2, PhoneCall } from "lucide-react"
+import { useEffect, useState } from "react"
+import {
+  HeartHandshake,
+  Loader2,
+  PhoneCall,
+  ShieldCheck,
+} from "lucide-react"
+import { Link } from "react-router-dom"
+
 import { api } from "@/lib/api"
+import {
+  emptySafetyPlan,
+  SAFETY_PLAN_SECTIONS,
+  safetyPlanHasContent,
+  type SafetyPlan,
+} from "@/lib/safetyPlan"
 
 export interface Hotline {
   name: string
@@ -15,13 +28,35 @@ interface CrisisActionsProps {
 }
 
 // Crisis escalation card shown when Therry classifies a conversation as a
-// crisis. Lists region-appropriate hotlines and lets the user notify their
+// crisis or the user taps "Need help now". The user's safety plan is shown
+// first, then region-appropriate hotlines, then the option to notify their
 // assigned therapist (POST /api/crisis/message-therapist).
 export function CrisisActions({ open, hotlines, onClose }: CrisisActionsProps) {
   const [contacting, setContacting] = useState(false)
   const [feedback, setFeedback] = useState<{ ok: boolean; text: string } | null>(
     null
   )
+  const [plan, setPlan] = useState<SafetyPlan>(emptySafetyPlan)
+  const [planLoaded, setPlanLoaded] = useState(false)
+
+  useEffect(() => {
+    if (!open || planLoaded) return
+    let mounted = true
+    async function loadPlan() {
+      try {
+        const { data } = await api.get<SafetyPlan>("/api/safety-plan")
+        if (mounted) setPlan({ ...emptySafetyPlan(), ...data })
+      } catch {
+        /* Plan is optional - hotlines remain the fallback. */
+      } finally {
+        if (mounted) setPlanLoaded(true)
+      }
+    }
+    void loadPlan()
+    return () => {
+      mounted = false
+    }
+  }, [open, planLoaded])
 
   if (!open) return null
 
@@ -44,6 +79,8 @@ export function CrisisActions({ open, hotlines, onClose }: CrisisActionsProps) {
     }
   }
 
+  const hasPlan = safetyPlanHasContent(plan)
+
   return (
     <div className="rounded-2xl border border-red-200 bg-red-50 p-4 dark:border-red-900/50 dark:bg-red-950/30">
       <div className="flex items-center justify-between">
@@ -60,7 +97,43 @@ export function CrisisActions({ open, hotlines, onClose }: CrisisActionsProps) {
       <p className="mt-1 text-xs text-red-600/80 dark:text-red-400/80">
         If you are in immediate danger, call 911 now.
       </p>
+
+      {hasPlan && (
+        <div className="mt-3 rounded-xl bg-white p-4 dark:bg-gray-900">
+          <p className="flex items-center gap-2 text-xs font-semibold text-emerald-700 uppercase dark:text-emerald-400">
+            <ShieldCheck className="size-3.5" /> Your safety plan
+          </p>
+          <div className="mt-2 space-y-3">
+            {SAFETY_PLAN_SECTIONS.filter((s) => plan[s.key].length > 0).map(
+              (section) => (
+                <div key={section.key}>
+                  <p className="text-xs font-medium text-gray-500 dark:text-gray-400">
+                    {section.label}
+                  </p>
+                  <ul className="mt-0.5 list-inside list-disc space-y-0.5">
+                    {plan[section.key].map((item, i) => (
+                      <li key={`${item}-${i}`} className="text-sm text-gray-800 dark:text-gray-200">
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )
+            )}
+          </div>
+          <Link
+            to="/safety-plan"
+            className="mt-3 inline-block text-xs font-medium text-emerald-600 hover:underline dark:text-emerald-400"
+          >
+            Edit safety plan
+          </Link>
+        </div>
+      )}
+
       <div className="mt-3 space-y-2">
+        <p className="text-xs font-semibold text-red-600/80 uppercase dark:text-red-400/80">
+          Hotlines
+        </p>
         {hotlines.length > 0 ? (
           hotlines.map((h) => (
             <div

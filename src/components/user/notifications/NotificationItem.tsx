@@ -14,6 +14,7 @@ const typeIcons: Record<string, typeof Bell> = {
   crisis_alert: AlertTriangle,
   community_update: Bell,
   streak_milestone: TrendingUp,
+  mood_checkin: Heart,
 }
 
 const typeColors: Record<string, string> = {

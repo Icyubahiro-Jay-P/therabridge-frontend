@@ -37,7 +37,12 @@ export function ProfilePage() {
 
   return (
     <div className="space-y-8 p-6">
-      <ProfileHeader user={user} avatarUrl={avatarPreview || avatarUrl} onCameraClick={() => fileInputRef.current?.click()}>
+      <ProfileHeader
+        user={user}
+        avatarUrl={avatarPreview || avatarUrl}
+        onCameraClick={() => fileInputRef.current?.click()}
+        onRemove={handleDeleteAvatar}
+      >
         <input
           ref={fileInputRef}
           type="file"

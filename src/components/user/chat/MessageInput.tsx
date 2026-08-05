@@ -1,4 +1,5 @@
 import { MessageInput as SharedMessageInput } from "../shared/MessageInput"
+import { LIMITS } from "@/lib/limits"
 
 export function MessageInput({
   partnerName,
@@ -29,6 +30,7 @@ export function MessageInput({
       enterToSend={enterToSend}
       editing={editing}
       onCancelEdit={onCancelEdit}
+      maxLength={LIMITS.message.dm}
     />
   )
 }

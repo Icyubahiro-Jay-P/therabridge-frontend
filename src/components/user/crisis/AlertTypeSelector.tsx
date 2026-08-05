@@ -1,11 +1,11 @@
 import { cn } from "@/lib/utils"
 
 const alertTypes = [
-  { value: "immediate_danger", label: "Immediate Danger", color: "bg-red-500", severity: "Critical" },
-  { value: "severe_distress", label: "Severe Distress", color: "bg-orange-500", severity: "High" },
-  { value: "panic_attack", label: "Panic Attack", color: "bg-amber-500", severity: "Medium" },
-  { value: "self_harm_thoughts", label: "Self-Harm Thoughts", color: "bg-red-600", severity: "Critical" },
-  { value: "emergency", label: "Emergency", color: "bg-red-700", severity: "Emergency" },
+  { value: "immediate_danger", label: "Immediate Danger", color: "bg-red-500", hint: "You are in danger right now" },
+  { value: "severe_distress", label: "Severe Distress", color: "bg-orange-500", hint: "Overwhelming, hard to cope" },
+  { value: "panic_attack", label: "Panic Attack", color: "bg-amber-500", hint: "Racing heart or breathlessness" },
+  { value: "self_harm_thoughts", label: "Self-Harm Thoughts", color: "bg-red-600", hint: "Thinking of hurting yourself" },
+  { value: "emergency", label: "Emergency", color: "bg-red-700", hint: "Needs emergency care now" },
 ]
 
 export function AlertTypeSelector({
@@ -32,7 +32,7 @@ export function AlertTypeSelector({
           <span className={cn("flex size-3 shrink-0 rounded-full", t.color)} />
           <div className="min-w-0 flex-1">
             <p className="text-sm font-medium text-gray-900 dark:text-white">{t.label}</p>
-            <p className="text-xs text-gray-400">{t.severity}</p>
+            <p className="text-xs text-gray-400">{t.hint}</p>
           </div>
         </button>
       ))}

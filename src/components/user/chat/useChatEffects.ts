@@ -5,6 +5,13 @@ import { playMessageSound } from "@/lib/sound"
 import { getErrorMessage, loadSetting, CHAT_PAGE_SIZE } from "./utils"
 import type { ChatUser, Conversation, DirectMessage } from "./types"
 
+// Fire-and-forget server-side mark-read. The backend flips `read`/`readAt`,
+// clears the sender's unread notifications, and emits `conversations_updated`
+// to the reader's own room so every tab reconciles.
+function markConversationRead(peerId: string) {
+  void api.put(`/api/chat/conversation/${peerId}/read`).catch(() => {})
+}
+
 export function useChatEffects(state: {
   username?: string
   currentUserId?: string
@@ -12,7 +19,7 @@ export function useChatEffects(state: {
   setShowPreviews: (v: boolean) => void
   setEnterToSend: (v: boolean) => void
   setLoadingList: (v: boolean) => void
-  setConversations: (v: Conversation[]) => void
+  setConversations: (v: Conversation[] | ((prev: Conversation[]) => Conversation[])) => void
   setError: (v: string | null) => void
   setPartner: (v: ChatUser | null) => void
   setMessages: (v: DirectMessage[] | ((prev: DirectMessage[]) => DirectMessage[])) => void
@@ -103,6 +110,14 @@ export function useChatEffects(state: {
           state.setNextCursor(response.data.nextCursor ?? null)
           state.setHasOlderMessages(!!response.data.nextCursor)
           state.setLoadingMessages(false)
+          // Clear the list badge for the opened thread immediately (optimistic),
+          // then let the socket event reconcile it across tabs.
+          state.setConversations((prev) =>
+            prev.map((c) =>
+              c.partner._id === user._id ? { ...c, unread: 0 } : c
+            )
+          )
+          markConversationRead(user._id)
         }
       } catch {
         if (mounted) {
@@ -143,6 +158,11 @@ export function useChatEffects(state: {
           playMessageSound()
         return [...map.values()]
       })
+      // The thread is open, so a freshly delivered incoming message should be
+      // marked read right away (keeps the unread count pinned at 0 while viewing).
+      if (message.sender?._id !== currentUserId && !message.read) {
+        markConversationRead(partnerId)
+      }
     }
 
     function onDmUpdated(message: DirectMessage) {

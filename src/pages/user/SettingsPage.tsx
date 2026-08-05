@@ -5,6 +5,7 @@ import { ChatSettings } from "@/components/user/settings/ChatSettings"
 import { PrivacySettings } from "@/components/user/settings/PrivacySettings"
 import { SettingRow } from "@/components/user/settings/SettingRow"
 import { PrivacyToggles } from "@/components/user/settings/PrivacyToggles"
+import { DataPrivacySection } from "@/components/user/settings/DataPrivacySection"
 import { DeleteAccountModal } from "@/components/user/settings/DeleteAccountModal"
 import { DeviceNotificationsToggle } from "@/components/user/settings/DeviceNotificationsToggle"
 import { playTestSound } from "@/lib/sound"
@@ -56,6 +57,8 @@ export function SettingsPage() {
       />
 
       <PrivacySettings settings={settings} updateSetting={updateSetting} />
+
+      <DataPrivacySection />
 
       <section className="space-y-3">
         <h2 className="text-sm font-semibold tracking-wider text-gray-400 uppercase">

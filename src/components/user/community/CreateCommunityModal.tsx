@@ -6,6 +6,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
 import { api } from "@/lib/api"
+import { LIMITS } from "@/lib/limits"
 import { getErrorMessage } from "./utils"
 import type { Community, CommunityCategory } from "./types"
 
@@ -81,11 +82,11 @@ export function CreateCommunityModal({
             <Input
               id="community-name"
               value={name}
-              onChange={(e) => setName(e.target.value)}
+              onChange={(e) => setName(e.target.value.slice(0, LIMITS.community.name))}
               placeholder="e.g. Calm Corner"
               required
               minLength={2}
-              maxLength={60}
+              maxLength={LIMITS.community.name}
               disabled={loading}
             />
           </div>
@@ -95,9 +96,9 @@ export function CreateCommunityModal({
             <Textarea
               id="community-desc"
               value={description}
-              onChange={(e) => setDescription(e.target.value)}
+              onChange={(e) => setDescription(e.target.value.slice(0, LIMITS.community.description))}
               placeholder="What is this space about?"
-              maxLength={200}
+              maxLength={LIMITS.community.description}
               rows={2}
               disabled={loading}
             />
@@ -125,9 +126,9 @@ export function CreateCommunityModal({
             <Textarea
               id="community-rules"
               value={rules}
-              onChange={(e) => setRules(e.target.value)}
+              onChange={(e) => setRules(e.target.value.slice(0, LIMITS.community.rules))}
               placeholder="Optional guidelines for members..."
-              maxLength={500}
+              maxLength={LIMITS.community.rules}
               rows={2}
               disabled={loading}
             />

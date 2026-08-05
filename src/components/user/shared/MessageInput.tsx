@@ -2,7 +2,6 @@ import { useRef, useEffect } from "react"
 import { CheckCheck, Loader2, PencilLine, Send, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { CharCounter } from "@/components/ui/char-counter"
-import { useMessageAutoFocus } from "@/hooks/useMessageAutoFocus"
 import { cn } from "@/lib/utils"
 import { LIMITS } from "@/lib/limits"
 
@@ -30,8 +29,6 @@ export function MessageInput({
   maxLength?: number
 }) {
   const textareaRef = useRef<HTMLTextAreaElement>(null)
-
-  useMessageAutoFocus(textareaRef, { value, disabled: sending || disabled })
 
   useEffect(() => {
     const el = textareaRef.current

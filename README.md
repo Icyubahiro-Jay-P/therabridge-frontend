@@ -81,6 +81,7 @@ npm run dev      # Starts on http://localhost:5173 (Vite proxies /api → http:/
 | `/profile` | My Profile | Edit personal info |
 | `/notifications` | Notifications | Read/manage alerts |
 | `/crisis` | Crisis Support | Emergency alert system |
+| `/safety-plan` | Safety Plan | Crisis preparedness builder |
 | `/clients` | Clients | Therapist panel |
 | `/users` | Users | Admin panel |
 | `/communities` | Communities | Admin panel |

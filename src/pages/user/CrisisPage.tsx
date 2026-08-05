@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
-import { Loader2, TriangleAlert, AlertCircle } from "lucide-react"
+import { Loader2, TriangleAlert, AlertCircle, ShieldCheck } from "lucide-react"
+import { Link } from "react-router-dom"
 
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
@@ -74,6 +75,26 @@ export function CrisisPage() {
     <div className="mx-auto max-w-2xl space-y-8 p-6">
       <CrisisHeader />
       <EmergencyContacts />
+
+      <div className="flex items-center justify-between gap-3 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 dark:border-emerald-900/50 dark:bg-emerald-950/30">
+        <div className="flex items-center gap-3">
+          <ShieldCheck className="size-5 shrink-0 text-emerald-600 dark:text-emerald-400" />
+          <div>
+            <p className="text-sm font-medium text-emerald-800 dark:text-emerald-300">
+              My safety plan
+            </p>
+            <p className="text-xs text-emerald-700/80 dark:text-emerald-400/80">
+              Build or review the plan shown first when you need help
+            </p>
+          </div>
+        </div>
+        <Link
+          to="/safety-plan"
+          className="shrink-0 rounded-lg bg-emerald-600 px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-emerald-700"
+        >
+          Open
+        </Link>
+      </div>
 
       {sent ? (
         <CrisisAlertSuccess

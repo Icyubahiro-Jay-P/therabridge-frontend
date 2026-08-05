@@ -1,30 +1,32 @@
-import { Camera, UserCircle } from "lucide-react"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Camera } from "lucide-react"
+import AvatarActions from "@/components/user/shared/AvatarActions"
 import type { User } from "@/types/user"
 
 interface Props {
   user: User
   avatarUrl: string
   onCameraClick: () => void
+  onRemove?: () => Promise<void>
   children?: React.ReactNode
 }
 
-export function ProfileHeader({ user, avatarUrl, onCameraClick, children }: Props) {
+export function ProfileHeader({
+  user,
+  avatarUrl,
+  onCameraClick,
+  onRemove,
+  children,
+}: Props) {
   return (
     <div className="flex flex-col items-center gap-5 sm:flex-row sm:items-start">
       <div className="relative shrink-0">
-        <Avatar className="size-24 border-2 border-gray-200 shadow-sm dark:border-gray-700">
-          <AvatarImage src={avatarUrl || undefined} />
-          <AvatarFallback className="bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-400">
-            <UserCircle className="size-14" strokeWidth={1.5} />
-          </AvatarFallback>
-        </Avatar>
-        <button
-          onClick={onCameraClick}
-          className="absolute -bottom-1 -right-1 flex size-7 items-center justify-center rounded-full border-2 border-white bg-emerald-500 text-white shadow hover:bg-emerald-600 dark:border-gray-900"
-        >
-          <Camera className="size-3.5" />
-        </button>
+        <AvatarActions
+          avatarUrl={avatarUrl || ""}
+          name={`${user.firstName} ${user.lastName}`}
+          isOwner
+          onUpdate={onCameraClick}
+          onRemove={onRemove}
+        />
         {children}
       </div>
 

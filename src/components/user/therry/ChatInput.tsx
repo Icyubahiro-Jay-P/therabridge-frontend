@@ -1,7 +1,9 @@
 import { CheckCheck, PencilLine, Send, X } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
+import { CharCounter } from "@/components/ui/char-counter"
 import { cn } from "@/lib/utils"
+import { LIMITS } from "@/lib/limits"
 
 export function ChatInput({
   value,
@@ -18,6 +20,7 @@ export function ChatInput({
   editing?: boolean
   onCancelEdit?: () => void
 }) {
+  const maxLength = LIMITS.message.therry
   return (
     <div className="border-t border-gray-200 px-4 py-3.5 dark:border-gray-700/60">
       {editing && (
@@ -37,9 +40,11 @@ export function ChatInput({
       <form onSubmit={onSubmit} className="flex items-center gap-2">
         <Input
           value={value}
-          onChange={(e) => onChange(e.target.value)}
+          onChange={(e) => onChange(e.target.value.slice(0, maxLength))}
           placeholder={editing ? "Edit your message..." : "Share what's on your mind..."}
           disabled={loading}
+          maxLength={maxLength}
+          aria-label="Message to Therry"
           className={cn(
             "flex-1 rounded-xl",
             editing &&
@@ -58,6 +63,9 @@ export function ChatInput({
           {editing ? <CheckCheck className="size-4" /> : <Send className="size-4" />}
         </Button>
       </form>
+      <div className="mt-1.5 flex justify-end">
+        <CharCounter count={value.length} limit={maxLength} />
+      </div>
     </div>
   )
 }

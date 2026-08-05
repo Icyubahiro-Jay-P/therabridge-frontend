@@ -68,7 +68,7 @@ export function ChatMessage({
       {isUser && onEdit && !isEditing && (
         <button
           onClick={() => onEdit(message)}
-          className="ml-1.5 flex size-6 cursor-pointer shrink-0 items-center justify-center self-center rounded-full bg-black/10 text-gray-500 opacity-0 transition-opacity group-hover:opacity-100 hover:bg-black/20 dark:bg-white/10 dark:text-gray-300 dark:hover:bg-white/20"
+          className="ml-1.5 flex size-6 cursor-pointer shrink-0 items-center justify-center self-center rounded-full bg-black/10 text-gray-500 transition-opacity hover:bg-black/20 dark:bg-white/10 dark:text-gray-300 dark:hover:bg-white/20 hover-hover:opacity-0 hover-hover:group-hover:opacity-100"
           aria-label="Edit message"
         >
           <PencilLine className="size-3" />

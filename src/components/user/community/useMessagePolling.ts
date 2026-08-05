@@ -40,6 +40,8 @@ export function useMessagePolling(state: {
       }
     }
     void load()
+    // Mark the room read when it's opened, matching the DM thread behavior.
+    void api.post(`/api/chat/communities/${communityId}/read`).catch(() => {})
 
     const socket = getSocket()
 

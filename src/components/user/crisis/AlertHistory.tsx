@@ -4,8 +4,15 @@ import { cn } from "@/lib/utils"
 interface CrisisAlert {
   _id: string
   alertType: string
+  severity: string
   status: string
   createdAt: string
+}
+
+const severityStyles: Record<string, string> = {
+  mild: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-400",
+  medium: "bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-400",
+  severe: "bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-400",
 }
 
 export function AlertHistory({
@@ -33,14 +40,24 @@ export function AlertHistory({
                   {new Date(a.createdAt).toLocaleDateString()} · {a.status}
                 </p>
               </div>
-              <span className={cn(
-                "rounded-full px-2 py-0.5 text-[10px] font-medium",
-                a.status === "active" ? "bg-red-100 text-red-700 dark:bg-red-900/40" :
-                a.status === "acknowledged" ? "bg-amber-100 text-amber-700 dark:bg-amber-900/40" :
-                "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40"
-              )}>
-                {a.status}
-              </span>
+              <div className="flex shrink-0 items-center gap-1.5">
+                {a.severity && (
+                  <span className={cn(
+                    "rounded-full px-2 py-0.5 text-[10px] font-medium capitalize",
+                    severityStyles[a.severity] ?? "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400"
+                  )}>
+                    {a.severity}
+                  </span>
+                )}
+                <span className={cn(
+                  "rounded-full px-2 py-0.5 text-[10px] font-medium capitalize",
+                  a.status === "active" ? "bg-red-100 text-red-700 dark:bg-red-900/40" :
+                  a.status === "acknowledged" ? "bg-amber-100 text-amber-700 dark:bg-amber-900/40" :
+                  "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40"
+                )}>
+                  {a.status}
+                </span>
+              </div>
             </div>
           ))}
         </div>

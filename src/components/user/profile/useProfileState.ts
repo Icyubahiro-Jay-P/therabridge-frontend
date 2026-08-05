@@ -98,6 +98,21 @@ export function useProfileState() {
     }
   }
 
+  async function handleDeleteAvatar() {
+    setAvatarMessage("")
+    setAvatarError("")
+    setAvatarUploading(true)
+    try {
+      await updateProfile({ avatar: null })
+      setAvatarPreview("")
+      setAvatarMessage("Profile picture removed")
+    } catch (err) {
+      setAvatarError(err instanceof Error ? err.message : "Remove failed")
+    } finally {
+      setAvatarUploading(false)
+    }
+  }
+
   function updateProfileField(field: keyof ProfileForm, value: string) {
     setProfileForm((prev) => ({ ...prev, [field]: value }))
   }
@@ -159,7 +174,8 @@ export function useProfileState() {
     avatarUploading,
     avatarMessage,
     avatarError,
-    avatarPreview, avatarUrl,
+    avatarPreview,
+    avatarUrl,
     profileForm,
     profileMessage,
     profileError,
@@ -169,6 +185,7 @@ export function useProfileState() {
     handleAvatarChange,
     handleRemoveAvatar,
     handleAvatarSubmit,
+    handleDeleteAvatar,
     updateProfileField,
     updatePasswordField,
     handleProfileSubmit,

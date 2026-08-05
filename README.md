@@ -131,7 +131,7 @@ src/
 ## State Management
 
 - **Global**: `store/auth-store.ts` (Zustand + persist) - user, auth status, initialization.
-- **Chat DMs**: `components/user/chat/useChatState.ts` + `useChatEffects.ts` - conversations, edit/unsend, message sounds. Incoming DMs arrive over Socket.io (`dm_message`, `dm_message_updated`, `dm_message_unsent`); the conversation list refreshes on `conversations_updated`.
+- **Chat DMs**: `components/user/chat/useChatState.ts` + `useChatEffects.ts` - conversations, edit/unsend, message sounds. Opening a thread (or receiving a DM into an open thread) fires `PUT /api/chat/conversation/:userId/read` so unread badges settle; selecting a DM or Therry closes the mobile sidebar drawer. Incoming DMs arrive over Socket.io (`dm_message`, `dm_message_updated`, `dm_message_unsent`); the conversation list refreshes on `conversations_updated`.
 - **Therry**: `components/user/chat/TherryChat.tsx` - loads history from `/api/therry/messages`, sends via `/api/therry/chat`, gates first use behind the AI-disclosure modal, and opens the crisis card when a reply is classified as a crisis.
 - **Community**: `useCommunityState.ts` + `useCommunityEffects.ts` + `useMessagePolling.ts`. The client joins a Socket.io room per community (`join_community` / `leave_community`) and receives `community_message`, `community_message_updated`, `community_message_unsent` events.
 - **Home / Mood / Settings / Profile**: `useHomeState.ts`, `useMoodState.ts`, `useSettingsState.ts`, `useProfileState.ts`.

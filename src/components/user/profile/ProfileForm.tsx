@@ -4,6 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
+import { LIMITS } from "@/lib/limits"
 import type { ProfileForm as ProfileFormType } from "./types"
 
 interface Props {
@@ -35,23 +36,23 @@ export function ProfileForm({ profileForm, isLoading, profileMessage, profileErr
               {profileError}
             </p>
           )}
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="space-y-2">
-              <Label htmlFor="profile-firstName">First name</Label>
-              <Input id="profile-firstName" value={profileForm.firstName} onChange={(e) => onFieldChange("firstName", e.target.value)} required minLength={2} disabled={isLoading} />
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div className="space-y-2">
+                <Label htmlFor="profile-firstName">First name</Label>
+                <Input id="profile-firstName" value={profileForm.firstName} onChange={(e) => onFieldChange("firstName", e.target.value.slice(0, LIMITS.profile.firstName))} required minLength={2} maxLength={LIMITS.profile.firstName} disabled={isLoading} />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="profile-lastName">Last name</Label>
+                <Input id="profile-lastName" value={profileForm.lastName} onChange={(e) => onFieldChange("lastName", e.target.value.slice(0, LIMITS.profile.lastName))} required minLength={2} maxLength={LIMITS.profile.lastName} disabled={isLoading} />
+              </div>
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="profile-lastName">Last name</Label>
-              <Input id="profile-lastName" value={profileForm.lastName} onChange={(e) => onFieldChange("lastName", e.target.value)} required minLength={2} disabled={isLoading} />
-            </div>
-          </div>
           <div className="space-y-2">
             <Label htmlFor="profile-dateOfBirth">Date of birth</Label>
             <Input id="profile-dateOfBirth" type="date" value={profileForm.dateOfBirth} onChange={(e) => onFieldChange("dateOfBirth", e.target.value)} required disabled={isLoading} />
           </div>
           <div className="space-y-2">
             <Label htmlFor="profile-bio">Bio</Label>
-            <Textarea id="profile-bio" value={profileForm.bio} onChange={(e) => onFieldChange("bio", e.target.value)} maxLength={300} rows={3} disabled={isLoading} placeholder="Tell others a little about yourself..." />
+            <Textarea id="profile-bio" value={profileForm.bio} onChange={(e) => onFieldChange("bio", e.target.value.slice(0, LIMITS.profile.bio))} maxLength={LIMITS.profile.bio} rows={3} disabled={isLoading} placeholder="Tell others a little about yourself..." />
           </div>
           <Button type="submit" disabled={isLoading}>
             {isLoading ? (

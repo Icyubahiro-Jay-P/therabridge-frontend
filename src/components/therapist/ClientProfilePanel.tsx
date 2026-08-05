@@ -114,7 +114,22 @@ export function ClientProfilePanel({
             <p className="text-sm text-gray-700 dark:text-gray-300">{user.bio}</p>
           </div>
         )}
+
+        <button
+          onClick={() => setSafetyPlanOpen(true)}
+          className="flex w-full items-center justify-center gap-2 rounded-xl border border-emerald-200 px-4 py-2.5 text-sm font-medium text-emerald-700 transition-colors hover:bg-emerald-50 dark:border-emerald-900/50 dark:text-emerald-400 dark:hover:bg-emerald-950/40"
+        >
+          <ShieldCheck className="size-4" /> View safety plan
+        </button>
       </div>
+
+      {safetyPlanOpen && (
+        <SafetyPlanModal
+          clientId={user.id}
+          clientName={`${user.firstName} ${user.lastName}`}
+          onClose={() => setSafetyPlanOpen(false)}
+        />
+      )}
     </div>
   )
 }

@@ -26,6 +26,7 @@ const typeColors: Record<string, string> = {
   crisis_alert: "bg-red-100 text-red-600 dark:bg-red-900/40 dark:text-red-400",
   community_update: "bg-teal-100 text-teal-600 dark:bg-teal-900/40 dark:text-teal-400",
   streak_milestone: "bg-orange-100 text-orange-600 dark:bg-orange-900/40 dark:text-orange-400",
+  mood_checkin: "bg-pink-100 text-pink-600 dark:bg-pink-900/40 dark:text-pink-400",
 }
 
 interface NotificationData {

@@ -3,6 +3,7 @@ import { Loader2, TriangleAlert, AlertCircle } from "lucide-react"
 
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/utils"
 import { api } from "@/lib/api"
 import { LIMITS } from "@/lib/limits"
 import { CrisisHeader } from "@/components/user/crisis/CrisisHeader"
@@ -14,13 +15,22 @@ import { AlertHistory } from "@/components/user/crisis/AlertHistory"
 interface CrisisAlert {
   _id: string
   alertType: string
+  severity: string
   description: string
   status: string
   createdAt: string
 }
 
+const severityOptions = [
+  { value: "mild", label: "Mild", color: "bg-emerald-500", hint: "Unpleasant but manageable" },
+  { value: "medium", label: "Moderate", color: "bg-amber-500", hint: "Hard to cope with" },
+  { value: "severe", label: "Severe", color: "bg-red-600", hint: "Can't cope or unsafe" },
+]
+
 export function CrisisPage() {
   const [alertType, setAlertType] = useState("")
+  const [severity, setSeverity] = useState("medium")
+  const [requestContact, setRequestContact] = useState(false)
   const [description, setDescription] = useState("")
   const [sending, setSending] = useState(false)
   const [sent, setSent] = useState(false)
@@ -49,7 +59,7 @@ export function CrisisPage() {
     setSending(true)
     setError(null)
     try {
-      const { data } = await api.post("/api/crisis", { alertType, description })
+      const { data } = await api.post("/api/crisis", { alertType, description, severity, requestContact })
       setSent(true)
       setResources(data.resources || [])
       setMyAlerts((prev) => [data.crisis, ...prev])
@@ -68,7 +78,7 @@ export function CrisisPage() {
       {sent ? (
         <CrisisAlertSuccess
           resources={resources}
-          onReset={() => { setSent(false); setAlertType(""); setDescription(""); setResources([]) }}
+          onReset={() => { setSent(false); setAlertType(""); setSeverity("medium"); setRequestContact(false); setDescription(""); setResources([]) }}
         />
       ) : (
         <>
@@ -81,6 +91,45 @@ export function CrisisPage() {
           <div className="rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-700/60 dark:bg-gray-900">
             <h2 className="mb-4 text-lg font-semibold text-gray-900 dark:text-white">Request support</h2>
             <AlertTypeSelector value={alertType} onChange={setAlertType} />
+
+            <div className="mb-4">
+              <p className="mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">How bad is it right now?</p>
+              <div className="grid grid-cols-3 gap-2">
+                {severityOptions.map((s) => (
+                  <button
+                    key={s.value}
+                    type="button"
+                    onClick={() => setSeverity(s.value)}
+                    className={cn(
+                      "flex flex-col items-start gap-1 rounded-xl border px-3 py-2 text-left transition-all",
+                      severity === s.value
+                        ? "border-red-300 bg-red-50 dark:border-red-800 dark:bg-red-950/30"
+                        : "border-gray-200 hover:bg-gray-50 dark:border-gray-700 dark:hover:bg-gray-800"
+                    )}
+                  >
+                    <span className="flex items-center gap-2">
+                      <span className={cn("size-2.5 rounded-full", s.color)} />
+                      <span className="text-sm font-medium text-gray-900 dark:text-white">{s.label}</span>
+                    </span>
+                    <span className="text-[11px] text-gray-400">{s.hint}</span>
+                  </button>
+                ))}
+              </div>
+              <p className="mt-2 text-xs text-gray-400">
+                Severe alerts notify your care team immediately. Moderate alerts notify them non-urgently.
+              </p>
+            </div>
+
+            <label className="mb-4 flex cursor-pointer items-center gap-2 text-sm text-gray-600 dark:text-gray-300">
+              <input
+                type="checkbox"
+                checked={requestContact}
+                onChange={(e) => setRequestContact(e.target.checked)}
+                className="size-4 rounded border-gray-300 text-red-600 focus:ring-red-500 dark:border-gray-600"
+              />
+              I'd like to be contacted about this alert
+            </label>
+
             <Textarea
               value={description}
               onChange={(e) => setDescription(e.target.value.slice(0, LIMITS.crisis.description))}

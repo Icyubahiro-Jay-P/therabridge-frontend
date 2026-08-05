@@ -102,9 +102,25 @@ export function useSignupState() {
     setFieldErrors(validate(form))
   }
 
-  function handleDateSelect(selectedDate: Date | undefined) {
-    setDate(selectedDate)
-    const value = selectedDate ? selectedDate.toISOString().split("T")[0] : ""
+  // Builds the DOB from day/month/year selects. Returns an empty string until
+  // every part is filled and the combination is a real calendar date, so the
+  // existing `validateField`/`handleStepSubmit` flow keeps working unchanged.
+  function handleDateParts(day: string, month: string, year: string) {
+    const d = day ? parseInt(day, 10) : NaN
+    const m = month ? parseInt(month, 10) : NaN
+    const y = year ? parseInt(year, 10) : NaN
+
+    let date: Date | undefined
+    let value = ""
+    if (!isNaN(d) && !isNaN(m) && !isNaN(y) && m >= 1 && m <= 12) {
+      const daysInMonth = new Date(y, m, 0).getDate()
+      if (d >= 1 && d <= daysInMonth && y >= 1900) {
+        date = new Date(y, m - 1, d)
+        value = `${y}-${String(m).padStart(2, "0")}-${String(d).padStart(2, "0")}`
+      }
+    }
+
+    setDate(date)
     const next = { ...form, dateOfBirth: value }
     setForm(next)
     if (touched.dateOfBirth) setFieldErrors(validate(next))
@@ -152,7 +168,7 @@ export function useSignupState() {
     isFirstStep,
     updateField,
     handleBlur,
-    handleDateSelect,
+    handleDateParts,
     handleStepSubmit,
     setShowPassword,
     goToStep,

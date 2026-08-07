@@ -64,7 +64,31 @@ export function useMoodState() {
     }
   }, [])
 
-  useEffect(() => { void loadData() }, [loadData])
+  useEffect(() => {
+    let mounted = true
+    async function initialLoad() {
+      try {
+        const [moodsRes, statsRes] = await Promise.all([
+          api.get<{ data: MoodEntry[] }>("/api/mood?days=30"),
+          api.get<MoodStats>("/api/mood/stats"),
+        ])
+        if (mounted) {
+          setMoods(moodsRes.data.data ?? [])
+          setStats(statsRes.data)
+        }
+      } catch (err) {
+        if (mounted) {
+          const msg = err instanceof Error ? err.message : "Failed to load mood data"
+          setLoadError(msg)
+          setError(msg)
+        }
+      } finally {
+        if (mounted) setLoading(false)
+      }
+    }
+    void initialLoad()
+    return () => { mounted = false }
+  }, [])
 
   async function reload() {
     setLoading(true)

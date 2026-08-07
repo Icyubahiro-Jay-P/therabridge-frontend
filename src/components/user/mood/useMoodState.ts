@@ -48,8 +48,6 @@ export function useMoodState() {
   const [saving, setSaving] = useState(false)
 
   const loadData = useCallback(async () => {
-    setLoading(true)
-    setLoadError(null)
     try {
       const [moodsRes, statsRes] = await Promise.all([
         api.get<{ data: MoodEntry[] }>("/api/mood?days=30"),
@@ -67,6 +65,12 @@ export function useMoodState() {
   }, [])
 
   useEffect(() => { void loadData() }, [loadData])
+
+  async function reload() {
+    setLoading(true)
+    setLoadError(null)
+    await loadData()
+  }
 
   function toggleFactor(f: string) {
     setFactors((prev) => prev.includes(f) ? prev.filter((x) => x !== f) : [...prev, f])
@@ -103,6 +107,6 @@ export function useMoodState() {
     moods, stats, loading, loadError, error, success,
     selectedMood, note, intensity, factors, saving,
     setSelectedMood, setNote, setIntensity, toggleFactor, handleLog,
-    setError, setSuccess, reload: loadData,
+    setError, setSuccess, reload,
   }
 }

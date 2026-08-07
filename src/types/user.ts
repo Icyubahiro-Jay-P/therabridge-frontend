@@ -68,7 +68,6 @@ export interface UpdateProfilePayload {
   lastName?: string
   dateOfBirth?: string
   bio?: string
-  avatar?: string | null
 }
 
 export interface ChangePasswordPayload {

@@ -30,10 +30,29 @@ export function useChatEffects(state: {
   setHasOlderMessages: (v: boolean) => void
   setLoadingOlder: (v: boolean) => void
 }) {
+  const {
+    username,
+    currentUserId,
+    partner,
+    setShowPreviews,
+    setEnterToSend,
+    setLoadingList,
+    setConversations,
+    setError,
+    setPartner,
+    setMessages,
+    setLoadingMessages,
+    setEditingId,
+    setEditingContent,
+    setNextCursor,
+    setHasOlderMessages,
+    setLoadingOlder,
+  } = state
+
   useEffect(() => {
     function reload() {
-      state.setShowPreviews(loadSetting("messagePreviews", true))
-      state.setEnterToSend(loadSetting("enterToSend", true))
+      setShowPreviews(loadSetting("messagePreviews", true))
+      setEnterToSend(loadSetting("enterToSend", true))
     }
     window.addEventListener("storage", reload)
     const interval = setInterval(reload, 2000)
@@ -41,58 +60,58 @@ export function useChatEffects(state: {
       window.removeEventListener("storage", reload)
       clearInterval(interval)
     }
-  }, [])
+  }, [setShowPreviews, setEnterToSend])
 
   useEffect(() => {
     async function load() {
-      state.setLoadingList(true)
+      setLoadingList(true)
       try {
         const { data } = await api.get<{ data: Conversation[] }>(
           "/api/chat/conversations"
         )
-        state.setConversations(Array.isArray(data.data) ? data.data : [])
+        setConversations(Array.isArray(data.data) ? data.data : [])
       } catch (err) {
-        state.setError(getErrorMessage(err))
+        setError(getErrorMessage(err))
       } finally {
-        state.setLoadingList(false)
+        setLoadingList(false)
       }
     }
     void load()
-  }, [])
+  }, [setLoadingList, setConversations, setError])
 
   useEffect(() => {
-    if (!state.username) {
-      state.setPartner(null)
-      state.setMessages([])
-      state.setNextCursor(null)
-      state.setHasOlderMessages(false)
-      state.setLoadingOlder(false)
-      state.setError(null)
-      state.setEditingId(null)
-      state.setEditingContent("")
+    if (!username) {
+      setPartner(null)
+      setMessages([])
+      setNextCursor(null)
+      setHasOlderMessages(false)
+      setLoadingOlder(false)
+      setError(null)
+      setEditingId(null)
+      setEditingContent("")
       return
     }
-    if (state.username === "therry") {
-      state.setPartner(null)
-      state.setMessages([])
-      state.setNextCursor(null)
-      state.setHasOlderMessages(false)
-      state.setLoadingOlder(false)
-      state.setError(null)
-      state.setEditingId(null)
-      state.setEditingContent("")
+    if (username === "therry") {
+      setPartner(null)
+      setMessages([])
+      setNextCursor(null)
+      setHasOlderMessages(false)
+      setLoadingOlder(false)
+      setError(null)
+      setEditingId(null)
+      setEditingContent("")
       return
     }
     let mounted = true
     async function resolveAndFetch() {
-      state.setLoadingMessages(true)
-      state.setMessages([])
-      state.setNextCursor(null)
-      state.setHasOlderMessages(false)
-      state.setLoadingOlder(false)
-      state.setError(null)
+      setLoadingMessages(true)
+      setMessages([])
+      setNextCursor(null)
+      setHasOlderMessages(false)
+      setLoadingOlder(false)
+      setError(null)
       try {
-        const { data } = await api.get(`/api/users/${state.username}`)
+        const { data } = await api.get(`/api/users/${username}`)
         const user: ChatUser = {
           _id: data._id ?? data.id,
           username: data.username,
@@ -101,18 +120,18 @@ export function useChatEffects(state: {
           avatar: data.avatar,
         }
         if (!mounted) return
-        state.setPartner(user)
+        setPartner(user)
         const response = await api.get<{ data: DirectMessage[]; nextCursor: string | null }>(
           `/api/chat/conversation/${user._id}?limit=${CHAT_PAGE_SIZE}`
         )
         if (mounted) {
-          state.setMessages(Array.isArray(response.data.data) ? response.data.data : [])
-          state.setNextCursor(response.data.nextCursor ?? null)
-          state.setHasOlderMessages(!!response.data.nextCursor)
-          state.setLoadingMessages(false)
+          setMessages(Array.isArray(response.data.data) ? response.data.data : [])
+          setNextCursor(response.data.nextCursor ?? null)
+          setHasOlderMessages(!!response.data.nextCursor)
+          setLoadingMessages(false)
           // Clear the list badge for the opened thread immediately (optimistic),
           // then let the socket event reconcile it across tabs.
-          state.setConversations((prev) =>
+          setConversations((prev) =>
             prev.map((c) =>
               c.partner._id === user._id ? { ...c, unread: 0 } : c
             )
@@ -121,25 +140,36 @@ export function useChatEffects(state: {
         }
       } catch {
         if (mounted) {
-          state.setPartner(null)
-          state.setError(`User "${state.username}" not found`)
+          setPartner(null)
+          setError(`User "${username}" not found`)
         }
       } finally {
-        if (mounted) state.setLoadingMessages(false)
+        if (mounted) setLoadingMessages(false)
       }
     }
     void resolveAndFetch()
     return () => {
       mounted = false
     }
-  }, [state.username])
+  }, [
+    username,
+    setPartner,
+    setMessages,
+    setNextCursor,
+    setHasOlderMessages,
+    setLoadingOlder,
+    setError,
+    setEditingId,
+    setEditingContent,
+    setLoadingMessages,
+    setConversations,
+  ])
 
   useEffect(() => {
-    if (!state.partner) return
+    if (!partner) return
     const socket = getSocket()
     if (!socket) return
-    const partnerId = state.partner._id
-    const currentUserId = state.currentUserId
+    const partnerId = partner._id
 
     function isForThisConversation(message: DirectMessage) {
       return (
@@ -150,7 +180,7 @@ export function useChatEffects(state: {
 
     function onDmMessage(message: DirectMessage) {
       if (!isForThisConversation(message)) return
-      state.setMessages((prev) => {
+      setMessages((prev) => {
         const map = new Map(prev.map((m) => [m._id, m]))
         const isNew = !map.has(message._id)
         map.set(message._id, message)
@@ -167,13 +197,13 @@ export function useChatEffects(state: {
 
     function onDmUpdated(message: DirectMessage) {
       if (!isForThisConversation(message)) return
-      state.setMessages((prev) =>
+      setMessages((prev) =>
         prev.map((m) => (m._id === message._id ? message : m))
       )
     }
 
     function onDmUnsent({ messageId }: { messageId: string }) {
-      state.setMessages((prev) =>
+      setMessages((prev) =>
         prev.map((m) =>
           m._id === messageId
             ? { ...m, unsent: true, content: "Message unsent" }
@@ -186,7 +216,7 @@ export function useChatEffects(state: {
       void api
         .get<{ data: Conversation[] }>("/api/chat/conversations")
         .then(({ data }) => {
-          state.setConversations(Array.isArray(data.data) ? data.data : [])
+          setConversations(Array.isArray(data.data) ? data.data : [])
         })
         .catch(() => {})
     }
@@ -201,5 +231,5 @@ export function useChatEffects(state: {
       socket.off("dm_message_unsent", onDmUnsent)
       socket.off("conversations_updated", onConversationsUpdated)
     }
-  }, [state.partner, state.currentUserId, state.setMessages, state.setConversations])
+  }, [partner, currentUserId, setMessages, setConversations])
 }

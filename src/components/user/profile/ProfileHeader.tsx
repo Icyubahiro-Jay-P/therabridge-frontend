@@ -1,4 +1,3 @@
-import { Camera } from "lucide-react"
 import AvatarActions from "@/components/user/shared/AvatarActions"
 import type { User } from "@/types/user"
 

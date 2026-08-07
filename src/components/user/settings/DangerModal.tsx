@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { Loader2, Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
@@ -17,7 +17,15 @@ interface DangerModalProps {
 export function DangerModal({ open, title, description, confirmLabel, confirmInputLabel, requiredInput, loading, onConfirm, onCancel }: DangerModalProps) {
   const [value, setValue] = useState("")
   const [error, setError] = useState("")
-  useEffect(() => { if (open) { setValue(""); setError("") } }, [open])
+  const [prevOpen, setPrevOpen] = useState(open)
+
+  if (prevOpen !== open) {
+    setPrevOpen(open)
+    if (open) {
+      setValue("")
+      setError("")
+    }
+  }
   if (!open) return null
   function handleConfirm() {
     if (value !== requiredInput) {

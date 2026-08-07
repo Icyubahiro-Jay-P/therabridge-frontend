@@ -30,7 +30,13 @@ export function Tooltip({ content, children, side = "top", delayDuration = 200 }
   )
 }
 
-export function TooltipIcon({ icon: Icon, tooltip, ...props }: any) {
+interface TooltipIconProps {
+  icon: React.ComponentType<{ className?: string }>
+  tooltip: string | ReactNode
+  [key: string]: unknown
+}
+
+export function TooltipIcon({ icon: Icon, tooltip, ...props }: TooltipIconProps) {
   return (
     <Tooltip content={tooltip}>
       <button type="button" {...props}>

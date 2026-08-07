@@ -1,5 +1,4 @@
 import { io, type Socket } from "socket.io-client"
-import { getAuthToken } from "@/lib/api"
 
 const SOCKET_URL =
   import.meta.env.VITE_SOCKET_URL || window.location.origin
@@ -7,8 +6,9 @@ const SOCKET_URL =
 let socket: Socket | null = null
 
 function createSocket(): Socket {
+  // Auth comes from the httpOnly cookie the browser attaches via
+  // withCredentials; no token is passed or stored client-side.
   const s = io(SOCKET_URL, {
-    auth: (cb) => cb({ token: getAuthToken() }),
     withCredentials: true,
     transports: ["websocket", "polling"],
     reconnection: true,

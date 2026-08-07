@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react"
+import { useRef, useState } from "react"
 import { useAuthStore } from "@/store/auth-store"
 import { toDateInputValue, type ProfileForm } from "./types"
 
@@ -22,6 +22,18 @@ export function useProfileState() {
     dateOfBirth: "",
     bio: "",
   })
+  const [prevUser, setPrevUser] = useState<string | undefined>(user?._id)
+
+  if (user && prevUser !== user._id) {
+    setPrevUser(user._id)
+    setProfileForm({
+      firstName: user.firstName,
+      lastName: user.lastName,
+      dateOfBirth: toDateInputValue(user.dateOfBirth),
+      bio: user.bio ?? "",
+    })
+    setAvatarPreview(user.avatar ?? "")
+  }
   const [profileMessage, setProfileMessage] = useState("")
   const [profileError, setProfileError] = useState("")
   const [passwordForm, setPasswordForm] = useState({
@@ -40,17 +52,6 @@ export function useProfileState() {
       ? user.avatar
       : `${API_BASE_URL}${user.avatar}`
     : ""
-
-  useEffect(() => {
-    if (!user) return
-    setProfileForm({
-      firstName: user.firstName,
-      lastName: user.lastName,
-      dateOfBirth: toDateInputValue(user.dateOfBirth),
-      bio: user.bio ?? "",
-    })
-    setAvatarPreview(user.avatar ?? "")
-  }, [user])
 
   function handleAvatarChange(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0]

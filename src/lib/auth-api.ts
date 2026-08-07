@@ -115,6 +115,11 @@ export async function uploadAvatar(file: File): Promise<User> {
   return normalizeUser(data.user)
 }
 
+export async function deleteAvatar(): Promise<User> {
+  const { data } = await api.delete<{ user: RawUser }>("/api/users/avatar")
+  return normalizeUser(data.user)
+}
+
 export async function changePassword(
   payload: ChangePasswordPayload
 ): Promise<void> {

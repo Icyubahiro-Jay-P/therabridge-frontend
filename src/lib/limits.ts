@@ -23,7 +23,6 @@ export const LIMITS = {
     firstName: 50,
     lastName: 50,
     bio: 300,
-    avatar: 500,
   },
   community: {
     name: 60,

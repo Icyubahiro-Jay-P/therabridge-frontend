@@ -12,6 +12,12 @@ export function useLayoutState() {
   const [notificationCount, setNotificationCount] = useState(0)
   const [logoutModalOpen, setLogoutModalOpen] = useState(false)
   const [loggingOut, setLoggingOut] = useState(false)
+  const [prevSidebarMode, setPrevSidebarMode] = useState<SidebarMode>(sidebarMode)
+
+  if (prevSidebarMode !== sidebarMode) {
+    setPrevSidebarMode(sidebarMode)
+    if (sidebarMode !== "hidden") setMobileOpen(false)
+  }
 
   const role = user?.role ?? "user"
   const isMinimized = sidebarMode === "minimized"
@@ -31,10 +37,6 @@ export function useLayoutState() {
   }, [])
 
   useEffect(() => {
-    if (sidebarMode !== "hidden") setMobileOpen(false)
-  }, [sidebarMode])
-
-  useEffect(() => {
     let mounted = true
 
     async function refresh() {
@@ -50,7 +52,9 @@ export function useLayoutState() {
         const total = convs.reduce((sum, c) => sum + (c.unread ?? 0), 0)
         setUnreadCount(total)
         setNotificationCount(notifRes.data.count ?? 0)
-      } catch {}
+      } catch {
+        // Keep the previous badge counts on a transient failure.
+      }
     }
     void refresh()
 
@@ -86,6 +90,7 @@ export function useLayoutState() {
     try {
       await logout()
     } catch {
+      // The store already surfaces the error message.
     } finally {
       setLoggingOut(false)
       setLogoutModalOpen(false)

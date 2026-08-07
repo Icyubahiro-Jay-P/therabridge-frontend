@@ -150,7 +150,7 @@ function AuthInitializer({ children }: { children: React.ReactNode }) {
     if (!isInitialized) {
       initialize()
     }
-  }, [])
+  }, [initialize, isInitialized])
 
   if (!isInitialized) {
     return (

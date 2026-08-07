@@ -10,6 +10,7 @@ import {
   updateProfile as updateProfileRequest,
   changePassword as changePasswordRequest,
   uploadAvatar as uploadAvatarRequest,
+  deleteAvatar as deleteAvatarRequest,
   updateChatSettings as updateChatSettingsRequest,
   updatePrivacy as updatePrivacyRequest,
 } from "@/lib/auth-api"
@@ -42,6 +43,7 @@ interface AuthState {
   updateProfile: (payload: UpdateProfilePayload) => Promise<void>
   changePassword: (payload: ChangePasswordPayload) => Promise<string>
   uploadAvatar: (file: File) => Promise<void>
+  deleteAvatar: () => Promise<void>
   updatePrivacy: (settings: Partial<PrivacySettings>) => Promise<void>
   updateChatSettings: (settings: Partial<ChatSettings>) => Promise<void>
 }
@@ -173,6 +175,20 @@ export const useAuthStore = create<AuthState>()(
           set({ user })
         } catch (error) {
           const message = getErrorMessage(error, "Upload failed")
+          set({ error: message })
+          rethrow(message, error)
+        } finally {
+          set({ isLoading: false })
+        }
+      },
+
+      deleteAvatar: async () => {
+        set({ isLoading: true, error: null })
+        try {
+          const user = await deleteAvatarRequest()
+          set({ user })
+        } catch (error) {
+          const message = getErrorMessage(error, "Remove failed")
           set({ error: message })
           rethrow(message, error)
         } finally {

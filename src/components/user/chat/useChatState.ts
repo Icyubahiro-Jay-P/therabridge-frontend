@@ -16,6 +16,12 @@ export function useChatState() {
   const [loadingSuggestions, setLoadingSuggestions] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
   const [searchResults, setSearchResults] = useState<ChatUser[]>([])
+  const [prevSearchQuery, setPrevSearchQuery] = useState(searchQuery)
+
+  if (prevSearchQuery !== searchQuery) {
+    setPrevSearchQuery(searchQuery)
+    if (searchQuery.length < 3) setSearchResults([])
+  }
   const [searching, setSearching] = useState(false)
   const [partner, setPartner] = useState<ChatUser | null>(null)
   const [messages, setMessages] = useState<DirectMessage[]>([])
@@ -60,7 +66,7 @@ export function useChatState() {
     }
   }, [loadingList])
   useEffect(() => {
-    if (searchQuery.length < 3) { setSearchResults([]); return }
+    if (searchQuery.length < 3) return
     const timeout = setTimeout(async () => {
       setSearching(true)
       try {

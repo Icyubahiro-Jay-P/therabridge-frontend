@@ -100,6 +100,7 @@ function DefaultErrorFallback({
 /**
  * Higher-order component to wrap a component with error boundary
  */
+// eslint-disable-next-line react-refresh/only-export-components
 export function withErrorBoundary<P extends object>(
   Component: React.ComponentType<P>,
   fallback?: (error: Error, retry: () => void) => ReactNode

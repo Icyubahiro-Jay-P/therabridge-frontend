@@ -53,6 +53,10 @@ function getErrorMessage(error: unknown, fallback: string): string {
   return fallback
 }
 
+function rethrow(message: string, cause: unknown): never {
+  throw new Error(message, { cause })
+}
+
 export const useAuthStore = create<AuthState>()(
   persist(
     (set) => ({
@@ -95,7 +99,7 @@ export const useAuthStore = create<AuthState>()(
         } catch (error) {
           const message = getErrorMessage(error, "Login failed")
           set({ error: message })
-          throw new Error(message)
+          rethrow(message, error)
         } finally {
           set({ isLoading: false })
         }
@@ -112,7 +116,7 @@ export const useAuthStore = create<AuthState>()(
         } catch (error) {
           const message = getErrorMessage(error, "Registration failed")
           set({ error: message })
-          throw new Error(message)
+          rethrow(message, error)
         } finally {
           set({ isLoading: false })
         }
@@ -128,7 +132,7 @@ export const useAuthStore = create<AuthState>()(
         } catch (error) {
           const message = getErrorMessage(error, "Logout failed")
           set({ error: message })
-          throw new Error(message)
+          rethrow(message, error)
         } finally {
           set({ isLoading: false })
         }
@@ -142,7 +146,7 @@ export const useAuthStore = create<AuthState>()(
         } catch (error) {
           const message = getErrorMessage(error, "Update failed")
           set({ error: message })
-          throw new Error(message)
+          rethrow(message, error)
         } finally {
           set({ isLoading: false })
         }
@@ -156,7 +160,7 @@ export const useAuthStore = create<AuthState>()(
         } catch (error) {
           const message = getErrorMessage(error, "Password change failed")
           set({ error: message })
-          throw new Error(message)
+          rethrow(message, error)
         } finally {
           set({ isLoading: false })
         }
@@ -170,7 +174,7 @@ export const useAuthStore = create<AuthState>()(
         } catch (error) {
           const message = getErrorMessage(error, "Upload failed")
           set({ error: message })
-          throw new Error(message)
+          rethrow(message, error)
         } finally {
           set({ isLoading: false })
         }
@@ -186,7 +190,7 @@ export const useAuthStore = create<AuthState>()(
         } catch (error) {
           const message = getErrorMessage(error, "Update failed")
           set({ error: message })
-          throw new Error(message)
+          rethrow(message, error)
         } finally {
           set({ isLoading: false })
         }
@@ -202,7 +206,7 @@ export const useAuthStore = create<AuthState>()(
         } catch (error) {
           const message = getErrorMessage(error, "Update failed")
           set({ error: message })
-          throw new Error(message)
+          rethrow(message, error)
         } finally {
           set({ isLoading: false })
         }

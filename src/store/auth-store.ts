@@ -13,7 +13,7 @@ import {
   updateChatSettings as updateChatSettingsRequest,
   updatePrivacy as updatePrivacyRequest,
 } from "@/lib/auth-api"
-import { AuthError, NetworkError, setAuthHandlers, setAuthToken } from "@/lib/api"
+import { AuthError, NetworkError, setAuthHandlers } from "@/lib/api"
 import { connectSocket, disconnectSocket } from "@/lib/socket"
 import {
   syncPushSubscription,
@@ -31,7 +31,6 @@ import type {
 
 interface AuthState {
   user: User | null
-  token: string | null
   isLoading: boolean
   isInitialized: boolean
   error: string | null
@@ -58,7 +57,6 @@ export const useAuthStore = create<AuthState>()(
   persist(
     (set) => ({
       user: null,
-      token: null,
       isLoading: false,
       isInitialized: false,
       error: null,
@@ -76,11 +74,10 @@ export const useAuthStore = create<AuthState>()(
             void syncPushSubscription()
           } else {
             set({ user: null })
-            set({ token: null })
             disconnectSocket()
           }
         } catch {
-          set({ user: null, token: null })
+          set({ user: null })
           disconnectSocket()
         } finally {
           set({ isInitialized: true })
@@ -90,9 +87,8 @@ export const useAuthStore = create<AuthState>()(
       login: async (payload) => {
         set({ isLoading: true, error: null })
         try {
-          const { user, token, message } = await loginRequest(payload)
-          set({ user, token })
-          setAuthToken(token)
+          const { user, message } = await loginRequest(payload)
+          set({ user })
           connectSocket()
           void syncPushSubscription()
           return message
@@ -108,9 +104,8 @@ export const useAuthStore = create<AuthState>()(
       register: async (payload) => {
         set({ isLoading: true, error: null })
         try {
-          const { user, token, message } = await registerRequest(payload)
-          set({ user, token })
-          setAuthToken(token)
+          const { user, message } = await registerRequest(payload)
+          set({ user })
           connectSocket()
           void syncPushSubscription()
           return message
@@ -128,8 +123,7 @@ export const useAuthStore = create<AuthState>()(
         try {
           await logoutRequest()
           void unregisterServiceWorker()
-          set({ user: null, token: null })
-          setAuthToken(null)
+          set({ user: null })
           disconnectSocket()
         } catch (error) {
           const message = getErrorMessage(error, "Logout failed")
@@ -216,19 +210,16 @@ export const useAuthStore = create<AuthState>()(
     }),
     {
       name: "auth-storage",
-      partialize: (state) => ({ user: state.user, token: state.token }),
+      partialize: (state) => ({ user: state.user }),
     }
   )
 )
 
-// Keep the persisted token in sync when the api layer silently refreshes it,
-// and force a clean logout when a session genuinely expires.
+// Sessions live in httpOnly cookies, so there is nothing token-related to keep
+// in sync here. When the refresh cookie expires, force a clean logout.
 setAuthHandlers({
-  onTokenRefreshed: (token) => {
-    useAuthStore.setState({ token })
-  },
   onAuthExpired: () => {
-    useAuthStore.setState({ user: null, token: null })
+    useAuthStore.setState({ user: null })
     disconnectSocket()
     void unregisterServiceWorker()
   },

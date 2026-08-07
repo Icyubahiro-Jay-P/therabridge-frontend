@@ -44,7 +44,13 @@ export function ExerciseModal({
   const [logId, setLogId] = useState<string | null>(null)
   const [saving, setSaving] = useState(false)
   const [sessionError, setSessionError] = useState("")
-  const startTimeRef = useRef<number>(Date.now())
+  const startTimeRef = useRef<number | null>(null)
+  const [prevStep, setPrevStep] = useState(step)
+
+  if (prevStep !== step) {
+    setPrevStep(step)
+    setTimeLeft(exercise.steps[step]?.duration ?? null)
+  }
 
   const currentStep = exercise.steps[step]
   const TypeIcon = typeIcons[exercise.type] ?? Sparkles
@@ -65,22 +71,16 @@ export function ExerciseModal({
   }, [exercise._id])
 
   useEffect(() => {
-    if (!currentStep?.duration) {
-      setTimeLeft(null)
-      return
-    }
-    setTimeLeft(currentStep.duration)
     const interval = setInterval(() => {
       setTimeLeft((t) => {
         if (t === null || t <= 1) {
-          clearInterval(interval)
-          return 0
+          return t === null ? null : 0
         }
         return t - 1
       })
     }, 1000)
     return () => clearInterval(interval)
-  }, [step, currentStep?.duration])
+  }, [])
 
   async function advance() {
     if (!stepReady) return
@@ -90,7 +90,7 @@ export function ExerciseModal({
     } else {
       setSaving(true)
       try {
-        const timeSpent = Math.floor((Date.now() - startTimeRef.current) / 1000)
+        const timeSpent = Math.floor((Date.now() - (startTimeRef.current ?? Date.now())) / 1000)
         await api.post(`/api/exercises/${exercise._id}/complete`, {
           logId,
           timeSpent,

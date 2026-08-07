@@ -8,6 +8,7 @@ export function useProfileState() {
   const updateProfile = useAuthStore((state) => state.updateProfile)
   const changePassword = useAuthStore((state) => state.changePassword)
   const uploadAvatar = useAuthStore((state) => state.uploadAvatar)
+  const deleteAvatar = useAuthStore((state) => state.deleteAvatar)
 
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [avatarPreview, setAvatarPreview] = useState<string>("")
@@ -104,7 +105,7 @@ export function useProfileState() {
     setAvatarError("")
     setAvatarUploading(true)
     try {
-      await updateProfile({ avatar: null })
+      await deleteAvatar()
       setAvatarPreview("")
       setAvatarMessage("Profile picture removed")
     } catch (err) {

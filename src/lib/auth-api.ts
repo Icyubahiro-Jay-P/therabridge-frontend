@@ -60,28 +60,25 @@ function normalizeUser(raw: RawUser): User {
 
 type AuthResponse = {
   message: string
-  token: string
   user: RawUser
 }
 
 export async function register(
   payload: RegisterPayload
-): Promise<{ user: User; token: string; message: string }> {
+): Promise<{ user: User; message: string }> {
   const { data } = await api.post<AuthResponse>("/api/users/register", payload)
   return {
     user: normalizeUser(data.user),
-    token: data.token,
     message: data.message,
   }
 }
 
 export async function login(
   payload: LoginPayload
-): Promise<{ user: User; token: string; message: string }> {
+): Promise<{ user: User; message: string }> {
   const { data } = await api.post<AuthResponse>("/api/users/login", payload)
   return {
     user: normalizeUser(data.user),
-    token: data.token,
     message: data.message,
   }
 }

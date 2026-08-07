@@ -12,18 +12,19 @@ export function useMessagePolling(state: {
   setLoadingMessages: (v: boolean) => void
   setError: (v: string | null) => void
 }) {
+  const { active, currentUserId, setMessages, setLoadingMessages, setError } = state
+
   useEffect(() => {
-    if (!state.active) {
-      state.setMessages([])
+    if (!active) {
+      setMessages([])
       return
     }
 
-    const communityId = state.active._id
-    const currentUserId = state.currentUserId
+    const communityId = active._id
     let mounted = true
 
-    state.setLoadingMessages(true)
-    state.setMessages([])
+    setLoadingMessages(true)
+    setMessages([])
 
     async function load() {
       try {
@@ -31,12 +32,12 @@ export function useMessagePolling(state: {
           `/api/chat/communities/${communityId}`
         )
         if (!mounted) return
-        state.setMessages(Array.isArray(data.messages) ? data.messages : [])
+        setMessages(Array.isArray(data.messages) ? data.messages : [])
       } catch (err) {
         if (!mounted) return
-        state.setError(getErrorMessage(err))
+        setError(getErrorMessage(err))
       } finally {
-        if (mounted) state.setLoadingMessages(false)
+        if (mounted) setLoadingMessages(false)
       }
     }
     void load()
@@ -58,7 +59,7 @@ export function useMessagePolling(state: {
       message: CommunityMessage
     }) {
       if (!payload || payload.communityId !== communityId) return
-      state.setMessages((prev) => {
+      setMessages((prev) => {
         const map = new Map(prev.map((m) => [m._id, m]))
         const isNew = !map.has(payload.message._id)
         map.set(payload.message._id, payload.message)
@@ -76,7 +77,7 @@ export function useMessagePolling(state: {
       message: CommunityMessage
     }) {
       if (!payload || payload.communityId !== communityId) return
-      state.setMessages((prev) =>
+      setMessages((prev) =>
         prev.map((m) =>
           m._id === payload.message._id ? payload.message : m
         )
@@ -88,7 +89,7 @@ export function useMessagePolling(state: {
       message: CommunityMessage
     }) {
       if (!payload || payload.communityId !== communityId) return
-      state.setMessages((prev) =>
+      setMessages((prev) =>
         prev.map((m) =>
           m._id === payload.message._id ? payload.message : m
         )
@@ -113,5 +114,5 @@ export function useMessagePolling(state: {
         socket.off("community_message_unsent", onCommunityMessageUnsent)
       }
     }
-  }, [state.active, state.currentUserId, state.setMessages])
+  }, [active, currentUserId, setMessages, setLoadingMessages, setError])
 }

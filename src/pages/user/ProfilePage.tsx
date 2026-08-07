@@ -27,6 +27,7 @@ export function ProfilePage() {
     handleAvatarChange,
     handleRemoveAvatar,
     handleAvatarSubmit,
+    handleDeleteAvatar,
     updateProfileField,
     updatePasswordField,
     handleProfileSubmit,

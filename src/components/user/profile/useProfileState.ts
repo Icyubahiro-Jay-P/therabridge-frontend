@@ -22,10 +22,10 @@ export function useProfileState() {
     dateOfBirth: "",
     bio: "",
   })
-  const [prevUser, setPrevUser] = useState<string | undefined>(user?._id)
+  const [prevUser, setPrevUser] = useState<string | undefined>(user?.id)
 
-  if (user && prevUser !== user._id) {
-    setPrevUser(user._id)
+  if (user && prevUser !== user.id) {
+    setPrevUser(user.id)
     setProfileForm({
       firstName: user.firstName,
       lastName: user.lastName,

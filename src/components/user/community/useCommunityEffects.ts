@@ -14,57 +14,58 @@ export function useCommunityEffects(state: {
   active: Community | null
 }) {
   const navigate = useNavigate()
+  const { inviteKey, communities, active, setCommunities, setLoading, setError, setActive } = state
 
   useEffect(() => {
     async function load() {
-      state.setLoading(true)
+      setLoading(true)
       try {
         const { data } = await api.get<Community[]>("/api/chat/communities")
-        state.setCommunities(data)
+        setCommunities(data)
       } catch (err) {
-        state.setError(getErrorMessage(err))
+        setError(getErrorMessage(err))
       } finally {
-        state.setLoading(false)
+        setLoading(false)
       }
     }
     void load()
-  }, [])
+  }, [setCommunities, setLoading, setError])
 
   useEffect(() => {
-    if (!state.inviteKey) {
-      state.setActive(null)
+    if (!inviteKey) {
+      setActive(null)
       return
     }
-    const found = state.communities.find(
-      (c) => c.inviteKey === state.inviteKey!.toUpperCase()
+    const found = communities.find(
+      (c) => c.inviteKey === inviteKey!.toUpperCase()
     )
     if (found) {
-      state.setActive(found)
+      setActive(found)
     } else {
       let mounted = true
       async function fetchByKey() {
         try {
           const { data } = await api.get<Community>(
-            `/api/chat/communities/by-key/${state.inviteKey}`
+            `/api/chat/communities/by-key/${inviteKey}`
           )
           if (mounted) {
-            state.setActive(data)
-            state.setCommunities((prev) =>
+            setActive(data)
+            setCommunities((prev) =>
               prev.find((c) => c._id === data._id) ? prev : [...prev, data]
             )
           }
         } catch {
-          if (mounted) state.setError("Community not found.")
+          if (mounted) setError("Community not found.")
         }
       }
       void fetchByKey()
       return () => { mounted = false }
     }
-  }, [state.inviteKey, state.communities])
+  }, [inviteKey, communities, setActive, setCommunities, setError])
 
   useEffect(() => {
-    if (state.active && state.inviteKey !== state.active.inviteKey) {
-      navigate(`/community/${state.active.inviteKey}`, { replace: true })
+    if (active && inviteKey !== active.inviteKey) {
+      navigate(`/community/${active.inviteKey}`, { replace: true })
     }
-  }, [state.active, state.inviteKey, navigate])
+  }, [active, inviteKey, navigate])
 }

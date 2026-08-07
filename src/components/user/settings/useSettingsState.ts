@@ -39,7 +39,9 @@ function loadSettings(): Settings {
       }
       return { ...DEFAULT_SETTINGS, ...parsed }
     }
-  } catch {}
+  } catch {
+    // Fall back to defaults if stored settings are corrupt.
+  }
   return DEFAULT_SETTINGS
 }
 

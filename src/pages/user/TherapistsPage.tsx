@@ -38,7 +38,7 @@ function TherapistCardSkeleton() {
 
 export function TherapistsPage() {
   const [searchQuery, setSearchQuery] = useState("")
-  const { data, isLoading, isError, error } = useGetTherapists(1, 50)
+  const { data, isLoading, isError, error } = useGetTherapists<Therapist>(1, 50)
 
   const therapists: Therapist[] = data?.data ?? []
   const filtered = therapists.filter((t) => {

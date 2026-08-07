@@ -26,7 +26,9 @@ export function AdminDashboardPage() {
           activeCrisis: crisisRes.data.length || 0,
           totalNotifications: 0,
         })
-      } catch {} finally {
+      } catch {
+        // Keep previous stats on a transient failure.
+      } finally {
         setLoading(false)
       }
     }

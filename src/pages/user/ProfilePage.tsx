@@ -55,6 +55,7 @@ export function ProfilePage() {
 
       <AvatarUpload
         avatarFile={avatarFile}
+        avatarPreview={avatarPreview}
         avatarUploading={avatarUploading}
         avatarMessage={avatarMessage}
         avatarError={avatarError}

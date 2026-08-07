@@ -9,12 +9,21 @@ interface PaginatedResponse<T> {
   limit: number
 }
 
-function paginatedQueryKey(base: string[], params: Record<string, any>) {
+type QueryParams = Record<string, string | number | boolean | undefined>
+
+function paginatedQueryKey(base: string[], params: QueryParams) {
   return [...base, params]
 }
 
+export interface MoodPayload {
+  mood?: number
+  moodScore?: number
+  note?: string
+  factors?: string[]
+}
+
 // User queries
-export function useGetUsers(page = 1, limit = 20, filters = {}) {
+export function useGetUsers<T = unknown>(page = 1, limit = 20, filters: QueryParams = {}) {
   return useQuery({
     queryKey: paginatedQueryKey(["users"], { page, limit, ...filters }),
     queryFn: async () => {
@@ -23,7 +32,7 @@ export function useGetUsers(page = 1, limit = 20, filters = {}) {
         limit: limit.toString(),
         ...filters,
       })
-      const { data } = await api.get<PaginatedResponse<any>>(
+      const { data } = await api.get<PaginatedResponse<T>>(
         `/api/users/users?${params}`
       )
       return data
@@ -32,7 +41,7 @@ export function useGetUsers(page = 1, limit = 20, filters = {}) {
   })
 }
 
-export function useGetTherapists(page = 1, limit = 20, filters = {}) {
+export function useGetTherapists<T = unknown>(page = 1, limit = 20, filters: QueryParams = {}) {
   return useQuery({
     queryKey: paginatedQueryKey(["therapists"], { page, limit, ...filters }),
     queryFn: async () => {
@@ -41,7 +50,7 @@ export function useGetTherapists(page = 1, limit = 20, filters = {}) {
         limit: limit.toString(),
         ...filters,
       })
-      const { data } = await api.get<PaginatedResponse<any>>(
+      const { data } = await api.get<PaginatedResponse<T>>(
         `/api/users/therapists?${params}`
       )
       return data
@@ -63,7 +72,7 @@ export function useGetUserProfile(userId: string) {
 }
 
 // Mood queries
-export function useGetMyMoods(page = 1, limit = 20, filters = {}) {
+export function useGetMyMoods<T = unknown>(page = 1, limit = 20, filters: QueryParams = {}) {
   return useQuery({
     queryKey: paginatedQueryKey(["moods"], { page, limit, ...filters }),
     queryFn: async () => {
@@ -72,7 +81,7 @@ export function useGetMyMoods(page = 1, limit = 20, filters = {}) {
         limit: limit.toString(),
         ...filters,
       })
-      const { data } = await api.get<PaginatedResponse<any>>(
+      const { data } = await api.get<PaginatedResponse<T>>(
         `/api/mood?${params}`
       )
       return data
@@ -96,7 +105,7 @@ export function useLogMood() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: async (moodData: any) => {
+    mutationFn: async (moodData: MoodPayload) => {
       const { data } = await api.post(`/api/mood`, moodData, {
         headers: { "Idempotency-Key": `mood-${Date.now()}-${Math.random()}` },
       })
@@ -110,7 +119,7 @@ export function useLogMood() {
 }
 
 // Chat queries
-export function useGetConversations(page = 1, limit = 20) {
+export function useGetConversations<T = unknown>(page = 1, limit = 20) {
   return useQuery({
     queryKey: ["conversations", { page, limit }],
     queryFn: async () => {
@@ -118,7 +127,7 @@ export function useGetConversations(page = 1, limit = 20) {
         page: page.toString(),
         limit: limit.toString(),
       })
-      const { data } = await api.get<PaginatedResponse<any>>(
+      const { data } = await api.get<PaginatedResponse<T>>(
         `/api/chat/conversations?${params}`
       )
       return data
@@ -181,7 +190,7 @@ export function useGetExercises() {
   })
 }
 
-export function useGetExerciseLogs(page = 1, limit = 20) {
+export function useGetExerciseLogs<T = unknown>(page = 1, limit = 20) {
   return useQuery({
     queryKey: ["exercise-logs", { page, limit }],
     queryFn: async () => {
@@ -189,7 +198,7 @@ export function useGetExerciseLogs(page = 1, limit = 20) {
         page: page.toString(),
         limit: limit.toString(),
       })
-      const { data } = await api.get<PaginatedResponse<any>>(
+      const { data } = await api.get<PaginatedResponse<T>>(
         `/api/exercises/logs/mine?${params}`
       )
       return data
@@ -244,7 +253,7 @@ export function useCompleteExercise() {
 }
 
 // Notifications queries
-export function useGetNotifications(page = 1, limit = 20) {
+export function useGetNotifications<T = unknown>(page = 1, limit = 20) {
   return useQuery({
     queryKey: ["notifications", { page, limit }],
     queryFn: async () => {
@@ -252,7 +261,7 @@ export function useGetNotifications(page = 1, limit = 20) {
         page: page.toString(),
         limit: limit.toString(),
       })
-      const { data } = await api.get<PaginatedResponse<any>>(
+      const { data } = await api.get<PaginatedResponse<T>>(
         `/api/notifications?${params}`
       )
       return data

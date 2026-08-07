@@ -34,6 +34,8 @@ export function loadSetting<T>(key: string, fallback: T): T {
       const s = JSON.parse(stored)
       return s[key] ?? fallback
     }
-  } catch {}
+  } catch {
+    // Fall back to the default when stored settings are corrupt.
+  }
   return fallback
 }

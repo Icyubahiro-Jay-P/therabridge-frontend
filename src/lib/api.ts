@@ -4,24 +4,9 @@ const API_BASE_URL =
   import.meta.env.VITE_API_URL ||
   (typeof window !== "undefined" ? window.location.origin : "")
 
-export function setAuthToken(_token: string | null) {
-  // Token is managed via Zustand persist (auth-store) and httpOnly cookies.
-  // This function is kept for backward compatibility but is now a no-op.
-}
-
-export function getAuthToken(): string | null {
-  if (typeof window === "undefined") return null
-  try {
-    const stored = localStorage.getItem("auth-storage")
-    if (stored) {
-      const parsed = JSON.parse(stored)
-      return parsed?.state?.token ?? null
-    }
-  } catch {
-    // Ignore parse errors
-  }
-  return null
-}
+// Auth is carried exclusively by httpOnly cookies (set by the backend on
+// login/register/refresh). The access token is never written to localStorage
+// or held in JS memory, so it is out of reach of injected scripts.
 
 export const api = axios.create({
   baseURL: API_BASE_URL,
@@ -32,50 +17,36 @@ export const api = axios.create({
   withCredentials: true,
 })
 
-api.interceptors.request.use((config) => {
-  const token = getAuthToken()
-  if (token && config && config.headers) {
-    config.headers.Authorization = `Bearer ${token}`
-  }
-  return config
-})
-
 // ====================== AUTH / REFRESH TOKEN PLUMBING ======================
-let onTokenRefreshed: ((token: string) => void) | null = null
 let onAuthExpired: (() => void) | null = null
 
 export function setAuthHandlers(handlers: {
-  onTokenRefreshed?: (token: string) => void
   onAuthExpired?: () => void
 }) {
-  onTokenRefreshed = handlers.onTokenRefreshed ?? null
   onAuthExpired = handlers.onAuthExpired ?? null
 }
 
 type RefreshResult =
-  { ok: true; token: string } | { ok: false; reason: "expired" | "network" }
+  { ok: true } | { ok: false; reason: "expired" | "network" }
 
 let refreshPromise: Promise<RefreshResult> | null = null
 
 function performRefresh(): Promise<RefreshResult> {
-  // Use a bare axios call (not `api`) so this never recurses into interceptors
+  // Use a bare axios call (not `api`) so this never recurses into interceptors.
+  // The server rotates the refresh cookie and sets a fresh access-token cookie;
+  // nothing token-related is stored client-side.
   return axios
     .post<{ token: string }>(`${API_BASE_URL}/api/users/refresh`, null, {
       headers: { "Content-Type": "application/json" },
       withCredentials: true,
       timeout: 15000,
     })
-    .then(({ data }): RefreshResult => {
-      setAuthToken(data.token)
-      onTokenRefreshed?.(data.token)
-      return { ok: true, token: data.token }
-    })
+    .then((): RefreshResult => ({ ok: true }))
     .catch((err): RefreshResult => {
       if (!err?.response) {
         // Transient network failure - keep the session, surface a network error
         return { ok: false, reason: "network" }
       }
-      setAuthToken(null)
       onAuthExpired?.()
       return { ok: false, reason: "expired" }
     })
@@ -136,7 +107,8 @@ api.interceptors.response.use(
       config._retry = true
       const result = await getRefreshPromise()
       if (result.ok) {
-        config.headers.Authorization = `Bearer ${result.token}`
+        // The refresh endpoint has already rotated the cookies; retry the
+        // original request with the new (cookie-carried) credentials.
         return api(config)
       }
       if (result.reason === "expired") {

@@ -1,7 +1,7 @@
 import { TriangleAlert } from "lucide-react"
 import { Skeleton } from "@/components/ui/skeleton"
 import { cn } from "@/lib/utils"
-import { moodOptions, type MoodEntry } from "./useMoodState"
+import { type MoodEntry } from "./useMoodState"
 
 interface MoodHistoryProps {
   moods: MoodEntry[]
@@ -52,10 +52,8 @@ export function MoodHistory({ moods, loading, error }: MoodHistoryProps) {
       ) : (
         <div className="space-y-2">
           {moods.slice(0, 20).map((m) => {
-            const moodOpt = moodOptions.find((o) => o.value === m.mood)
             return (
               <div key={m._id} className="flex items-start gap-3 rounded-xl border border-gray-100 bg-white p-4 dark:border-gray-800 dark:bg-gray-900">
-                <span className="text-2xl">{moodOpt?.emoji || m.emoji}</span>
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2">
                     <span className="text-sm font-medium text-gray-900 dark:text-white capitalize">{m.mood}</span>

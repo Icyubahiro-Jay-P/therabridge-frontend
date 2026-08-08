@@ -168,6 +168,7 @@ export const useAuthStore = create<AuthState>()(
         try {
           await logoutRequest()
           void unregisterServiceWorker()
+          cancelInitializeRetry()
           set({ user: null })
           disconnectSocket()
         } catch (error) {
@@ -278,6 +279,7 @@ export const useAuthStore = create<AuthState>()(
 // in sync here. When the refresh cookie expires, force a clean logout.
 setAuthHandlers({
   onAuthExpired: () => {
+    cancelInitializeRetry()
     useAuthStore.setState({ user: null })
     disconnectSocket()
     void unregisterServiceWorker()

@@ -3,7 +3,7 @@ import { timeAgo } from "./utils"
 import { cn } from "@/lib/utils"
 import type { Conversation } from "./types"
 
-const MAX_PREVIEW_CHARS = 48
+const MAX_PREVIEW_CHARS = 20
 
 function truncatePreview(text: string) {
   if (text.length <= MAX_PREVIEW_CHARS) return text

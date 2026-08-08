@@ -33,7 +33,7 @@ export function ConversationItem({
           </span>
         )}
       </div>
-      <div className="min-w-0 flex-1">
+      <div className="min-w-0 flex-1 overflow-hidden">
         <p className="truncate text-sm font-medium text-gray-900 dark:text-white">
           {conv.partner.firstName} {conv.partner.lastName}
         </p>

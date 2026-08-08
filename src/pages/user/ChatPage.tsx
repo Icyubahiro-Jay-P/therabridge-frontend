@@ -5,7 +5,6 @@ import { useChatState } from "@/components/user/chat/useChatState"
 import { useChatEffects } from "@/components/user/chat/useChatEffects"
 import { Sidebar } from "@/components/user/chat/Sidebar"
 import { EmptyState } from "@/components/user/chat/EmptyState"
-import { SuggestedUsers } from "@/components/user/chat/SuggestedUsers"
 import { ChatView } from "@/components/user/chat/ChatView"
 import { TherryChat } from "@/components/user/chat/TherryChat"
 import { ScreenshotOverlay } from "@/components/user/community/ScreenshotOverlay"
@@ -165,13 +164,6 @@ export function ChatPage() {
               <div className="flex min-h-0 flex-1 flex-col overflow-y-auto">
                 <div className="grid min-h-0 flex-1 place-items-center">
                   <EmptyState />
-                </div>
-                <div className="shrink-0 px-6 pb-6">
-                  <SuggestedUsers
-                    loading={c.loadingSuggestions}
-                    suggestions={c.suggestions}
-                    onSelectUser={c.openDM}
-                  />
                 </div>
               </div>
             </>

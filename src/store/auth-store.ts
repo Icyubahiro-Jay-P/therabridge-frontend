@@ -36,7 +36,7 @@ interface AuthState {
   isInitialized: boolean
   error: string | null
   clearError: () => void
-  initialize: () => Promise<void>
+  initialize: (isRetry?: boolean) => Promise<void>
   login: (payload: LoginPayload) => Promise<string>
   register: (payload: RegisterPayload) => Promise<string>
   logout: () => Promise<void>

@@ -3,6 +3,13 @@ import { timeAgo } from "./utils"
 import { cn } from "@/lib/utils"
 import type { Conversation } from "./types"
 
+const MAX_PREVIEW_CHARS = 48
+
+function truncatePreview(text: string) {
+  if (text.length <= MAX_PREVIEW_CHARS) return text
+  return text.slice(0, MAX_PREVIEW_CHARS).trimEnd() + "..."
+}
+
 export function ConversationItem({
   conv,
   isActive,
@@ -40,7 +47,7 @@ export function ConversationItem({
         <div className="flex items-center gap-2">
           <p className="min-w-0 flex-1 truncate text-xs text-gray-400">
             {showPreviews
-              ? `${isMine ? "You" : conv.partner.firstName}: ${conv.lastMessage.content}`
+              ? truncatePreview(`${isMine ? "You" : conv.partner.firstName}: ${conv.lastMessage.content}`)
               : "New message"}
           </p>
           <span className="shrink-0 text-[11px] text-gray-400">

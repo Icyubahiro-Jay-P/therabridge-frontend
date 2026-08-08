@@ -27,7 +27,7 @@ export function UpcomingAppointments({ logs }: UpcomingAppointmentsProps) {
           >
             <CheckCircle2 className="size-3" />
             <span>
-              {log.exercise.emoji} {log.exercise.title}
+              {log.exercise.title}
             </span>
             {log.completedAt && (
               <span className="text-emerald-400 dark:text-emerald-500">

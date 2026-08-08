@@ -1,6 +1,12 @@
 import { memo, useState } from "react"
 import { Link } from "react-router-dom"
-import { CheckCheck, History, MoreVertical, PencilLine, TriangleAlert } from "lucide-react"
+import {
+  CheckCheck,
+  History,
+  MoreVertical,
+  PencilLine,
+  TriangleAlert,
+} from "lucide-react"
 import { cn } from "@/lib/utils"
 import type { DirectMessage } from "./types"
 import { Avatar } from "./Avatar"
@@ -47,12 +53,17 @@ export const MessageBubble = memo(function MessageBubble({
   const seen = isMe && msg.read && msg.readAt
   return (
     <div
-      className={cn("relative mb-2 flex flex-col", isMe ? "items-end" : "items-start")}
+      className={cn(
+        "relative mb-2 flex flex-col",
+        isMe ? "items-end" : "items-start"
+      )}
     >
       <div
         className={cn(
           "group flex max-w-[70%] gap-1",
-          isMe ? "items-center flex-row-reverse justify-start" : "items-start flex-row"
+          isMe
+            ? "flex-row-reverse items-center justify-start"
+            : "flex-row items-start"
         )}
       >
         {!isMe && (
@@ -61,20 +72,33 @@ export const MessageBubble = memo(function MessageBubble({
           </Link>
         )}
         <div className="flex min-w-0 flex-col">
-          <div className={cn("flex items-center gap-1", isMe ? "flex-row-reverse" : "flex-row")}>
+          <div
+            className={cn(
+              "flex items-center gap-1",
+              isMe ? "flex-row-reverse" : "flex-row"
+            )}
+          >
             {canEdit && (
               <button
-                onClick={(e) => { e.stopPropagation(); setMenuOpenId(menuOpen ? null : msg._id) }}
-                className="flex cursor-pointer size-6 shrink-0 items-center justify-center rounded-full transition-opacity bg-black/10 dark:bg-white/10 hover:bg-black/20 dark:hover:bg-white/20 hover-hover:opacity-0 hover-hover:group-hover:opacity-100"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  setMenuOpenId(menuOpen ? null : msg._id)
+                }}
+                className="hover-hover:opacity-0 hover-hover:group-hover:opacity-100 flex size-6 shrink-0 cursor-pointer items-center justify-center rounded-full bg-black/10 transition-opacity hover:bg-black/20 dark:bg-white/10 dark:hover:bg-white/20"
               >
                 <MoreVertical className="size-3.5" />
               </button>
             )}
-            <div className={cn("flex flex-col", isMe ? "items-end" : "items-start")}>
+            <div
+              className={cn(
+                "flex flex-col",
+                isMe ? "items-end" : "items-start"
+              )}
+            >
               <div
                 onClick={() => onToggleTimestamp(msg._id)}
                 className={cn(
-                  "wrap-break-words relative cursor-pointer rounded-2xl text-sm",
+                  "wrap-break-words relative min-w-0 cursor-pointer overflow-hidden rounded-2xl text-sm",
                   isMe
                     ? "rounded-br-md bg-emerald-600 text-white"
                     : "rounded-bl-md bg-gray-300 text-gray-900 dark:bg-gray-800 dark:text-gray-100",
@@ -85,7 +109,10 @@ export const MessageBubble = memo(function MessageBubble({
                 )}
               >
                 <div
-                  className={cn("px-3.5 pt-2.5", isUnsent && "italic opacity-60")}
+                  className={cn(
+                    "px-3.5 pt-2.5",
+                    isUnsent && "italic opacity-60"
+                  )}
                 >
                   <p className="wrap-break-words whitespace-pre-wrap">
                     {isUnsent ? "Message unsent" : msg.content}
@@ -101,7 +128,9 @@ export const MessageBubble = memo(function MessageBubble({
                     <span
                       className={cn(
                         "inline-flex items-center gap-1 text-[10px] font-medium",
-                        isMe ? "text-teal-200" : "text-teal-600 dark:text-teal-400"
+                        isMe
+                          ? "text-teal-200"
+                          : "text-teal-600 dark:text-teal-400"
                       )}
                     >
                       <PencilLine className="size-2.5" /> Editing...
@@ -125,7 +154,7 @@ export const MessageBubble = memo(function MessageBubble({
                       )}
                       <span
                         className={cn(
-                          "text-[11px] leading-none pr-2",
+                          "pr-2 text-[11px] leading-none",
                           isMe
                             ? "text-emerald-700 dark:text-emerald-600"
                             : "text-gray-500 dark:text-gray-400"
@@ -139,7 +168,9 @@ export const MessageBubble = memo(function MessageBubble({
                     <button
                       onClick={(e) => {
                         e.stopPropagation()
-                        setShowHistoryFor(showHistoryFor === msg._id ? null : msg._id)
+                        setShowHistoryFor(
+                          showHistoryFor === msg._id ? null : msg._id
+                        )
                       }}
                       title="Show edit history"
                       className="flex cursor-pointer items-center gap-1 rounded px-1.5 py-0.5 text-[10px] text-gray-500 transition-colors duration-150 hover:text-emerald-600 hover:underline dark:text-gray-400 dark:hover:text-emerald-400"
@@ -167,22 +198,42 @@ export const MessageBubble = memo(function MessageBubble({
         />
       )}
       {confirmUnsend && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40" onClick={() => setConfirmUnsend(false)}>
-          <div className="mx-4 w-full max-w-sm rounded-2xl bg-white p-6 shadow-xl dark:bg-gray-900" onClick={(e) => e.stopPropagation()}>
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
+          onClick={() => setConfirmUnsend(false)}
+        >
+          <div
+            className="mx-4 w-full max-w-sm rounded-2xl bg-white p-6 shadow-xl dark:bg-gray-900"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="mb-4 flex items-center gap-3">
               <span className="flex size-10 items-center justify-center rounded-full bg-red-100 text-red-600 dark:bg-red-900/40 dark:text-red-400">
                 <TriangleAlert className="size-5" />
               </span>
               <div>
-                <h3 className="font-semibold text-gray-900 dark:text-white">Unsend message?</h3>
-                <p className="text-sm text-gray-500 dark:text-gray-400">This action cannot be undone.</p>
+                <h3 className="font-semibold text-gray-900 dark:text-white">
+                  Unsend message?
+                </h3>
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  This action cannot be undone.
+                </p>
               </div>
             </div>
             <div className="flex gap-2">
-              <button onClick={() => setConfirmUnsend(false)} className="flex-1 rounded-xl border border-gray-200 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800">
+              <button
+                onClick={() => setConfirmUnsend(false)}
+                className="flex-1 rounded-xl border border-gray-200 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800"
+              >
                 Cancel
               </button>
-              <button onClick={() => { onUnsend(msg._id); setConfirmUnsend(false) }} disabled={deleting === msg._id} className="flex-1 rounded-xl bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 disabled:opacity-50">
+              <button
+                onClick={() => {
+                  onUnsend(msg._id)
+                  setConfirmUnsend(false)
+                }}
+                disabled={deleting === msg._id}
+                className="flex-1 rounded-xl bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 disabled:opacity-50"
+              >
                 {deleting === msg._id ? "Unsending..." : "Unsend"}
               </button>
             </div>

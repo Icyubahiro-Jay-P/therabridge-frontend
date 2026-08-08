@@ -149,6 +149,7 @@ export const useAuthStore = create<AuthState>()(
         set({ isLoading: true, error: null })
         try {
           const { user, message } = await registerRequest(payload)
+          cancelInitializeRetry()
           set({ user })
           connectSocket()
           void syncPushSubscription()

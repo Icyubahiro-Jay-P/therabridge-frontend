@@ -179,8 +179,9 @@ html.calm-mode.dark {
 
 /* Word wrapping for long message content */
 .wrap-break-words {
-  overflow-wrap: break-word;
+  overflow-wrap: anywhere;
   word-break: break-word;
+  hyphens: auto;
 }
 
 /* Screenshot protection */

@@ -11,6 +11,5 @@ export interface Exercise {
   type: string
   steps: ExerciseStep[]
   difficulty: string
-  emoji: string
   color: string
 }

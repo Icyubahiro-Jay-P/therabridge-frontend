@@ -8,7 +8,6 @@ export interface ExerciseLogEntry {
   exercise: {
     _id: string
     title: string
-    emoji: string
     color: string
     type: string
     duration: number

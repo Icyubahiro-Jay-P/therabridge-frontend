@@ -72,6 +72,7 @@ export default function AvatarActions({
             <DropdownMenuSeparator />
             <DropdownMenuItem
               onClick={() => setConfirmOpen(true)}
+              disabled={!hasAvatar} // visually destructive intent handled by icon/text
               // visually destructive intent handled by icon/text
             >
               <Trash2 className={`${hasAvatar ? "" : "opacity-50"} size-4`} />

@@ -42,7 +42,7 @@ export function MoodSelector({
               ? `${m.color} ring-2 ring-offset-2`
               : "border-gray-200 bg-gray-50 text-gray-500 hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400"
           )}>
-            <span className="text-lg">{m.emoji}</span> {m.label}
+            {m.label}
           </button>
         ))}
       </div>

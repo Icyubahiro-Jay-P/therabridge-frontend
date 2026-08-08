@@ -47,6 +47,13 @@ function performRefresh(): Promise<RefreshResult> {
         // Transient network failure - keep the session, surface a network error
         return { ok: false, reason: "network" }
       }
+      const status = err.response.status
+      // Transient proxy/server errors - e.g. Render returning 502/503 while the
+      // backend is mid-deploy - must NOT log the user out. Only a genuine auth
+      // failure (401/403) means the session has actually expired.
+      if (status === 408 || status === 429 || status >= 500) {
+        return { ok: false, reason: "network" }
+      }
       onAuthExpired?.()
       return { ok: false, reason: "expired" }
     })
@@ -92,8 +99,19 @@ api.interceptors.response.use(
     }
 
     const status = error.response.status
+
+    // Transient proxy/server errors (backend mid-deploy, rate limit, timeout)
+    // are treated as network errors - never as a session expiry or confusing
+    // backend error text.
+    if (status === 408 || status === 429 || status >= 500) {
+      return Promise.reject(
+        new NetworkError("Network error. Check your connection.")
+      )
+    }
+
     const config = error.config as
-      (InternalAxiosRequestConfig & { _retry?: boolean }) | undefined
+      | (InternalAxiosRequestConfig & { _retry?: boolean })
+      | undefined
     const url = config?.url ?? ""
 
     // On an expired access token, silently refresh and retry the original request.

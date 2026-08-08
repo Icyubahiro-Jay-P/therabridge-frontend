@@ -59,6 +59,34 @@ function rethrow(message: string, cause: unknown): never {
   throw new Error(message, { cause })
 }
 
+// ====================== SESSION INIT RETRY ======================
+// When the backend is briefly unreachable (e.g. a redeploy), a failed init
+// must NOT log the user out - the session lives in httpOnly cookies and
+// survives. Keep the persisted user and retry in the background instead.
+const INIT_RETRY_DELAY_MS = 4000
+const MAX_INIT_RETRIES = 6
+
+let initRetryTimer: ReturnType<typeof setTimeout> | null = null
+let initRetryCount = 0
+
+function scheduleInitializeRetry() {
+  if (initRetryTimer || initRetryCount >= MAX_INIT_RETRIES) return
+  if (!useAuthStore.getState().user) return
+  initRetryCount += 1
+  initRetryTimer = setTimeout(() => {
+    initRetryTimer = null
+    void useAuthStore.getState().initialize(true)
+  }, INIT_RETRY_DELAY_MS)
+}
+
+function cancelInitializeRetry() {
+  if (initRetryTimer) {
+    clearTimeout(initRetryTimer)
+    initRetryTimer = null
+  }
+  initRetryCount = 0
+}
+
 export const useAuthStore = create<AuthState>()(
   persist(
     (set) => ({
@@ -69,11 +97,12 @@ export const useAuthStore = create<AuthState>()(
 
       clearError: () => set({ error: null }),
 
-      initialize: async () => {
-        set({ isInitialized: false })
+      initialize: async (isRetry = false) => {
+        if (!isRetry) set({ isInitialized: false })
         try {
           const user = await fetchProfile()
           if (user) {
+            cancelInitializeRetry()
             const chatSettings = await fetchChatSettingsRequest()
             set({ user: { ...user, chatSettings } })
             connectSocket()
@@ -82,9 +111,17 @@ export const useAuthStore = create<AuthState>()(
             set({ user: null })
             disconnectSocket()
           }
-        } catch {
-          set({ user: null })
-          disconnectSocket()
+        } catch (error) {
+          if (error instanceof AuthError) {
+            // Session genuinely expired - clean logout.
+            cancelInitializeRetry()
+            set({ user: null })
+            disconnectSocket()
+          } else {
+            // Transient failure (backend unreachable, e.g. redeploying).
+            // Keep the persisted session and retry shortly.
+            scheduleInitializeRetry()
+          }
         } finally {
           set({ isInitialized: true })
         }

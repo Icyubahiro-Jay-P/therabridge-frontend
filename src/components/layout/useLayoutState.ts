@@ -67,13 +67,27 @@ export function useLayoutState() {
     function onNotification() {
       void refresh()
     }
+    function onNotificationsUpdated(payload?: { count?: number }) {
+      if (payload && typeof payload.count === "number") {
+        setNotificationCount(payload.count)
+        return
+      }
+      void refresh()
+    }
+    function onLocalNotificationsUpdated() {
+      void refresh()
+    }
 
     socket.on("conversations_updated", onConversationsUpdated)
     socket.on("notification", onNotification)
+    socket.on("notifications_updated", onNotificationsUpdated)
+    window.addEventListener("notifications-updated", onLocalNotificationsUpdated)
     return () => {
       mounted = false
       socket.off("conversations_updated", onConversationsUpdated)
       socket.off("notification", onNotification)
+      socket.off("notifications_updated", onNotificationsUpdated)
+      window.removeEventListener("notifications-updated", onLocalNotificationsUpdated)
     }
   }, [])
 

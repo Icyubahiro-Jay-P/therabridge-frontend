@@ -56,6 +56,7 @@ export function NotificationsPage() {
     })
     try {
       await markReadMutation.mutateAsync(id)
+      window.dispatchEvent(new Event("notifications-updated"))
     } catch {
       setOptimisticNotifications(null)
     }
@@ -68,6 +69,7 @@ export function NotificationsPage() {
     })
     try {
       await api.put("/api/notifications/read-all")
+      window.dispatchEvent(new Event("notifications-updated"))
       setSuccess("All marked as read")
     } catch {
       setOptimisticNotifications(null)
@@ -82,6 +84,7 @@ export function NotificationsPage() {
     })
     try {
       await api.delete(`/api/notifications/${id}`)
+      window.dispatchEvent(new Event("notifications-updated"))
       setSuccess("Notification deleted")
     } catch {
       setOptimisticNotifications(null)
@@ -94,6 +97,7 @@ export function NotificationsPage() {
     try {
       await api.delete("/api/notifications")
       setOptimisticNotifications([])
+      window.dispatchEvent(new Event("notifications-updated"))
       setSuccess("All notifications deleted")
     } catch {
       setOptimisticNotifications(null)

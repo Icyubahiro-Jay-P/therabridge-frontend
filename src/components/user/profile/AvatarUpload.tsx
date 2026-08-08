@@ -48,7 +48,7 @@ export function AvatarUpload({
                 type="button"
                 onClick={onUpload}
                 size="sm"
-                className="flex-1 bg-emerald-600 hover:bg-emerald-700 sm:flex-none"
+                className="bg-emerald-600 hover:bg-emerald-700"
               >
                 Upload photo
               </Button>

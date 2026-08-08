@@ -74,7 +74,7 @@ export default function AvatarActions({
               onClick={() => setConfirmOpen(true)}
               // visually destructive intent handled by icon/text
             >
-              <Trash2 className="size-4" />
+              <Trash2 className={`${hasAvatar ? "" : "opacity-50"} size-4`} />
               <span className={`${hasAvatar ? "" : "opacity-50"}`}>Remove</span>
             </DropdownMenuItem>
           </DropdownMenuContent>

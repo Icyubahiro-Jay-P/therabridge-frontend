@@ -36,7 +36,7 @@ function performRefresh(): Promise<RefreshResult> {
   // The server rotates the refresh cookie and sets a fresh access-token cookie;
   // nothing token-related is stored client-side.
   return axios
-    .post<{ token: string }>(`${API_BASE_URL}/api/users/refresh`, null, {
+    .post<{ token: string }>(`${API_BASE_URL}/api/users/refresh`, {}, {
       headers: { "Content-Type": "application/json" },
       withCredentials: true,
       timeout: 15000,

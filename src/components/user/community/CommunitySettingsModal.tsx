@@ -1,6 +1,5 @@
 import { useState } from "react"
 import { LogOut, Trash2, TriangleAlert, X } from "lucide-react"
-import { ScrollArea } from "@/components/ui/scroll-area"
 import { Button } from "@/components/ui/button"
 import { api } from "@/lib/api"
 import { getErrorMessage } from "./utils"
@@ -120,7 +119,7 @@ export function CommunitySettingsModal({
             <X className="size-5" />
           </button>
         </div>
-        <ScrollArea className="min-h-0 flex-1 p-6">
+        <div className="min-h-0 flex-1 overflow-y-auto p-6">
           <div className="space-y-6">
             {error && (
               <div className="rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700 dark:border-red-900/50 dark:bg-red-950/40 dark:text-red-400">
@@ -198,7 +197,7 @@ export function CommunitySettingsModal({
               </div>
             )}
           </div>
-        </ScrollArea>
+        </div>
       </div>
     </div>
   )

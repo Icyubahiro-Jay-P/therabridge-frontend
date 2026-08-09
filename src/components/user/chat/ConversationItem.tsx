@@ -22,6 +22,7 @@ export function ConversationItem({
   showPreviews: boolean
 }) {
   const isMine = conv.lastMessage.sender._id !== conv.partner._id
+  const hasUnread = conv.unread > 0
   return (
     <button
       onClick={onClick}
@@ -41,16 +42,35 @@ export function ConversationItem({
         )}
       </div>
       <div className="min-w-0 flex-1 overflow-hidden">
-        <p className="truncate text-sm font-medium text-gray-900 dark:text-white">
+        <p
+          className={cn(
+            "truncate text-sm text-gray-900 dark:text-white",
+            hasUnread ? "font-bold" : "font-medium"
+          )}
+        >
           {conv.partner.firstName} {conv.partner.lastName}
         </p>
         <div className="flex items-center gap-2">
-          <p className="min-w-0 flex-1 truncate text-xs text-gray-400">
+          <p
+            className={cn(
+              "min-w-0 flex-1 truncate text-xs",
+              hasUnread
+                ? "font-semibold text-gray-700 dark:text-gray-200"
+                : "font-normal text-gray-400"
+            )}
+          >
             {showPreviews
-              ? truncatePreview(`${isMine ? "You" : conv.partner.firstName}: ${conv.lastMessage.content}`)
+              ? truncatePreview(isMine ? `You: ${conv.lastMessage.content}` : conv.lastMessage.content)
               : "New message"}
           </p>
-          <span className="shrink-0 text-[11px] text-gray-400">
+          <span
+            className={cn(
+              "shrink-0 text-[11px]",
+              hasUnread
+                ? "font-semibold text-gray-700 dark:text-gray-200"
+                : "text-gray-400"
+            )}
+          >
             {timeAgo(conv.lastMessage.createdAt)}
           </span>
         </div>

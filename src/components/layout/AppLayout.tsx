@@ -11,7 +11,7 @@ import { LogoutModal } from "./LogoutModal"
 import { ScreenshotProtection } from "./ScreenshotProtection"
 import { TopHeader } from "./TopHeader"
 
-export function AppLayout() {
+export function AppLayout({ children }: { children?: React.ReactNode }) {
   const { user } = useAuthStore()
   const {
     mobileOpen,
@@ -76,7 +76,7 @@ export function AppLayout() {
         />
 
         <main className="flex min-h-0 flex-1 flex-col overflow-y-auto pb-16 md:pb-0">
-          <Outlet />
+          {children ?? <Outlet />}
         </main>
       </div>
 

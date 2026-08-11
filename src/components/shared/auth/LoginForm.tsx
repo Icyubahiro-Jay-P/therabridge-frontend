@@ -37,7 +37,7 @@ export function LoginForm({
         <span>{feedback.message}</span>
       </div>
     )}
-    <form onSubmit={onSubmit} noValidate className="space-y-5">
+    <form onSubmit={onSubmit} noValidate className="space-y-4">
       <div className="space-y-1.5">
         <Label htmlFor="identifier" className="text-sm font-medium">Email or username</Label>
         <div className="relative">

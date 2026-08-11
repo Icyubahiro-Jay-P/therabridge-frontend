@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom"
-import { Leaf } from "lucide-react"
+import { Leaf, ShieldCheck } from "lucide-react"
 
 import { ModeToggle } from "@/components/shared/mode-toggle"
 import { useLoginState } from "@/components/shared/auth/useLoginState"
@@ -75,7 +75,11 @@ export function LoginPage() {
           <LoginFooter />
         </div>
 
-        <div className="mt-4">
+        <div className="mt-4 space-y-3">
+          <div className="flex items-center justify-center gap-2 text-xs text-gray-400 dark:text-gray-500">
+            <ShieldCheck className="size-3.5" />
+            Your conversations are private and encrypted.
+          </div>
           <LegalNotice />
         </div>
       </div>

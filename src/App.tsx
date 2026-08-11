@@ -321,7 +321,7 @@ export function App() {
             }
           />
           <Route
-            path="/terms"
+            path="/terms-of-service"
             element={
               <ErrorBoundaryRoute>
                 <TermsPage />
@@ -329,7 +329,7 @@ export function App() {
             }
           />
           <Route
-            path="/privacy"
+            path="/privacy-policy"
             element={
               <ErrorBoundaryRoute>
                 <PrivacyPage />
@@ -337,7 +337,7 @@ export function App() {
             }
           />
           <Route
-            path="/cookies"
+            path="/cookie-use"
             element={
               <ErrorBoundaryRoute>
                 <CookiesPage />

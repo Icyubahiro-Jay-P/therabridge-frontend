@@ -148,7 +148,7 @@ export function PrivacyPage() {
           <li>
             <strong>Control cookies.</strong> See our{" "}
             <Link
-              to="/cookies"
+              to="/cookie-use"
               className="text-emerald-600 underline underline-offset-2 hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300"
             >
               Cookie Use

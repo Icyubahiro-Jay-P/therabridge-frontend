@@ -8,191 +8,185 @@ export function PrivacyPage() {
     <LegalLayout
       title="Privacy Policy"
       updated="August 11, 2026"
-      intro="This Privacy Policy explains what information Therabridge collects, how we use and protect it, and the choices you have. Protecting your privacy — especially around sensitive mental health data — is core to what we do."
+      intro="What you share here is personal — especially when it comes to your wellbeing. This policy explains what we collect, how we use it, and how we keep it safe. If you ever have questions, we&rsquo;re here to answer them."
     >
-      <LegalSection title="1. Information we collect">
+      <LegalSection title="1. What we collect">
         <p>
-          <strong>Account information.</strong> First and last name, username,
-          email address, date of birth, password (stored as a secure hash), an
-          optional avatar, and an optional bio.
+          <strong>About you.</strong> Your first and last name, username, email
+          address, date of birth, an optional profile photo, and an optional
+          bio. Your password is never stored in a way anyone — including us —
+          can read.
         </p>
         <p>
-          <strong>Communications.</strong> Direct messages, community messages,
-          and conversations with Therry, including edit history and unsent
-          messages.
+          <strong>Your conversations.</strong> Direct messages, community
+          messages, and your chats with Therry.
         </p>
         <p>
-          <strong>Wellness data.</strong> Mood entries and notes, intensity and
-          factors, wellness exercise activity and scores, streaks, crisis
-          reports, safety plans, and preferences.
+          <strong>Your wellness information.</strong> Mood entries and notes,
+          wellness activity, streaks, crisis reports, safety plans, and your
+          preferences.
         </p>
         <p>
-          <strong>Technical information.</strong> Browser and device details
-          needed to deliver web push notifications, IP addresses and
-          user-agents used in our security audit log, and information about how
-          you use the Service.
+          <strong>A little about your device.</strong> Basic technical details
+          we use to send you notifications and to keep your account secure.
         </p>
       </LegalSection>
 
-      <LegalSection title="2. How we use your information">
+      <LegalSection title="2. How we use it">
         <ul className="list-disc space-y-1.5 pl-5">
-          <li>To provide and operate the Service, including messaging, communities, and Therry</li>
-          <li>To connect you with your assigned therapist and support escalation</li>
-          <li>To deliver in-app and push notifications you have enabled</li>
-          <li>To keep the Service secure and prevent abuse</li>
-          <li>To understand usage patterns and improve the Service</li>
-          <li>To comply with legal obligations and enforce our Terms</li>
+          <li>To run the app — messaging, communities, Therry, and everything in between</li>
+          <li>To connect you with your therapist and make sure help reaches you when needed</li>
+          <li>To send the notifications you&rsquo;ve asked for</li>
+          <li>To protect your account and keep the community safe</li>
+          <li>To understand how people use the app so we can make it better</li>
+          <li>To meet legal requirements and enforce our Terms</li>
         </ul>
         <p>
-          We do not sell your personal information.
+          We never sell your personal information. Ever.
         </p>
       </LegalSection>
 
-      <LegalSection title="3. How we protect your information">
+      <LegalSection title="3. How we keep it safe">
+        <p>We take your privacy seriously. Here&rsquo;s what that looks like:</p>
         <ul className="list-disc space-y-1.5 pl-5">
           <li>
-            <strong>Encryption at rest.</strong> Sensitive fields — including
-            messages, mood notes, crisis descriptions, safety plan items, Therry
-            conversations, and notification bodies — are encrypted at rest using
-            AES-256-GCM field-level encryption.
+            <strong>Encryption.</strong> Sensitive things — your messages, mood
+            notes, crisis descriptions, safety plan, and chats with Therry —
+            are scrambled with strong encryption so they can only be read where
+            they&rsquo;re meant to be.
           </li>
           <li>
-            <strong>Encryption in transit.</strong> All traffic is served over
-            HTTPS/TLS.
+            <strong>Secure sign-in.</strong> Your password is stored in a
+            scrambled form, and your sign-in cookies are protected so they
+            can&rsquo;t be read by scripts.
           </li>
           <li>
-            <strong>Secure authentication.</strong> Passwords are hashed with
-            bcrypt, and sessions use short-lived access tokens and rotating
-            refresh tokens stored in HTTP-only cookies.
+            <strong>Safe connections.</strong> All communication between your
+            device and Therabridge is encrypted.
           </li>
           <li>
-            <strong>Abuse prevention.</strong> We use rate limiting, input
-            validation, and spam filtering to protect the platform.
+            <strong>Keeping the community healthy.</strong> We watch for spam
+            and abuse and gently filter it out.
           </li>
         </ul>
         <p>
-          While we take strong measures to protect your data, no method of
-          transmission or storage is completely secure.
+          No system is completely foolproof, but we put real effort into
+          protecting what you share.
         </p>
       </LegalSection>
 
-      <LegalSection title="4. AI companion & crisis escalation">
+      <LegalSection title="4. Therry and getting you help">
         <p>
-          When you chat with Therry, your conversation may be analyzed to
-          detect signs of crisis. If a crisis is detected, we may notify your
-          assigned therapist, or platform administrators if you have no
-          therapist, and we will surface region-appropriate crisis hotlines in
-          the app. These actions are designed to help keep you safe and are
-          described in the app before they happen.
+          When you talk to Therry, we may look for signs that you might be in
+          crisis. If we find them, we may let your therapist know — or, if you
+          don&rsquo;t have one, a member of our team — and we&rsquo;ll show you
+          hotlines for your area right in the app. We do this to help keep you
+          safe, and we&rsquo;re always upfront about it.
         </p>
       </LegalSection>
 
-      <LegalSection title="5. How we share information">
+      <LegalSection title="5. Who we share things with">
         <ul className="list-disc space-y-1.5 pl-5">
           <li>
-            <strong>With your therapist.</strong> If a therapist is assigned to
-            you, they can see your profile, mood and crisis activity, and other
-            information needed to support you.
+            <strong>Your therapist.</strong> If a therapist is assigned to you,
+            they can see what they need to support you, like your mood and
+            crisis activity.
           </li>
           <li>
-            <strong>Within communities.</strong> Your messages and profile are
-            visible to other members and moderators of communities you join.
+            <strong>Your communities.</strong> People in a community room you
+            join can see your profile and messages there.
           </li>
           <li>
-            <strong>With service providers.</strong> We use hosting, email, and
-            infrastructure providers that process data on our behalf and only as
-            needed to operate the Service.
+            <strong>Our service providers.</strong> We rely on a small number
+            of trusted companies to run the app — like hosting and email — and
+            they only handle data to do that job.
           </li>
           <li>
-            <strong>For legal and safety reasons.</strong> We may disclose
-            information where required by law, to protect the safety of users or
-            the public, or to enforce our Terms.
+            <strong>For legal or safety reasons.</strong> We may share
+            information if the law requires it, or to protect someone&rsquo;s
+            safety.
           </li>
         </ul>
       </LegalSection>
 
-      <LegalSection title="6. Data retention">
+      <LegalSection title="6. How long we keep things">
         <ul className="list-disc space-y-1.5 pl-5">
           <li>
-            Your account and the data you create are retained while your account
-            is active.
+            Your account and what you create are kept while your account is
+            active.
           </li>
           <li>
-            Crisis and audit logs are retained for approximately six months,
-            after which identity fields are anonymized.
+            Crisis and safety records are kept for about six months, then
+            identifying details are removed.
           </li>
           <li>
-            When you delete your account, your profile, messages, communities,
-            moods, crises, safety plan, Therry history, notifications, exercise
-            logs, and related records are permanently deleted as part of a
-            cascade, while audit history is retained with identifying
-            references removed.
+            When you delete your account, we permanently remove your profile,
+            messages, communities, moods, crises, safety plan, Therry history,
+            and more — everything connected to your account goes with it.
           </li>
         </ul>
       </LegalSection>
 
-      <LegalSection title="7. Your rights and choices">
+      <LegalSection title="7. Your choices">
         <ul className="list-disc space-y-1.5 pl-5">
           <li>
             <strong>Edit your information.</strong> Update your profile, bio,
-            chat settings, and privacy visibility from your settings.
+            and privacy choices anytime from your settings.
           </li>
           <li>
-            <strong>Export your data.</strong> Download a complete, decrypted
-            copy of all the data we hold about you at any time.
+            <strong>Download your data.</strong> Grab a readable copy of
+            everything you&rsquo;ve shared with us, whenever you want.
           </li>
           <li>
-            <strong>Delete your account.</strong> Permanently delete your
-            account and all associated data from your settings.
+            <strong>Delete your account.</strong> Remove your account and all
+            the data connected to it from your settings.
           </li>
           <li>
-            <strong>Manage notifications.</strong> Control in-app and push
-            notifications, including web push subscriptions.
+            <strong>Manage notifications.</strong> Choose which notifications
+            you receive, including browser notifications.
           </li>
           <li>
-            <strong>Control cookies and local storage.</strong> See our{" "}
+            <strong>Control cookies.</strong> See our{" "}
             <Link
               to="/cookies"
               className="text-emerald-600 underline underline-offset-2 hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300"
             >
               Cookie Use
             </Link>{" "}
-            policy for details on how to manage them.
+            policy for how to manage them.
           </li>
         </ul>
       </LegalSection>
 
-      <LegalSection title="8. Children's privacy">
+      <LegalSection title="8. A note about young people">
         <p>
-          The Service is not directed to children under 18, and we do not
-          knowingly collect personal information from anyone under 18. If you
-          believe a child has provided us with personal information, please
-          contact us so we can delete it.
+          Therabridge is for people 18 and older, and we don&rsquo;t knowingly
+          collect information from anyone younger. If you believe a young
+          person has shared information with us, please reach out so we can
+          remove it.
         </p>
       </LegalSection>
 
-      <LegalSection title="9. International data">
+      <LegalSection title="9. Where your data lives">
         <p>
-          Therabridge may process data in locations where our infrastructure
-          providers operate. By using the Service, you consent to this
-          processing.
+          Your data may be stored where our trusted service providers operate.
+          By using Therabridge, you agree to that.
         </p>
       </LegalSection>
 
       <LegalSection title="10. Changes to this policy">
         <p>
-          We may update this Privacy Policy from time to time. Material changes
-          will be reflected on this page with an updated date. Your continued
-          use of the Service after changes take effect constitutes acceptance
-          of the revised policy.
+          We may update this Privacy Policy from time to time. When we make
+          important changes, we&rsquo;ll post them here with a new date. If you
+          keep using Therabridge after that, it means you accept the updated
+          policy.
         </p>
       </LegalSection>
 
-      <LegalSection title="11. Contact us">
+      <LegalSection title="11. Getting in touch">
         <p>
-          If you have questions about this Privacy Policy or your data, please
-          reach out through the in-app support channels or visit
-          therabridge.vercel.app.
+          Questions about your privacy or your data? Reach out through the
+          support options in the app, or visit therabridge.vercel.app.
         </p>
       </LegalSection>
     </LegalLayout>

@@ -12,6 +12,7 @@ import { ModeToggle } from "@/components/shared/mode-toggle"
 import { LoginForm } from "@/components/shared/auth/LoginForm"
 import { LoginFooter } from "@/components/shared/auth/LoginFooter"
 import { useLoginState } from "@/components/shared/auth/useLoginState"
+import { LegalNotice } from "@/components/legal/LegalNotice"
 
 function PhoneMockup() {
   const moods = [
@@ -249,9 +250,12 @@ export function LandingPage() {
             <LoginFooter />
           </div>
 
-          <div className="mt-8 flex items-center justify-center gap-2 text-xs text-gray-400 dark:text-gray-500">
-            <ShieldCheck className="size-3.5" />
-            Your conversations are private and encrypted.
+          <div className="mt-8 space-y-4">
+            <div className="flex items-center justify-center gap-2 text-xs text-gray-400 dark:text-gray-500">
+              <ShieldCheck className="size-3.5" />
+              Your conversations are private and encrypted.
+            </div>
+            <LegalNotice />
           </div>
         </section>
       </div>

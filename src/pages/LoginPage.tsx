@@ -54,7 +54,7 @@ export function LoginPage() {
           <h1 className="mb-1 text-2xl font-bold text-gray-900 dark:text-white text-center">
             Welcome back
           </h1>
-          <p className="mb-6 text-sm text-gray-500 dark:text-gray-400">
+          <p className="mb-4 text-sm text-gray-500 dark:text-gray-400">
             Sign in with your email or username to continue.
           </p>
 

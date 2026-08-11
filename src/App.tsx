@@ -255,6 +255,15 @@ export function App() {
     <BrowserRouter>
       <AuthInitializer>
         <Routes>
+          <Route
+            path="/"
+            element={
+              <ErrorBoundaryRoute>
+                <RootRoute />
+              </ErrorBoundaryRoute>
+            }
+          />
+
           <Route element={<GuestRoute />}>
             <Route
               path="/login"
@@ -305,18 +314,6 @@ export function App() {
 
           <Route element={<ProtectedRoute />}>
             <Route element={<AppLayout />}>
-              <Route
-                path="/"
-                element={
-                  <ErrorBoundaryRoute>
-                    <RoleRoute
-                      userPage={UserHomePage}
-                      adminPage={AdminDashboardPage}
-                      therapistPage={TherapistDashboardPage}
-                    />
-                  </ErrorBoundaryRoute>
-                }
-              />
               <Route
                 path="/chat"
                 element={

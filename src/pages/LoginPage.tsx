@@ -74,10 +74,10 @@ export function LoginPage() {
 
           <LoginFooter />
         </div>
-      </div>
 
-      <div className="relative mt-4 w-full max-w-md">
-        <LegalNotice />
+        <div className="mt-4">
+          <LegalNotice />
+        </div>
       </div>
     </main>
   )

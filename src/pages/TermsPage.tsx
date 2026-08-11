@@ -15,14 +15,14 @@ export function TermsPage() {
           By creating an account, signing in, or using Therabridge (the
           &ldquo;Service&rdquo;), you agree to these Terms, our{" "}
           <Link
-            to="/privacy"
+            to="/privacy-policy"
             className="text-emerald-600 underline underline-offset-2 hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300"
           >
             Privacy Policy
           </Link>
           , and our{" "}
           <Link
-            to="/cookies"
+            to="/cookie-use"
             className="text-emerald-600 underline underline-offset-2 hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300"
           >
             Cookie Use
@@ -123,7 +123,7 @@ export function TermsPage() {
           therapist — or, if you don&rsquo;t have one, a member of our team — so
           someone can check in on you. We explain all of this in our{" "}
           <Link
-            to="/privacy"
+            to="/privacy-policy"
             className="text-emerald-600 underline underline-offset-2 hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300"
           >
             Privacy Policy

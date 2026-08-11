@@ -197,7 +197,7 @@ export function LandingPage() {
             </h1>
             <p className="mx-auto mt-5 max-w-sm text-pretty text-base leading-relaxed text-gray-500 dark:text-gray-400">
               Private chats with your therapist, a 24/7 AI companion, mood
-              tracking, and gentle daily check-ins — in one calm, secure place.
+              tracking, and gentle daily check-ins in one calm, secure place.
             </p>
           </div>
 

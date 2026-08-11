@@ -5,6 +5,7 @@ import { ModeToggle } from "@/components/shared/mode-toggle"
 import { useLoginState } from "@/components/shared/auth/useLoginState"
 import { LoginForm } from "@/components/shared/auth/LoginForm"
 import { LoginFooter } from "@/components/shared/auth/LoginFooter"
+import { LegalNotice } from "@/components/legal/LegalNotice"
 
 export function LoginPage() {
   const {
@@ -73,6 +74,10 @@ export function LoginPage() {
 
           <LoginFooter />
         </div>
+      </div>
+
+      <div className="relative mt-4 w-full max-w-md">
+        <LegalNotice />
       </div>
     </main>
   )

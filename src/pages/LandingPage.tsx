@@ -25,7 +25,7 @@ function PhoneMockup() {
 
   return (
     <div
-      className="mockup-phone animate-float-y w-full max-w-100 max-h-160"
+      className="mockup-phone animate-float-y w-full max-w-98 max-h-170"
       style={{ borderColor: "var(--border)" }}
     >
       <div className="mockup-phone-camera"></div>

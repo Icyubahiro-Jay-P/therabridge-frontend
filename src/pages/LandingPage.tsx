@@ -24,15 +24,29 @@ function PhoneMockup() {
 
   return (
     <div
-      className="mockup-phone animate-float-y w-full max-w-82.5"
+      className="mockup-phone animate-float-y w-full max-w-90 max-h-160"
       style={{ borderColor: "var(--border)" }}
     >
       <div className="mockup-phone-camera"></div>
       <div className="mockup-phone-display">
         <div className="flex h-full w-full flex-col bg-linear-to-br from-emerald-50 via-white to-teal-50 px-6 pt-14 pb-7 dark:from-gray-900 dark:via-gray-900 dark:to-emerald-950/40">
-          <div className="flex items-center justify-between text-[10px] font-medium tracking-wide text-gray-400">
-            <span>9:41</span>
-            <span className="flex items-center gap-1.5" aria-hidden="true">
+          <div className="grid grid-cols-3 items-center">
+            <span className="justify-self-start text-[10px] font-medium tracking-wide text-gray-400">
+              9:41
+            </span>
+            <span className="flex items-center justify-center gap-1 rounded-full bg-emerald-100/80 px-2 py-1 dark:bg-emerald-900/50">
+              <span className="relative flex size-1.5">
+                <span className="absolute inline-flex size-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+                <span className="relative inline-flex size-1.5 rounded-full bg-emerald-500" />
+              </span>
+              <span className="text-[9px] font-semibold text-emerald-700 dark:text-emerald-300">
+                Therry is here
+              </span>
+            </span>
+            <span
+              className="flex items-center justify-self-end gap-1.5"
+              aria-hidden="true"
+            >
               <span className="size-1.5 rounded-full bg-gray-300 dark:bg-gray-600" />
               <span className="size-1.5 rounded-full bg-gray-300 dark:bg-gray-600" />
               <span className="size-1.5 rounded-full bg-emerald-500" />
@@ -164,16 +178,6 @@ export function LandingPage() {
       <div className="relative z-10 mx-auto grid min-h-svh w-full max-w-6xl grid-cols-1 items-center gap-20 px-6 py-16 sm:px-10 sm:py-20 lg:grid-cols-[1fr_1.05fr] lg:gap-24 lg:px-14 lg:py-24">
         <section className="relative hidden lg:flex lg:items-center lg:justify-center">
           <PhoneMockup />
-
-          <div className="absolute top-16 -left-10 hidden animate-rise-in items-center gap-2 rounded-full border border-white/60 bg-white/90 py-2 pr-4 pl-2 shadow-lg shadow-emerald-900/10 backdrop-blur xl:flex dark:border-white/10 dark:bg-gray-900/90">
-            <span className="relative flex size-2">
-              <span className="absolute inline-flex size-full animate-ping rounded-full bg-emerald-400 opacity-75" />
-              <span className="relative inline-flex size-2 rounded-full bg-emerald-500" />
-            </span>
-            <span className="text-xs font-medium text-gray-700 dark:text-gray-200">
-              Therry is here
-            </span>
-          </div>
         </section>
 
         <section className="animate-rise-in mx-auto w-full max-w-md">

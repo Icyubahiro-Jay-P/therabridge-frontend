@@ -40,6 +40,15 @@ const AccountDisabledPage = lazy(() =>
 const LandingPage = lazy(() =>
   import("@/pages/LandingPage").then((mod) => ({ default: mod.LandingPage }))
 )
+const TermsPage = lazy(() =>
+  import("@/pages/TermsPage").then((mod) => ({ default: mod.TermsPage }))
+)
+const PrivacyPage = lazy(() =>
+  import("@/pages/PrivacyPage").then((mod) => ({ default: mod.PrivacyPage }))
+)
+const CookiesPage = lazy(() =>
+  import("@/pages/CookiesPage").then((mod) => ({ default: mod.CookiesPage }))
+)
 
 const UserHomePage = lazy(() =>
   import("@/pages/user/HomePage").then((mod) => ({ default: mod.HomePage }))
@@ -308,6 +317,30 @@ export function App() {
             element={
               <ErrorBoundaryRoute>
                 <AccountDisabledPage />
+              </ErrorBoundaryRoute>
+            }
+          />
+          <Route
+            path="/terms"
+            element={
+              <ErrorBoundaryRoute>
+                <TermsPage />
+              </ErrorBoundaryRoute>
+            }
+          />
+          <Route
+            path="/privacy"
+            element={
+              <ErrorBoundaryRoute>
+                <PrivacyPage />
+              </ErrorBoundaryRoute>
+            }
+          />
+          <Route
+            path="/cookies"
+            element={
+              <ErrorBoundaryRoute>
+                <CookiesPage />
               </ErrorBoundaryRoute>
             }
           />

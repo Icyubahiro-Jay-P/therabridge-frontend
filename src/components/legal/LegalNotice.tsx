@@ -14,15 +14,15 @@ export function LegalNotice({ className }: { className?: string }) {
       )}
     >
       By continuing, you agree to our{" "}
-      <Link to="/terms" className={linkClass}>
+      <Link to="/terms-of-service" className={linkClass}>
         Terms of Service
       </Link>
       ,{" "}
-      <Link to="/privacy" className={linkClass}>
+      <Link to="/privacy-policy" className={linkClass}>
         Privacy Policy
       </Link>{" "}
       and{" "}
-      <Link to="/cookies" className={linkClass}>
+      <Link to="/cookie-use" className={linkClass}>
         Cookie Use
       </Link>
       .

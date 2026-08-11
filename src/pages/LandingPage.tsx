@@ -177,7 +177,7 @@ export function LandingPage() {
       </div>
 
       <div className="relative z-10 mx-auto grid min-h-svh w-full max-w-6xl grid-cols-1 items-center gap-20 px-6 py-16 sm:px-10 sm:py-20 lg:grid-cols-[1fr_1.05fr] lg:gap-24 lg:px-14 lg:py-10">
-        <section className="relative hidden md:flex md:items-center md:justify-center">
+        <section className="relative hidden md:flex md:items-center md:justify-center lg:-translate-y-11">
           <PhoneMockup />
         </section>
 

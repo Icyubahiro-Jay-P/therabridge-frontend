@@ -54,19 +54,19 @@ export function LegalLayout({
           </p>
           <nav className="flex items-center gap-5 text-xs font-medium">
             <Link
-              to="/terms"
+              to="/terms-of-service"
               className="text-gray-500 transition-colors hover:text-emerald-600 dark:text-gray-400 dark:hover:text-emerald-400"
             >
               Terms of Service
             </Link>
             <Link
-              to="/privacy"
+              to="/privacy-policy"
               className="text-gray-500 transition-colors hover:text-emerald-600 dark:text-gray-400 dark:hover:text-emerald-400"
             >
               Privacy Policy
             </Link>
             <Link
-              to="/cookies"
+              to="/cookie-use"
               className="text-gray-500 transition-colors hover:text-emerald-600 dark:text-gray-400 dark:hover:text-emerald-400"
             >
               Cookie Use

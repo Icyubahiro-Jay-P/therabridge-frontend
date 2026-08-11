@@ -148,7 +148,7 @@ export function LandingPage() {
   } = useLoginState()
 
   return (
-    <main className="relative min-h-svh overflow-x-hidden overflow-y-auto bg-linear-to-br from-emerald-50 via-white to-teal-50 dark:from-gray-950 dark:via-gray-900 dark:to-emerald-950/30">
+    <main className="relative h-svh overflow-x-hidden overflow-y-auto bg-linear-to-br from-emerald-50 via-white to-teal-50 dark:from-gray-950 dark:via-gray-900 dark:to-emerald-950/30">
       <div
         className="pointer-events-none absolute inset-0 overflow-hidden"
         aria-hidden="true"
@@ -157,7 +157,7 @@ export function LandingPage() {
         <div className="absolute -bottom-40 -left-32 size-120 rounded-full bg-teal-400/20 blur-3xl dark:bg-teal-600/10" />
       </div>
 
-      <div className="absolute top-5 right-5 z-20">
+      <div className="fixed top-5 right-5 z-20">
         <ModeToggle />
       </div>
 

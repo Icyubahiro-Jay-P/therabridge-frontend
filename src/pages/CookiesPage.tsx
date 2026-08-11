@@ -90,7 +90,7 @@ export function CookiesPage() {
           options in the app, or visit therabridge.vercel.app. You can also
           read our{" "}
           <Link
-            to="/privacy"
+            to="/privacy-policy"
             className="text-emerald-600 underline underline-offset-2 hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300"
           >
             Privacy Policy

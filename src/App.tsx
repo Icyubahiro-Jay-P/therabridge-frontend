@@ -37,6 +37,9 @@ const AccountDisabledPage = lazy(() =>
     default: mod.AccountDisabledPage,
   }))
 )
+const LandingPage = lazy(() =>
+  import("@/pages/LandingPage").then((mod) => ({ default: mod.LandingPage }))
+)
 
 const UserHomePage = lazy(() =>
   import("@/pages/user/HomePage").then((mod) => ({ default: mod.HomePage }))
@@ -111,21 +114,37 @@ const TherapistClientsPage = lazy(() =>
   }))
 )
 
-function RoleRoute({
-  userPage: UserPage,
-  adminPage: AdminPage,
-  therapistPage: TherapistPage,
-}: {
-  userPage: React.ComponentType
-  adminPage?: React.ComponentType
-  therapistPage?: React.ComponentType
-}) {
+function RootRoute() {
   const user = useAuthStore((state) => state.user)
-  const role = user?.role ?? "user"
+  const isInitialized = useAuthStore((state) => state.isInitialized)
 
-  if (role === "admin" && AdminPage) return <AdminPage />
-  if (role === "therapist" && TherapistPage) return <TherapistPage />
-  return <UserPage />
+  if (!isInitialized) {
+    return (
+      <div className="flex min-h-svh items-center justify-center">
+        <p className="text-sm text-muted-foreground">Loading...</p>
+      </div>
+    )
+  }
+
+  if (!user) {
+    return <LandingPage />
+  }
+
+  if (user.isDisabled) {
+    return <Navigate to="/account-disabled" replace />
+  }
+
+  return (
+    <AppLayout>
+      {user.role === "admin" ? (
+        <AdminDashboardPage />
+      ) : user.role === "therapist" ? (
+        <TherapistDashboardPage />
+      ) : (
+        <UserHomePage />
+      )}
+    </AppLayout>
+  )
 }
 
 function RequireRole({

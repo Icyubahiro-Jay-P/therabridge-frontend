@@ -29,6 +29,11 @@ const VerifyEmailPage = lazy(() =>
     default: mod.VerifyEmailPage,
   }))
 )
+const OnboardingPage = lazy(() =>
+  import("@/pages/OnboardingPage").then((mod) => ({
+    default: mod.OnboardingPage,
+  }))
+)
 const PublicProfilePage = lazy(() =>
   import("@/pages/PublicProfilePage").then((mod) => ({
     default: mod.PublicProfilePage,
@@ -323,6 +328,14 @@ export function App() {
               element={
                 <ErrorBoundaryRoute>
                   <VerifyEmailPage />
+                </ErrorBoundaryRoute>
+              }
+            />
+            <Route
+              path="/onboarding"
+              element={
+                <ErrorBoundaryRoute>
+                  <OnboardingPage />
                 </ErrorBoundaryRoute>
               }
             />

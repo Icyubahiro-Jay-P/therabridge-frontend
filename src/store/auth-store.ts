@@ -39,6 +39,7 @@ interface AuthState {
   initialize: (isRetry?: boolean) => Promise<void>
   login: (payload: LoginPayload) => Promise<string>
   register: (payload: RegisterPayload) => Promise<string>
+  markVerified: () => void
   logout: () => Promise<void>
   updateProfile: (payload: UpdateProfilePayload) => Promise<void>
   changePassword: (payload: ChangePasswordPayload) => Promise<string>
@@ -162,6 +163,11 @@ export const useAuthStore = create<AuthState>()(
           set({ isLoading: false })
         }
       },
+
+      markVerified: () =>
+        set((state) => ({
+          user: state.user ? { ...state.user, isAccountVerified: true } : null,
+        })),
 
       logout: async () => {
         set({ isLoading: true, error: null })

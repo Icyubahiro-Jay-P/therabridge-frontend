@@ -17,6 +17,8 @@ React 19 + TypeScript SPA for Therabridge, a mental wellness platform connecting
 - **Privacy Shield** - Screenshot protection, watermarking, and audit trails for sensitive content
 - **Data Privacy & Compliance** - Persistent AI-disclosure modal, self-serve data export, account deletion, and retention notices
 - **Live Crisis Escalation** - Therry auto-detects crisis language and surfaces an in-chat crisis card with region hotlines and one-tap therapist notification
+- **Email Verification & Onboarding** - 6-digit code verification flow with resend cooldown, unverified banner, and a skippable two-step onboarding (avatar + bio)
+- **Admin Analytics Dashboard** - KPI overview with 7/30-day trends and a 14-day activity line chart with toggleable legend series
 
 ## Stack
 
@@ -69,7 +71,9 @@ npm run dev      # Starts on http://localhost:5173 (Vite proxies /api → http:/
 | `/signup/:step` | Register | One field per step (`first-name`, `last-name`, `username`, `email`, `date-of-birth`, `password`) |
 | `/forgot-password` | Forgot Password | Email reset request |
 | `/reset-password/:token` | Reset Password | New password form |
-| `/` | Home/Dashboard | Greeting, streaks, exercises, appointments |
+| `/verify-email` | Verify Email | 6-digit code entry (paste/auto-advance, resend with 60-s cooldown) |
+| `/onboarding` | Onboarding | Post-verification profile setup (avatar + bio, both skippable) |
+| `/` | Home/Dashboard | Greeting, streaks, exercises, appointments (admins see the analytics dashboard; therapists see their dashboard) |
 | `/chat` | Chat | Direct-message hub (conversation list) |
 | `/chat/:username` | Chat | DM thread with another user |
 | `/chat/therry` | Therry | AI wellness companion (history persisted) |

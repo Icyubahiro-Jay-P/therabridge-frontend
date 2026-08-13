@@ -23,6 +23,7 @@ type RawUser = {
   avatar?: string | null
   bio?: string
   isDisabled?: boolean
+  isAccountVerified?: boolean
   createdAt?: string
   updatedAt?: string
   privacySettings?: PrivacySettings
@@ -46,6 +47,7 @@ function normalizeUser(raw: RawUser): User {
     avatar: raw.avatar,
     bio: raw.bio,
     isDisabled: raw.isDisabled,
+    isAccountVerified: raw.isAccountVerified,
     createdAt: raw.createdAt,
     updatedAt: raw.updatedAt,
     privacySettings: raw.privacySettings,
@@ -143,6 +145,21 @@ export async function resetPassword(
     { password }
   )
   return data.message
+}
+
+export async function verifyEmail(code: string): Promise<{ message: string }> {
+  const { data } = await api.post<{ message: string; isAccountVerified: boolean }>(
+    "/api/users/verify-email",
+    { code }
+  )
+  return data
+}
+
+export async function resendVerification(): Promise<number> {
+  const { data } = await api.post<{ message: string; resendCooldownSeconds: number }>(
+    "/api/users/resend-verification"
+  )
+  return data.resendCooldownSeconds ?? 60
 }
 
 export async function fetchPublicProfile(

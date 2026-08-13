@@ -1,39 +1,85 @@
 import { useEffect, useState } from "react"
-import { Loader2, Shield, Users, Hash, AlertTriangle } from "lucide-react"
+import {
+  Loader2,
+  Users,
+  Shield,
+  Hash,
+  AlertTriangle,
+  UserPlus,
+  MessageCircle,
+  Heart,
+  Activity,
+  RefreshCw,
+} from "lucide-react"
 
 import { useAuthStore } from "@/store/auth-store"
 import { api } from "@/lib/api"
 import { AdminStatCard } from "@/components/admin/AdminStatCard"
+import { PageHeader } from "@/components/admin/PageHeader"
+import { FeedbackBanner } from "@/components/admin/FeedbackBanner"
+import { ActivityChart } from "@/components/admin/ActivityChart"
+import { MoodDistribution } from "@/components/admin/MoodDistribution"
+import { ActiveCrises } from "@/components/admin/ActiveCrises"
+import { RecentSignups } from "@/components/admin/RecentSignups"
+import { TopCommunities } from "@/components/admin/TopCommunities"
+import { RecentAudit } from "@/components/admin/RecentAudit"
+import type { AdminDashboardData } from "@/components/admin/dashboard-types"
+
+const EMPTY_DATA: AdminDashboardData = {
+  totals: { users: 0, therapists: 0, admins: 0, communities: 0, activeCrisis: 0, unverifiedUsers: 0, disabledUsers: 0, notifications: 0 },
+  trends: { signupsToday: 0, signupsWeek: 0, signupsMonth: 0, communitiesWeek: 0, crisesWeek: 0, crisesMonth: 0, messagesWeek: 0, communityMessagesWeek: 0, moodsWeek: 0, exercisesWeek: 0 },
+  activity: [],
+  moodDistribution: { great: 0, good: 0, okay: 0, bad: 0, terrible: 0 },
+  recentSignups: [],
+  activeCrises: [],
+  recentAudit: [],
+  topCommunities: [],
+}
 
 export function AdminDashboardPage() {
   const user = useAuthStore((state) => state.user)
-  const [stats, setStats] = useState({ users: 0, therapists: 0, communities: 0, activeCrisis: 0, totalNotifications: 0 })
+  const [data, setData] = useState<AdminDashboardData>(EMPTY_DATA)
   const [loading, setLoading] = useState(true)
+  const [refreshing, setRefreshing] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  async function fetchDashboard(): Promise<AdminDashboardData> {
+    const res = await api.get<AdminDashboardData>("/api/admin/dashboard")
+    return res.data
+  }
 
   useEffect(() => {
-    async function load() {
-      try {
-        const [usersRes, communitiesRes, crisisRes] = await Promise.all([
-          api.get("/api/users/users"),
-          api.get("/api/chat/communities"),
-          api.get("/api/crisis/active").catch(() => ({ data: [] })),
-        ])
-        const allUsers = usersRes.data
-        setStats({
-          users: allUsers.filter((u: { role: string }) => u.role === "user").length,
-          therapists: allUsers.filter((u: { role: string }) => u.role === "therapist").length,
-          communities: communitiesRes.data.length,
-          activeCrisis: crisisRes.data.length || 0,
-          totalNotifications: 0,
-        })
-      } catch {
-        // Keep previous stats on a transient failure.
-      } finally {
-        setLoading(false)
-      }
+    let cancelled = false
+    fetchDashboard()
+      .then((dashboard) => {
+        if (cancelled) return
+        setData(dashboard)
+        setError(null)
+      })
+      .catch((err) => {
+        if (cancelled) return
+        setError(err instanceof Error ? err.message : "Failed to load dashboard")
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false)
+      })
+    return () => {
+      cancelled = true
     }
-    void load()
   }, [])
+
+  function handleRefresh() {
+    setRefreshing(true)
+    fetchDashboard()
+      .then((dashboard) => {
+        setData(dashboard)
+        setError(null)
+      })
+      .catch((err) =>
+        setError(err instanceof Error ? err.message : "Failed to load dashboard")
+      )
+      .finally(() => setRefreshing(false))
+  }
 
   if (loading) {
     return (
@@ -43,24 +89,73 @@ export function AdminDashboardPage() {
     )
   }
 
-  const cards = [
-    { label: "Users", value: stats.users, icon: Users, href: "/users", color: "bg-sky-500" },
-    { label: "Therapists", value: stats.therapists, icon: Shield, href: "/users", color: "bg-emerald-500" },
-    { label: "Communities", value: stats.communities, icon: Hash, href: "/communities", color: "bg-violet-500" },
-    { label: "Active Crisis", value: stats.activeCrisis, icon: AlertTriangle, href: "/crisis", color: "bg-red-500" },
+  const { totals, trends } = data
+
+  const primaryCards = [
+    {
+      label: "Users",
+      value: totals.users,
+      icon: Users,
+      href: "/users",
+      color: "bg-sky-500",
+      subtitle: `+${trends.signupsWeek} new this week`,
+    },
+    {
+      label: "Therapists",
+      value: totals.therapists,
+      icon: Shield,
+      href: "/users",
+      color: "bg-emerald-500",
+      subtitle: `${totals.unverifiedUsers} unverified accounts`,
+    },
+    {
+      label: "Communities",
+      value: totals.communities,
+      icon: Hash,
+      href: "/communities",
+      color: "bg-violet-500",
+      subtitle: `+${trends.communitiesWeek} created this week`,
+    },
+    {
+      label: "Active Crisis",
+      value: totals.activeCrisis,
+      icon: AlertTriangle,
+      href: "/crisis",
+      color: "bg-red-500",
+      isAlert: true,
+      subtitle: `${trends.crisesWeek} alerts in the last 7 days`,
+    },
+  ]
+
+  const weekCards = [
+    { label: "New signups (7d)", value: trends.signupsWeek, icon: UserPlus, color: "bg-teal-500", href: "/users" },
+    { label: "Direct messages (7d)", value: trends.messagesWeek, icon: MessageCircle, color: "bg-sky-500", href: "/users" },
+    { label: "Mood check-ins (7d)", value: trends.moodsWeek, icon: Heart, color: "bg-emerald-500", href: "/users" },
+    { label: "Exercises completed (7d)", value: trends.exercisesWeek, icon: Activity, color: "bg-amber-500", href: "/users" },
   ]
 
   return (
     <div className="space-y-8 p-6">
-      <div>
-        <h1 className="text-3xl font-semibold tracking-tight">Admin dashboard</h1>
-        <p className="mt-2 text-muted-foreground">
-          Welcome back, {user?.firstName}. Here is your platform overview.
-        </p>
+      <div className="flex flex-wrap items-start justify-between gap-4">
+        <PageHeader
+          title="Admin dashboard"
+          description={`Welcome back, ${user?.firstName}. Here is how Therabridge is doing today.`}
+        />
+        <button
+          type="button"
+          onClick={() => handleRefresh()}
+          disabled={refreshing}
+          className="flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 disabled:opacity-60 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200 dark:hover:bg-gray-800"
+        >
+          <RefreshCw className={`size-4 ${refreshing ? "animate-spin" : ""}`} />
+          Refresh
+        </button>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-4">
-        {cards.map((card) => (
+      {error && <FeedbackBanner type="error" message={error} />}
+
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {primaryCards.map((card) => (
           <AdminStatCard
             key={card.label}
             label={card.label}
@@ -68,10 +163,39 @@ export function AdminDashboardPage() {
             icon={card.icon}
             href={card.href}
             color={card.color}
-            isAlert={card.label === "Active Crisis"}
+            isAlert={card.isAlert}
+            subtitle={card.subtitle}
           />
         ))}
       </div>
+
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {weekCards.map((card) => (
+          <AdminStatCard
+            key={card.label}
+            label={card.label}
+            value={card.value}
+            icon={card.icon}
+            href={card.href}
+            color={card.color}
+          />
+        ))}
+      </div>
+
+      <div className="grid gap-4 lg:grid-cols-3">
+        <div className="lg:col-span-2">
+          <ActivityChart data={data.activity} />
+        </div>
+        <MoodDistribution distribution={data.moodDistribution} />
+      </div>
+
+      <div className="grid gap-4 lg:grid-cols-3">
+        <ActiveCrises crises={data.activeCrises} />
+        <RecentSignups signups={data.recentSignups} />
+        <TopCommunities communities={data.topCommunities} />
+      </div>
+
+      <RecentAudit entries={data.recentAudit} />
     </div>
   )
 }

@@ -108,13 +108,14 @@ src/
 │   ├── notifications/      # NotificationItem, NotificationsHeader
 │   ├── privacy/            # GuardOverlay, WatermarkCanvas
 │   ├── shared/             # Shared auth & profile components
-│   │   ├── auth/           # ProtectedRoute, ErrorBoundary, LoginForm, SignupForm, ...
+│   │   ├── auth/           # ProtectedRoute, ErrorBoundary, LoginForm, SignupForm, VerifyEmailForm, useVerifyEmailState, ...
 │   │   └── profile/        # ProfileHeader, ProfileInfoCard, PrivateFieldBadge
 │   ├── therapist/          # Therapist dashboard components
 │   ├── ui/                 # Shadcn/ui primitives
 │   ├── user/
 │   │   ├── chat/           # DM chat components
 │   │   ├── community/      # Community group chat
+│   │   ├── onboarding/     # OnboardingForm + useOnboardingState (avatar/bio setup)
 │   │   ├── settings/       # Settings panels (incl. DataPrivacySection)
 │   │   ├── therapists/     # Therapist browsing
 │   │   ├── therry/         # AI companion UI (ChatMessage, SuggestionChips, ChatInput, AiDisclosureModal, CrisisActions, ...)

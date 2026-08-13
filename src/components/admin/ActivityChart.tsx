@@ -90,16 +90,33 @@ export function ActivityChart({ data }: { data: DashboardActivityPoint[] }) {
         </span>
       </div>
 
-      <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 pb-4 text-xs text-gray-500 dark:text-gray-400">
-        {SERIES.map((s) => (
-          <span key={s.key} className="flex items-center gap-1.5">
-            <span
-              className="h-0.5 w-3 rounded-full"
-              style={{ backgroundColor: s.color }}
-            />
-            {s.label}
-          </span>
-        ))}
+      <div className="flex flex-wrap items-center gap-x-1.5 gap-y-1.5 pb-4 text-xs">
+        {SERIES.map((s) => {
+          const isOff = hidden.has(s.key)
+          return (
+            <button
+              key={s.key}
+              type="button"
+              aria-pressed={!isOff}
+              title={isOff ? `Show ${s.label}` : `Hide ${s.label}`}
+              onClick={() => toggleSeries(s.key)}
+              className={`flex cursor-pointer items-center gap-1.5 rounded-full border px-2.5 py-1 font-medium transition-all hover:bg-gray-50 dark:hover:bg-gray-800 ${
+                isOff
+                  ? "border-gray-200 text-gray-400 opacity-70 hover:opacity-100 dark:border-gray-700 dark:text-gray-500"
+                  : "border-transparent text-gray-600 dark:text-gray-300"
+              }`}
+            >
+              <span
+                className="h-0.5 w-3 rounded-full transition-opacity"
+                style={{
+                  backgroundColor: isOff ? "#9ca3af" : s.color,
+                  opacity: isOff ? 0.5 : 1,
+                }}
+              />
+              {s.label}
+            </button>
+          )
+        })}
       </div>
 
       {!hasActivity ? (

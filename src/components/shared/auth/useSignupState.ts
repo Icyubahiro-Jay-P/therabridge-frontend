@@ -149,7 +149,7 @@ export function useSignupState() {
     try {
       const message = await register(form)
       setFeedback({ type: "success", message })
-      window.setTimeout(() => navigate("/"), 900)
+      window.setTimeout(() => navigate("/verify-email"), 900)
     } catch (err) {
       setFeedback({ type: "error", message: err instanceof Error ? err.message : "Registration failed" })
     }

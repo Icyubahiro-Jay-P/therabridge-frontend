@@ -10,6 +10,7 @@ export function AdminStatCard({
   href,
   color,
   isAlert,
+  subtitle,
 }: {
   label: string
   value: number
@@ -17,6 +18,7 @@ export function AdminStatCard({
   href: string
   color: string
   isAlert?: boolean
+  subtitle?: string
 }) {
   return (
     <Link
@@ -26,16 +28,19 @@ export function AdminStatCard({
         isAlert && value > 0 && "border-red-200 dark:border-red-900/50"
       )}
     >
-      <span className={cn("flex size-12 items-center justify-center rounded-xl text-white", color)}>
+      <span className={cn("flex size-12 shrink-0 items-center justify-center rounded-xl text-white", color)}>
         <Icon className="size-6" />
       </span>
-      <div>
-        <p className={cn("text-2xl font-bold", isAlert && value > 0 ? "text-red-600 dark:text-red-400" : "text-gray-900 dark:text-white")}>
+      <div className="min-w-0">
+        <p className={cn("text-2xl font-bold leading-tight", isAlert && value > 0 ? "text-red-600 dark:text-red-400" : "text-gray-900 dark:text-white")}>
           {value}
         </p>
-        <p className="text-sm text-gray-500 dark:text-gray-400">{label}</p>
+        <p className="truncate text-sm text-gray-500 dark:text-gray-400">{label}</p>
+        {subtitle && (
+          <p className="truncate text-xs text-gray-400 dark:text-gray-500">{subtitle}</p>
+        )}
       </div>
-      <ChevronRight className="ml-auto size-4 text-gray-300" />
+      <ChevronRight className="ml-auto size-4 shrink-0 text-gray-300" />
     </Link>
   )
 }

@@ -123,6 +123,10 @@ export function ActivityChart({ data }: { data: DashboardActivityPoint[] }) {
         <div className="flex h-52 items-center justify-center rounded-xl border border-dashed border-gray-200 text-sm text-gray-400 dark:border-gray-700">
           No activity recorded in the last 14 days.
         </div>
+      ) : visibleSeries.length === 0 ? (
+        <div className="flex h-52 items-center justify-center rounded-xl border border-dashed border-gray-200 text-sm text-gray-400 dark:border-gray-700">
+          All series are hidden. Click a legend item to show it.
+        </div>
       ) : (
         <div className="relative">
           <svg

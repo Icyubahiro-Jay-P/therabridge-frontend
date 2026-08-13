@@ -49,7 +49,7 @@ export function VerifyEmailForm() {
           Email verified!
         </p>
         <p className="text-sm text-gray-500 dark:text-gray-400">
-          Taking you to your dashboard…
+          Taking you to set up your profile…
         </p>
       </div>
     )

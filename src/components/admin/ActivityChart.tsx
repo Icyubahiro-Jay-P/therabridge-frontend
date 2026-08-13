@@ -205,7 +205,7 @@ export function ActivityChart({ data }: { data: DashboardActivityPoint[] }) {
               />
             )}
 
-            {SERIES.map((s) => {
+            {visibleSeries.map((s) => {
               const points = data
                 .map(
                   (point, i) =>
@@ -263,7 +263,7 @@ export function ActivityChart({ data }: { data: DashboardActivityPoint[] }) {
                   {hovered.label}
                 </p>
                 <ul className="space-y-1.5">
-                  {SERIES.map((s) => (
+                  {visibleSeries.map((s) => (
                     <li
                       key={s.key}
                       className="flex items-center justify-between gap-3 text-xs"

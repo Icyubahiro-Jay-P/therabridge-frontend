@@ -83,8 +83,7 @@ export function AppLayout({ children }: { children?: React.ReactNode }) {
           >
             <MailCheck className="size-3.5 shrink-0" />
             <span>
-              Verify your email to activate your account — enter the 6-digit
-              code we sent you.
+              Verify your email to activate your account enter the 6-digit code we sent you.
             </span>
           </Link>
         )}

@@ -11,6 +11,8 @@ const SERIES = [
   { key: "signups", label: "Signups", color: "#14b8a6" },
 ] as const
 
+type SeriesKey = (typeof SERIES)[number]["key"]
+
 const VIEWBOX = { width: 720, height: 280 }
 const MARGIN = { top: 18, right: 16, bottom: 26, left: 38 }
 const Y_TICKS = 4
@@ -25,6 +27,9 @@ function niceMax(max: number): number {
 
 export function ActivityChart({ data }: { data: DashboardActivityPoint[] }) {
   const [hoverIndex, setHoverIndex] = useState<number | null>(null)
+  const [hidden, setHidden] = useState<Set<SeriesKey>>(new Set())
+
+  const visibleSeries = SERIES.filter((s) => !hidden.has(s.key))
 
   const n = data.length
   const hasActivity = data.some((point) =>
@@ -34,7 +39,7 @@ export function ActivityChart({ data }: { data: DashboardActivityPoint[] }) {
   const maxVal = niceMax(
     Math.max(
       1,
-      ...data.flatMap((point) => SERIES.map((s) => point[s.key]))
+      ...data.flatMap((point) => visibleSeries.map((s) => point[s.key]))
     )
   )
   const plotW = VIEWBOX.width - MARGIN.left - MARGIN.right
@@ -48,6 +53,15 @@ export function ActivityChart({ data }: { data: DashboardActivityPoint[] }) {
     value: (maxVal / Y_TICKS) * (Y_TICKS - t),
     y: yFor((maxVal / Y_TICKS) * (Y_TICKS - t)),
   }))
+
+  function toggleSeries(key: SeriesKey) {
+    setHidden((prev) => {
+      const next = new Set(prev)
+      if (next.has(key)) next.delete(key)
+      else next.add(key)
+      return next
+    })
+  }
 
   function handleMouseMove(event: React.MouseEvent<SVGSVGElement>) {
     const rect = event.currentTarget.getBoundingClientRect()

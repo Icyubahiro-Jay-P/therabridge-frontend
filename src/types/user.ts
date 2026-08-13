@@ -11,6 +11,7 @@ export interface User {
   avatar?: string | null
   bio?: string
   isDisabled?: boolean
+  isAccountVerified?: boolean
   createdAt?: string
   updatedAt?: string
   privacySettings?: PrivacySettings

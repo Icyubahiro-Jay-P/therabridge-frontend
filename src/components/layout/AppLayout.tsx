@@ -1,5 +1,6 @@
-import { Outlet } from "react-router-dom"
+import { Link, Outlet } from "react-router-dom"
 import { cn } from "@/lib/utils"
+import { MailCheck } from "lucide-react"
 import { useAuthStore } from "@/store/auth-store"
 import { useLayoutState } from "./useLayoutState"
 import { SidebarHeader } from "./SidebarHeader"
@@ -74,6 +75,19 @@ export function AppLayout({ children }: { children?: React.ReactNode }) {
           notificationCount={notificationCount}
           onOpenMenu={() => setMobileOpen(true)}
         />
+
+        {user && !user.isAccountVerified && (
+          <Link
+            to="/verify-email"
+            className="flex items-center justify-center gap-2 border-b border-amber-200/60 bg-amber-50 px-4 py-2 text-center text-xs font-medium text-amber-800 transition-colors hover:bg-amber-100 dark:border-amber-900/40 dark:bg-amber-950/40 dark:text-amber-300 dark:hover:bg-amber-950/70"
+          >
+            <MailCheck className="size-3.5 shrink-0" />
+            <span>
+              Verify your email to activate your account — enter the 6-digit
+              code we sent you.
+            </span>
+          </Link>
+        )}
 
         <main className="flex min-h-0 flex-1 flex-col overflow-y-auto pb-16 md:pb-0">
           {children ?? <Outlet />}

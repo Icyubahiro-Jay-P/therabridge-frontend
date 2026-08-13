@@ -24,6 +24,11 @@ const ResetPasswordPage = lazy(() =>
     default: mod.ResetPasswordPage,
   }))
 )
+const VerifyEmailPage = lazy(() =>
+  import("@/pages/VerifyEmailPage").then((mod) => ({
+    default: mod.VerifyEmailPage,
+  }))
+)
 const PublicProfilePage = lazy(() =>
   import("@/pages/PublicProfilePage").then((mod) => ({
     default: mod.PublicProfilePage,
@@ -312,6 +317,16 @@ export function App() {
               </ErrorBoundaryRoute>
             }
           />
+          <Route element={<ProtectedRoute />}>
+            <Route
+              path="/verify-email"
+              element={
+                <ErrorBoundaryRoute>
+                  <VerifyEmailPage />
+                </ErrorBoundaryRoute>
+              }
+            />
+          </Route>
           <Route
             path="/account-disabled"
             element={

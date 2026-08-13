@@ -60,7 +60,7 @@ export function useVerifyEmailState() {
       await verifyEmail(code)
       markVerified()
       setSuccess(true)
-      window.setTimeout(() => navigate("/"), 1500)
+      window.setTimeout(() => navigate("/onboarding"), 1500)
     } catch (err) {
       setError(err instanceof Error ? err.message : "Verification failed")
       setDigits(Array(VERIFY_CODE_LENGTH).fill(""))

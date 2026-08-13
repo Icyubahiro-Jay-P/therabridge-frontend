@@ -99,7 +99,7 @@ npm run dev      # Starts on http://localhost:5173 (Vite proxies /api → http:/
 ```
 src/
 ├── components/
-│   ├── admin/              # Admin panel components (AdminStatCard, SearchBar, ...)
+│   ├── admin/              # Admin panel components (AdminStatCard, ActivityChart, dashboard-types, ...)
 │   ├── crisis/             # Crisis support (AlertHistory, EmergencyContacts, ...)
 │   ├── exercises/          # ExerciseCard, ExerciseModal, types
 │   ├── home/               # ResourceCard, StreakCards, TherapistList, ...

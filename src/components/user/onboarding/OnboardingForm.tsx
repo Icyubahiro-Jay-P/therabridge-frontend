@@ -78,7 +78,7 @@ export function OnboardingForm() {
               Add a profile picture
             </h2>
             <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-              Optional — a photo helps friends and therapists recognise you.
+              Optional. A photo helps friends and therapists recognise you.
             </p>
           </div>
 
@@ -161,7 +161,7 @@ export function OnboardingForm() {
               Tell us a little about yourself
             </h2>
             <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-              Optional — a short bio appears on your public profile.
+              Optional. A short bio appears on your public profile.
             </p>
           </div>
 

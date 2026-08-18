@@ -8,7 +8,7 @@ export function TermsPage() {
     <LegalLayout
       title="Terms of Service"
       updated="August 11, 2026"
-      intro="These Terms explain what you can expect from Therabridge and what we ask of you in return. Please read them — by creating an account or using the app, you agree to them."
+      intro="These Terms explain what you can expect from Therabridge and what we ask of you in return. Please read them. By creating an account or using the app, you agree to them."
     >
       <LegalSection title="1. Your agreement">
         <p>
@@ -27,7 +27,7 @@ export function TermsPage() {
           >
             Cookie Use
           </Link>{" "}
-          policy. If any of this doesn&rsquo;t work for you, that&rsquo;s okay —
+          policy. If any of this doesn&rsquo;t work for you, that&rsquo;s okay,
           please just don&rsquo;t use the app.
         </p>
       </LegalSection>
@@ -56,13 +56,13 @@ export function TermsPage() {
         <p>
           We&rsquo;re here to support you, not to diagnose, treat, or replace
           professional care. Therry is a caring companion, not a therapist or
-          clinician, and their words are informational — not medical advice.
+          clinician, and their words are informational, not medical advice.
         </p>
         <p>
           If you&rsquo;re in danger or having a medical emergency, please call
           your local emergency number right away. If you&rsquo;re in crisis,
           use the hotlines shown in the app or reach out to someone you trust.
-          The crisis tools in Therabridge are an extra layer of support — never
+          The crisis tools in Therabridge are an extra layer of support, never
           a replacement for emergency care.
         </p>
       </LegalSection>
@@ -101,7 +101,7 @@ export function TermsPage() {
       <LegalSection title="7. What you share stays yours">
         <p>
           Your messages, mood entries, safety plans, and everything else you
-          create belong to you. We only use them to run the app — like storing
+          create belong to you. We only use them to run the app, like storing
           them securely and showing them back to you where they belong.
         </p>
         <p>
@@ -120,7 +120,7 @@ export function TermsPage() {
         <p>
           To help keep you safe, we may look at conversations for signs of
           crisis. If we think you might be in crisis, we may tell your
-          therapist — or, if you don&rsquo;t have one, a member of our team — so
+          therapist, or if you don&rsquo;t have one, a member of our team, so
           someone can check in on you. We explain all of this in our{" "}
           <Link
             to="/privacy-policy"
@@ -134,7 +134,7 @@ export function TermsPage() {
 
       <LegalSection title="9. Therapists and community rooms">
         <p>
-          Therapists and professionals on Therabridge are independent — they
+          Therapists and professionals on Therabridge are independent. They
           aren&rsquo;t employees of ours. Community rooms are by invitation
           only, and the people who run them may approve or remove members to
           keep the space safe and friendly.

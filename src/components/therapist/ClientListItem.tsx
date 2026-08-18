@@ -118,7 +118,7 @@ export function ClientListItem({
             <div>
               <p className="text-gray-400">Mood</p>
               <p className="font-medium capitalize">
-                {summary.signals.mood.lastMood ?? "—"} · {summary.signals.mood.trend}
+                {summary.signals.mood.lastMood ?? "--"} · {summary.signals.mood.trend}
               </p>
             </div>
             <div>

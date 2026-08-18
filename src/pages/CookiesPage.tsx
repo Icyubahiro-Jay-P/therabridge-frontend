@@ -8,13 +8,13 @@ export function CookiesPage() {
     <LegalLayout
       title="Cookie Use"
       updated="August 11, 2026"
-      intro="Cookies and small pieces of saved data are how Therabridge remembers you — like keeping you signed in and remembering your preferences. This page explains, in plain language, how that works."
+      intro="Cookies and small pieces of saved data are how Therabridge remembers you, like keeping you signed in and remembering your preferences. This page explains, in plain language, how that works."
     >
       <LegalSection title="1. What are cookies?">
         <p>
           Cookies are tiny files your browser saves on your device so websites
           can remember you between visits. We also use similar, simple storage
-          your browser offers — like saving your preferences.
+          your browser offers, like saving your preferences.
         </p>
       </LegalSection>
 
@@ -58,7 +58,7 @@ export function CookiesPage() {
 
       <LegalSection title="4. Do we use third-party cookies?">
         <p>
-          No — not today. Therabridge doesn&rsquo;t use advertising, analytics,
+          No, not today. Therabridge doesn&rsquo;t use advertising, analytics,
           or social-media tracking cookies. If we ever decide to, we&rsquo;ll
           update this page and ask your permission first.
         </p>

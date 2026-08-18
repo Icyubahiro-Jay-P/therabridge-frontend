@@ -1,6 +1,6 @@
 // Client risk-insight contract for the therapist roster (B3). Mirrors
 // GET /api/therapist/clients/risk-summary. Deliberately "signals to check in
-// on" — never a diagnosis.
+// on, never a diagnosis.
 export interface ClientSignals {
   mood: {
     negativeLast7d: number
@@ -58,4 +58,4 @@ export const RISK_LEVEL_META: Record<
 }
 
 export const DISCLAIMER =
-  "These are signals for you to check in on — not a diagnosis."
+  "These are signals for you to check in on, not a diagnosis."

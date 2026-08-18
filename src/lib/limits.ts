@@ -1,6 +1,6 @@
 // Single source of truth for input character limits. These MUST match the
 // backend Zod schemas + Mongoose validators in backend/utils/validation.js.
-// The backend remains the authority — these enforce a friendlier client-side
+// The backend remains the authority, these enforce a friendlier client-side
 // UX (hard stop + counter) but the server re-validates everything.
 export const LIMITS = {
   message: {

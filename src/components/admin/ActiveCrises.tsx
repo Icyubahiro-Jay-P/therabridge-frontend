@@ -53,7 +53,7 @@ export function ActiveCrises({ crises }: { crises: DashboardCrisis[] }) {
 
       {crises.length === 0 ? (
         <div className="rounded-xl bg-emerald-50 px-4 py-6 text-center text-sm font-medium text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400">
-          No active alerts — all clear.
+          No active alerts, all clear.
         </div>
       ) : (
         <ul className="space-y-3">

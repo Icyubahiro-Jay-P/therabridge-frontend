@@ -8,13 +8,13 @@ export function PrivacyPage() {
     <LegalLayout
       title="Privacy Policy"
       updated="August 11, 2026"
-      intro="What you share here is personal — especially when it comes to your wellbeing. This policy explains what we collect, how we use it, and how we keep it safe. If you ever have questions, we&rsquo;re here to answer them."
+      intro="What you share here is personal, especially when it comes to your wellbeing. This policy explains what we collect, how we use it, and how we keep it safe. If you ever have questions, we&rsquo;re here to answer them."
     >
       <LegalSection title="1. What we collect">
         <p>
           <strong>About you.</strong> Your first and last name, username, email
           address, date of birth, an optional profile photo, and an optional
-          bio. Your password is never stored in a way anyone — including us —
+          bio. Your password is never stored in a way anyone, including us,
           can read.
         </p>
         <p>
@@ -34,7 +34,7 @@ export function PrivacyPage() {
 
       <LegalSection title="2. How we use it">
         <ul className="list-disc space-y-1.5 pl-5">
-          <li>To run the app — messaging, communities, Therry, and everything in between</li>
+          <li>To run the app, messaging, communities, Therry, and everything in between</li>
           <li>To connect you with your therapist and make sure help reaches you when needed</li>
           <li>To send the notifications you&rsquo;ve asked for</li>
           <li>To protect your account and keep the community safe</li>
@@ -50,8 +50,8 @@ export function PrivacyPage() {
         <p>We take your privacy seriously. Here&rsquo;s what that looks like:</p>
         <ul className="list-disc space-y-1.5 pl-5">
           <li>
-            <strong>Encryption.</strong> Sensitive things — your messages, mood
-            notes, crisis descriptions, safety plan, and chats with Therry —
+            <strong>Encryption.</strong> Sensitive things, your messages, mood
+            notes, crisis descriptions, safety plan, and chats with Therry,
             are scrambled with strong encryption so they can only be read where
             they&rsquo;re meant to be.
           </li>
@@ -78,8 +78,8 @@ export function PrivacyPage() {
       <LegalSection title="4. Therry and getting you help">
         <p>
           When you talk to Therry, we may look for signs that you might be in
-          crisis. If we find them, we may let your therapist know — or, if you
-          don&rsquo;t have one, a member of our team — and we&rsquo;ll show you
+          crisis. If we find them, we may let your therapist know, or if you
+          don&rsquo;t have one, a member of our team, and we&rsquo;ll show you
           hotlines for your area right in the app. We do this to help keep you
           safe, and we&rsquo;re always upfront about it.
         </p>
@@ -98,7 +98,7 @@ export function PrivacyPage() {
           </li>
           <li>
             <strong>Our service providers.</strong> We rely on a small number
-            of trusted companies to run the app — like hosting and email — and
+            of trusted companies to run the app, like hosting and email, and
             they only handle data to do that job.
           </li>
           <li>
@@ -122,7 +122,7 @@ export function PrivacyPage() {
           <li>
             When you delete your account, we permanently remove your profile,
             messages, communities, moods, crises, safety plan, Therry history,
-            and more — everything connected to your account goes with it.
+            and more, everything connected to your account goes with it.
           </li>
         </ul>
       </LegalSection>

@@ -30,6 +30,15 @@ export const LIMITS = {
     rules: 500,
     inviteKey: 8,
   },
+  thoughtRecord: {
+    situation: 500,
+    automaticThought: 500,
+    emotions: 300,
+    evidenceFor: 500,
+    evidenceAgainst: 500,
+    reframe: 500,
+    outcomeEmotion: 300,
+  },
 } as const
 
 export type CharLimit = number

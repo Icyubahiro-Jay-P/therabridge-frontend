@@ -5,6 +5,7 @@ import {
   History,
   MoreVertical,
   PencilLine,
+  Reply,
   TriangleAlert,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
@@ -12,6 +13,7 @@ import type { DirectMessage } from "./types"
 import { Avatar } from "./Avatar"
 import { MessageActions } from "./MessageActions"
 import { EditHistory } from "./EditHistory"
+import { VoiceMessagePlayer } from "../shared/VoiceMessagePlayer"
 import { formatTime, timeAgo } from "../shared/utils"
 
 export const MessageBubble = memo(function MessageBubble({

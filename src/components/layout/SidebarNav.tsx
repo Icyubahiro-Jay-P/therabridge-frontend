@@ -1,6 +1,6 @@
 import {
   Home, LayoutDashboard, MessageCircle, Users, Heart,
-  Stethoscope, User, Shield, ShieldCheck, AlertTriangle, Bell, Settings, Brain, ClipboardCheck, Sparkles, Calendar, Route, BookOpen,
+  Stethoscope, User, Shield, ShieldCheck, AlertTriangle, Bell, Settings, Brain, ClipboardCheck, Sparkles, Calendar, Route, BookOpen, Moon,
 } from "lucide-react"
 import { NavItem, NavItemWithBadge } from "./NavItem"
 

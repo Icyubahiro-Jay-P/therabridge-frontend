@@ -1,9 +1,10 @@
 import { memo } from "react"
 import { Link } from "react-router-dom"
-import { CheckCheck } from "lucide-react"
+import { CheckCheck, Reply } from "lucide-react"
 import { cn } from "@/lib/utils"
 import type { CommunityMessage } from "./types"
 import { Avatar } from "./Avatar"
+import { VoiceMessagePlayer } from "../shared/VoiceMessagePlayer"
 import { timeAgo } from "../shared/utils"
 
 export const MessageBubble = memo(function MessageBubble({
@@ -11,11 +12,13 @@ export const MessageBubble = memo(function MessageBubble({
   isMe,
   onToggleTimestamp,
   selectedTimestampMessage,
+  onScrollToMessage,
 }: {
   msg: CommunityMessage
   isMe: boolean
   onToggleTimestamp: (id: string) => void
   selectedTimestampMessage: string | null
+  onScrollToMessage?: (id: string) => void
 }) {
   const showTime = selectedTimestampMessage === msg._id
   const readCount = msg.readBy?.length ?? 0
@@ -50,7 +53,36 @@ export const MessageBubble = memo(function MessageBubble({
               : "rounded-bl-md bg-gray-100 text-gray-900 dark:bg-gray-800 dark:text-gray-100"
           )}
         >
-          <p className="wrap-break-words whitespace-pre-wrap">{msg.content}</p>
+          {msg.replyTo && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation()
+                onScrollToMessage?.(msg.replyTo!._id)
+              }}
+              className={cn(
+                "mb-1.5 flex w-full items-center gap-2 border-l-2 px-2 py-1 text-left text-[11px] opacity-80 hover:opacity-100",
+                isMe
+                  ? "border-white/50 bg-white/10"
+                  : "border-emerald-400 bg-black/5 dark:border-emerald-500 dark:bg-white/5"
+              )}
+            >
+              <Reply className="size-3 shrink-0" />
+              <span className="truncate">
+                <span className="font-semibold">{msg.replyTo.senderUsername}</span>
+                {" — "}
+                {msg.replyTo.type === "voice" ? "🎤 Voice message" : msg.replyTo.content}
+              </span>
+            </button>
+          )}
+          {msg.type === "voice" && msg.audioUrl ? (
+            <VoiceMessagePlayer
+              audioUrl={msg.audioUrl}
+              duration={msg.duration}
+              isMe={isMe}
+            />
+          ) : (
+            <p className="wrap-break-words whitespace-pre-wrap">{msg.content}</p>
+          )}
         </div>
         {showTime && (
           <div

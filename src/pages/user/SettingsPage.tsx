@@ -9,6 +9,7 @@ import { PrivacyToggles } from "@/components/user/settings/PrivacyToggles"
 import { DataPrivacySection } from "@/components/user/settings/DataPrivacySection"
 import { DeleteAccountModal } from "@/components/user/settings/DeleteAccountModal"
 import { DeviceNotificationsToggle } from "@/components/user/settings/DeviceNotificationsToggle"
+import { TwoFactorSetup } from "@/components/shared/auth/TwoFactorSetup"
 import { playTestSound } from "@/lib/sound"
 
 export function SettingsPage() {
@@ -58,6 +59,15 @@ export function SettingsPage() {
       />
 
       <PrivacySettings settings={settings} updateSetting={updateSetting} />
+
+      <section className="space-y-3">
+        <h2 className="text-sm font-semibold tracking-wider text-gray-400 uppercase">
+          Security
+        </h2>
+        <div className="rounded-xl border border-gray-200 p-4 dark:border-gray-700/60">
+          <TwoFactorSetup />
+        </div>
+      </section>
 
       <section className="space-y-3">
         <h2 className="text-sm font-semibold tracking-wider text-gray-400 uppercase">

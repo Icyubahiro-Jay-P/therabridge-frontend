@@ -1,7 +1,6 @@
-import { useState, useRef, useEffect, useCallback } from "react"
-import { Mic, Square, X, Send, Loader2 } from "lucide-react"
+import { useState, useRef, useEffect } from "react"
+import { X, Send, Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { cn } from "@/lib/utils"
 
 interface VoiceRecorderProps {
   onRecordingComplete: (blob: Blob, duration: number) => void
@@ -14,7 +13,6 @@ export function VoiceRecorder({
   onCancel,
   sending = false,
 }: VoiceRecorderProps) {
-  const [recording, setRecording] = useState(false)
   const [duration, setDuration] = useState(0)
   const [analyserData, setAnalyserData] = useState<number[]>([])
   const mediaRecorderRef = useRef<MediaRecorder | null>(null)
@@ -23,67 +21,94 @@ export function VoiceRecorder({
   const timerRef = useRef<ReturnType<typeof setInterval>>(null)
   const analyserRef = useRef<AnalyserNode | null>(null)
   const rafRef = useRef<number>(0)
-  const canvasRef = useRef<HTMLCanvasElement>(null)
-
-  const startRecording = useCallback(async () => {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({
-        audio: {
-          echoCancellation: true,
-          noiseSuppression: true,
-          sampleRate: 44100,
-        },
-      })
-      streamRef.current = stream
-
-      const audioCtx = new AudioContext()
-      const source = audioCtx.createMediaStreamSource(stream)
-      const analyser = audioCtx.createAnalyser()
-      analyser.fftSize = 64
-      source.connect(analyser)
-      analyserRef.current = analyser
-
-      const mimeType = MediaRecorder.isTypeSupported("audio/webm;codecs=opus")
-        ? "audio/webm;codecs=opus"
-        : "audio/webm"
-      const recorder = new MediaRecorder(stream, { mimeType })
-      mediaRecorderRef.current = recorder
-      chunksRef.current = []
-
-      recorder.ondataavailable = (e) => {
-        if (e.data.size > 0) chunksRef.current.push(e.data)
-      }
-
-      recorder.start(100)
-      setRecording(true)
-      setDuration(0)
-
-      timerRef.current = setInterval(() => {
-        setDuration((d) => d + 1)
-      }, 1000)
-
-      const drawWave = () => {
-        if (!analyserRef.current) return
-        const data = new Uint8Array(analyserRef.current.frequencyBinCount)
-        analyserRef.current.getByteFrequencyData(data)
-        const normalized = Array.from(data).map((v) => v / 255)
-        setAnalyserData(normalized)
-        rafRef.current = requestAnimationFrame(drawWave)
-      }
-      rafRef.current = requestAnimationFrame(drawWave)
-    } catch {
-      onCancel()
-    }
-  }, [onCancel])
+  const durationRef = useRef(0)
+  const canvasRef = useRef<HTMLCanvasElement | null>(null)
 
   useEffect(() => {
-    startRecording()
+    let cancelled = false
+    async function init() {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          audio: {
+            echoCancellation: true,
+            noiseSuppression: true,
+            sampleRate: 44100,
+          },
+        })
+        if (cancelled) {
+          stream.getTracks().forEach((t) => t.stop())
+          return
+        }
+        streamRef.current = stream
+
+        const audioCtx = new AudioContext()
+        const source = audioCtx.createMediaStreamSource(stream)
+        const analyser = audioCtx.createAnalyser()
+        analyser.fftSize = 64
+        source.connect(analyser)
+        analyserRef.current = analyser
+
+        const mimeType = MediaRecorder.isTypeSupported("audio/webm;codecs=opus")
+          ? "audio/webm;codecs=opus"
+          : "audio/webm"
+        const recorder = new MediaRecorder(stream, { mimeType })
+        mediaRecorderRef.current = recorder
+        chunksRef.current = []
+
+        recorder.ondataavailable = (e) => {
+          if (e.data.size > 0) chunksRef.current.push(e.data)
+        }
+
+        recorder.start(100)
+        durationRef.current = 0
+        setDuration(0)
+
+        timerRef.current = setInterval(() => {
+          durationRef.current += 1
+          setDuration(durationRef.current)
+        }, 1000)
+
+        const drawWave = () => {
+          if (!analyserRef.current) return
+          const data = new Uint8Array(analyserRef.current.frequencyBinCount)
+          analyserRef.current.getByteFrequencyData(data)
+          const normalized = Array.from(data).map((v) => v / 255)
+          setAnalyserData(normalized)
+          rafRef.current = requestAnimationFrame(drawWave)
+        }
+        rafRef.current = requestAnimationFrame(drawWave)
+      } catch {
+        onCancel()
+      }
+    }
+    void init()
     return () => {
+      cancelled = true
       cancelAnimationFrame(rafRef.current)
       clearInterval(timerRef.current ?? undefined)
       streamRef.current?.getTracks().forEach((t) => t.stop())
     }
-  }, [startRecording])
+  }, [])
+
+  useEffect(() => {
+    const canvas = canvasRef.current
+    if (!canvas || analyserData.length === 0) return
+    const ctx = canvas.getContext("2d")
+    if (!ctx) return
+    const w = canvas.width
+    const h = canvas.height
+    ctx.clearRect(0, 0, w, h)
+    const barWidth = w / analyserData.length
+    analyserData.forEach((v, i) => {
+      const barH = Math.max(2, v * h)
+      const x = i * barWidth
+      const y = (h - barH) / 2
+      ctx.fillStyle = "rgb(16, 185, 129)"
+      ctx.beginPath()
+      ctx.roundRect(x + 1, y, barWidth - 2, barH, 2)
+      ctx.fill()
+    })
+  }, [analyserData])
 
   function stopRecording() {
     const recorder = mediaRecorderRef.current
@@ -93,10 +118,9 @@ export function VoiceRecorder({
       streamRef.current?.getTracks().forEach((t) => t.stop())
       cancelAnimationFrame(rafRef.current)
       clearInterval(timerRef.current ?? undefined)
-      onRecordingComplete(blob, duration)
+      onRecordingComplete(blob, durationRef.current)
     }
     recorder.stop()
-    setRecording(false)
   }
 
   function cancelRecording() {
@@ -133,24 +157,6 @@ export function VoiceRecorder({
               width={200}
               height={32}
               className="h-8 w-full"
-              ref={(canvas) => {
-                if (!canvas) return
-                const ctx = canvas.getContext("2d")
-                if (!ctx) return
-                const w = canvas.width
-                const h = canvas.height
-                ctx.clearRect(0, 0, w, h)
-                const barWidth = w / analyserData.length
-                analyserData.forEach((v, i) => {
-                  const barH = Math.max(2, v * h)
-                  const x = i * barWidth
-                  const y = (h - barH) / 2
-                  ctx.fillStyle = "rgb(16, 185, 129)"
-                  ctx.beginPath()
-                  ctx.roundRect(x + 1, y, barWidth - 2, barH, 2)
-                  ctx.fill()
-                })
-              }}
             />
           ) : (
             <div className="flex items-center gap-1 px-3">

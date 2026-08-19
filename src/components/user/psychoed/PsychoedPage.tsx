@@ -125,6 +125,7 @@ export function PsychoedPage() {
         }}
         onStart={s.startModule}
         onCompleteStep={s.completeStep}
+        onNavigateToStep={s.navigateToStep}
         onClearMessages={s.clearMessages}
       />
     )

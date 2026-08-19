@@ -1,5 +1,5 @@
 import { useRef, useEffect } from "react"
-import { CheckCheck, Loader2, PencilLine, Send, X } from "lucide-react"
+import { CheckCheck, Loader2, Mic, PencilLine, Reply, Send, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { CharCounter } from "@/components/ui/char-counter"
 import { cn } from "@/lib/utils"
@@ -9,6 +9,7 @@ export function MessageInput({
   value,
   onChange,
   onSend,
+  onSendVoice,
   sending,
   placeholder,
   enterToSend = true,
@@ -16,10 +17,13 @@ export function MessageInput({
   onCancelEdit,
   disabled = false,
   maxLength = LIMITS.message.dm,
+  replyTo,
+  onCancelReply,
 }: {
   value: string
   onChange: (v: string) => void
   onSend: () => void
+  onSendVoice?: (blob: Blob, duration: number) => void
   sending: boolean
   placeholder?: string
   enterToSend?: boolean
@@ -27,6 +31,12 @@ export function MessageInput({
   onCancelEdit?: () => void
   disabled?: boolean
   maxLength?: number
+  replyTo?: {
+    senderUsername: string
+    content: string
+    type?: string
+  } | null
+  onCancelReply?: () => void
 }) {
   const textareaRef = useRef<HTMLTextAreaElement>(null)
 
@@ -38,8 +48,29 @@ export function MessageInput({
     }
   }, [value])
 
+  const showVoiceRecorder = onSendVoice && !value.trim() && !editing
+
   return (
     <div className="border-t border-gray-200 px-4 py-3.5 dark:border-gray-700/60">
+      {replyTo && (
+        <div className="mb-2 flex items-center justify-between gap-2 rounded-lg border border-emerald-300 bg-emerald-50 px-3 py-2 dark:border-emerald-700/70 dark:bg-emerald-950/40">
+          <p className="flex items-center gap-1.5 truncate text-xs font-medium text-emerald-700 dark:text-emerald-300">
+            <Reply className="size-3.5 shrink-0" />
+            <span className="truncate">
+              Replying to <span className="font-bold">{replyTo.senderUsername}</span>
+              {" — "}
+              {replyTo.type === "voice" ? "Voice message" : replyTo.content}
+            </span>
+          </p>
+          <button
+            type="button"
+            onClick={onCancelReply}
+            className="flex shrink-0 cursor-pointer items-center gap-1 rounded-md px-2 py-1 text-xs font-medium text-emerald-700 hover:bg-emerald-100 dark:text-emerald-300 dark:hover:bg-emerald-900/40"
+          >
+            <X className="size-3.5" />
+          </button>
+        </div>
+      )}
       {editing && (
         <div className="mb-2 flex items-center justify-between gap-2 rounded-lg border border-teal-300 bg-teal-50 px-3 py-2 dark:border-teal-700/70 dark:bg-teal-950/40">
           <p className="flex items-center gap-1.5 text-xs font-medium text-teal-700 dark:text-teal-300">
@@ -87,25 +118,27 @@ export function MessageInput({
             }
           }}
         />
-        <Button
-          type="submit"
-          disabled={sending || disabled || !value.trim()}
-          className={cn(
-            "mb-0.5 shrink-0",
-            editing
-              ? "bg-teal-600 hover:bg-teal-700"
-              : "bg-emerald-600 hover:bg-emerald-700"
-          )}
-          size="icon"
-        >
-          {sending ? (
-            <Loader2 className="size-4 animate-spin" />
-          ) : editing ? (
-            <CheckCheck className="size-4" />
-          ) : (
-            <Send className="size-4" />
-          )}
-        </Button>
+        {value.trim() || editing ? (
+          <Button
+            type="submit"
+            disabled={sending || disabled || !value.trim()}
+            className={cn(
+              "mb-0.5 shrink-0",
+              editing
+                ? "bg-teal-600 hover:bg-teal-700"
+                : "bg-emerald-600 hover:bg-emerald-700"
+            )}
+            size="icon"
+          >
+            {sending ? (
+              <Loader2 className="size-4 animate-spin" />
+            ) : editing ? (
+              <CheckCheck className="size-4" />
+            ) : (
+              <Send className="size-4" />
+            )}
+          </Button>
+        ) : showVoiceRecorder ? null : null}
       </form>
       <div className="mt-1.5 flex justify-end">
         <CharCounter count={value.length} limit={maxLength} />

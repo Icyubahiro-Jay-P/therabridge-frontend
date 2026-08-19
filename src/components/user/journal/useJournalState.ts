@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from "react"
+import { useState, useCallback, useEffect, useRef } from "react"
 import * as journalApi from "@/lib/journal-api"
 import type { JournalEntry } from "./types"
 
@@ -7,7 +7,6 @@ export function useJournalState() {
   const [loading, setLoading] = useState(true)
   const [loadError, setLoadError] = useState<string | null>(null)
   const [hasMore, setHasMore] = useState(false)
-  const [page, setPage] = useState(1)
   const [searchQuery, setSearchQuery] = useState("")
   const [filterMood, setFilterMood] = useState<string | null>(null)
 
@@ -24,38 +23,41 @@ export function useJournalState() {
   const [editorTags, setEditorTags] = useState<string[]>([])
   const [editorIsPublic, setEditorIsPublic] = useState(false)
 
-  const loadEntries = useCallback(async (p: number, mood: string | null, search: string) => {
+  // Use a version counter to avoid stale responses
+  const fetchVersionRef = useRef(0)
+
+  const fetchEntries = useCallback(async (opts: { page?: number; mood?: string | null; search?: string; append?: boolean }) => {
+    const version = ++fetchVersionRef.current
     try {
-      setLoading(true)
+      if (!opts.append) setLoading(true)
       setLoadError(null)
       const data = await journalApi.getMyEntries({
-        page: p,
+        page: opts.page ?? 1,
         limit: 20,
-        mood: mood ?? undefined,
-        search: search || undefined,
+        mood: opts.mood ?? undefined,
+        search: opts.search || undefined,
       })
-      setEntries((prev) => (p === 1 ? data.entries : [...prev, ...data.entries]))
+      if (version !== fetchVersionRef.current) return
+      setEntries((prev) => (opts.append ? [...prev, ...data.entries] : data.entries))
       setHasMore(data.hasMore)
     } catch (err) {
+      if (version !== fetchVersionRef.current) return
       setLoadError(err instanceof Error ? err.message : "Failed to load entries")
     } finally {
-      setLoading(false)
+      if (version === fetchVersionRef.current) setLoading(false)
     }
   }, [])
 
-  // Reset and reload when filters change
+  // Initial load + refetch on filter change
   useEffect(() => {
-    loadEntries(1, filterMood, searchQuery)
-  }, [filterMood, searchQuery, loadEntries])
+    fetchEntries({ page: 1, mood: filterMood, search: searchQuery, append: false })
+  }, [filterMood, searchQuery, fetchEntries])
 
-  // Load more when page changes (but not page 1, which is handled above)
-  useEffect(() => {
-    if (page > 1) loadEntries(page, filterMood, searchQuery)
-  }, [page, filterMood, searchQuery, loadEntries])
-
-  const loadMore = useCallback(() => {
-    setPage((p) => p + 1)
-  }, [])
+  const loadMore = useCallback(async () => {
+    const currentCount = entries.length
+    const nextPage = Math.floor(currentCount / 20) + 1
+    await fetchEntries({ page: nextPage, mood: filterMood, search: searchQuery, append: true })
+  }, [entries.length, filterMood, searchQuery, fetchEntries])
 
   const openEditor = useCallback((entry?: JournalEntry) => {
     if (entry) {

@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect, useRef } from "react"
+import { useState, useCallback, useEffect } from "react"
 import * as journalApi from "@/lib/journal-api"
 import type { JournalEntry } from "./types"
 
@@ -24,23 +24,18 @@ export function useJournalState() {
   const [editorTags, setEditorTags] = useState<string[]>([])
   const [editorIsPublic, setEditorIsPublic] = useState(false)
 
-  const filtersRef = useRef({ searchQuery, filterMood })
-  filtersRef.current = { searchQuery, filterMood }
-
-  const loadEntries = useCallback(async (reset = false) => {
+  const loadEntries = useCallback(async (p: number, mood: string | null, search: string) => {
     try {
       setLoading(true)
       setLoadError(null)
-      const { searchQuery: sq, filterMood: fm } = filtersRef.current
       const data = await journalApi.getMyEntries({
-        page: reset ? 1 : undefined,
+        page: p,
         limit: 20,
-        mood: fm ?? undefined,
-        search: sq || undefined,
+        mood: mood ?? undefined,
+        search: search || undefined,
       })
-      setEntries((prev) => (reset ? data.entries : [...prev, ...data.entries]))
+      setEntries((prev) => (p === 1 ? data.entries : [...prev, ...data.entries]))
       setHasMore(data.hasMore)
-      if (reset) setPage(1)
     } catch (err) {
       setLoadError(err instanceof Error ? err.message : "Failed to load entries")
     } finally {
@@ -48,17 +43,19 @@ export function useJournalState() {
     }
   }, [])
 
+  // Reset and reload when filters change
   useEffect(() => {
-    loadEntries(true)
-  }, [loadEntries, searchQuery, filterMood])
+    loadEntries(1, filterMood, searchQuery)
+  }, [filterMood, searchQuery, loadEntries])
+
+  // Load more when page changes (but not page 1, which is handled above)
+  useEffect(() => {
+    if (page > 1) loadEntries(page, filterMood, searchQuery)
+  }, [page, filterMood, searchQuery, loadEntries])
 
   const loadMore = useCallback(() => {
     setPage((p) => p + 1)
   }, [])
-
-  useEffect(() => {
-    if (page > 1) loadEntries()
-  }, [page, loadEntries])
 
   const openEditor = useCallback((entry?: JournalEntry) => {
     if (entry) {

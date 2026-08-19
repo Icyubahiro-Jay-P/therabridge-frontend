@@ -506,6 +506,14 @@ export function App() {
                 }
               />
               <Route
+                path="/assessments"
+                element={
+                  <ErrorBoundaryRoute>
+                    <UserAssessmentsPage />
+                  </ErrorBoundaryRoute>
+                }
+              />
+              <Route
                 path="/clients"
                 element={
                   <ErrorBoundaryRoute>

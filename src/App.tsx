@@ -484,6 +484,14 @@ export function App() {
                 }
               />
               <Route
+                path="/journal"
+                element={
+                  <ErrorBoundaryRoute>
+                    <UserJournalPage />
+                  </ErrorBoundaryRoute>
+                }
+              />
+              <Route
                 path="/clients"
                 element={
                   <ErrorBoundaryRoute>

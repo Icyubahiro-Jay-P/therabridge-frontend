@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom"
-import { Menu, Shield, ShieldOff } from "lucide-react"
+import { Menu, Shield, ShieldOff, Video } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Avatar } from "./Avatar"
 import type { ChatUser } from "./types"
@@ -9,11 +9,15 @@ export function ChatHeader({
   onToggleSidebar,
   screenshotProtected,
   onToggleScreenshot,
+  onCall,
+  callDisabled,
 }: {
   partner: ChatUser
   onToggleSidebar: () => void
   screenshotProtected: boolean
   onToggleScreenshot: () => void
+  onCall?: () => void
+  callDisabled?: boolean
 }) {
   return (
     <div className="flex items-center justify-between border-b border-gray-200 px-4 py-3.5 dark:border-gray-700/60">
@@ -38,6 +42,21 @@ export function ChatHeader({
         </Link>
       </div>
       <div className="flex items-center gap-1">
+        {onCall && (
+          <button
+            onClick={onCall}
+            disabled={callDisabled}
+            className={cn(
+              "rounded-lg p-2 transition-colors",
+              callDisabled
+                ? "cursor-not-allowed text-gray-300 dark:text-gray-600"
+                : "text-gray-400 hover:bg-blue-50 hover:text-blue-500 dark:hover:bg-blue-900/30"
+            )}
+            title="Start video call"
+          >
+            <Video className="size-4" />
+          </button>
+        )}
         <button
           onClick={onToggleScreenshot}
           className={cn(

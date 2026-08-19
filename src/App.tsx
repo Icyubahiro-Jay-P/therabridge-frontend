@@ -138,6 +138,9 @@ const UserSleepPage = lazy(() =>
 const UserMedicationsPage = lazy(() =>
   import("@/components/user/medications/MedicationsPage").then((mod) => ({ default: mod.MedicationsPage }))
 )
+const UserPetPage = lazy(() =>
+  import("@/components/user/pet/PetPage").then((mod) => ({ default: mod.PetPage }))
+)
 
 const AdminDashboardPage = lazy(() =>
   import("@/pages/admin/DashboardPage").then((mod) => ({
@@ -598,6 +601,14 @@ export function App() {
                 element={
                   <ErrorBoundaryRoute>
                     <UserMedicationsPage />
+                  </ErrorBoundaryRoute>
+                }
+              />
+              <Route
+                path="/pet"
+                element={
+                  <ErrorBoundaryRoute>
+                    <UserPetPage />
                   </ErrorBoundaryRoute>
                 }
               />

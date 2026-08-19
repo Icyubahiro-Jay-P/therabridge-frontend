@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useCallback } from "react"
+import { useState, useRef, useEffect } from "react"
 import { Play, Pause } from "lucide-react"
 import { cn } from "@/lib/utils"
 
@@ -22,23 +22,14 @@ export function VoiceMessagePlayer({
   const [progress, setProgress] = useState(0)
   const [loadedDuration, setLoadedDuration] = useState(duration || 0)
   const rafRef = useRef<number>(0)
-
-  const updateProgress = useCallback(() => {
-    const audio = audioRef.current
-    if (!audio) return
-    if (audio.duration && isFinite(audio.duration)) {
-      setLoadedDuration(audio.duration)
-      setProgress((audio.currentTime / audio.duration) * 100)
-    }
-    if (!audio.paused) {
-      rafRef.current = requestAnimationFrame(updateProgress)
-    }
-  }, [])
+  const playingRef = useRef(false)
 
   useEffect(() => {
     const audio = audioRef.current
     if (!audio) return
+
     const onEnded = () => {
+      playingRef.current = false
       setPlaying(false)
       setProgress(0)
       cancelAnimationFrame(rafRef.current)
@@ -60,15 +51,26 @@ export function VoiceMessagePlayer({
   function togglePlay() {
     const audio = audioRef.current
     if (!audio) return
-    if (playing) {
+    if (playingRef.current) {
       audio.pause()
+      playingRef.current = false
       setPlaying(false)
       cancelAnimationFrame(rafRef.current)
     } else {
       audio.currentTime = 0
       audio.play()
+      playingRef.current = true
       setPlaying(true)
-      rafRef.current = requestAnimationFrame(updateProgress)
+      rafRef.current = requestAnimationFrame(function tick() {
+        if (!audio) return
+        if (audio.duration && isFinite(audio.duration)) {
+          setLoadedDuration(audio.duration)
+          setProgress((audio.currentTime / audio.duration) * 100)
+        }
+        if (!audio.paused) {
+          rafRef.current = requestAnimationFrame(tick)
+        }
+      })
     }
   }
 

@@ -108,6 +108,9 @@ const UserSafetyPlanPage = lazy(() =>
 const UserJournalPage = lazy(() =>
   import("@/components/user/journal/JournalPage").then((mod) => ({ default: mod.JournalPage }))
 )
+const UserThoughtRecordsPage = lazy(() =>
+  import("@/components/user/thought-records/ThoughtRecordsPage").then((mod) => ({ default: mod.ThoughtRecordsPage }))
+)
 
 const AdminDashboardPage = lazy(() =>
   import("@/pages/admin/DashboardPage").then((mod) => ({
@@ -488,6 +491,14 @@ export function App() {
                 element={
                   <ErrorBoundaryRoute>
                     <UserJournalPage />
+                  </ErrorBoundaryRoute>
+                }
+              />
+              <Route
+                path="/thought-records"
+                element={
+                  <ErrorBoundaryRoute>
+                    <UserThoughtRecordsPage />
                   </ErrorBoundaryRoute>
                 }
               />

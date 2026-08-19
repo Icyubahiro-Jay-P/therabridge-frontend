@@ -99,6 +99,13 @@ export function usePsychoedState() {
     }
   }, [])
 
+  const navigateToStep = useCallback((stepIndex: number) => {
+    setActiveProgress((prev) => {
+      if (!prev) return prev
+      return { ...prev, currentStepIndex: stepIndex }
+    })
+  }, [])
+
   return {
     modules,
     activeModule,
@@ -111,6 +118,7 @@ export function usePsychoedState() {
     fetchModule,
     startModule,
     completeStep,
+    navigateToStep,
     clearMessages: () => { setError(null); setSuccess(null) },
   }
 }

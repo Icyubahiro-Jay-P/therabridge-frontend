@@ -183,6 +183,7 @@ export function ChatPage() {
               editingContent={c.editingContent}
               setEditingContent={c.setEditingContent}
               onStartEdit={c.startEdit}
+              onReply={c.startReply}
               onSaveEdit={c.handleSaveEdit}
               onCancelEdit={c.cancelEdit}
               onUnsend={c.handleUnsend}
@@ -197,7 +198,10 @@ export function ChatPage() {
               setNewMessage={c.setNewMessage}
               sending={c.sending}
               onSend={c.sendMessage}
+              onSendVoice={c.sendVoiceNote}
               enterToSend={c.enterToSend}
+              replyTo={c.replyToMessage}
+              onCancelReply={c.cancelReply}
               onLoadOlder={c.loadOlderMessages}
               loadingOlder={c.loadingOlder}
               hasOlder={c.hasOlderMessages}

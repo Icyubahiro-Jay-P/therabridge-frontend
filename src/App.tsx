@@ -594,6 +594,14 @@ export function App() {
                 }
               />
               <Route
+                path="/medications"
+                element={
+                  <ErrorBoundaryRoute>
+                    <UserMedicationsPage />
+                  </ErrorBoundaryRoute>
+                }
+              />
+              <Route
                 path="/clients"
                 element={
                   <ErrorBoundaryRoute>

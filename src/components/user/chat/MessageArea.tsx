@@ -9,6 +9,7 @@ export function MessageArea({
   currentUserId,
   editingId,
   onStartEdit,
+  onReply,
   onUnsend,
   menuOpenId,
   setMenuOpenId,
@@ -27,6 +28,7 @@ export function MessageArea({
   currentUserId: string | undefined
   editingId: string | null
   onStartEdit: (msg: DirectMessage) => void
+  onReply: (msg: DirectMessage) => void
   onUnsend: (id: string) => void
   menuOpenId: string | null
   setMenuOpenId: (id: string | null) => void
@@ -66,6 +68,7 @@ export function MessageArea({
             isMe={isMe}
             editingId={editingId}
             onStartEdit={onStartEdit}
+            onReply={onReply}
             onUnsend={onUnsend}
             menuOpenId={menuOpenId}
             setMenuOpenId={setMenuOpenId}

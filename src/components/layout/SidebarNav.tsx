@@ -1,6 +1,6 @@
 import {
   Home, LayoutDashboard, MessageCircle, Users, Heart,
-  Stethoscope, User, Shield, ShieldCheck, AlertTriangle, Bell, Settings, Brain, ClipboardCheck, Sparkles, Calendar, Route, BookOpen, Moon,
+  Stethoscope, User, Shield, ShieldCheck, AlertTriangle, Bell, Settings, Brain, ClipboardCheck, Sparkles, Calendar, Route, BookOpen, Moon, Pill,
 } from "lucide-react"
 import { NavItem, NavItemWithBadge } from "./NavItem"
 
@@ -30,6 +30,7 @@ export function SidebarNav({
           <NavItem to="/activities" icon={<Calendar className="size-4" />} label="Activities" minimized={isMinimized} onClick={closeMobile} />
           <NavItem to="/learn" icon={<BookOpen className="size-4" />} label="Learn" minimized={isMinimized} onClick={closeMobile} />
           <NavItem to="/sleep" icon={<Moon className="size-4" />} label="Sleep" minimized={isMinimized} onClick={closeMobile} />
+          <NavItem to="/medications" icon={<Pill className="size-4" />} label="Medications" minimized={isMinimized} onClick={closeMobile} />
           <NavItem to="/programs" icon={<Route className="size-4" />} label="Programs" minimized={isMinimized} onClick={closeMobile} />
           <NavItem to="/coping-cards" icon={<Layers className="size-4" />} label="Coping Cards" minimized={isMinimized} onClick={closeMobile} />
           <NavItem to="/therapists" icon={<Stethoscope className="size-4" />} label="Therapists" minimized={isMinimized} onClick={closeMobile} />

@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from "react"
+import { useState, useCallback, useEffect, useRef } from "react"
 import * as journalApi from "@/lib/journal-api"
 import type { JournalEntry } from "./types"
 
@@ -24,37 +24,41 @@ export function useJournalState() {
   const [editorTags, setEditorTags] = useState<string[]>([])
   const [editorIsPublic, setEditorIsPublic] = useState(false)
 
-  const loadEntries = useCallback(
-    async (reset = false) => {
-      try {
-        setLoading(true)
-        setLoadError(null)
-        const p = reset ? 1 : page
-        const data = await journalApi.getMyEntries({
-          page: p,
-          limit: 20,
-          mood: filterMood ?? undefined,
-          search: searchQuery || undefined,
-        })
-        setEntries((prev) => (reset ? data.entries : [...prev, ...data.entries]))
-        setHasMore(data.hasMore)
-        if (reset) setPage(1)
-      } catch (err) {
-        setLoadError(err instanceof Error ? err.message : "Failed to load entries")
-      } finally {
-        setLoading(false)
-      }
-    },
-    [page, filterMood, searchQuery],
-  )
+  const filtersRef = useRef({ searchQuery, filterMood })
+  filtersRef.current = { searchQuery, filterMood }
+
+  const loadEntries = useCallback(async (reset = false) => {
+    try {
+      setLoading(true)
+      setLoadError(null)
+      const { searchQuery: sq, filterMood: fm } = filtersRef.current
+      const data = await journalApi.getMyEntries({
+        page: reset ? 1 : undefined,
+        limit: 20,
+        mood: fm ?? undefined,
+        search: sq || undefined,
+      })
+      setEntries((prev) => (reset ? data.entries : [...prev, ...data.entries]))
+      setHasMore(data.hasMore)
+      if (reset) setPage(1)
+    } catch (err) {
+      setLoadError(err instanceof Error ? err.message : "Failed to load entries")
+    } finally {
+      setLoading(false)
+    }
+  }, [])
 
   useEffect(() => {
     loadEntries(true)
-  }, [filterMood, searchQuery])
+  }, [loadEntries, searchQuery, filterMood])
+
+  const loadMore = useCallback(() => {
+    setPage((p) => p + 1)
+  }, [])
 
   useEffect(() => {
     if (page > 1) loadEntries()
-  }, [page])
+  }, [page, loadEntries])
 
   const openEditor = useCallback((entry?: JournalEntry) => {
     if (entry) {
@@ -186,6 +190,6 @@ export function useJournalState() {
     openEditor, closeEditor, saveEntry,
     removeEntry,
     addCommentToEntry, removeCommentFromEntry,
-    loadMore: () => setPage((p) => p + 1),
+    loadMore,
   }
 }

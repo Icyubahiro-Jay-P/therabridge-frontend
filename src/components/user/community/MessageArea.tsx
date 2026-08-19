@@ -9,6 +9,8 @@ export function MessageArea({
   currentUserId,
   onToggleTimestamp,
   selectedTimestampMessage,
+  onReply,
+  onScrollToMessage,
 }: {
   error: string | null
   loadingMessages: boolean
@@ -16,6 +18,8 @@ export function MessageArea({
   currentUserId: string | undefined
   onToggleTimestamp: (id: string) => void
   selectedTimestampMessage: string | null
+  onReply: (msg: CommunityMessage) => void
+  onScrollToMessage?: (id: string) => void
 }) {
   return (
     <SharedMessageArea
@@ -31,6 +35,8 @@ export function MessageArea({
             isMe={m.sender._id === (currentUserId ?? "")}
             onToggleTimestamp={onToggleTimestamp}
             selectedTimestampMessage={selectedTimestampMessage}
+            onReply={onReply}
+            onScrollToMessage={onScrollToMessage}
           />
         )
       }}

@@ -114,15 +114,44 @@ export const MessageBubble = memo(function MessageBubble({
                       : "ring-2 ring-teal-400 ring-offset-1 ring-offset-gray-50 dark:ring-offset-gray-950")
                 )}
               >
+                {msg.replyTo && (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      onScrollToMessage?.(msg.replyTo!._id)
+                    }}
+                    className={cn(
+                      "flex w-full items-center gap-2 border-l-2 px-3 py-1.5 text-left text-[11px] opacity-80 hover:opacity-100",
+                      isMe
+                        ? "border-white/50 bg-white/10"
+                        : "border-emerald-400 bg-black/5 dark:border-emerald-500 dark:bg-white/5"
+                    )}
+                  >
+                    <Reply className="size-3 shrink-0" />
+                    <span className="truncate">
+                      <span className="font-semibold">{msg.replyTo.senderUsername}</span>
+                      {" — "}
+                      {msg.replyTo.type === "voice" ? "🎤 Voice message" : msg.replyTo.content}
+                    </span>
+                  </button>
+                )}
                 <div
                   className={cn(
                     "px-3.5 pt-2.5",
                     isUnsent && "italic opacity-60"
                   )}
                 >
-                  <p className="wrap-break-words whitespace-pre-wrap">
-                    {isUnsent ? "Message unsent" : msg.content}
-                  </p>
+                  {msg.type === "voice" && msg.audioUrl ? (
+                    <VoiceMessagePlayer
+                      audioUrl={msg.audioUrl}
+                      duration={msg.duration}
+                      isMe={isMe}
+                    />
+                  ) : (
+                    <p className="wrap-break-words whitespace-pre-wrap">
+                      {isUnsent ? "Message unsent" : msg.content}
+                    </p>
+                  )}
                 </div>
                 <div
                   className={cn(
@@ -195,6 +224,10 @@ export const MessageBubble = memo(function MessageBubble({
           isMe={isMe}
           editAllowed={editAllowed}
           onEdit={() => onStartEdit(msg)}
+          onReply={() => {
+            setMenuOpenId(null)
+            onReply(msg)
+          }}
           onUnsend={() => {
             setMenuOpenId(null)
             setConfirmUnsend(true)

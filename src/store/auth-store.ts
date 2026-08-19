@@ -136,12 +136,16 @@ export const useAuthStore = create<AuthState>()(
       login: async (payload) => {
         set({ isLoading: true, error: null })
         try {
-          const { user, message } = await loginRequest(payload)
+          const result = await loginRequest(payload)
           cancelInitializeRetry()
-          set({ user })
+          if ("requiresTwoFactor" in result && result.requiresTwoFactor) {
+            set({ pendingTwoFactor: { twoFactorToken: result.twoFactorToken } })
+            return "Two-factor authentication required"
+          }
+          set({ user: result.user })
           connectSocket()
           void syncPushSubscription()
-          return message
+          return result.message
         } catch (error) {
           const message = getErrorMessage(error, "Login failed")
           set({ error: message })
@@ -150,6 +154,30 @@ export const useAuthStore = create<AuthState>()(
           set({ isLoading: false })
         }
       },
+
+      verifyTwoFactor: async (code) => {
+        set({ isLoading: true, error: null })
+        try {
+          const pending = useAuthStore.getState().pendingTwoFactor
+          if (!pending) {
+            throw new Error("No pending two-factor session")
+          }
+          const { user, message } = await validateTwoFactorRequest(code, pending.twoFactorToken)
+          cancelInitializeRetry()
+          set({ user, pendingTwoFactor: null })
+          connectSocket()
+          void syncPushSubscription()
+          return message
+        } catch (error) {
+          const message = getErrorMessage(error, "Verification failed")
+          set({ error: message })
+          rethrow(message, error)
+        } finally {
+          set({ isLoading: false })
+        }
+      },
+
+      clearPendingTwoFactor: () => set({ pendingTwoFactor: null }),
 
       register: async (payload) => {
         set({ isLoading: true, error: null })

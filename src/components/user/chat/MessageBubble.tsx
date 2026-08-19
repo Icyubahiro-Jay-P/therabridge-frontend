@@ -21,6 +21,7 @@ export const MessageBubble = memo(function MessageBubble({
   isMe,
   editingId,
   onStartEdit,
+  onReply,
   onUnsend,
   menuOpenId,
   setMenuOpenId,
@@ -29,11 +30,13 @@ export const MessageBubble = memo(function MessageBubble({
   showHistoryFor,
   setShowHistoryFor,
   deleting,
+  onScrollToMessage,
 }: {
   msg: DirectMessage
   isMe: boolean
   editingId: string | null
   onStartEdit: (msg: DirectMessage) => void
+  onReply: (msg: DirectMessage) => void
   onUnsend: (id: string) => void
   menuOpenId: string | null
   setMenuOpenId: (id: string | null) => void
@@ -42,6 +45,7 @@ export const MessageBubble = memo(function MessageBubble({
   showHistoryFor: string | null
   setShowHistoryFor: (id: string | null) => void
   deleting: string | null
+  onScrollToMessage?: (id: string) => void
 }) {
   const [confirmUnsend, setConfirmUnsend] = useState(false)
   const isUnsent = msg.unsent

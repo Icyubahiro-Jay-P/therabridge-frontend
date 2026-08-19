@@ -583,6 +583,14 @@ export function App() {
                 }
               />
               <Route
+                path="/sleep"
+                element={
+                  <ErrorBoundaryRoute>
+                    <UserSleepPage />
+                  </ErrorBoundaryRoute>
+                }
+              />
+              <Route
                 path="/clients"
                 element={
                   <ErrorBoundaryRoute>

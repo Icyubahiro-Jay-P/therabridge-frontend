@@ -1,10 +1,10 @@
-import { Brain, Plus, Search, BarChart3, TrendingDown, TrendingUp } from "lucide-react"
+import { Brain, Plus, Search, TrendingDown, TrendingUp } from "lucide-react"
 import { useThoughtRecordState } from "./useThoughtRecordState"
 import { ThoughtRecordEditor } from "./ThoughtRecordEditor"
 import { ThoughtRecordCard } from "./ThoughtRecordCard"
 import { ThoughtRecordDetail } from "./ThoughtRecordDetail"
 import { useAuthStore } from "@/store/auth-store"
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 import type { ThoughtRecord } from "@/lib/thoughtRecord-api"
 
 const DISTORTIONS: Record<string, string> = {
@@ -27,6 +27,8 @@ export function ThoughtRecordsPage() {
   const s = useThoughtRecordState()
   const currentUser = useAuthStore((s) => s.user)
   const initializedRef = useRef(false)
+  const [editorOpen, setEditorOpen] = useState(false)
+  const [editingRecord, setEditingRecord] = useState<ThoughtRecord | null>(null)
 
   useEffect(() => {
     if (!initializedRef.current) {
@@ -36,13 +38,23 @@ export function ThoughtRecordsPage() {
     }
   })
 
+  const openEditor = (record?: ThoughtRecord) => {
+    setEditingRecord(record ?? null)
+    setEditorOpen(true)
+  }
+
+  const closeEditor = () => {
+    setEditorOpen(false)
+    setEditingRecord(null)
+  }
+
   return (
     <div className="mx-auto max-w-3xl space-y-6 p-6">
       {s.selectedRecord ? (
         <ThoughtRecordDetail
           record={s.selectedRecord}
           onBack={() => s.setSelectedRecord(null)}
-          onEdit={(r: ThoughtRecord) => s.setSelectedRecord(r)}
+          onEdit={(r: ThoughtRecord) => { s.setSelectedRecord(null); openEditor(r) }}
           onDelete={s.deleteRecord}
           currentUserId={currentUser?.id}
         />
@@ -56,7 +68,7 @@ export function ThoughtRecordsPage() {
               </p>
             </div>
             <button
-              onClick={() => s.setSelectedRecord(null)}
+              onClick={() => openEditor()}
               className="flex items-center gap-2 rounded-xl bg-violet-600 px-4 py-2 text-sm font-medium text-white hover:bg-violet-700"
             >
               <Plus className="size-4" />
@@ -70,7 +82,6 @@ export function ThoughtRecordsPage() {
             </div>
           )}
 
-          {/* Stats Overview */}
           {s.stats && s.stats.totalRecords > 0 && (
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
               <div className="rounded-xl border border-gray-200 bg-white p-3 dark:border-gray-700 dark:bg-gray-900">
@@ -102,7 +113,6 @@ export function ThoughtRecordsPage() {
             </div>
           )}
 
-          {/* Search & Filter */}
           <div className="flex gap-3">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-gray-400" />
@@ -172,12 +182,19 @@ export function ThoughtRecordsPage() {
       )}
 
       <ThoughtRecordEditor
-        open={s.selectedRecord === null && false}
-        record={null}
+        open={editorOpen}
+        record={editingRecord}
         saving={s.saving}
         error={s.error}
-        onSave={s.createRecord}
-        onClose={() => {}}
+        onSave={async (data) => {
+          if (editingRecord) {
+            await s.updateRecord(editingRecord._id, data)
+          } else {
+            await s.createRecord(data)
+          }
+          closeEditor()
+        }}
+        onClose={closeEditor}
       />
     </div>
   )

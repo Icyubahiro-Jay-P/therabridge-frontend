@@ -117,6 +117,11 @@ export function CommunityPage() {
               currentUserId={c.currentUser?.id}
               onToggleTimestamp={c.toggleTimestamp}
               selectedTimestampMessage={c.selectedTimestampMessage}
+              onReply={c.startReply}
+              onScrollToMessage={(id) => {
+                const el = document.getElementById(`msg-${id}`)
+                el?.scrollIntoView({ behavior: "smooth", block: "center" })
+              }}
             />
             {c.active.isDisabled && (
               <div className="flex items-center gap-2 border-t border-red-200 bg-red-50 px-4 py-2.5 text-sm text-red-600 dark:border-red-900/50 dark:bg-red-950/30 dark:text-red-400">
@@ -128,9 +133,12 @@ export function CommunityPage() {
               value={c.newMessage}
               onChange={c.setNewMessage}
               onSend={c.sendMessage}
+              onSendVoice={c.sendVoiceNote}
               sending={c.sending}
               communityName={c.active.name}
               disabled={c.active.isDisabled}
+              replyTo={c.replyToMessage}
+              onCancelReply={c.cancelReply}
             />
             <GuardOverlay mode="blackout" visible={guard.guarded} />
             <WatermarkCanvas

@@ -41,6 +41,7 @@ export function useChatState() {
   const [menuOpenId, setMenuOpenId] = useState<string | null>(null)
   const [selectedTimestampMessage, setSelectedTimestampMessage] = useState<string | null>(null)
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false)
+  const [replyToMessage, setReplyToMessage] = useState<ReplySnapshot | null>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const loadingOlderRef = useRef(false)
 

@@ -29,6 +29,7 @@ export function SidebarNav({
           <NavItem to="/gratitude" icon={<Sparkles className="size-4" />} label="Gratitude" minimized={isMinimized} onClick={closeMobile} />
           <NavItem to="/activities" icon={<Calendar className="size-4" />} label="Activities" minimized={isMinimized} onClick={closeMobile} />
           <NavItem to="/learn" icon={<BookOpen className="size-4" />} label="Learn" minimized={isMinimized} onClick={closeMobile} />
+          <NavItem to="/sleep" icon={<Moon className="size-4" />} label="Sleep" minimized={isMinimized} onClick={closeMobile} />
           <NavItem to="/programs" icon={<Route className="size-4" />} label="Programs" minimized={isMinimized} onClick={closeMobile} />
           <NavItem to="/coping-cards" icon={<Layers className="size-4" />} label="Coping Cards" minimized={isMinimized} onClick={closeMobile} />
           <NavItem to="/therapists" icon={<Stethoscope className="size-4" />} label="Therapists" minimized={isMinimized} onClick={closeMobile} />

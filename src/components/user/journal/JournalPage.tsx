@@ -11,7 +11,6 @@ export function JournalPage() {
   const currentUser = useAuthStore((s) => s.user)
   const initializedRef = useRef(false)
 
-  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => {
     if (!initializedRef.current) {
       initializedRef.current = true

@@ -3,6 +3,7 @@ import { Loader2, Menu } from "lucide-react"
 
 import { useChatState } from "@/components/user/chat/useChatState"
 import { useChatEffects } from "@/components/user/chat/useChatEffects"
+import { useWebRTC } from "@/components/user/chat/useWebRTC"
 import { Sidebar } from "@/components/user/chat/Sidebar"
 import { EmptyState } from "@/components/user/chat/EmptyState"
 import { ChatView } from "@/components/user/chat/ChatView"
@@ -24,6 +25,8 @@ export function ChatPage() {
     setEditingId: c.setEditingId,
     setEditingContent: c.setEditingContent,
   })
+
+  const webrtc = useWebRTC(c.currentUser?.id ?? "")
 
   const partnerIdRef = useRef<string | null>(null)
   useEffect(() => {
@@ -205,6 +208,18 @@ export function ChatPage() {
               onLoadOlder={c.loadOlderMessages}
               loadingOlder={c.loadingOlder}
               hasOlder={c.hasOlderMessages}
+              callState={webrtc.callState}
+              localStream={webrtc.localStream}
+              remoteStream={webrtc.remoteStream}
+              incomingCall={webrtc.incomingCall}
+              isMuted={webrtc.isMuted}
+              isVideoOff={webrtc.isVideoOff}
+              onStartCall={() => webrtc.startCall(c.partner!._id)}
+              onAcceptCall={webrtc.acceptCall}
+              onRejectCall={webrtc.rejectCall}
+              onEndCall={webrtc.endCall}
+              onToggleMute={webrtc.toggleMute}
+              onToggleVideo={webrtc.toggleVideo}
             />
             <GuardOverlay mode="blackout" visible={guard.guarded} />
             <WatermarkCanvas

@@ -9,7 +9,7 @@ import {
   X,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { useWebRTC, type CallState } from "./useWebRTC"
+import type { CallState } from "./useWebRTC"
 
 interface VideoCallOverlayProps {
   userId: string

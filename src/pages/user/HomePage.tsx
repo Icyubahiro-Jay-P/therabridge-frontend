@@ -4,6 +4,7 @@ import { ResourcesSection } from "@/components/user/home/ResourcesSection"
 import { UpcomingAppointments } from "@/components/user/home/UpcomingAppointments"
 import { TherapistList } from "@/components/user/home/TherapistList"
 import { StreakCards } from "@/components/user/home/StreakCards"
+import { RecommendationSection } from "@/components/user/home/RecommendationSection"
 
 export function HomePage() {
   const {
@@ -25,6 +26,8 @@ export function HomePage() {
 
       <div className="space-y-10 p-6">
         {scoreStreak && <StreakCards scoreStreak={scoreStreak} />}
+
+        <RecommendationSection />
 
         <ResourcesSection
           exercises={exercises}

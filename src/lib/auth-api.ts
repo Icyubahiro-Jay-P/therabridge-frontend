@@ -62,7 +62,9 @@ function normalizeUser(raw: RawUser): User {
 
 type AuthResponse = {
   message: string
-  user: RawUser
+  user?: RawUser
+  requiresTwoFactor?: boolean
+  twoFactorToken?: string
 }
 
 export async function register(
@@ -70,17 +72,20 @@ export async function register(
 ): Promise<{ user: User; message: string }> {
   const { data } = await api.post<AuthResponse>("/api/users/register", payload)
   return {
-    user: normalizeUser(data.user),
+    user: normalizeUser(data.user!),
     message: data.message,
   }
 }
 
 export async function login(
   payload: LoginPayload
-): Promise<{ user: User; message: string }> {
+): Promise<{ user: User; message: string } | { requiresTwoFactor: true; twoFactorToken: string }> {
   const { data } = await api.post<AuthResponse>("/api/users/login", payload)
+  if (data.requiresTwoFactor && data.twoFactorToken) {
+    return { requiresTwoFactor: true, twoFactorToken: data.twoFactorToken }
+  }
   return {
-    user: normalizeUser(data.user),
+    user: normalizeUser(data.user!),
     message: data.message,
   }
 }
@@ -193,4 +198,60 @@ export async function updatePrivacy(
     { privacySettings }
   )
   return data.privacySettings
+}
+
+// ─── Two-Factor Authentication ──────────────────────────────────────────────
+
+export interface TwoFactorSetupResponse {
+  message: string
+  qrCode: string
+  secret: string
+}
+
+export interface TwoFactorStatusResponse {
+  enabled: boolean
+  backupCodesRemaining: number
+}
+
+export async function setupTwoFactor(): Promise<TwoFactorSetupResponse> {
+  const { data } = await api.post<TwoFactorSetupResponse>("/api/users/2fa/setup")
+  return data
+}
+
+export async function verifyTwoFactorSetup(code: string): Promise<{ message: string; backupCodes: string[] }> {
+  const { data } = await api.post<{ message: string; backupCodes: string[] }>(
+    "/api/users/2fa/verify-setup",
+    { code }
+  )
+  return data
+}
+
+export async function validateTwoFactor(
+  code: string,
+  twoFactorToken: string
+): Promise<{ user: User; message: string }> {
+  const { data } = await api.post<AuthResponse>(
+    "/api/users/2fa/validate",
+    { code },
+    { headers: { Authorization: `Bearer ${twoFactorToken}` } }
+  )
+  return {
+    user: normalizeUser(data.user!),
+    message: data.message,
+  }
+}
+
+export async function disableTwoFactor(
+  password: string,
+  code: string
+): Promise<{ message: string }> {
+  const { data } = await api.delete<{ message: string }>("/api/users/2fa/disable", {
+    data: { password, code },
+  })
+  return data
+}
+
+export async function getTwoFactorStatus(): Promise<TwoFactorStatusResponse> {
+  const { data } = await api.get<TwoFactorStatusResponse>("/api/users/2fa/status")
+  return data
 }

@@ -111,6 +111,9 @@ const UserJournalPage = lazy(() =>
 const UserThoughtRecordsPage = lazy(() =>
   import("@/components/user/thought-records/ThoughtRecordsPage").then((mod) => ({ default: mod.ThoughtRecordsPage }))
 )
+const UserAssessmentsPage = lazy(() =>
+  import("@/components/user/assessments/AssessmentsPage").then((mod) => ({ default: mod.AssessmentsPage }))
+)
 
 const AdminDashboardPage = lazy(() =>
   import("@/pages/admin/DashboardPage").then((mod) => ({

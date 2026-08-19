@@ -20,7 +20,7 @@ interface IncomingCall {
   callerUsername: string
 }
 
-export function useWebRTC(userId: string) {
+export function useWebRTC() {
   const [callState, setCallState] = useState<CallState>("idle")
   const [callId, setCallId] = useState<string | null>(null)
   const [peerId, setPeerId] = useState<string | null>(null)
@@ -93,10 +93,14 @@ export function useWebRTC(userId: string) {
 
   // Ref to always have latest callId in socket handlers
   const callIdRef = useRef<string | null>(null)
-  callIdRef.current = callId
+  useEffect(() => {
+    callIdRef.current = callId
+  }, [callId])
 
   const peerIdRef = useRef<string | null>(null)
-  peerIdRef.current = peerId
+  useEffect(() => {
+    peerIdRef.current = peerId
+  }, [peerId])
 
   // ==================== SOCKET LISTENERS ====================
   useEffect(() => {

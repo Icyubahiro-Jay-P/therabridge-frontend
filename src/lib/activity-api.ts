@@ -1,0 +1,61 @@
+import { api } from "@/lib/api"
+
+export interface Activity {
+  _id: string
+  user: string
+  title: string
+  category: string
+  scheduledDate: string
+  scheduledTime: string | null
+  duration: number | null
+  expectedPleasure: number
+  actualPleasure: number | null
+  completed: boolean
+  completedAt: string | null
+  notes: string | null
+  moodBefore: string | null
+  moodAfter: string | null
+  pointsEarned?: number
+  createdAt: string
+  updatedAt: string
+}
+
+export interface ActivityStats {
+  totalActivities: number
+  completedActivities: number
+  completionRate: number
+  categoryBreakdown: { category: string; total: number; completed: number }[]
+  avgPleasure: number | null
+}
+
+export const CATEGORIES = [
+  { value: "social", label: "Social", color: "blue" },
+  { value: "physical", label: "Physical", color: "green" },
+  { value: "creative", label: "Creative", color: "purple" },
+  { value: "productive", label: "Productive", color: "orange" },
+  { value: "relaxation", label: "Relaxation", color: "teal" },
+  { value: "outdoor", label: "Outdoor", color: "emerald" },
+  { value: "learning", label: "Learning", color: "indigo" },
+  { value: "self_care", label: "Self-Care", color: "pink" },
+  { value: "other", label: "Other", color: "gray" },
+] as const
+
+export const activityApi = {
+  create: (data: {
+    title: string; category: string; scheduledDate: string;
+    scheduledTime?: string; duration?: number; expectedPleasure: number;
+    moodBefore?: string; notes?: string;
+  }) => api.post<Activity>("/activities", data).then((r) => r.data),
+
+  list: (params?: { week?: string; completed?: boolean; category?: string }) =>
+    api.get<{ activities: Activity[] }>("/activities", { params }).then((r) => r.data),
+
+  get: (id: string) => api.get<Activity>(`/activities/${id}`).then((r) => r.data),
+
+  complete: (id: string, data?: { actualPleasure?: number; moodAfter?: string; notes?: string }) =>
+    api.post<Activity>(`/activities/${id}/complete`, data).then((r) => r.data),
+
+  delete: (id: string) => api.delete(`/activities/${id}`).then((r) => r.data),
+
+  stats: () => api.get<ActivityStats>("/activities/stats").then((r) => r.data),
+}

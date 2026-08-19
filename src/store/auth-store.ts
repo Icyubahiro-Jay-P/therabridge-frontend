@@ -13,6 +13,7 @@ import {
   deleteAvatar as deleteAvatarRequest,
   updateChatSettings as updateChatSettingsRequest,
   updatePrivacy as updatePrivacyRequest,
+  validateTwoFactor as validateTwoFactorRequest,
 } from "@/lib/auth-api"
 import { AuthError, NetworkError, setAuthHandlers } from "@/lib/api"
 import { connectSocket, disconnectSocket } from "@/lib/socket"
@@ -35,9 +36,12 @@ interface AuthState {
   isLoading: boolean
   isInitialized: boolean
   error: string | null
+  pendingTwoFactor: { twoFactorToken: string } | null
   clearError: () => void
   initialize: (isRetry?: boolean) => Promise<void>
   login: (payload: LoginPayload) => Promise<string>
+  verifyTwoFactor: (code: string) => Promise<string>
+  clearPendingTwoFactor: () => void
   register: (payload: RegisterPayload) => Promise<string>
   markVerified: () => void
   logout: () => Promise<void>
@@ -95,6 +99,7 @@ export const useAuthStore = create<AuthState>()(
       isLoading: false,
       isInitialized: false,
       error: null,
+      pendingTwoFactor: null,
 
       clearError: () => set({ error: null }),
 

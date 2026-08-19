@@ -26,6 +26,7 @@ export function SidebarNav({
           <NavItem to="/mood" icon={<Heart className="size-4" />} label="Mood" minimized={isMinimized} onClick={closeMobile} />
           <NavItem to="/thought-records" icon={<Brain className="size-4" />} label="Thought Records" minimized={isMinimized} onClick={closeMobile} />
           <NavItem to="/assessments" icon={<ClipboardCheck className="size-4" />} label="Assessments" minimized={isMinimized} onClick={closeMobile} />
+          <NavItem to="/gratitude" icon={<Sparkles className="size-4" />} label="Gratitude" minimized={isMinimized} onClick={closeMobile} />
           <NavItem to="/therapists" icon={<Stethoscope className="size-4" />} label="Therapists" minimized={isMinimized} onClick={closeMobile} />
           <NavItem to="/safety-plan" icon={<ShieldCheck className="size-4" />} label="Safety Plan" minimized={isMinimized} onClick={closeMobile} />
         </>

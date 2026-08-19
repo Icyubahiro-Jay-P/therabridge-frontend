@@ -120,6 +120,12 @@ const UserGratitudePage = lazy(() =>
 const UserActivitiesPage = lazy(() =>
   import("@/components/user/activities/ActivitiesPage").then((mod) => ({ default: mod.ActivitiesPage }))
 )
+const UserProgramsPage = lazy(() =>
+  import("@/components/user/programs/ProgramsPage").then((mod) => ({ default: mod.ProgramsPage }))
+)
+const UserProgramDetailPage = lazy(() =>
+  import("@/components/user/programs/ProgramDetail").then((mod) => ({ default: mod.ProgramDetail }))
+)
 const UserCopingCardsPage = lazy(() =>
   import("@/components/user/coping-cards/CopingCardsPage").then((mod) => ({ default: mod.CopingCardsPage }))
 )

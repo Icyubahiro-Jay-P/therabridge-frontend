@@ -1,4 +1,4 @@
-import type { ChatUser, EditEntry } from "../chat/types"
+import type { ChatUser, EditEntry, ReplySnapshot } from "../chat/types"
 
 export type CommunityCategory =
   | "general"
@@ -20,6 +20,10 @@ export interface CommunityMessage {
   edited?: boolean
   editCount?: number
   editHistory?: EditEntry[]
+  type?: "text" | "voice"
+  audioUrl?: string | null
+  duration?: number | null
+  replyTo?: ReplySnapshot
 }
 
 export interface Community {

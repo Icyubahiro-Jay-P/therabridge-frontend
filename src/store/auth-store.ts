@@ -38,6 +38,7 @@ interface AuthState {
   error: string | null
   pendingTwoFactor: { twoFactorToken: string } | null
   clearError: () => void
+  setUser: (user: User | null) => void
   initialize: (isRetry?: boolean) => Promise<void>
   login: (payload: LoginPayload) => Promise<string>
   verifyTwoFactor: (code: string) => Promise<string>
@@ -102,6 +103,8 @@ export const useAuthStore = create<AuthState>()(
       pendingTwoFactor: null,
 
       clearError: () => set({ error: null }),
+
+      setUser: (user) => set({ user }),
 
       initialize: async (isRetry = false) => {
         if (!isRetry) set({ isInitialized: false })

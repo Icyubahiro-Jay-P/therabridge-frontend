@@ -12,6 +12,14 @@ export interface EditEntry {
   editedAt: string
 }
 
+export interface ReplySnapshot {
+  _id: string
+  senderUsername: string
+  senderAvatar?: string | null
+  content: string
+  type?: "text" | "voice"
+}
+
 export interface DirectMessage {
   _id: string
   sender: ChatUser
@@ -26,6 +34,10 @@ export interface DirectMessage {
   edited?: boolean
   editCount?: number
   editHistory?: EditEntry[]
+  type?: "text" | "voice"
+  audioUrl?: string | null
+  duration?: number | null
+  replyTo?: ReplySnapshot
 }
 
 export interface Conversation {

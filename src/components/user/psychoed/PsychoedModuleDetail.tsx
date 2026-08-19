@@ -1,14 +1,14 @@
-import { ArrowLeft, ChevronLeft, ChevronRight, CheckCircle2, BookOpen, Lock } from "lucide-react"
-import { CATEGORY_META, CATEGORY_META as META } from "@/lib/psychoed-api"
+import { ArrowLeft, ChevronLeft, ChevronRight, CheckCircle2, BookOpen } from "lucide-react"
+import { CATEGORY_META } from "@/lib/psychoed-api"
 import type { PsychoedModuleDetail as ModuleDetail, PsychoedProgress, PsychoedCategory } from "@/lib/psychoed-api"
 
-const CATEGORY_ACCENT: Record<PsychoedCategory, { ring: string; bg: string; text: string }> = {
-  cbt: { ring: "ring-violet-500", bg: "bg-violet-600", text: "text-violet-600 dark:text-violet-400" },
-  anxiety: { ring: "ring-blue-500", bg: "bg-blue-600", text: "text-blue-600 dark:text-blue-400" },
-  depression: { ring: "ring-indigo-500", bg: "bg-indigo-600", text: "text-indigo-600 dark:text-indigo-400" },
-  stress: { ring: "ring-orange-500", bg: "bg-orange-600", text: "text-orange-600 dark:text-orange-400" },
-  sleep: { ring: "ring-teal-500", bg: "bg-teal-600", text: "text-teal-600 dark:text-teal-400" },
-  relationships: { ring: "ring-pink-500", bg: "bg-pink-600", text: "text-pink-600 dark:text-pink-400" },
+const CATEGORY_ACCENT: Record<PsychoedCategory, { bg: string; text: string; lightBg: string }> = {
+  cbt: { bg: "bg-violet-600", text: "text-violet-600 dark:text-violet-400", lightBg: "bg-violet-50 dark:bg-violet-950/20" },
+  anxiety: { bg: "bg-blue-600", text: "text-blue-600 dark:text-blue-400", lightBg: "bg-blue-50 dark:bg-blue-950/20" },
+  depression: { bg: "bg-indigo-600", text: "text-indigo-600 dark:text-indigo-400", lightBg: "bg-indigo-50 dark:bg-indigo-950/20" },
+  stress: { bg: "bg-orange-600", text: "text-orange-600 dark:text-orange-400", lightBg: "bg-orange-50 dark:bg-orange-950/20" },
+  sleep: { bg: "bg-teal-600", text: "text-teal-600 dark:text-teal-400", lightBg: "bg-teal-50 dark:bg-teal-950/20" },
+  relationships: { bg: "bg-pink-600", text: "text-pink-600 dark:text-pink-400", lightBg: "bg-pink-50 dark:bg-pink-950/20" },
 }
 
 function renderMarkdown(text: string) {
@@ -26,35 +26,6 @@ function renderMarkdown(text: string) {
         </h3>,
       )
       i++
-      continue
-    }
-
-    if (line.startsWith("- **")) {
-      const items: React.ReactNode[] = []
-      while (i < lines.length && lines[i].startsWith("- ")) {
-        const content = lines[i].slice(2)
-        const parts = content.split(/\*\*(.*?)\*\*/g)
-        items.push(
-          <li key={i} className="flex gap-2 py-1">
-            <span className="mt-1.5 size-1 shrink-0 rounded-full bg-gray-400 dark:bg-gray-500" />
-            <span className="text-sm text-gray-700 dark:text-gray-300">
-              {parts.map((part, pi) =>
-                pi % 2 === 1 ? (
-                  <strong key={pi} className="font-semibold text-gray-900 dark:text-white">{part}</strong>
-                ) : (
-                  <span key={pi}>{part}</span>
-                ),
-              )}
-            </span>
-          </li>,
-        )
-        i++
-      }
-      elements.push(
-        <ul key={`ul-${i}`} className="my-2 space-y-1 pl-1">
-          {items}
-        </ul>,
-      )
       continue
     }
 
@@ -150,6 +121,7 @@ interface Props {
   onBack: () => void
   onStart: (id: string) => Promise<PsychoedProgress | null>
   onCompleteStep: (id: string, stepIndex: number) => Promise<PsychoedProgress | null>
+  onNavigateToStep: (stepIndex: number) => void
   onClearMessages: () => void
 }
 
@@ -163,10 +135,11 @@ export function PsychoedModuleDetail({
   onBack,
   onStart,
   onCompleteStep,
+  onNavigateToStep,
   onClearMessages,
 }: Props) {
   const accent = CATEGORY_ACCENT[mod.category]
-  const meta = META[mod.category]
+  const meta = CATEGORY_META[mod.category]
   const currentStep = progress?.currentStepIndex ?? 0
   const step = mod.steps[currentStep]
   const totalSteps = mod.steps.length
@@ -174,21 +147,19 @@ export function PsychoedModuleDetail({
   const isCompleted = progress?.completed ?? false
   const stepCompleted = progress?.completedSteps.includes(currentStep) ?? false
 
-  const handleStart = async () => {
-    await onStart(mod._id)
-  }
-
   const handleNext = async () => {
     if (!stepCompleted) {
       await onCompleteStep(mod._id, currentStep)
+    }
+    if (currentStep < totalSteps - 1) {
+      onNavigateToStep(currentStep + 1)
     }
     onClearMessages()
   }
 
   const handlePrev = () => {
     if (currentStep > 0) {
-      const event = new CustomEvent("psychoed-navigate", { detail: { stepIndex: currentStep - 1 } })
-      window.dispatchEvent(event)
+      onNavigateToStep(currentStep - 1)
     }
   }
 
@@ -247,15 +218,18 @@ export function PsychoedModuleDetail({
           const done = progress?.completedSteps.includes(i) ?? false
           const active = i === currentStep
           return (
-            <div
+            <button
               key={i}
+              onClick={() => {
+                if (i <= currentStep || done) onNavigateToStep(i)
+              }}
               className={`h-1.5 flex-1 rounded-full transition-colors ${
                 active
-                  ? `${accent.bg}`
+                  ? accent.bg
                   : done
                     ? "bg-emerald-400 dark:bg-emerald-500"
                     : "bg-gray-200 dark:bg-gray-700"
-              }`}
+              } ${i <= currentStep || done ? "cursor-pointer hover:opacity-80" : "cursor-default"}`}
               title={s.title}
             />
           )
@@ -274,7 +248,7 @@ export function PsychoedModuleDetail({
               Estimated {mod.steps.reduce((a, s) => a + s.duration, 0)} minutes total.
             </p>
             <button
-              onClick={handleStart}
+              onClick={() => onStart(mod._id)}
               disabled={saving}
               className={`mt-6 rounded-xl px-6 py-2.5 text-sm font-medium text-white transition-colors ${accent.bg} hover:opacity-90 disabled:opacity-50`}
             >
@@ -287,7 +261,7 @@ export function PsychoedModuleDetail({
           <CheckCircle2 className="mx-auto mb-4 size-12 text-emerald-500" />
           <h2 className="text-lg font-bold text-emerald-800 dark:text-emerald-300">Module Complete</h2>
           <p className="mt-2 text-sm text-emerald-700 dark:text-emerald-400">
-            You've finished all {totalSteps} steps in this module. Great work on your learning journey.
+            You've finished all {totalSteps} steps. Great work on your learning journey.
           </p>
           <button
             onClick={onBack}
@@ -299,7 +273,7 @@ export function PsychoedModuleDetail({
       ) : step ? (
         <div className="rounded-2xl border border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-900">
           {/* Step header */}
-          <div className={`rounded-t-2xl px-6 py-4 ${CATEGORY_BG_LIGHT[mod.category]}`}>
+          <div className={`rounded-t-2xl px-6 py-4 ${accent.lightBg}`}>
             <div className="flex items-center justify-between">
               <h2 className="text-base font-bold text-gray-900 dark:text-white">
                 {step.title}
@@ -325,16 +299,7 @@ export function PsychoedModuleDetail({
           {/* Navigation */}
           <div className="flex items-center justify-between border-t border-gray-100 px-6 py-4 dark:border-gray-800">
             <button
-              onClick={() => {
-                if (currentStep > 0) {
-                  // Find the previous step index
-                  const prevIndex = currentStep - 1
-                  // We need to navigate to the previous step
-                  // The parent component handles step navigation via onCompleteStep
-                  // But we need a way to go to a specific step
-                  // For now, we'll use a simpler approach
-                }
-              }}
+              onClick={handlePrev}
               disabled={currentStep === 0 || saving}
               className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm text-gray-500 hover:bg-gray-100 disabled:opacity-30 dark:hover:bg-gray-800"
             >
@@ -343,31 +308,23 @@ export function PsychoedModuleDetail({
             </button>
 
             <div className="flex items-center gap-2">
-              {!stepCompleted && (
+              {!stepCompleted ? (
                 <button
                   onClick={handleNext}
                   disabled={saving}
                   className={`rounded-lg px-4 py-1.5 text-sm font-medium text-white transition-colors ${accent.bg} hover:opacity-90 disabled:opacity-50`}
                 >
-                  {saving ? "Saving..." : currentStep === totalSteps - 1 ? "Complete Module" : "Mark Complete & Continue"}
+                  {saving ? "Saving..." : currentStep === totalSteps - 1 ? "Complete Module" : "Mark Complete"}
                 </button>
-              )}
-              {stepCompleted && currentStep < totalSteps - 1 && (
+              ) : currentStep < totalSteps - 1 ? (
                 <button
-                  onClick={() => {
-                    // Navigate to next step
-                    // Find next uncompleted step or the next sequential step
-                    const nextStep = currentStep + 1
-                    // We'll dispatch a custom event to handle this
-                    window.dispatchEvent(new CustomEvent("psychoed-navigate", { detail: { stepIndex: nextStep } }))
-                  }}
+                  onClick={() => onNavigateToStep(currentStep + 1)}
                   className={`rounded-lg px-4 py-1.5 text-sm font-medium text-white transition-colors ${accent.bg} hover:opacity-90`}
                 >
                   Next Step
                   <ChevronRight className="ml-1 inline size-3.5" />
                 </button>
-              )}
-              {stepCompleted && currentStep === totalSteps - 1 && (
+              ) : (
                 <span className="flex items-center gap-1.5 text-sm font-medium text-emerald-600 dark:text-emerald-400">
                   <CheckCircle2 className="size-4" />
                   All steps complete
@@ -379,13 +336,4 @@ export function PsychoedModuleDetail({
       ) : null}
     </div>
   )
-}
-
-const CATEGORY_BG_LIGHT: Record<PsychoedCategory, string> = {
-  cbt: "bg-violet-50 dark:bg-violet-950/20",
-  anxiety: "bg-blue-50 dark:bg-blue-950/20",
-  depression: "bg-indigo-50 dark:bg-indigo-950/20",
-  stress: "bg-orange-50 dark:bg-orange-950/20",
-  sleep: "bg-teal-50 dark:bg-teal-950/20",
-  relationships: "bg-pink-50 dark:bg-pink-950/20",
 }

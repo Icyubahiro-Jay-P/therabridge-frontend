@@ -1,10 +1,10 @@
-import { useState, useCallback, useEffect, useRef } from "react"
+import { useState, useCallback, useRef } from "react"
 import * as journalApi from "@/lib/journal-api"
 import type { JournalEntry } from "./types"
 
 export function useJournalState() {
   const [entries, setEntries] = useState<JournalEntry[]>([])
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(false)
   const [loadError, setLoadError] = useState<string | null>(null)
   const [hasMore, setHasMore] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
@@ -23,14 +23,13 @@ export function useJournalState() {
   const [editorTags, setEditorTags] = useState<string[]>([])
   const [editorIsPublic, setEditorIsPublic] = useState(false)
 
-  // Use a version counter to avoid stale responses
   const fetchVersionRef = useRef(0)
 
   const fetchEntries = useCallback(async (opts: { page?: number; mood?: string | null; search?: string; append?: boolean }) => {
     const version = ++fetchVersionRef.current
+    if (!opts.append) setLoading(true)
+    setLoadError(null)
     try {
-      if (!opts.append) setLoading(true)
-      setLoadError(null)
       const data = await journalApi.getMyEntries({
         page: opts.page ?? 1,
         limit: 20,
@@ -47,11 +46,6 @@ export function useJournalState() {
       if (version === fetchVersionRef.current) setLoading(false)
     }
   }, [])
-
-  // Initial load + refetch on filter change
-  useEffect(() => {
-    fetchEntries({ page: 1, mood: filterMood, search: searchQuery, append: false })
-  }, [filterMood, searchQuery, fetchEntries])
 
   const loadMore = useCallback(async () => {
     const currentCount = entries.length
@@ -189,6 +183,6 @@ export function useJournalState() {
     openEditor, closeEditor, saveEntry,
     removeEntry,
     addCommentToEntry, removeCommentFromEntry,
-    loadMore,
+    loadMore, fetchEntries,
   }
 }

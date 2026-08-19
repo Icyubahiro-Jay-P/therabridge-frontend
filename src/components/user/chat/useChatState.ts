@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom"
 import { useAuthStore } from "@/store/auth-store"
 import { api } from "@/lib/api"
 import { getErrorMessage, loadSetting, CHAT_PAGE_SIZE } from "./utils"
-import type { ChatUser, Conversation, DirectMessage } from "./types"
+import type { ChatUser, Conversation, DirectMessage, ReplySnapshot } from "./types"
 
 export function useChatState() {
   const { username } = useParams<{ username: string }>()

@@ -1,6 +1,7 @@
 import { ChatHeader } from "./ChatHeader"
 import { MessageArea } from "./MessageArea"
 import { MessageInput } from "./MessageInput"
+import { VideoCallOverlay } from "./VideoCallOverlay"
 import type { ChatUser, DirectMessage, ReplySnapshot } from "./types"
 
 export function ChatView({
@@ -38,6 +39,18 @@ export function ChatView({
   onLoadOlder,
   loadingOlder,
   hasOlder,
+  callState,
+  localStream,
+  remoteStream,
+  incomingCall,
+  isMuted,
+  isVideoOff,
+  onStartCall,
+  onAcceptCall,
+  onRejectCall,
+  onEndCall,
+  onToggleMute,
+  onToggleVideo,
 }: {
   partner: ChatUser
   onToggleSidebar: () => void
@@ -73,6 +86,23 @@ export function ChatView({
   onLoadOlder: () => void
   loadingOlder: boolean
   hasOlder: boolean
+  callState?: string
+  localStream?: MediaStream | null
+  remoteStream?: MediaStream | null
+  incomingCall?: {
+    callId: string
+    callerId: string
+    callerName: string
+    callerUsername: string
+  } | null
+  isMuted?: boolean
+  isVideoOff?: boolean
+  onStartCall?: () => void
+  onAcceptCall?: () => void
+  onRejectCall?: () => void
+  onEndCall?: () => void
+  onToggleMute?: () => void
+  onToggleVideo?: () => void
 }) {
   return (
     <>
@@ -81,6 +111,8 @@ export function ChatView({
         onToggleSidebar={onToggleSidebar}
         screenshotProtected={screenshotProtected}
         onToggleScreenshot={onToggleScreenshot}
+        onCall={onStartCall}
+        callDisabled={callState !== "idle"}
       />
       <MessageArea
         error={error}
@@ -115,6 +147,25 @@ export function ChatView({
         replyTo={!editingId ? replyTo : null}
         onCancelReply={onCancelReply}
       />
+      {currentUserId && (
+        <VideoCallOverlay
+          userId={currentUserId}
+          callState={(callState ?? "idle") as "idle" | "calling" | "ringing" | "connecting" | "connected" | "ended"}
+          peerId={partner.id}
+          localStream={localStream ?? null}
+          remoteStream={remoteStream ?? null}
+          incomingCall={incomingCall ?? null}
+          isMuted={isMuted ?? false}
+          isVideoOff={isVideoOff ?? false}
+          acceptCall={onAcceptCall ?? (() => {})}
+          rejectCall={onRejectCall ?? (() => {})}
+          endCall={onEndCall ?? (() => {})}
+          toggleMute={onToggleMute ?? (() => {})}
+          toggleVideo={onToggleVideo ?? (() => {})}
+          partnerName={`${partner.firstName} ${partner.lastName}`}
+          partnerAvatar={partner.avatar ?? undefined}
+        />
+      )}
     </>
   )
 }

@@ -64,7 +64,6 @@ function VideoElement({
 
 export function VideoCallOverlay({
   callState,
-  peerId,
   localStream,
   remoteStream,
   incomingCall,

@@ -49,6 +49,10 @@ export function useLoginState() {
     if (Object.keys(errors).length > 0) return
     try {
       const message = await login({ identifier, password })
+      if (message === "Two-factor authentication required") {
+        navigate("/verify-2fa", { replace: true })
+        return
+      }
       setFeedback({ type: "success", message })
       setTimeout(() => navigate("/", { replace: true }), 900)
     } catch (err) {

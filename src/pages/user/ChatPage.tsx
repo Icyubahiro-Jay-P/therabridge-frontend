@@ -26,7 +26,7 @@ export function ChatPage() {
     setEditingContent: c.setEditingContent,
   })
 
-  const webrtc = useWebRTC(c.currentUser?.id ?? "")
+  const webrtc = useWebRTC()
 
   const partnerIdRef = useRef<string | null>(null)
   useEffect(() => {

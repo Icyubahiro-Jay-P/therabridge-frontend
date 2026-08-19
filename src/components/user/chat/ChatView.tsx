@@ -1,7 +1,7 @@
 import { ChatHeader } from "./ChatHeader"
 import { MessageArea } from "./MessageArea"
 import { MessageInput } from "./MessageInput"
-import type { ChatUser, DirectMessage } from "./types"
+import type { ChatUser, DirectMessage, ReplySnapshot } from "./types"
 
 export function ChatView({
   partner,
@@ -16,6 +16,7 @@ export function ChatView({
   editingContent,
   setEditingContent,
   onStartEdit,
+  onReply,
   onSaveEdit,
   onCancelEdit,
   onUnsend,
@@ -30,7 +31,10 @@ export function ChatView({
   setNewMessage,
   sending,
   onSend,
+  onSendVoice,
   enterToSend,
+  replyTo,
+  onCancelReply,
   onLoadOlder,
   loadingOlder,
   hasOlder,
@@ -47,6 +51,7 @@ export function ChatView({
   editingContent: string
   setEditingContent: (v: string) => void
   onStartEdit: (msg: DirectMessage) => void
+  onReply: (msg: DirectMessage) => void
   onSaveEdit: () => void
   onCancelEdit: () => void
   onUnsend: (id: string) => void
@@ -61,7 +66,10 @@ export function ChatView({
   setNewMessage: (v: string) => void
   sending: boolean
   onSend: () => void
+  onSendVoice: (blob: Blob, duration: number) => void
   enterToSend: boolean
+  replyTo: ReplySnapshot | null
+  onCancelReply: () => void
   onLoadOlder: () => void
   loadingOlder: boolean
   hasOlder: boolean
@@ -81,6 +89,7 @@ export function ChatView({
         currentUserId={currentUserId}
         editingId={editingId}
         onStartEdit={onStartEdit}
+        onReply={onReply}
         onUnsend={onUnsend}
         menuOpenId={menuOpenId}
         setMenuOpenId={setMenuOpenId}
@@ -99,9 +108,12 @@ export function ChatView({
         value={editingId ? editingContent : newMessage}
         onChange={editingId ? setEditingContent : setNewMessage}
         onSend={editingId ? onSaveEdit : onSend}
+        onSendVoice={!editingId ? onSendVoice : undefined}
         enterToSend={enterToSend}
         editing={!!editingId}
         onCancelEdit={onCancelEdit}
+        replyTo={!editingId ? replyTo : null}
+        onCancelReply={onCancelReply}
       />
     </>
   )

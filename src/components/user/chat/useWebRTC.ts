@@ -20,6 +20,9 @@ interface IncomingCall {
   callerUsername: string
 }
 
+// Mutable ref for values needed inside socket handlers
+const callRef = { callId: null as string | null }
+
 export function useWebRTC() {
   const [callState, setCallState] = useState<CallState>("idle")
   const [callId, setCallId] = useState<string | null>(null)
@@ -42,6 +45,7 @@ export function useWebRTC() {
     setRemoteStream(null)
     setCallId(null)
     setPeerId(null)
+    callRef.callId = null
     setIsMuted(false)
     setIsVideoOff(false)
   }, [])
@@ -64,7 +68,7 @@ export function useWebRTC() {
       pc.onicecandidate = (event) => {
         if (event.candidate) {
           getSocket()?.emit("call:ice-candidate", {
-            callId: callIdRef.current,
+            callId: callRef.callId,
             candidate: event.candidate.toJSON(),
             targetId: remoteUserId,
           })
@@ -91,23 +95,12 @@ export function useWebRTC() {
     [],
   )
 
-  // Ref to always have latest callId in socket handlers
-  const callIdRef = useRef<string | null>(null)
-  useEffect(() => {
-    callIdRef.current = callId
-  }, [callId])
-
-  const peerIdRef = useRef<string | null>(null)
-  useEffect(() => {
-    peerIdRef.current = peerId
-  }, [peerId])
-
   // ==================== SOCKET LISTENERS ====================
   useEffect(() => {
     const socket = getSocket()
     if (!socket) return
 
-    const handleIncoming = async ({
+    const handleIncoming = ({
       callId: cid,
       callerId,
       callerName,
@@ -116,6 +109,7 @@ export function useWebRTC() {
       setIncomingCall({ callId: cid, callerId, callerName, callerUsername })
       setCallState("ringing")
       setCallId(cid)
+      callRef.callId = cid
       setPeerId(callerId)
     }
 
@@ -146,6 +140,7 @@ export function useWebRTC() {
 
       setCallState("connecting")
       setCallId(cid)
+      callRef.callId = cid
       setPeerId(callerId)
       setIncomingCall(null)
     }
@@ -158,7 +153,7 @@ export function useWebRTC() {
     }) => {
       if (!pcRef.current) return
       await pcRef.current.setRemoteDescription(new RTCSessionDescription(sdp))
-      setCallState("connecting")
+      setCallState("connected")
     }
 
     const handleIceCandidate = async ({
@@ -192,6 +187,7 @@ export function useWebRTC() {
 
     const handleCallInitiated = ({ callId: cid }: { callId: string }) => {
       setCallId(cid)
+      callRef.callId = cid
       setCallState("ringing")
     }
 
@@ -235,10 +231,10 @@ export function useWebRTC() {
     [getLocalStream, createPeerConnection],
   )
 
-  const acceptCall = useCallback(async () => {
+  const acceptCall = useCallback(() => {
     if (!incomingCall) return
-    // The actual connection happens when we receive the offer via socket
-    // This just accepts the incoming notification
+    // The offer arrives via socket handleOffer which sets up the peer connection
+    // This just transitions the UI state
     setCallState("connecting")
   }, [incomingCall])
 
@@ -253,12 +249,12 @@ export function useWebRTC() {
   }, [incomingCall])
 
   const endCall = useCallback(() => {
-    if (callId) {
-      getSocket()?.emit("call:end", { callId })
+    if (callRef.callId) {
+      getSocket()?.emit("call:end", { callId: callRef.callId })
     }
     setCallState("ended")
     cleanup()
-  }, [callId, cleanup])
+  }, [cleanup])
 
   const toggleMute = useCallback(() => {
     localStreamRef.current?.getAudioTracks().forEach((t) => {

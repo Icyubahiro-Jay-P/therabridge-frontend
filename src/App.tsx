@@ -545,6 +545,22 @@ export function App() {
                 }
               />
               <Route
+                path="/programs"
+                element={
+                  <ErrorBoundaryRoute>
+                    <UserProgramsPage />
+                  </ErrorBoundaryRoute>
+                }
+              />
+              <Route
+                path="/programs/:id"
+                element={
+                  <ErrorBoundaryRoute>
+                    <UserProgramDetailPage />
+                  </ErrorBoundaryRoute>
+                }
+              />
+              <Route
                 path="/coping-cards"
                 element={
                   <ErrorBoundaryRoute>

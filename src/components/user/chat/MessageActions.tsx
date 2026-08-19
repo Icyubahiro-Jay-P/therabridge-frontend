@@ -1,10 +1,11 @@
-import { Edit, X } from "lucide-react"
+import { Edit, Reply, X } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 export function MessageActions({
   isMe,
   editAllowed,
   onEdit,
+  onReply,
   onUnsend,
   onClose,
   deleting,
@@ -12,6 +13,7 @@ export function MessageActions({
   isMe: boolean
   editAllowed: boolean
   onEdit: () => void
+  onReply: () => void
   onUnsend: () => void
   onClose: () => void
   deleting: boolean
@@ -25,6 +27,12 @@ export function MessageActions({
           isMe ? "right-8" : "left-8"
         )}
       >
+        <button
+          onClick={onReply}
+          className="flex w-full items-center gap-2 px-3 py-1.5 text-left text-xs text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"
+        >
+          <Reply className="size-3" /> Reply
+        </button>
         {editAllowed && (
           <button
             onClick={onEdit}

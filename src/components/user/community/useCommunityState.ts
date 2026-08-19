@@ -4,6 +4,7 @@ import { useAuthStore } from "@/store/auth-store"
 import { api } from "@/lib/api"
 import { getErrorMessage } from "./utils"
 import type { Community, CommunityMessage } from "./types"
+import type { ReplySnapshot } from "../chat/types"
 
 export function useCommunityState() {
   const { inviteKey } = useParams<{ inviteKey: string }>()
@@ -29,23 +30,66 @@ export function useCommunityState() {
   const [editingContent, setEditingContent] = useState("")
   const [showHistoryFor, setShowHistoryFor] = useState<string | null>(null)
   const [menuOpenId, setMenuOpenId] = useState<string | null>(null)
+  const [replyToMessage, setReplyToMessage] = useState<ReplySnapshot | null>(null)
 
   async function sendMessage() {
     if (!newMessage.trim() || !active) return
     setSending(true)
     try {
+      const payload: { content: string; replyToMessageId?: string } = { content: newMessage.trim() }
+      if (replyToMessage) {
+        payload.replyToMessageId = replyToMessage._id
+      }
       const { data } = await api.post<CommunityMessage>(
         `/api/chat/communities/${active._id}/messages`,
-        { content: newMessage.trim() }
+        payload
       )
       setMessages((prev) => [...prev, data])
       setNewMessage("")
+      setReplyToMessage(null)
     } catch (err) {
       setError(getErrorMessage(err))
     } finally {
       setSending(false)
     }
   }
+
+  async function sendVoiceNote(blob: Blob, duration: number) {
+    if (!active) return
+    setSending(true)
+    try {
+      const formData = new FormData()
+      formData.append("audio", blob, "voice.webm")
+      formData.append("duration", String(duration))
+      if (replyToMessage) {
+        formData.append("replyToMessageId", replyToMessage._id)
+      }
+      const { data } = await api.post<CommunityMessage>(
+        `/api/chat/communities/${active._id}/voice`,
+        formData,
+        { headers: { "Content-Type": "multipart/form-data" } }
+      )
+      setMessages((prev) => [...prev, data])
+      setReplyToMessage(null)
+    } catch (err) {
+      setError(getErrorMessage(err))
+    } finally {
+      setSending(false)
+    }
+  }
+
+  function startReply(msg: CommunityMessage) {
+    setReplyToMessage({
+      _id: msg._id,
+      senderUsername: msg.sender.username,
+      senderAvatar: msg.sender.avatar,
+      content: msg.type === "voice" ? "🎤 Voice message" : msg.content.slice(0, 150),
+      type: msg.type || "text",
+    })
+    setMenuOpenId(null)
+  }
+
+  function cancelReply() { setReplyToMessage(null) }
 
   function selectCommunity(c: Community) {
     setActive(c)
@@ -139,6 +183,7 @@ export function useCommunityState() {
     communities, setCommunities, loading, setLoading, error, setError,
     active, setActive, messages, setMessages, loadingMessages, setLoadingMessages,
     newMessage, setNewMessage, sending, setSending,
+    replyToMessage, setReplyToMessage,
     showJoin, setShowJoin,
     showCreate, setShowCreate,
     showSettings, setShowSettings,
@@ -146,7 +191,7 @@ export function useCommunityState() {
     selectedTimestampMessage, setSelectedTimestampMessage,
     toggleTimestamp,
     screenshotProtected, setScreenshotProtected,
-    sendMessage, selectCommunity, onCreated, leaveActive, deleteActive,
+    sendMessage, sendVoiceNote, startReply, cancelReply, selectCommunity, onCreated, leaveActive, deleteActive,
     deleting, editingId, editingContent, setEditingContent,
     showHistoryFor, setShowHistoryFor, menuOpenId, setMenuOpenId,
     handleUnsend, startEdit, handleSaveEdit, cancelEdit,

@@ -21,6 +21,7 @@ export interface User {
   exerciseStreak?: number
   longestLoginStreak?: number
   longestExerciseStreak?: number
+  twoFactorEnabled?: boolean
 }
 
 export interface ChatSettings {

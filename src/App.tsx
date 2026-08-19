@@ -29,6 +29,11 @@ const VerifyEmailPage = lazy(() =>
     default: mod.VerifyEmailPage,
   }))
 )
+const VerifyTwoFactorPage = lazy(() =>
+  import("@/pages/VerifyTwoFactorPage").then((mod) => ({
+    default: mod.VerifyTwoFactorPage,
+  }))
+)
 const OnboardingPage = lazy(() =>
   import("@/pages/OnboardingPage").then((mod) => ({
     default: mod.OnboardingPage,
@@ -323,14 +328,22 @@ export function App() {
             }
           />
           <Route element={<ProtectedRoute />}>
-            <Route
-              path="/verify-email"
-              element={
-                <ErrorBoundaryRoute>
-                  <VerifyEmailPage />
-                </ErrorBoundaryRoute>
-              }
-            />
+          <Route
+            path="/verify-email"
+            element={
+              <ErrorBoundaryRoute>
+                <VerifyEmailPage />
+              </ErrorBoundaryRoute>
+            }
+          />
+          <Route
+            path="/verify-2fa"
+            element={
+              <ErrorBoundaryRoute>
+                <VerifyTwoFactorPage />
+              </ErrorBoundaryRoute>
+            }
+          />
             <Route
               path="/onboarding"
               element={

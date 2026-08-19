@@ -23,7 +23,7 @@ export function MessageActions({
       <div className="fixed inset-0 z-10" onClick={onClose} />
       <div
         className={cn(
-          "absolute z-20 min-w-[120px] rounded-lg border border-gray-200 bg-white py-1 shadow-lg dark:border-gray-700 dark:bg-gray-800",
+          "absolute z-20 min-w-30 rounded-lg border border-gray-200 bg-white py-1 shadow-lg dark:border-gray-700 dark:bg-gray-800",
           isMe ? "right-8" : "left-8"
         )}
       >

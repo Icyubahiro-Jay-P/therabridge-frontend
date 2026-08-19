@@ -132,6 +132,9 @@ const UserCopingCardsPage = lazy(() =>
 const UserPsychoedPage = lazy(() =>
   import("@/components/user/psychoed/PsychoedPage").then((mod) => ({ default: mod.PsychoedPage }))
 )
+const UserSleepPage = lazy(() =>
+  import("@/components/user/sleep/SleepPage").then((mod) => ({ default: mod.SleepPage }))
+)
 
 const AdminDashboardPage = lazy(() =>
   import("@/pages/admin/DashboardPage").then((mod) => ({

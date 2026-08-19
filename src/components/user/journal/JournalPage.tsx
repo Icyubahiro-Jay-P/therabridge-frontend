@@ -1,22 +1,26 @@
-import { useCallbackRef } from "@/hooks/useCallbackRef"
 import { TriangleAlert, Plus, Search, BookOpen } from "lucide-react"
 import { useJournalState } from "./useJournalState"
 import { JournalEditor } from "./JournalEditor"
 import { JournalEntryCard } from "./JournalEntryCard"
 import { JournalEntryDetail } from "./JournalEntryDetail"
 import { useAuthStore } from "@/store/auth-store"
+import { useEffect, useRef } from "react"
 
 export function JournalPage() {
   const j = useJournalState()
   const currentUser = useAuthStore((s) => s.user)
+  const initializedRef = useRef(false)
 
-  // Trigger initial fetch on mount
-  const mountedRef = useCallbackRef(() => {
-    j.fetchEntries({ page: 1, mood: null, search: "" })
-  })
+  // eslint-disable-next-line react-hooks/set-state-in-effect
+  useEffect(() => {
+    if (!initializedRef.current) {
+      initializedRef.current = true
+      j.fetchEntries({ page: 1, mood: null, search: "" })
+    }
+  }) // Intentionally no deps — runs once on mount
 
   return (
-    <div className="mx-auto max-w-3xl space-y-6 p-6" ref={mountedRef}>
+    <div className="mx-auto max-w-3xl space-y-6 p-6">
       {j.selectedEntry ? (
         <JournalEntryDetail
           entry={j.selectedEntry}

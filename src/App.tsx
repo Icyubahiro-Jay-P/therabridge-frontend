@@ -114,6 +114,9 @@ const UserThoughtRecordsPage = lazy(() =>
 const UserAssessmentsPage = lazy(() =>
   import("@/components/user/assessments/AssessmentsPage").then((mod) => ({ default: mod.AssessmentsPage }))
 )
+const UserGratitudePage = lazy(() =>
+  import("@/components/user/gratitude/GratitudePage").then((mod) => ({ default: mod.GratitudePage }))
+)
 
 const AdminDashboardPage = lazy(() =>
   import("@/pages/admin/DashboardPage").then((mod) => ({
@@ -510,6 +513,14 @@ export function App() {
                 element={
                   <ErrorBoundaryRoute>
                     <UserAssessmentsPage />
+                  </ErrorBoundaryRoute>
+                }
+              />
+              <Route
+                path="/gratitude"
+                element={
+                  <ErrorBoundaryRoute>
+                    <UserGratitudePage />
                   </ErrorBoundaryRoute>
                 }
               />

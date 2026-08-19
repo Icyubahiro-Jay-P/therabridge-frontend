@@ -88,12 +88,54 @@ export function useChatState() {
     if (!newMessage.trim() || !partner) return
     setSending(true)
     try {
-      const { data } = await api.post<DirectMessage>("/api/chat/send", { recipientId: partner._id, content: newMessage.trim() })
+      const payload: { recipientId: string; content: string; replyToMessageId?: string } = {
+        recipientId: partner._id,
+        content: newMessage.trim(),
+      }
+      if (replyToMessage) {
+        payload.replyToMessageId = replyToMessage._id
+      }
+      const { data } = await api.post<DirectMessage>("/api/chat/send", payload)
       setMessages((prev) => [...prev, data])
       setNewMessage("")
+      setReplyToMessage(null)
     } catch (err) { setError(getErrorMessage(err)) }
     finally { setSending(false) }
   }
+
+  async function sendVoiceNote(blob: Blob, duration: number) {
+    if (!partner) return
+    setSending(true)
+    try {
+      const formData = new FormData()
+      formData.append("audio", blob, "voice.webm")
+      formData.append("recipientId", partner._id)
+      formData.append("duration", String(duration))
+      if (replyToMessage) {
+        formData.append("replyToMessageId", replyToMessage._id)
+      }
+      const { data } = await api.post<DirectMessage>("/api/chat/voice", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      })
+      setMessages((prev) => [...prev, data])
+      setReplyToMessage(null)
+    } catch (err) { setError(getErrorMessage(err)) }
+    finally { setSending(false) }
+  }
+
+  function startReply(msg: DirectMessage) {
+    const sender = msg.sender
+    setReplyToMessage({
+      _id: msg._id,
+      senderUsername: sender.username,
+      senderAvatar: sender.avatar,
+      content: msg.type === "voice" ? "🎤 Voice message" : msg.content.slice(0, 150),
+      type: msg.type || "text",
+    })
+    setMenuOpenId(null)
+  }
+
+  function cancelReply() { setReplyToMessage(null) }
   async function handleUnsend(messageId: string) {
     setDeleting(messageId)
     try {

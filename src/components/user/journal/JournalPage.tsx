@@ -1,3 +1,4 @@
+import { useCallbackRef } from "@/hooks/useCallbackRef"
 import { TriangleAlert, Plus, Search, BookOpen } from "lucide-react"
 import { useJournalState } from "./useJournalState"
 import { JournalEditor } from "./JournalEditor"
@@ -9,8 +10,13 @@ export function JournalPage() {
   const j = useJournalState()
   const currentUser = useAuthStore((s) => s.user)
 
+  // Trigger initial fetch on mount
+  const mountedRef = useCallbackRef(() => {
+    j.fetchEntries({ page: 1, mood: null, search: "" })
+  })
+
   return (
-    <div className="mx-auto max-w-3xl space-y-6 p-6">
+    <div className="mx-auto max-w-3xl space-y-6 p-6" ref={mountedRef}>
       {j.selectedEntry ? (
         <JournalEntryDetail
           entry={j.selectedEntry}
@@ -49,14 +55,21 @@ export function JournalPage() {
               <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-gray-400" />
               <input
                 value={j.searchQuery}
-                onChange={(e) => j.setSearchQuery(e.target.value)}
+                onChange={(e) => {
+                  j.setSearchQuery(e.target.value)
+                  j.fetchEntries({ page: 1, mood: j.filterMood, search: e.target.value })
+                }}
                 placeholder="Search entries..."
                 className="w-full rounded-xl border border-gray-200 bg-white py-2 pl-9 pr-3 text-sm text-gray-900 placeholder:text-gray-400 focus:border-blue-400 focus:outline-none focus:ring-1 focus:ring-blue-400 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
               />
             </div>
             <select
               value={j.filterMood ?? ""}
-              onChange={(e) => j.setFilterMood(e.target.value || null)}
+              onChange={(e) => {
+                const v = e.target.value || null
+                j.setFilterMood(v)
+                j.fetchEntries({ page: 1, mood: v, search: j.searchQuery })
+              }}
               className="rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm text-gray-700 focus:border-blue-400 focus:outline-none dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300"
             >
               <option value="">All moods</option>
@@ -101,7 +114,7 @@ export function JournalPage() {
 
           {j.hasMore && (
             <button
-              onClick={j.loadMore}
+              onClick={() => j.loadMore()}
               className="w-full rounded-xl border border-gray-200 py-2.5 text-sm text-gray-500 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-800"
             >
               {j.loading ? "Loading..." : "Load more"}

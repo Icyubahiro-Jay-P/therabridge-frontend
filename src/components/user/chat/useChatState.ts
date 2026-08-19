@@ -192,7 +192,8 @@ export function useChatState() {
     deleting, setDeleting, editingId, setEditingId, editingContent, setEditingContent,
     showHistoryFor, setShowHistoryFor, menuOpenId, setMenuOpenId,
     selectedTimestampMessage, setSelectedTimestampMessage, mobileSidebarOpen, setMobileSidebarOpen,
-    messagesEndRef, sendMessage, handleUnsend, startEdit, handleSaveEdit, openDM, cancelEdit, toggleTimestamp,
+    replyToMessage, setReplyToMessage,
+    messagesEndRef, sendMessage, sendVoiceNote, startReply, cancelReply, handleUnsend, startEdit, handleSaveEdit, openDM, cancelEdit, toggleTimestamp,
     loadOlderMessages,
   }
 }

@@ -90,7 +90,6 @@ export function MessageArea({
             showHistoryFor={showHistoryFor}
             setShowHistoryFor={setShowHistoryFor}
             deleting={deleting}
-            onScrollToMessage={onScrollToMessage}
           />
         )
       }}

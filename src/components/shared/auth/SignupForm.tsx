@@ -120,68 +120,37 @@ export function SignupForm({
           </Label>
 
           {stepItem.field === "dateOfBirth" ? (
-            <div className="grid grid-cols-3 gap-3">
-              <div className="space-y-1">
-                <select
-                  id="dob-day"
-                  aria-label="Day"
-                  value={dobDay ?? ""}
+            <Popover open={dobOpen} onOpenChange={setDobOpen}>
+              <PopoverTrigger asChild>
+                <button
+                  type="button"
                   disabled={l}
-                  onChange={(e) => hdp(e.target.value, dobMonth ?? "", dobYear ?? "")}
                   className={cn(
-                    "h-9 w-full cursor-pointer rounded-4xl border border-input bg-input/30 px-3 text-base text-gray-900 outline-none transition-colors focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm dark:text-white",
+                    "flex h-9 w-full cursor-pointer items-center gap-2 rounded-4xl border border-input bg-input/30 px-3 text-base outline-none transition-colors focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
+                    formattedDob ? "text-gray-900 dark:text-white" : "text-gray-400 dark:text-gray-500",
                     fe.dateOfBirth && "border-red-400 dark:border-red-600"
                   )}
                 >
-                  <option value="">Day</option>
-                  {Array.from({ length: daysInMonth }, (_, i) => i + 1).map((d) => (
-                    <option key={d} value={d}>
-                      {d}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div className="space-y-1">
-                <select
-                  id="dob-month"
-                  aria-label="Month"
-                  value={dobMonth ?? ""}
-                  disabled={l}
-                  onChange={(e) => hdp(dobDay ?? "", e.target.value, dobYear ?? "")}
-                  className={cn(
-                    "h-9 w-full cursor-pointer rounded-4xl border border-input bg-input/30 px-3 text-base text-gray-900 outline-none transition-colors focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm dark:text-white",
-                    fe.dateOfBirth && "border-red-400 dark:border-red-600"
-                  )}
-                >
-                  <option value="">Month</option>
-                  {MONTH_NAMES.map((name, i) => (
-                    <option key={name} value={i + 1}>
-                      {name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div className="space-y-1">
-                <select
-                  id="dob-year"
-                  aria-label="Year"
-                  value={dobYear ?? ""}
-                  disabled={l}
-                  onChange={(e) => hdp(dobDay ?? "", dobMonth ?? "", e.target.value)}
-                  className={cn(
-                    "h-9 w-full cursor-pointer rounded-4xl border border-input bg-input/30 px-3 text-base text-gray-900 outline-none transition-colors focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm dark:text-white",
-                    fe.dateOfBirth && "border-red-400 dark:border-red-600"
-                  )}
-                >
-                  <option value="">Year</option>
-                  {yearOptions.map((y) => (
-                    <option key={y} value={y}>
-                      {y}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
+                  <CalendarIcon className="size-4 shrink-0 text-gray-400" />
+                  <span className="flex-1 text-left">{formattedDob || "Select your date of birth"}</span>
+                </button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="start">
+                <Calendar
+                  mode="single"
+                  selected={date}
+                  onSelect={(selected) => {
+                    if (selected) {
+                      sdp(selected)
+                      setDobOpen(false)
+                    }
+                  }}
+                  defaultMonth={date ?? maxDate}
+                  disabled={(d) => d > maxDate}
+                  autoFocus
+                />
+              </PopoverContent>
+            </Popover>
           ) : (
             <div className="relative">
               <stepItem.icon className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-gray-400" />

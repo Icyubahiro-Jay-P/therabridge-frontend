@@ -63,27 +63,16 @@ export function SignupForm({
   const currentError =
     fe[stepItem.field] ?? validateField(stepItem.field, currentValue, date)
 
-  // Date-of-birth selects: year range mirrors the 18–120 server rule, and the
-  // day list clamps to the selected month/year so Feb 29 / Apr 31 can't happen.
-  const currentYear = new Date().getFullYear()
-  const [dobYear, dobMonth, dobDay] = (form.dateOfBirth || "").split("-")
-  const daysInMonth =
-    dobYear && dobMonth
-      ? new Date(parseInt(dobYear, 10), parseInt(dobMonth, 10), 0).getDate()
-      : 31
-  const yearOptions = Array.from(
-    { length: currentYear - 18 - (currentYear - 120) + 1 },
-    (_, i) => currentYear - 18 - i
-  )
-  const MONTH_NAMES = [
-    "January", "February", "March", "April", "May", "June",
-    "July", "August", "September", "October", "November", "December",
-  ]
-
   const progress = useMemo(
     () => ((stepIndex + 1) / STEP_COUNT) * 100,
     [stepIndex]
   )
+
+  const [dobOpen, setDobOpen] = useState(false)
+  const maxDate = subYears(new Date(), 18)
+  const formattedDob = date
+    ? date.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })
+    : ""
 
   return (
     <>

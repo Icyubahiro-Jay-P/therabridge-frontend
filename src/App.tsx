@@ -194,6 +194,10 @@ function RootRoute() {
     return <Navigate to="/account-disabled" replace />
   }
 
+  if (!user.isAccountVerified) {
+    return <Navigate to="/verify-email" replace />
+  }
+
   return (
     <AppLayout>
       {user.role === "admin" ? (

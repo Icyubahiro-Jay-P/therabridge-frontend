@@ -27,7 +27,7 @@ export const MessageBubble = memo(function MessageBubble({
   const isUnsent = !!msg.unsent
 
   return (
-    <div className={cn("group/msg mb-2 flex", isMe ? "justify-end" : "justify-start")}>
+    <div id={`msg-${msg._id}`} className={cn("group/msg mb-2 flex", isMe ? "justify-end" : "justify-start")}>
       {!isMe && (
         <Link
           to={`/user/${msg.sender.username}`}

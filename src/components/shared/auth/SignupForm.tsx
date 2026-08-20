@@ -33,7 +33,7 @@ export function SignupForm({
   isFirstStep,
   updateField: uf,
   handleBlur: hb,
-  setDateOfBirth: sdp,
+  handleDateParts: hdp,
   handleStepSubmit: hss,
   setShowPassword: sp,
   goToStep,
@@ -49,7 +49,7 @@ export function SignupForm({
   isFirstStep: boolean
   updateField: (f: FieldName, v: string) => void
   handleBlur: (f: FieldName) => void
-  setDateOfBirth: (date: Date) => void
+  handleDateParts: (day: string, month: string, year: string) => void
   handleStepSubmit: (e: React.FormEvent<HTMLFormElement>) => void
   setShowPassword: React.Dispatch<React.SetStateAction<boolean>>
   goToStep: (index: number) => void
@@ -67,11 +67,20 @@ export function SignupForm({
     [stepIndex]
   )
 
-  const [dobOpen, setDobOpen] = useState(false)
-  const maxDate = subYears(new Date(), 18)
-  const formattedDob = date
-    ? date.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })
-    : ""
+  const currentYear = new Date().getFullYear()
+  const [dobYear, dobMonth, dobDay] = (form.dateOfBirth || "").split("-")
+  const daysInMonth =
+    dobYear && dobMonth
+      ? new Date(parseInt(dobYear, 10), parseInt(dobMonth, 10), 0).getDate()
+      : 0
+  const yearOptions = Array.from(
+    { length: currentYear - 18 - (currentYear - 120) + 1 },
+    (_, i) => currentYear - 18 - i
+  )
+  const MONTH_NAMES = [
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December",
+  ]
 
   return (
     <>
@@ -119,37 +128,77 @@ export function SignupForm({
           </Label>
 
           {stepItem.field === "dateOfBirth" ? (
-            <Popover open={dobOpen} onOpenChange={setDobOpen}>
-              <PopoverTrigger asChild>
-                <button
-                  type="button"
+            <div className="grid grid-cols-3 gap-3">
+              <div className="space-y-1">
+                <Label className="text-xs text-gray-400 dark:text-gray-500">Year</Label>
+                <Select
+                  value={dobYear ?? ""}
                   disabled={l}
-                  className={cn(
-                    "flex h-9 w-full cursor-pointer items-center gap-2 rounded-4xl border border-input bg-input/30 px-3 text-base outline-none transition-colors focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
-                    formattedDob ? "text-gray-900 dark:text-white" : "text-gray-400 dark:text-gray-500",
-                    fe.dateOfBirth && "border-red-400 dark:border-red-600"
-                  )}
+                  onValueChange={(val) => hdp(dobDay ?? "", dobMonth ?? "", val)}
                 >
-                  <CalendarIcon className="size-4 shrink-0 text-gray-400" />
-                  <span className="flex-1 text-left">{formattedDob || "Select your date of birth"}</span>
-                </button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0" align="start">
-                <Calendar
-                  mode="single"
-                  selected={date}
-                  onSelect={(selected) => {
-                    if (selected) {
-                      sdp(selected)
-                      setDobOpen(false)
-                    }
-                  }}
-                  defaultMonth={date ?? maxDate}
-                  disabled={(d) => d > maxDate}
-                  autoFocus
-                />
-              </PopoverContent>
-            </Popover>
+                  <SelectTrigger
+                    className={cn(
+                      fe.dateOfBirth && "border-red-400 dark:border-red-600"
+                    )}
+                  >
+                    <SelectValue placeholder="Year" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {yearOptions.map((y) => (
+                      <SelectItem key={y} value={String(y)}>
+                        {y}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-1">
+                <Label className="text-xs text-gray-400 dark:text-gray-500">Month</Label>
+                <Select
+                  value={dobMonth ?? ""}
+                  disabled={l || !dobYear}
+                  onValueChange={(val) => hdp(dobDay ?? "", val, dobYear ?? "")}
+                >
+                  <SelectTrigger
+                    className={cn(
+                      fe.dateOfBirth && "border-red-400 dark:border-red-600"
+                    )}
+                  >
+                    <SelectValue placeholder="Month" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {MONTH_NAMES.map((name, i) => (
+                      <SelectItem key={name} value={String(i + 1)}>
+                        {name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-1">
+                <Label className="text-xs text-gray-400 dark:text-gray-500">Day</Label>
+                <Select
+                  value={dobDay ?? ""}
+                  disabled={l || !dobMonth}
+                  onValueChange={(val) => hdp(val, dobMonth ?? "", dobYear ?? "")}
+                >
+                  <SelectTrigger
+                    className={cn(
+                      fe.dateOfBirth && "border-red-400 dark:border-red-600"
+                    )}
+                  >
+                    <SelectValue placeholder="Day" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {Array.from({ length: daysInMonth }, (_, i) => i + 1).map((d) => (
+                      <SelectItem key={d} value={String(d)}>
+                        {d}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
           ) : (
             <div className="relative">
               <stepItem.icon className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-gray-400" />

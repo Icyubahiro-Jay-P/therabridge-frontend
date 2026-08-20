@@ -132,27 +132,6 @@ export const MessageBubble = memo(function MessageBubble({
                         : "ring-2 ring-teal-400 ring-offset-1 ring-offset-gray-50 dark:ring-offset-gray-950")
                   )}
                 >
-                  {msg.replyTo && (
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        onScrollToMessage?.(msg.replyTo!._id)
-                      }}
-                      className={cn(
-                        "mb-0.5 flex w-full items-start gap-2 border-l-2 px-2.5 py-1 text-left text-[11px] opacity-80 hover:opacity-100",
-                        isMe
-                          ? "border-white/50 bg-white/10"
-                          : "border-emerald-400 bg-black/5 dark:border-emerald-500 dark:bg-white/5"
-                      )}
-                    >
-                      <Reply className="mt-0.5 size-3 shrink-0" />
-                      <span className="min-w-0 line-clamp-2">
-                        <span className="font-semibold">{msg.replyTo.senderUsername}</span>
-                        {" — "}
-                        {msg.replyTo.type === "voice" ? "Voice message" : msg.replyTo.content}
-                      </span>
-                    </button>
-                  )}
                   <div
                     className={cn(
                       "px-3.5 pt-2.5",

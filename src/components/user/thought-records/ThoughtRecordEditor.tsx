@@ -125,7 +125,7 @@ export function ThoughtRecordEditor({ open, record, saving, error, onSave, onClo
         )}
 
         {/* Step content */}
-        <div className="min-h-[200px]">
+        <div className="min-h-50">
           {step === 0 && (
             <div className="space-y-3">
               <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
@@ -200,7 +200,7 @@ export function ThoughtRecordEditor({ open, record, saving, error, onSave, onClo
               <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
                 Does this thought contain a cognitive distortion?
               </label>
-              <div className="max-h-[300px] space-y-2 overflow-y-auto pr-1">
+              <div className="max-h-75 space-y-2 overflow-y-auto pr-1">
                 {DISTORTIONS.map((d) => (
                   <button
                     key={d.value}

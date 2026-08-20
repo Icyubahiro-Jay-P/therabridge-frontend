@@ -103,13 +103,13 @@ export function SignupForm({
   function handleYearChange(val: string) {
     setDobYear(val)
     setDobDay("")
-    syncDob(val, dobMonth, dobDay)
+    syncDob(val, dobMonth, "")
   }
 
   function handleMonthChange(val: string) {
     setDobMonth(val)
     setDobDay("")
-    syncDob(dobYear, val, dobDay)
+    syncDob(dobYear, val, "")
   }
 
   function handleDayChange(val: string) {

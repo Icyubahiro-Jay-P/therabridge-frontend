@@ -77,7 +77,19 @@ export const MessageBubble = memo(function MessageBubble({
             <Avatar user={msg.sender} size="sm" />
           </Link>
         )}
-        <div className="flex min-w-0 flex-col">
+        <div className="relative">
+          <button
+            onClick={(e) => {
+              e.stopPropagation()
+              onReply(msg)
+            }}
+            className={cn(
+              "absolute top-1/2 z-10 flex size-6 -translate-y-1/2 items-center justify-center rounded-full border border-gray-200 bg-white opacity-0 shadow-sm transition-opacity hover:bg-gray-100 group-hover/msg:opacity-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700",
+              isMe ? "-left-3" : "-right-3"
+            )}
+          >
+            <Reply className="size-3 text-gray-500 dark:text-gray-400" />
+          </button>
           <div
             className={cn(
               "flex items-center gap-1",

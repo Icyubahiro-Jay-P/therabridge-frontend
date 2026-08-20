@@ -151,7 +151,7 @@ export function ChatView({
         <VideoCallOverlay
           userId={currentUserId}
           callState={(callState ?? "idle") as "idle" | "calling" | "ringing" | "connecting" | "connected" | "ended"}
-          peerId={partner.id}
+          peerId={partner._id}
           localStream={localStream ?? null}
           remoteStream={remoteStream ?? null}
           incomingCall={incomingCall ?? null}

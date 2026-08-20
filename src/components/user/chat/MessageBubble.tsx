@@ -77,19 +77,7 @@ export const MessageBubble = memo(function MessageBubble({
             <Avatar user={msg.sender} size="sm" />
           </Link>
         )}
-        <div className="relative">
-          <button
-            onClick={(e) => {
-              e.stopPropagation()
-              onReply(msg)
-            }}
-            className={cn(
-              "absolute top-1/2 z-10 flex size-6 -translate-y-1/2 items-center justify-center rounded-full border border-gray-200 bg-white opacity-0 shadow-sm transition-opacity hover:bg-gray-100 group-hover/msg:opacity-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700",
-              isMe ? "-left-3" : "-right-3"
-            )}
-          >
-            <Reply className="size-3 text-gray-500 dark:text-gray-400" />
-          </button>
+        <div className="flex min-w-0 flex-col">
           <div
             className={cn(
               "flex items-center gap-1",
@@ -113,80 +101,94 @@ export const MessageBubble = memo(function MessageBubble({
                 isMe ? "items-end" : "items-start"
               )}
             >
-              <div
-                onClick={() => onToggleTimestamp(msg._id)}
-                className={cn(
-                  "wrap-break-words relative min-w-0 cursor-pointer overflow-hidden rounded-2xl text-sm",
-                  isMe
-                    ? "rounded-br-md bg-emerald-600 text-white"
-                    : "rounded-bl-md bg-gray-300 text-gray-900 dark:bg-gray-800 dark:text-gray-100",
-                  isEditing &&
-                    (isMe
-                      ? "ring-2 ring-teal-400 ring-offset-1 ring-offset-gray-50 dark:ring-offset-gray-950"
-                      : "ring-2 ring-teal-400 ring-offset-1 ring-offset-gray-50 dark:ring-offset-gray-950")
-                )}
-              >
-                {msg.replyTo && (
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      onScrollToMessage?.(msg.replyTo!._id)
-                    }}
-                    className={cn(
-                      "flex w-full items-center gap-2 border-l-2 px-3 py-1.5 text-left text-[11px] opacity-80 hover:opacity-100",
-                      isMe
-                        ? "border-white/50 bg-white/10"
-                        : "border-emerald-400 bg-black/5 dark:border-emerald-500 dark:bg-white/5"
-                    )}
-                  >
-                    <Reply className="size-3 shrink-0" />
-                    <span className="truncate">
-                      <span className="font-semibold">{msg.replyTo.senderUsername}</span>
-                      {" — "}
-                      {msg.replyTo.type === "voice" ? "🎤 Voice message" : msg.replyTo.content}
-                    </span>
-                  </button>
-                )}
-                <div
+              <div className="relative">
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    onReply(msg)
+                  }}
                   className={cn(
-                    "px-3.5 pt-2.5",
-                    isUnsent && "italic opacity-60"
+                    "absolute top-1/2 z-10 flex size-6 -translate-y-1/2 items-center justify-center rounded-full border border-gray-200 bg-white opacity-0 shadow-sm transition-opacity hover:bg-gray-100 group-hover/msg:opacity-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700",
+                    isMe ? "-left-3" : "-right-3"
                   )}
                 >
-                  {isUnsent ? (
-                    <p className="wrap-break-words whitespace-pre-wrap italic">
-                      Message unsent
-                    </p>
-                  ) : msg.type === "voice" && msg.audioUrl ? (
-                    <VoiceMessagePlayer
-                      audioUrl={msg.audioUrl}
-                      duration={msg.duration}
-                      isMe={isMe}
-                    />
-                  ) : (
-                    <p className="wrap-break-words whitespace-pre-wrap">
-                      {msg.content}
-                    </p>
-                  )}
-                </div>
+                  <Reply className="size-3 text-gray-500 dark:text-gray-400" />
+                </button>
                 <div
+                  onClick={() => onToggleTimestamp(msg._id)}
                   className={cn(
-                    "flex items-center gap-2 px-3.5 pb-2",
-                    isMe ? "justify-end" : "justify-start"
+                    "wrap-break-words relative min-w-0 cursor-pointer overflow-hidden rounded-2xl text-sm",
+                    isMe
+                      ? "rounded-br-md bg-emerald-600 text-white"
+                      : "rounded-bl-md bg-gray-300 text-gray-900 dark:bg-gray-800 dark:text-gray-100",
+                    isEditing &&
+                      (isMe
+                        ? "ring-2 ring-teal-400 ring-offset-1 ring-offset-gray-50 dark:ring-offset-gray-950"
+                        : "ring-2 ring-teal-400 ring-offset-1 ring-offset-gray-50 dark:ring-offset-gray-950")
                   )}
                 >
-                  {isEditing && (
-                    <span
+                  {msg.replyTo && (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        onScrollToMessage?.(msg.replyTo!._id)
+                      }}
                       className={cn(
-                        "inline-flex items-center gap-1 text-[10px] font-medium",
+                        "flex w-full items-center gap-2 border-l-2 px-3 py-1.5 text-left text-[11px] opacity-80 hover:opacity-100",
                         isMe
-                          ? "text-teal-200"
-                          : "text-teal-600 dark:text-teal-400"
+                          ? "border-white/50 bg-white/10"
+                          : "border-emerald-400 bg-black/5 dark:border-emerald-500 dark:bg-white/5"
                       )}
                     >
-                      <PencilLine className="size-2.5" /> Editing...
-                    </span>
+                      <Reply className="size-3 shrink-0" />
+                      <span className="truncate">
+                        <span className="font-semibold">{msg.replyTo.senderUsername}</span>
+                        {" — "}
+                        {msg.replyTo.type === "voice" ? "🎤 Voice message" : msg.replyTo.content}
+                      </span>
+                    </button>
                   )}
+                  <div
+                    className={cn(
+                      "px-3.5 pt-2.5",
+                      isUnsent && "italic opacity-60"
+                    )}
+                  >
+                    {isUnsent ? (
+                      <p className="wrap-break-words whitespace-pre-wrap italic">
+                        Message unsent
+                      </p>
+                    ) : msg.type === "voice" && msg.audioUrl ? (
+                      <VoiceMessagePlayer
+                        audioUrl={msg.audioUrl}
+                        duration={msg.duration}
+                        isMe={isMe}
+                      />
+                    ) : (
+                      <p className="wrap-break-words whitespace-pre-wrap">
+                        {msg.content}
+                      </p>
+                    )}
+                  </div>
+                  <div
+                    className={cn(
+                      "flex items-center gap-2 px-3.5 pb-2",
+                      isMe ? "justify-end" : "justify-start"
+                    )}
+                  >
+                    {isEditing && (
+                      <span
+                        className={cn(
+                          "inline-flex items-center gap-1 text-[10px] font-medium",
+                          isMe
+                            ? "text-teal-200"
+                            : "text-teal-600 dark:text-teal-400"
+                        )}
+                      >
+                        <PencilLine className="size-2.5" /> Editing...
+                      </span>
+                    )}
+                  </div>
                 </div>
               </div>
               {(showTime || hasEdits) && (

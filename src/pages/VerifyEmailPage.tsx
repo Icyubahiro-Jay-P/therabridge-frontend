@@ -1,5 +1,5 @@
-import { Link, Navigate } from "react-router-dom"
-import { CheckCircle2, Leaf, ShieldCheck } from "lucide-react"
+import { Navigate } from "react-router-dom"
+import { Leaf, ShieldCheck } from "lucide-react"
 
 import { ModeToggle } from "@/components/shared/mode-toggle"
 import { VerifyEmailForm } from "@/components/shared/auth/VerifyEmailForm"

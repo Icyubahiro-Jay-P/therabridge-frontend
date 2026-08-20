@@ -28,7 +28,7 @@ export interface DirectMessage {
   read: boolean
   readAt?: string
   createdAt: string
-  kind?: "message" | "screenshot-notice"
+  kind?: "message" | "screenshot-notice" | "missed-call"
   noticeType?: string | null
   unsent?: boolean
   edited?: boolean

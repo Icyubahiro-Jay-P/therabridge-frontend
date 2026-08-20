@@ -54,7 +54,7 @@ export const MessageBubble = memo(function MessageBubble({
               onReply(msg)
             }}
             className={cn(
-              "absolute -top-2 z-10 flex size-6 items-center justify-center rounded-full border border-gray-200 bg-white opacity-0 shadow-sm transition-opacity hover:bg-gray-100 group-hover/msg:opacity-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700",
+              "absolute top-1/2 z-10 flex size-6 -translate-y-1/2 items-center justify-center rounded-full border border-gray-200 bg-white opacity-0 shadow-sm transition-opacity hover:bg-gray-100 group-hover/msg:opacity-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700",
               isMe ? "-left-3" : "-right-3"
             )}
           >

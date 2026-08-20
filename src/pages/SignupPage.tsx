@@ -19,7 +19,7 @@ export function SignupPage() {
     isFirstStep,
     updateField,
     handleBlur,
-    handleDateParts,
+    setDateOfBirth,
     handleStepSubmit,
     setShowPassword,
     goToStep,
@@ -73,7 +73,7 @@ export function SignupPage() {
             isFirstStep={isFirstStep}
             updateField={updateField}
             handleBlur={handleBlur}
-            handleDateParts={handleDateParts}
+            setDateOfBirth={setDateOfBirth}
             handleStepSubmit={handleStepSubmit}
             setShowPassword={setShowPassword}
             goToStep={goToStep}

@@ -10,6 +10,7 @@ import {
   Heart,
   Activity,
   RefreshCw,
+  Plus,
 } from "lucide-react"
 
 import { useAuthStore } from "@/store/auth-store"
@@ -23,7 +24,17 @@ import { ActiveCrises } from "@/components/admin/ActiveCrises"
 import { RecentSignups } from "@/components/admin/RecentSignups"
 import { TopCommunities } from "@/components/admin/TopCommunities"
 import { RecentAudit } from "@/components/admin/RecentAudit"
+import { CreateExerciseModal } from "@/components/admin/CreateExerciseModal"
+import { StreakCards } from "@/components/user/home/StreakCards"
 import type { AdminDashboardData } from "@/components/admin/dashboard-types"
+
+interface ScoreStreak {
+  exerciseScore: number
+  loginStreak: number
+  exerciseStreak: number
+  longestLoginStreak: number
+  longestExerciseStreak: number
+}
 
 const EMPTY_DATA: AdminDashboardData = {
   totals: { users: 0, therapists: 0, admins: 0, communities: 0, activeCrisis: 0, unverifiedUsers: 0, disabledUsers: 0, notifications: 0 },
@@ -42,6 +53,8 @@ export function AdminDashboardPage() {
   const [loading, setLoading] = useState(true)
   const [refreshing, setRefreshing] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [scoreStreak, setScoreStreak] = useState<ScoreStreak | null>(null)
+  const [showCreateExercise, setShowCreateExercise] = useState(false)
 
   async function fetchDashboard(): Promise<AdminDashboardData> {
     const res = await api.get<AdminDashboardData>("/api/admin/dashboard")

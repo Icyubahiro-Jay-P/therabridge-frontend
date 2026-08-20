@@ -290,9 +290,6 @@ export function ProgramDetail() {
         )}
         <ActivityViewer
           activity={activity}
-          weekIndex={activeActivity.weekIndex}
-          activityIndex={activeActivity.activityIndex}
-          programId={program._id}
           isCompleted={isActivityCompleted(
             activeActivity.weekIndex,
             activeActivity.activityIndex,
@@ -413,8 +410,6 @@ export function ProgramDetail() {
               completedActivities={completedActivities}
               completedWeeks={completedWeeks}
               isCurrentWeek={progress.currentWeek === weekIndex}
-              programId={program._id}
-              onActivityComplete={() => p.fetchProgram(program._id)}
             />
           ))}
         </div>

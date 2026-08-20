@@ -13,14 +13,12 @@ export const MessageBubble = memo(function MessageBubble({
   onToggleTimestamp,
   selectedTimestampMessage,
   onReply,
-  onScrollToMessage,
 }: {
   msg: CommunityMessage
   isMe: boolean
   onToggleTimestamp: (id: string) => void
   selectedTimestampMessage: string | null
   onReply: (msg: CommunityMessage) => void
-  onScrollToMessage?: (id: string) => void
 }) {
   const showTime = selectedTimestampMessage === msg._id
   const readCount = msg.readBy?.length ?? 0
@@ -74,27 +72,6 @@ export const MessageBubble = memo(function MessageBubble({
               isUnsent && "italic opacity-60"
             )}
           >
-            {msg.replyTo && (
-              <button
-                onClick={(e) => {
-                  e.stopPropagation()
-                  onScrollToMessage?.(msg.replyTo!._id)
-                }}
-                className={cn(
-                  "mb-1 flex w-full items-start gap-2 border-l-2 px-2 py-1 text-left text-[11px] opacity-80 hover:opacity-100",
-                  isMe
-                    ? "border-white/50 bg-white/10"
-                    : "border-emerald-400 bg-black/5 dark:border-emerald-500 dark:bg-white/5"
-                )}
-              >
-                <Reply className="mt-0.5 size-3 shrink-0" />
-                <span className="min-w-0 line-clamp-2">
-                  <span className="font-semibold">{msg.replyTo.senderUsername}</span>
-                  {" — "}
-                  {msg.replyTo.type === "voice" ? "Voice message" : msg.replyTo.content}
-                </span>
-              </button>
-            )}
             {isUnsent ? (
               <p className="wrap-break-words whitespace-pre-wrap italic">
                 Message unsent

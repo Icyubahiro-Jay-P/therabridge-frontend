@@ -49,6 +49,11 @@ export interface PublicProfile {
   role: UserRole
   avatar?: string | null
   createdAt?: string
+  exerciseScore?: number
+  loginStreak?: number
+  exerciseStreak?: number
+  longestLoginStreak?: number
+  longestExerciseStreak?: number
 }
 
 export interface LoginPayload {

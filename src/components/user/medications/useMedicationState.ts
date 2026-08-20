@@ -1,5 +1,5 @@
 import { useState, useCallback, useRef } from "react"
-import * as medicationApi from "@/lib/medication-api"
+import { medicationApi } from "@/lib/medication-api"
 import type { Medication, MedicationLog, AdherenceStats } from "./types"
 
 export function useMedicationState() {
@@ -170,27 +170,30 @@ export function useMedicationState() {
     setSideEffects((prev) => prev.filter((_, i) => i !== idx))
   }, [])
 
-  const logDose = useCallback(async (skipped = false) => {
-    if (!pendingLogMedication) return
+  const logDose = useCallback(async (skipped = false, medicationOverride?: Medication) => {
+    const med = medicationOverride || pendingLogMedication
+    if (!med) return
     try {
       setSaving(true)
       setError(null)
       const log = await medicationApi.logDose({
-        medicationId: pendingLogMedication._id,
+        medicationId: med._id,
         skipped,
         sideEffects: skipped ? [] : sideEffects,
         notes: logNotes.trim() || null,
       })
       setLogs((prev) => [log, ...prev])
-      setSideEffectModalOpen(false)
-      setPendingLogMedication(null)
+      if (!medicationOverride) {
+        setSideEffectModalOpen(false)
+        setPendingLogMedication(null)
+      }
       setSuccess(skipped ? "Dose marked as skipped" : "Dose logged! +2 points")
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to log dose")
     } finally {
       setSaving(false)
     }
-  }, [pendingLogMedication, sideEffects, logNotes])
+  }, [pendingLogMedication, sideEffects, logNotes, medicationApi])
 
   const fetchLogs = useCallback(async (opts: { page?: number; medicationId?: string; append?: boolean }) => {
     setLogsLoading(true)

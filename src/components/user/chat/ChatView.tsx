@@ -39,6 +39,7 @@ export function ChatView({
   onLoadOlder,
   loadingOlder,
   hasOlder,
+  onScrollToMessage,
   callState,
   localStream,
   remoteStream,
@@ -86,6 +87,7 @@ export function ChatView({
   onLoadOlder: () => void
   loadingOlder: boolean
   hasOlder: boolean
+  onScrollToMessage?: (id: string) => void
   callState?: string
   localStream?: MediaStream | null
   remoteStream?: MediaStream | null
@@ -133,6 +135,7 @@ export function ChatView({
         onLoadOlder={onLoadOlder}
         loadingOlder={loadingOlder}
         hasOlder={hasOlder}
+        onScrollToMessage={onScrollToMessage}
       />
       <MessageInput
         partnerName={partner.firstName}

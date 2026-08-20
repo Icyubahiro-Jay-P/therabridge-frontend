@@ -44,12 +44,39 @@ function VideoElement({
   className?: string
 }) {
   const ref = useRef<HTMLVideoElement>(null)
+  const streamRef = useRef(stream)
+  streamRef.current = stream
 
   useEffect(() => {
-    if (ref.current && stream) {
-      ref.current.srcObject = stream
+    const el = ref.current
+    if (!el) return
+
+    if (stream) {
+      el.srcObject = stream
+    } else {
+      el.srcObject = null
+    }
+
+    return () => {
+      el.srcObject = null
     }
   }, [stream])
+
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+
+    const handleVisibility = () => {
+      if (document.visibilityState === "visible" && streamRef.current) {
+        el.srcObject = null
+        el.srcObject = streamRef.current
+        el.play().catch(() => {})
+      }
+    }
+
+    document.addEventListener("visibilitychange", handleVisibility)
+    return () => document.removeEventListener("visibilitychange", handleVisibility)
+  }, [])
 
   return (
     <video

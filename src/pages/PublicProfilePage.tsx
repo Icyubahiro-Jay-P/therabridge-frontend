@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { useParams, useNavigate } from "react-router-dom"
-import { ArrowLeft, CalendarDays, Lock, Mail, MessageCircle, Shield } from "lucide-react"
+import { ArrowLeft, CalendarDays, Flame, Lock, Mail, MessageCircle, Shield, Star, Zap } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { fetchPublicProfile } from "@/lib/auth-api"
@@ -68,6 +68,34 @@ export function PublicProfilePage() {
             : "Unknown"}
         />
       </div>
+
+      {(profile.exerciseScore != null && profile.exerciseScore > 0) ||
+       (profile.loginStreak != null && profile.loginStreak > 0) ||
+       (profile.exerciseStreak != null && profile.exerciseStreak > 0) ? (
+        <div className="grid gap-4 sm:grid-cols-3">
+          {profile.exerciseScore != null && (
+            <ProfileInfoCard icon={Star} label="Wellness points">
+              <p className="text-sm font-semibold text-gray-900 dark:text-white">
+                {profile.exerciseScore.toLocaleString()}
+              </p>
+            </ProfileInfoCard>
+          )}
+          {profile.loginStreak != null && profile.loginStreak > 0 && (
+            <ProfileInfoCard icon={Zap} label="Login streak">
+              <p className="text-sm font-semibold text-gray-900 dark:text-white">
+                {profile.loginStreak} day{profile.loginStreak !== 1 ? "s" : ""}
+              </p>
+            </ProfileInfoCard>
+          )}
+          {profile.exerciseStreak != null && profile.exerciseStreak > 0 && (
+            <ProfileInfoCard icon={Flame} label="Exercise streak">
+              <p className="text-sm font-semibold text-gray-900 dark:text-white">
+                {profile.exerciseStreak} day{profile.exerciseStreak !== 1 ? "s" : ""}
+              </p>
+            </ProfileInfoCard>
+          )}
+        </div>
+      ) : null}
 
       {profile.bio === null && profile.firstName === null && profile.lastName === null && (
         <div className="flex items-center gap-2 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-700 dark:border-amber-900/50 dark:bg-amber-950/40 dark:text-amber-400">

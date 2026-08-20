@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom"
+import { Link, Navigate } from "react-router-dom"
 import { CheckCircle2, Leaf, ShieldCheck } from "lucide-react"
 
 import { ModeToggle } from "@/components/shared/mode-toggle"
@@ -8,6 +8,10 @@ import { useAuthStore } from "@/store/auth-store"
 export function VerifyEmailPage() {
   const user = useAuthStore((state) => state.user)
   const alreadyVerified = user?.isAccountVerified
+
+  if (alreadyVerified) {
+    return <Navigate to="/onboarding" replace />
+  }
 
   return (
     <main className="relative box-border flex min-h-screen items-center justify-center overflow-y-auto bg-linear-to-br from-emerald-50 via-white to-teal-50 px-4 py-6 dark:from-gray-950 dark:via-gray-900 dark:to-emerald-950/30">

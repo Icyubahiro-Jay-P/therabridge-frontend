@@ -38,17 +38,11 @@ function isActivityCompleted(
 
 function ActivityViewer({
   activity,
-  weekIndex,
-  activityIndex,
-  programId,
   isCompleted,
   onComplete,
   onBack,
 }: {
   activity: ProgramActivity
-  weekIndex: number
-  activityIndex: number
-  programId: string
   isCompleted: boolean
   onComplete: () => void
   onBack: () => void
@@ -106,16 +100,12 @@ function WeekSection({
   completedActivities,
   completedWeeks,
   isCurrentWeek,
-  programId,
-  onActivityComplete,
 }: {
   week: ProgramWeek
   weekIndex: number
   completedActivities: { weekIndex: number; activityIndex: number }[]
   completedWeeks: number[]
   isCurrentWeek: boolean
-  programId: string
-  onActivityComplete: () => void
 }) {
   const [expanded, setExpanded] = useState(isCurrentWeek)
   const completedCount = week.activities.filter((_, i) =>

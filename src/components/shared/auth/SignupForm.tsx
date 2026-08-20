@@ -189,9 +189,9 @@ export function SignupForm({
               <div className="space-y-1">
                 <Label className="text-xs text-gray-400 dark:text-gray-500">Month</Label>
                 <Select
-                  value={dobMonth ?? ""}
-                  disabled={l || !dobYear}
-                  onValueChange={(val) => hdp(dobDay ?? "", val, dobYear ?? "")}
+                  value={dobMonth}
+                  disabled={!dobYear}
+                  onValueChange={handleMonthChange}
                 >
                   <SelectTrigger
                     className={cn(

@@ -30,7 +30,6 @@ export const MessageBubble = memo(function MessageBubble({
   showHistoryFor,
   setShowHistoryFor,
   deleting,
-  onScrollToMessage,
 }: {
   msg: DirectMessage
   isMe: boolean

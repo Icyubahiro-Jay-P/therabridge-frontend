@@ -54,7 +54,7 @@ export function ThoughtRecordsPage() {
         <ThoughtRecordDetail
           record={s.selectedRecord}
           onBack={() => s.setSelectedRecord(null)}
-          onEdit={(r: ThoughtRecord) => { s.setSelectedRecord(null); openEditor(r) }}
+          onEdit={(r) => { s.setSelectedRecord(null); openEditor(r as ThoughtRecord) }}
           onDelete={s.deleteRecord}
           currentUserId={currentUser?.id}
         />

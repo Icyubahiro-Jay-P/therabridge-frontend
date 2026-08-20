@@ -2,7 +2,6 @@ import { X } from "lucide-react"
 import { useState } from "react"
 import { CATEGORIES } from "@/lib/activity-api"
 import { LIMITS } from "@/lib/limits"
-import { CharCounter } from "@/components/ui/char-counter"
 
 interface ActivityEditorProps {
   open: boolean

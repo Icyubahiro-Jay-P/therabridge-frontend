@@ -397,7 +397,7 @@ export function ProgramDetail() {
         )}
 
         {isProgramComplete && (
-          <div className="mt-5 rounded-xl bg-gradient-to-r from-emerald-50 to-green-50 p-4 text-center dark:from-emerald-950/30 dark:to-green-950/30">
+          <div className="mt-5 rounded-xl bg-linear-to-r from-emerald-50 to-green-50 p-4 text-center dark:from-emerald-950/30 dark:to-green-950/30">
             <Trophy className="mx-auto mb-2 size-8 text-emerald-500" />
             <p className="font-semibold text-emerald-700 dark:text-emerald-400">
               Congratulations!

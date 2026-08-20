@@ -1,11 +1,11 @@
-import { ClipboardCheck, TrendingDown, TrendingUp, ChevronRight, Trash2 } from "lucide-react"
+import { ClipboardCheck, Trash2 } from "lucide-react"
 import { useAssessmentState } from "./useAssessmentState"
 import { AssessmentQuestionnaire } from "./AssessmentQuestionnaire"
 import { AssessmentResult } from "./AssessmentResult"
 import { AssessmentTrendChart } from "./AssessmentTrendChart"
 import { useEffect, useRef, useState } from "react"
 import { ASSESSMENT_QUESTIONS } from "@/lib/assessment-api"
-import type { Assessment } from "@/lib/assessment-api"
+import type {} from "@/lib/assessment-api"
 
 const SEVERITY_COLORS: Record<string, string> = {
   minimal: "bg-green-100 text-green-700 dark:bg-green-950/40 dark:text-green-400",

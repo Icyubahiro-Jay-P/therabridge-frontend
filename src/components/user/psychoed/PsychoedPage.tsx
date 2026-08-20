@@ -1,4 +1,4 @@
-import { BookOpen, ChevronRight, CheckCircle2, Circle, Clock, Lock } from "lucide-react"
+import { BookOpen, ChevronRight, CheckCircle2, Clock } from "lucide-react"
 import { usePsychoedState } from "./usePsychoedState"
 import { CATEGORY_META, type PsychoedCategory, type PsychoedModuleSummary } from "@/lib/psychoed-api"
 import { useEffect, useRef } from "react"

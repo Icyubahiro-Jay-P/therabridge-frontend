@@ -90,7 +90,11 @@ export const MessageBubble = memo(function MessageBubble({
                 </span>
               </button>
             )}
-            {msg.type === "voice" && msg.audioUrl ? (
+            {isUnsent ? (
+              <p className="wrap-break-words whitespace-pre-wrap italic">
+                Message unsent
+              </p>
+            ) : msg.type === "voice" && msg.audioUrl ? (
               <VoiceMessagePlayer
                 audioUrl={msg.audioUrl}
                 duration={msg.duration}

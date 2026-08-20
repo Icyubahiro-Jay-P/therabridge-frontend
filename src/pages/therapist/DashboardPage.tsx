@@ -8,7 +8,16 @@ import { TherapistStatCard } from "@/components/therapist/TherapistStatCard"
 import { TherapistCommunityCard } from "@/components/therapist/TherapistCommunityCard"
 import { CreateCommunityModal } from "@/components/user/community/CreateCommunityModal"
 import { InviteClientModal } from "@/components/therapist/InviteClientModal"
+import { StreakCards } from "@/components/user/home/StreakCards"
 import type { Community } from "@/components/user/community/types"
+
+interface ScoreStreak {
+  exerciseScore: number
+  loginStreak: number
+  exerciseStreak: number
+  longestLoginStreak: number
+  longestExerciseStreak: number
+}
 
 interface RosterUser {
   _id: string

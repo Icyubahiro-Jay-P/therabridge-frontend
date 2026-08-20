@@ -2,21 +2,20 @@ import {
   CheckCircle2,
   Eye,
   EyeOff,
-  CalendarIcon,
   Loader2,
   TriangleAlert,
 } from "lucide-react"
-import { useMemo, useState } from "react"
-import { subYears } from "date-fns"
+import { useMemo } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Calendar } from "@/components/ui/calendar"
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover"
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { cn } from "@/lib/utils"
 import type { FieldName, FieldErrors, Feedback } from "./useSignupState"
 import { validateField } from "./useSignupState"

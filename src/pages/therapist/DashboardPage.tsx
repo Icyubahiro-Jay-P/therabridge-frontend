@@ -35,6 +35,7 @@ export function TherapistDashboardPage() {
   const [loading, setLoading] = useState(true)
   const [showCreate, setShowCreate] = useState(false)
   const [showInvite, setShowInvite] = useState(false)
+  const [scoreStreak, setScoreStreak] = useState<ScoreStreak | null>(null)
 
   useEffect(() => {
     async function load() {
@@ -53,6 +54,31 @@ export function TherapistDashboardPage() {
     }
     void load()
   }, [])
+
+  useEffect(() => {
+    async function fetchScoreStreak() {
+      if (!user) return
+      try {
+        const { data } = await api.get("/api/exercises/stats")
+        setScoreStreak({
+          exerciseScore: data.exerciseScore ?? 0,
+          loginStreak: data.loginStreak ?? 0,
+          exerciseStreak: data.exerciseStreak ?? 0,
+          longestLoginStreak: data.longestLoginStreak ?? 0,
+          longestExerciseStreak: data.longestExerciseStreak ?? 0,
+        })
+      } catch {
+        setScoreStreak({
+          exerciseScore: user.exerciseScore ?? 0,
+          loginStreak: user.loginStreak ?? 0,
+          exerciseStreak: user.exerciseStreak ?? 0,
+          longestLoginStreak: user.longestLoginStreak ?? 0,
+          longestExerciseStreak: user.longestExerciseStreak ?? 0,
+        })
+      }
+    }
+    void fetchScoreStreak()
+  }, [user])
 
   if (loading) {
     return (

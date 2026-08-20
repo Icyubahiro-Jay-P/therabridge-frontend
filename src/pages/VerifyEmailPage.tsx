@@ -46,26 +46,10 @@ export function VerifyEmailPage() {
             Verify your email
           </h1>
           <p className="mb-5 text-sm text-gray-500 dark:text-gray-400">
-            {alreadyVerified
-              ? "Your account is already verified. Welcome aboard!"
-              : "We sent a 6-digit code to your email to confirm your account."}
+            We sent a 6-digit code to your email to confirm your account.
           </p>
 
-          {alreadyVerified ? (
-            <div className="flex flex-col items-center gap-4 py-4 text-center">
-              <span className="flex size-14 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-900/40">
-                <CheckCircle2 className="size-7 text-emerald-600 dark:text-emerald-400" />
-              </span>
-              <Link
-                to="/"
-                className="rounded-4xl bg-linear-to-r from-emerald-600 to-teal-600 px-6 py-2.5 text-sm font-semibold text-white shadow-md shadow-emerald-500/20 hover:from-emerald-700 hover:to-teal-700"
-              >
-                Go to your dashboard
-              </Link>
-            </div>
-          ) : (
-            <VerifyEmailForm />
-          )}
+          <VerifyEmailForm />
         </div>
 
         <div className="mt-4 flex items-center justify-center gap-2 text-xs text-gray-400 dark:text-gray-500">

@@ -59,6 +59,7 @@ export const MessageBubble = memo(function MessageBubble({
   const seen = isMe && msg.read && msg.readAt
   return (
     <div
+      id={`msg-${msg._id}`}
       className={cn(
         "relative mb-2 flex flex-col",
         isMe ? "items-end" : "items-start"

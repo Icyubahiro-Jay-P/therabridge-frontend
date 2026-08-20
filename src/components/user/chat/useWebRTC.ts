@@ -203,6 +203,7 @@ export function useWebRTC() {
     socket.on("call:ended", handleCallEnded)
     socket.on("call:rejected", handleCallRejected)
     socket.on("call:busy", handleCallBusy)
+    socket.on("call:missed", handleCallMissed)
     socket.on("call:initiated", handleCallInitiated)
 
     return () => {
@@ -213,6 +214,7 @@ export function useWebRTC() {
       socket.off("call:ended", handleCallEnded)
       socket.off("call:rejected", handleCallRejected)
       socket.off("call:busy", handleCallBusy)
+      socket.off("call:missed", handleCallMissed)
       socket.off("call:initiated", handleCallInitiated)
     }
   }, [cleanup, createPeerConnection, getLocalStream])

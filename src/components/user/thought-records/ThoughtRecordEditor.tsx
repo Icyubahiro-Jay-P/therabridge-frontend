@@ -25,7 +25,16 @@ interface ThoughtRecordEditorProps {
   record: ThoughtRecord | null
   saving: boolean
   error: string | null
-  onSave: (data: Record<string, unknown>) => Promise<void>
+  onSave: (data: {
+    situation: string
+    automaticThought: string
+    emotions: string
+    emotionIntensity: number
+    distortionType: string
+    evidenceFor: string
+    evidenceAgainst: string
+    reframe: string
+  }) => Promise<void>
   onClose: () => void
 }
 
@@ -139,7 +148,7 @@ export function ThoughtRecordEditor({ open, record, saving, error, onSave, onClo
                 className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 placeholder:text-gray-400 focus:border-violet-400 focus:outline-none focus:ring-1 focus:ring-violet-400 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
                 placeholder="e.g., My friend didn't reply to my message for 3 hours..."
               />
-              <CharCounter current={situation.length} max={LIMITS.thoughtRecord.situation} />
+               <CharCounter count={situation.length} limit={LIMITS.thoughtRecord.situation} />
             </div>
           )}
 
@@ -156,7 +165,7 @@ export function ThoughtRecordEditor({ open, record, saving, error, onSave, onClo
                 className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 placeholder:text-gray-400 focus:border-violet-400 focus:outline-none focus:ring-1 focus:ring-violet-400 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
                 placeholder="e.g., They must be angry at me..."
               />
-              <CharCounter current={automaticThought.length} max={LIMITS.thoughtRecord.automaticThought} />
+               <CharCounter count={automaticThought.length} limit={LIMITS.thoughtRecord.automaticThought} />
             </div>
           )}
 
@@ -173,7 +182,7 @@ export function ThoughtRecordEditor({ open, record, saving, error, onSave, onClo
                   className="w-full rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 focus:border-violet-400 focus:outline-none focus:ring-1 focus:ring-violet-400 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
                   placeholder="e.g., Anxiety, rejection, sadness"
                 />
-                <CharCounter current={emotions.length} max={LIMITS.thoughtRecord.emotions} />
+                <CharCounter count={emotions.length} limit={LIMITS.thoughtRecord.emotions} />
               </div>
               <div className="space-y-2">
                 <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
@@ -233,7 +242,7 @@ export function ThoughtRecordEditor({ open, record, saving, error, onSave, onClo
                   className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 placeholder:text-gray-400 focus:border-violet-400 focus:outline-none focus:ring-1 focus:ring-violet-400 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
                   placeholder="What facts support this thought?"
                 />
-                <CharCounter current={evidenceFor.length} max={LIMITS.thoughtRecord.evidenceFor} />
+                <CharCounter count={evidenceFor.length} limit={LIMITS.thoughtRecord.evidenceFor} />
               </div>
               <div className="space-y-2">
                 <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
@@ -247,7 +256,7 @@ export function ThoughtRecordEditor({ open, record, saving, error, onSave, onClo
                   className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 placeholder:text-gray-400 focus:border-violet-400 focus:outline-none focus:ring-1 focus:ring-violet-400 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
                   placeholder="What facts contradict this thought?"
                 />
-                <CharCounter current={evidenceAgainst.length} max={LIMITS.thoughtRecord.evidenceAgainst} />
+                <CharCounter count={evidenceAgainst.length} limit={LIMITS.thoughtRecord.evidenceAgainst} />
               </div>
             </div>
           )}
@@ -270,7 +279,7 @@ export function ThoughtRecordEditor({ open, record, saving, error, onSave, onClo
                 className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 placeholder:text-gray-400 focus:border-violet-400 focus:outline-none focus:ring-1 focus:ring-violet-400 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
                 placeholder="e.g., My friend may be busy and not replying has nothing to do with me..."
               />
-              <CharCounter current={reframe.length} max={LIMITS.thoughtRecord.reframe} />
+              <CharCounter count={reframe.length} limit={LIMITS.thoughtRecord.reframe} />
             </div>
           )}
         </div>

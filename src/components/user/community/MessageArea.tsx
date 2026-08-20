@@ -10,7 +10,6 @@ export function MessageArea({
   onToggleTimestamp,
   selectedTimestampMessage,
   onReply,
-  onScrollToMessage,
 }: {
   error: string | null
   loadingMessages: boolean
@@ -19,7 +18,6 @@ export function MessageArea({
   onToggleTimestamp: (id: string) => void
   selectedTimestampMessage: string | null
   onReply: (msg: CommunityMessage) => void
-  onScrollToMessage?: (id: string) => void
 }) {
   return (
     <SharedMessageArea

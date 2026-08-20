@@ -128,7 +128,7 @@ interface Props {
 export function PsychoedModuleDetail({
   module: mod,
   progress,
-  loading,
+  loading: _loading,
   saving,
   error,
   success,

@@ -54,7 +54,9 @@ export function useLoginState() {
         return
       }
       setFeedback({ type: "success", message })
-      setTimeout(() => navigate("/", { replace: true }), 900)
+      const user = useAuthStore.getState().user
+      const target = user?.isAccountVerified ? "/" : "/verify-email"
+      setTimeout(() => navigate(target, { replace: true }), 900)
     } catch (err) {
       const msg = err instanceof Error ? err.message : "Login failed"
       if (msg.toLowerCase().includes("disabled")) {

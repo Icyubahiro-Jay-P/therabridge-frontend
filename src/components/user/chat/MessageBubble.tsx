@@ -44,7 +44,6 @@ export const MessageBubble = memo(function MessageBubble({
   showHistoryFor: string | null
   setShowHistoryFor: (id: string | null) => void
   deleting: string | null
-  onScrollToMessage?: (id: string) => void
 }) {
   const [confirmUnsend, setConfirmUnsend] = useState(false)
   const isUnsent = msg.unsent

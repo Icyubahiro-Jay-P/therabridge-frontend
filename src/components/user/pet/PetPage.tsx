@@ -76,7 +76,7 @@ export function PetPage() {
 
       {p.pet && (
         <>
-          <div className="relative overflow-hidden rounded-2xl border border-violet-200 bg-gradient-to-br from-violet-50 to-sky-50 p-8 text-center dark:border-violet-900/50 dark:from-violet-950/30 dark:to-sky-950/30">
+          <div className="relative overflow-hidden rounded-2xl border border-violet-200 bg-linear-to-br from-violet-50 to-sky-50 p-8 text-center dark:border-violet-900/50 dark:from-violet-950/30 dark:to-sky-950/30">
             {p.showLevelUp && (
               <div className="absolute inset-0 z-10 flex items-center justify-center">
                 <div className="animate-bounce rounded-2xl bg-yellow-400 px-6 py-3 text-lg font-bold text-yellow-900 shadow-lg dark:bg-yellow-500 dark:text-yellow-950">
@@ -140,7 +140,7 @@ export function PetPage() {
               </div>
               <div className="h-2.5 overflow-hidden rounded-full bg-gray-200 dark:bg-gray-700">
                 <div
-                  className="h-full rounded-full bg-gradient-to-r from-violet-500 to-sky-500 transition-all duration-500"
+                  className="h-full rounded-full bg-linear-to-r from-violet-500 to-sky-500 transition-all duration-500"
                   style={{ width: `${xpPercent}%` }}
                 />
               </div>

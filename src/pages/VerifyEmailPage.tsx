@@ -1,4 +1,4 @@
-import { Navigate } from "react-router-dom"
+import { Link, Navigate } from "react-router-dom"
 import { Leaf, ShieldCheck } from "lucide-react"
 
 import { ModeToggle } from "@/components/shared/mode-toggle"

@@ -41,7 +41,7 @@ export function AppLayout({ children }: { children?: React.ReactNode }) {
 
       <aside
         className={cn(
-          "flex flex-col border-r border-gray-200 bg-white transition-all duration-200 dark:border-gray-800 dark:bg-gray-900",
+          "flex h-svh flex-col overflow-hidden border-r border-gray-200 bg-white transition-all duration-200 dark:border-gray-800 dark:bg-gray-900",
           !isHidden && "relative",
           isMinimized ? "w-16" : !isHidden ? "w-64" : "",
           isHidden &&

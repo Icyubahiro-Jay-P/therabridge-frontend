@@ -66,7 +66,8 @@ export const MessageBubble = memo(function MessageBubble({
               "wrap-break-words min-w-0 cursor-pointer overflow-hidden rounded-2xl px-3.5 py-2 text-sm",
               isMe
                 ? "rounded-br-md bg-emerald-600 text-white"
-                : "rounded-bl-md bg-gray-100 text-gray-900 dark:bg-gray-800 dark:text-gray-100"
+                : "rounded-bl-md bg-gray-100 text-gray-900 dark:bg-gray-800 dark:text-gray-100",
+              isUnsent && "italic opacity-60"
             )}
           >
             {msg.replyTo && (

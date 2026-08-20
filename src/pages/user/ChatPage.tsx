@@ -208,10 +208,6 @@ export function ChatPage() {
               onLoadOlder={c.loadOlderMessages}
               loadingOlder={c.loadingOlder}
               hasOlder={c.hasOlderMessages}
-              onScrollToMessage={(id) => {
-                const el = document.getElementById(`msg-${id}`)
-                el?.scrollIntoView({ behavior: "smooth", block: "center" })
-              }}
               callState={webrtc.callState}
               localStream={webrtc.localStream}
               remoteStream={webrtc.remoteStream}

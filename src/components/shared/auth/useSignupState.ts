@@ -126,6 +126,19 @@ export function useSignupState() {
     if (touched.dateOfBirth) setFieldErrors(validate(next))
   }
 
+  function setDateOfBirth(selected: Date) {
+    const y = selected.getFullYear()
+    const m = selected.getMonth() + 1
+    const d = selected.getDate()
+    const value = `${y}-${String(m).padStart(2, "0")}-${String(d).padStart(2, "0")}`
+
+    setDate(selected)
+    const next = { ...form, dateOfBirth: value }
+    setForm(next)
+    setTouched((prev) => ({ ...prev, dateOfBirth: true }))
+    setFieldErrors(validate(next))
+  }
+
   async function handleStepSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
     if (stepIndex === -1) return
@@ -169,6 +182,7 @@ export function useSignupState() {
     updateField,
     handleBlur,
     handleDateParts,
+    setDateOfBirth,
     handleStepSubmit,
     setShowPassword,
     goToStep,

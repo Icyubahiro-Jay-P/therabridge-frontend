@@ -2,13 +2,21 @@ import {
   CheckCircle2,
   Eye,
   EyeOff,
+  CalendarIcon,
   Loader2,
   TriangleAlert,
 } from "lucide-react"
-import { useMemo } from "react"
+import { useMemo, useState } from "react"
+import { subYears } from "date-fns"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { Calendar } from "@/components/ui/calendar"
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
 import { cn } from "@/lib/utils"
 import type { FieldName, FieldErrors, Feedback } from "./useSignupState"
 import { validateField } from "./useSignupState"
@@ -26,7 +34,7 @@ export function SignupForm({
   isFirstStep,
   updateField: uf,
   handleBlur: hb,
-  handleDateParts: hdp,
+  setDateOfBirth: sdp,
   handleStepSubmit: hss,
   setShowPassword: sp,
   goToStep,
@@ -42,7 +50,7 @@ export function SignupForm({
   isFirstStep: boolean
   updateField: (f: FieldName, v: string) => void
   handleBlur: (f: FieldName) => void
-  handleDateParts: (day: string, month: string, year: string) => void
+  setDateOfBirth: (date: Date) => void
   handleStepSubmit: (e: React.FormEvent<HTMLFormElement>) => void
   setShowPassword: React.Dispatch<React.SetStateAction<boolean>>
   goToStep: (index: number) => void

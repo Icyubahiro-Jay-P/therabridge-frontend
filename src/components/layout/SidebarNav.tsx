@@ -21,22 +21,20 @@ export function SidebarNav({
       <NavItem to="/" icon={homeIcon} label={homeLabel} minimized={isMinimized} end onClick={closeMobile} />
       <NavItemWithBadge to="/chat" icon={<MessageCircle className="size-4" />} label="Chat" minimized={isMinimized} badge={unreadCount} onClick={closeMobile} />
       <NavItem to="/community" icon={<Users className="size-4" />} label="Community" minimized={isMinimized} onClick={closeMobile} />
-      {role === "user" && (
-        <>
-          <NavItem to="/mood" icon={<Heart className="size-4" />} label="Mood" minimized={isMinimized} onClick={closeMobile} />
-          <NavItem to="/thought-records" icon={<Brain className="size-4" />} label="Thought Records" minimized={isMinimized} onClick={closeMobile} />
-          <NavItem to="/assessments" icon={<ClipboardCheck className="size-4" />} label="Assessments" minimized={isMinimized} onClick={closeMobile} />
-          <NavItem to="/gratitude" icon={<Sparkles className="size-4" />} label="Gratitude" minimized={isMinimized} onClick={closeMobile} />
-          <NavItem to="/activities" icon={<Calendar className="size-4" />} label="Activities" minimized={isMinimized} onClick={closeMobile} />
-          <NavItem to="/learn" icon={<BookOpen className="size-4" />} label="Learn" minimized={isMinimized} onClick={closeMobile} />
-          <NavItem to="/sleep" icon={<Moon className="size-4" />} label="Sleep" minimized={isMinimized} onClick={closeMobile} />
-          <NavItem to="/medications" icon={<Pill className="size-4" />} label="Medications" minimized={isMinimized} onClick={closeMobile} />
-          <NavItem to="/pet" icon={<Bird className="size-4" />} label="Companion" minimized={isMinimized} onClick={closeMobile} />
-          <NavItem to="/programs" icon={<Route className="size-4" />} label="Programs" minimized={isMinimized} onClick={closeMobile} />
-          <NavItem to="/coping-cards" icon={<Layers className="size-4" />} label="Coping Cards" minimized={isMinimized} onClick={closeMobile} />
-          <NavItem to="/therapists" icon={<Stethoscope className="size-4" />} label="Therapists" minimized={isMinimized} onClick={closeMobile} />
-          <NavItem to="/safety-plan" icon={<ShieldCheck className="size-4" />} label="Safety Plan" minimized={isMinimized} onClick={closeMobile} />
-        </>
+      <NavItem to="/mood" icon={<Heart className="size-4" />} label="Mood" minimized={isMinimized} onClick={closeMobile} />
+      <NavItem to="/thought-records" icon={<Brain className="size-4" />} label="Thought Records" minimized={isMinimized} onClick={closeMobile} />
+      <NavItem to="/assessments" icon={<ClipboardCheck className="size-4" />} label="Assessments" minimized={isMinimized} onClick={closeMobile} />
+      <NavItem to="/gratitude" icon={<Sparkles className="size-4" />} label="Gratitude" minimized={isMinimized} onClick={closeMobile} />
+      <NavItem to="/activities" icon={<Calendar className="size-4" />} label="Activities" minimized={isMinimized} onClick={closeMobile} />
+      <NavItem to="/learn" icon={<BookOpen className="size-4" />} label="Learn" minimized={isMinimized} onClick={closeMobile} />
+      <NavItem to="/sleep" icon={<Moon className="size-4" />} label="Sleep" minimized={isMinimized} onClick={closeMobile} />
+      <NavItem to="/medications" icon={<Pill className="size-4" />} label="Medications" minimized={isMinimized} onClick={closeMobile} />
+      <NavItem to="/pet" icon={<Bird className="size-4" />} label="Companion" minimized={isMinimized} onClick={closeMobile} />
+      <NavItem to="/programs" icon={<Route className="size-4" />} label="Programs" minimized={isMinimized} onClick={closeMobile} />
+      <NavItem to="/coping-cards" icon={<Layers className="size-4" />} label="Coping Cards" minimized={isMinimized} onClick={closeMobile} />
+      <NavItem to="/safety-plan" icon={<ShieldCheck className="size-4" />} label="Safety Plan" minimized={isMinimized} onClick={closeMobile} />
+      {(role === "user" || role === "therapist") && (
+        <NavItem to="/therapists" icon={<Stethoscope className="size-4" />} label="Therapists" minimized={isMinimized} onClick={closeMobile} />
       )}
       {role === "therapist" && (
         <NavItem to="/clients" icon={<User className="size-4" />} label="Clients" minimized={isMinimized} onClick={closeMobile} />

@@ -62,6 +62,10 @@ export const MessageBubble = memo(function MessageBubble({
           </button>
           <div
             onClick={() => onToggleTimestamp(msg._id)}
+            onDoubleClick={(e) => {
+              e.stopPropagation()
+              onReply(msg)
+            }}
             className={cn(
               "wrap-break-words min-w-0 cursor-pointer overflow-hidden rounded-2xl px-3.5 py-2 text-sm",
               isMe
@@ -77,17 +81,17 @@ export const MessageBubble = memo(function MessageBubble({
                   onScrollToMessage?.(msg.replyTo!._id)
                 }}
                 className={cn(
-                  "mb-1.5 flex w-full items-center gap-2 border-l-2 px-2 py-1 text-left text-[11px] opacity-80 hover:opacity-100",
+                  "mb-1 flex w-full items-start gap-2 border-l-2 px-2 py-1 text-left text-[11px] opacity-80 hover:opacity-100",
                   isMe
                     ? "border-white/50 bg-white/10"
                     : "border-emerald-400 bg-black/5 dark:border-emerald-500 dark:bg-white/5"
                 )}
               >
-                <Reply className="size-3 shrink-0" />
-                <span className="truncate">
+                <Reply className="mt-0.5 size-3 shrink-0" />
+                <span className="min-w-0 line-clamp-2">
                   <span className="font-semibold">{msg.replyTo.senderUsername}</span>
                   {" — "}
-                  {msg.replyTo.type === "voice" ? "🎤 Voice message" : msg.replyTo.content}
+                  {msg.replyTo.type === "voice" ? "Voice message" : msg.replyTo.content}
                 </span>
               </button>
             )}

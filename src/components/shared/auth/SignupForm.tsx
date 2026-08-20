@@ -102,14 +102,30 @@ export function SignupForm({
 
   function handleYearChange(val: string) {
     setDobYear(val)
-    setDobDay("")
-    syncDob(val, dobMonth, "")
+    if (dobMonth && dobDay) {
+      const maxDays = new Date(parseInt(val, 10), parseInt(dobMonth, 10), 0).getDate()
+      const d = parseInt(dobDay, 10)
+      if (d > maxDays) {
+        setDobDay("")
+        syncDob(val, dobMonth, "")
+        return
+      }
+    }
+    syncDob(val, dobMonth, dobDay)
   }
 
   function handleMonthChange(val: string) {
     setDobMonth(val)
-    setDobDay("")
-    syncDob(dobYear, val, "")
+    if (dobYear && dobDay) {
+      const maxDays = new Date(parseInt(dobYear, 10), parseInt(val, 10), 0).getDate()
+      const d = parseInt(dobDay, 10)
+      if (d > maxDays) {
+        setDobDay("")
+        syncDob(dobYear, val, "")
+        return
+      }
+    }
+    syncDob(dobYear, val, dobDay)
   }
 
   function handleDayChange(val: string) {

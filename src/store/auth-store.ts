@@ -145,10 +145,11 @@ export const useAuthStore = create<AuthState>()(
             set({ pendingTwoFactor: { twoFactorToken: result.twoFactorToken } })
             return "Two-factor authentication required"
           }
-          set({ user: result.user })
+          const { user, message } = result as { user: User; message: string }
+          set({ user })
           connectSocket()
           void syncPushSubscription()
-          return result.message
+          return message
         } catch (error) {
           const message = getErrorMessage(error, "Login failed")
           set({ error: message })

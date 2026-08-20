@@ -36,7 +36,6 @@ export function MessageArea({
             onToggleTimestamp={onToggleTimestamp}
             selectedTimestampMessage={selectedTimestampMessage}
             onReply={onReply}
-            onScrollToMessage={onScrollToMessage}
           />
         )
       }}

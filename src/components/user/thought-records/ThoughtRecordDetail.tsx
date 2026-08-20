@@ -19,6 +19,7 @@ const DISTORTION_LABELS: Record<string, string> = {
 interface ThoughtRecordDetailProps {
   record: {
     _id: string
+    user: string
     situation: string
     automaticThought: string
     emotions: string
@@ -27,8 +28,11 @@ interface ThoughtRecordDetailProps {
     evidenceFor: string
     evidenceAgainst: string
     reframe: string
+    outcomeEmotion: string
+    outcomeIntensity: number | null
     mood: string | null
     createdAt: string
+    updatedAt: string
   }
   onBack: () => void
   onEdit: (record: ThoughtRecordDetailProps["record"]) => void

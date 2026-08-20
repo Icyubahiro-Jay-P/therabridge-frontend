@@ -14,7 +14,7 @@ async function request<T>(path: string, options?: RequestInit): Promise<T> {
   return data as T
 }
 
-import type { JournalEntry, JournalListResponse } from "./types"
+import type { JournalEntry, JournalListResponse } from "@/components/user/journal/types"
 
 export function createEntry(payload: {
   title: string

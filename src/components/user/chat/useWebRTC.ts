@@ -185,6 +185,11 @@ export function useWebRTC() {
       cleanup()
     }
 
+    const handleCallMissed = () => {
+      setCallState("ended")
+      cleanup()
+    }
+
     const handleCallInitiated = ({ callId: cid }: { callId: string }) => {
       setCallId(cid)
       callRef.callId = cid

@@ -22,6 +22,7 @@ export function MessageArea({
   onLoadOlder,
   loadingOlder,
   hasOlder,
+  onScrollToMessage,
 }: {
   error: string | null
   loadingMessages: boolean
@@ -41,6 +42,7 @@ export function MessageArea({
   onLoadOlder: () => void
   loadingOlder: boolean
   hasOlder: boolean
+  onScrollToMessage?: (id: string) => void
 }) {
   return (
     <SharedMessageArea
@@ -88,6 +90,7 @@ export function MessageArea({
             showHistoryFor={showHistoryFor}
             setShowHistoryFor={setShowHistoryFor}
             deleting={deleting}
+            onScrollToMessage={onScrollToMessage}
           />
         )
       }}

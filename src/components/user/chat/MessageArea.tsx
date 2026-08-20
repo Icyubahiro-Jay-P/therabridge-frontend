@@ -1,3 +1,4 @@
+import { PhoneOff } from "lucide-react"
 import { MessageArea as SharedMessageArea } from "../shared/MessageArea"
 import { MessageBubble } from "./MessageBubble"
 import type { DirectMessage } from "./types"
@@ -56,6 +57,16 @@ export function MessageArea({
             <div key={m._id} className="mb-2 flex items-center justify-center">
               <span className="rounded-full bg-gray-100 px-3 py-1 text-[11px] text-gray-500 dark:bg-gray-800/80 dark:text-gray-400">
                 {m.content}
+              </span>
+            </div>
+          )
+        }
+        if (m.kind === "missed-call") {
+          return (
+            <div key={m._id} className="mb-2 flex items-center justify-center">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-red-50 px-3 py-1 text-[11px] text-red-500 dark:bg-red-950/40 dark:text-red-400">
+                <PhoneOff className="size-3" />
+                Missed call
               </span>
             </div>
           )

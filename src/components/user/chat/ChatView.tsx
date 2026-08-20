@@ -133,7 +133,6 @@ export function ChatView({
         onLoadOlder={onLoadOlder}
         loadingOlder={loadingOlder}
         hasOlder={hasOlder}
-        onScrollToMessage={onScrollToMessage}
       />
       <MessageInput
         partnerName={partner.firstName}

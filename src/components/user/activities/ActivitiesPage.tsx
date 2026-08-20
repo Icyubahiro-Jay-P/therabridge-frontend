@@ -1,4 +1,4 @@
-import { Calendar, Plus, CheckCircle2, Circle, Trash2, TrendingUp } from "lucide-react"
+import { Calendar, Plus, CheckCircle2, Circle, Trash2 } from "lucide-react"
 import { useActivityState } from "./useActivityState"
 import { ActivityEditor } from "./ActivityEditor"
 import { CompleteActivityModal } from "./CompleteActivityModal"

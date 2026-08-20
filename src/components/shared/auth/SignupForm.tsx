@@ -5,7 +5,7 @@ import {
   Loader2,
   TriangleAlert,
 } from "lucide-react"
-import { useMemo } from "react"
+import { useMemo, useState, useCallback } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -68,11 +68,15 @@ export function SignupForm({
   )
 
   const currentYear = new Date().getFullYear()
-  const [dobYear, dobMonth, dobDay] = (form.dateOfBirth || "").split("-")
+  const [dobYear, setDobYear] = useState(() => (form.dateOfBirth || "").split("-")[0] || "")
+  const [dobMonth, setDobMonth] = useState(() => (form.dateOfBirth || "").split("-")[1] || "")
+  const [dobDay, setDobDay] = useState(() => (form.dateOfBirth || "").split("-")[2] || "")
+
   const daysInMonth =
     dobYear && dobMonth
       ? new Date(parseInt(dobYear, 10), parseInt(dobMonth, 10), 0).getDate()
       : 0
+
   const yearOptions = Array.from(
     { length: currentYear - 18 - (currentYear - 120) + 1 },
     (_, i) => currentYear - 18 - i
@@ -81,6 +85,37 @@ export function SignupForm({
     "January", "February", "March", "April", "May", "June",
     "July", "August", "September", "October", "November", "December",
   ]
+
+  const syncDob = useCallback(
+    (y: string, m: string, d: string) => {
+      if (y && m && d) {
+        const mi = parseInt(m, 10)
+        const di = parseInt(d, 10)
+        const daysMax = new Date(parseInt(y, 10), mi, 0).getDate()
+        if (di <= daysMax) {
+          hdp(d, m, y)
+        }
+      }
+    },
+    [hdp]
+  )
+
+  function handleYearChange(val: string) {
+    setDobYear(val)
+    setDobDay("")
+    syncDob(val, dobMonth, dobDay)
+  }
+
+  function handleMonthChange(val: string) {
+    setDobMonth(val)
+    setDobDay("")
+    syncDob(dobYear, val, dobDay)
+  }
+
+  function handleDayChange(val: string) {
+    setDobDay(val)
+    syncDob(dobYear, dobMonth, val)
+  }
 
   return (
     <>
@@ -132,9 +167,8 @@ export function SignupForm({
               <div className="space-y-1">
                 <Label className="text-xs text-gray-400 dark:text-gray-500">Year</Label>
                 <Select
-                  value={dobYear ?? ""}
-                  disabled={l}
-                  onValueChange={(val) => hdp(dobDay ?? "", dobMonth ?? "", val)}
+                  value={dobYear}
+                  onValueChange={handleYearChange}
                 >
                   <SelectTrigger
                     className={cn(

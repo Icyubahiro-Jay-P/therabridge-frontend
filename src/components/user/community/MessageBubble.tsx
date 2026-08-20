@@ -24,6 +24,7 @@ export const MessageBubble = memo(function MessageBubble({
 }) {
   const showTime = selectedTimestampMessage === msg._id
   const readCount = msg.readBy?.length ?? 0
+  const isUnsent = !!msg.unsent
 
   return (
     <div className={cn("group/msg mb-2 flex", isMe ? "justify-end" : "justify-start")}>

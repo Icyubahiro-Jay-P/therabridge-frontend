@@ -160,9 +160,10 @@ export async function verifyEmail(code: string): Promise<{ message: string }> {
   return data
 }
 
-export async function resendVerification(): Promise<number> {
+export async function resendVerification(email: string): Promise<number> {
   const { data } = await api.post<{ message: string; resendCooldownSeconds: number }>(
-    "/api/users/resend-verification"
+    "/api/users/resend-verification",
+    { email }
   )
   return data.resendCooldownSeconds ?? 60
 }

@@ -35,6 +35,7 @@ export function useWebRTC() {
 
   const pcRef = useRef<RTCPeerConnection | null>(null)
   const localStreamRef = useRef<MediaStream | null>(null)
+  const pendingOfferRef = useRef<{ sdp: RTCSessionDescriptionInit; calleeId: string } | null>(null)
 
   const cleanup = useCallback(() => {
     pcRef.current?.close()
@@ -46,6 +47,7 @@ export function useWebRTC() {
     setCallId(null)
     setPeerId(null)
     callRef.callId = null
+    pendingOfferRef.current = null
     setIsMuted(false)
     setIsVideoOff(false)
   }, [])
@@ -194,6 +196,13 @@ export function useWebRTC() {
       setCallId(cid)
       callRef.callId = cid
       setCallState("ringing")
+
+      // Send the pending SDP offer now that we have the callId
+      if (pendingOfferRef.current) {
+        const { sdp, calleeId } = pendingOfferRef.current
+        socket.emit("call:offer", { callId: cid, sdp, calleeId })
+        pendingOfferRef.current = null
+      }
     }
 
     socket.on("call:incoming", handleIncoming)
@@ -232,6 +241,9 @@ export function useWebRTC() {
 
       const offer = await pc.createOffer()
       await pc.setLocalDescription(offer)
+
+      // Store the offer SDP — we'll send it once the server returns callId
+      pendingOfferRef.current = { sdp: offer, calleeId: targetUserId }
 
       getSocket()?.emit("call:initiate", { calleeId: targetUserId })
     },

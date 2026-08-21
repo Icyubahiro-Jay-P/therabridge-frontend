@@ -39,17 +39,7 @@ export function ChatView({
   loadingOlder,
   hasOlder,
   callState,
-  localStream,
-  remoteStream,
-  incomingCall,
-  isMuted,
-  isVideoOff,
   onStartCall,
-  onAcceptCall,
-  onRejectCall,
-  onEndCall,
-  onToggleMute,
-  onToggleVideo,
 }: {
   partner: ChatUser
   onToggleSidebar: () => void

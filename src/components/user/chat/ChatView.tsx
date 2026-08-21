@@ -1,7 +1,6 @@
 import { ChatHeader } from "./ChatHeader"
 import { MessageArea } from "./MessageArea"
 import { MessageInput } from "./MessageInput"
-import { VideoCallOverlay } from "./VideoCallOverlay"
 import type { ChatUser, DirectMessage, ReplySnapshot } from "./types"
 
 export function ChatView({
@@ -147,25 +146,6 @@ export function ChatView({
         replyTo={!editingId ? replyTo : null}
         onCancelReply={onCancelReply}
       />
-      {currentUserId && (
-        <VideoCallOverlay
-          userId={currentUserId}
-          callState={(callState ?? "idle") as "idle" | "calling" | "ringing" | "connecting" | "connected" | "ended"}
-          peerId={partner._id}
-          localStream={localStream ?? null}
-          remoteStream={remoteStream ?? null}
-          incomingCall={incomingCall ?? null}
-          isMuted={isMuted ?? false}
-          isVideoOff={isVideoOff ?? false}
-          acceptCall={onAcceptCall ?? (() => {})}
-          rejectCall={onRejectCall ?? (() => {})}
-          endCall={onEndCall ?? (() => {})}
-          toggleMute={onToggleMute ?? (() => {})}
-          toggleVideo={onToggleVideo ?? (() => {})}
-          partnerName={`${partner.firstName} ${partner.lastName}`}
-          partnerAvatar={partner.avatar ?? undefined}
-        />
-      )}
     </>
   )
 }

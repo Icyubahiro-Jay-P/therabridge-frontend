@@ -70,11 +70,11 @@ export function useVerifyEmailState() {
   }
 
   async function handleResend() {
-    if (resending || resendCooldown > 0) return
+    if (resending || resendCooldown > 0 || !user?.email) return
     setResending(true)
     setError(null)
     try {
-      const cooldown = await resendVerification()
+      const cooldown = await resendVerification(user.email)
       setResendCooldown(cooldown || 60)
     } catch (err) {
       setError(err instanceof Error ? err.message : "Could not resend the code")

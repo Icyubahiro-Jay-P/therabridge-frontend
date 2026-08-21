@@ -76,22 +76,7 @@ export function ChatView({
   loadingOlder: boolean
   hasOlder: boolean
   callState?: string
-  localStream?: MediaStream | null
-  remoteStream?: MediaStream | null
-  incomingCall?: {
-    callId: string
-    callerId: string
-    callerName: string
-    callerUsername: string
-  } | null
-  isMuted?: boolean
-  isVideoOff?: boolean
   onStartCall?: () => void
-  onAcceptCall?: () => void
-  onRejectCall?: () => void
-  onEndCall?: () => void
-  onToggleMute?: () => void
-  onToggleVideo?: () => void
 }) {
   return (
     <>

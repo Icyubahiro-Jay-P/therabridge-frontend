@@ -210,17 +210,7 @@ export function ChatPage() {
               loadingOlder={c.loadingOlder}
               hasOlder={c.hasOlderMessages}
               callState={webrtc.callState}
-              localStream={webrtc.localStream}
-              remoteStream={webrtc.remoteStream}
-              incomingCall={webrtc.incomingCall}
-              isMuted={webrtc.isMuted}
-              isVideoOff={webrtc.isVideoOff}
               onStartCall={() => webrtc.startCall(c.partner!._id)}
-              onAcceptCall={webrtc.acceptCall}
-              onRejectCall={webrtc.rejectCall}
-              onEndCall={webrtc.endCall}
-              onToggleMute={webrtc.toggleMute}
-              onToggleVideo={webrtc.toggleVideo}
             />
             <GuardOverlay mode="blackout" visible={guard.guarded} />
             <WatermarkCanvas

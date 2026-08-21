@@ -7,6 +7,7 @@ import { useWebRTC } from "@/components/user/chat/useWebRTC"
 import { Sidebar } from "@/components/user/chat/Sidebar"
 import { EmptyState } from "@/components/user/chat/EmptyState"
 import { ChatView } from "@/components/user/chat/ChatView"
+import { VideoCallOverlay } from "@/components/user/chat/VideoCallOverlay"
 import { TherryChat } from "@/components/user/chat/TherryChat"
 import { ScreenshotOverlay } from "@/components/user/community/ScreenshotOverlay"
 import { useScreenshotNotices } from "@/components/user/chat/useScreenshotNotices"
@@ -229,6 +230,32 @@ export function ChatPage() {
             />
           </div>
         )}
+      </div>
+
+      {/* Video call overlay - rendered at page level so incoming calls show
+          even when the user is viewing a different conversation or no conversation */}
+      {c.currentUser?.id && (
+        <VideoCallOverlay
+          userId={c.currentUser.id}
+          callState={(webrtc.callState ?? "idle") as "idle" | "calling" | "ringing" | "connecting" | "connected" | "ended"}
+          peerId={webrtc.peerId}
+          localStream={webrtc.localStream ?? null}
+          remoteStream={webrtc.remoteStream ?? null}
+          incomingCall={webrtc.incomingCall ?? null}
+          isMuted={webrtc.isMuted ?? false}
+          isVideoOff={webrtc.isVideoOff ?? false}
+          acceptCall={webrtc.acceptCall}
+          rejectCall={webrtc.rejectCall}
+          endCall={webrtc.endCall}
+          toggleMute={webrtc.toggleMute}
+          toggleVideo={webrtc.toggleVideo}
+          partnerName={
+            webrtc.incomingCall?.callerName
+            ?? (c.partner ? `${c.partner.firstName} ${c.partner.lastName}` : "")
+          }
+          partnerAvatar={c.partner?.avatar ?? undefined}
+        />
+      )}
       </div>
     </div>
   )

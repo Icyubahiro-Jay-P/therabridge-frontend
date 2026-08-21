@@ -256,7 +256,6 @@ export function ChatPage() {
           partnerAvatar={c.partner?.avatar ?? undefined}
         />
       )}
-      </div>
     </div>
   )
 }

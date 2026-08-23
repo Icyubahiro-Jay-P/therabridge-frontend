@@ -1,5 +1,6 @@
 import { useState, useCallback } from "react"
 import { api } from "@/lib/api"
+import { getErrorMessage } from "@/lib/errors"
 
 export interface Settings {
   messagePreviews: boolean

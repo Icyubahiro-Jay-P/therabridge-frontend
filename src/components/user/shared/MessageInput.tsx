@@ -62,7 +62,7 @@ export function MessageInput({
             <Reply className="size-3.5 shrink-0" />
             <span className="truncate">
               Replying to <span className="font-bold">{replyTo.senderUsername}</span>
-              {" — "}
+              {", "}
               {replyTo.type === "voice" ? "Voice message" : replyTo.content}
             </span>
           </p>

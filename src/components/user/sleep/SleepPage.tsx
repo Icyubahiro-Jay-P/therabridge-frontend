@@ -214,7 +214,7 @@ export function SleepPage() {
     if (bedtime && wakeTime) {
       const [bh, bm] = bedtime.split(":").map(Number)
       const [wh, wm] = wakeTime.split(":").map(Number)
-      let bedMins = bh * 60 + bm
+      const bedMins = bh * 60 + bm
       let wakeMins = wh * 60 + wm
       if (wakeMins < bedMins) wakeMins += 24 * 60
       hoursSlept = Math.round(((wakeMins - bedMins) / 60) * 10) / 10
@@ -388,7 +388,7 @@ export function SleepPage() {
               {(() => {
                 const [bh, bm] = bedtime.split(":").map(Number)
                 const [wh, wm] = wakeTime.split(":").map(Number)
-                let bedMins = bh * 60 + bm
+                const bedMins = bh * 60 + bm
                 let wakeMins = wh * 60 + wm
                 if (wakeMins < bedMins) wakeMins += 24 * 60
                 return ((wakeMins - bedMins) / 60).toFixed(1)

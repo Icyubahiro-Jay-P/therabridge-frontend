@@ -209,7 +209,7 @@ export function ProgramsPage() {
               <EmptyState
                 icon={Route}
                 title="No programs available yet"
-                description="Programs are structured, multi-week therapeutic journeys created by our care team. New ones are added regularly — check back soon."
+                description="Programs are structured, multi-week therapeutic journeys created by our care team. New ones are added regularly, check back soon."
               />
             )
           ) : (

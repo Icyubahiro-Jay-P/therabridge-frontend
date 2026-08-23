@@ -13,7 +13,7 @@ export function useProgramState() {
   const [myCompleted, setMyCompleted] = useState<ProgramListItem[]>([])
   const [activeProgram, setActiveProgram] = useState<Program | null>(null)
   const [activeProgress, setActiveProgress] = useState<ProgramProgress | null>(null)
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState<string | null>(null)
 

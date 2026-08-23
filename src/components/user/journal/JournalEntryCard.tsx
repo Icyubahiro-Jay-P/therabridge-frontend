@@ -37,7 +37,7 @@ export function JournalEntryCard({ entry, onSelect, onEdit, onDelete, currentUse
         </div>
         <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
           {entry.isPublic ? (
-            <Globe className="size-3.5 text-blue-400" />
+            <Globe className="size-3.5 text-emerald-400" />
           ) : (
             <Lock className="size-3.5 text-gray-400" />
           )}

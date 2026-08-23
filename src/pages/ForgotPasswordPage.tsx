@@ -2,6 +2,7 @@ import { useState } from "react"
 import { Leaf, TriangleAlert } from "lucide-react"
 
 import { api } from "@/lib/api"
+import { getErrorMessage } from "@/lib/errors"
 import { ForgotPasswordForm } from "@/components/shared/auth/ForgotPasswordForm"
 import { ForgotPasswordSuccess } from "@/components/shared/auth/ForgotPasswordSuccess"
 

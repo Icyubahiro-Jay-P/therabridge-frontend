@@ -56,7 +56,7 @@ export function MedicationsPage() {
       </div>
 
       {m.success && (
-        <div className="rounded-xl bg-green-50 px-4 py-3 text-sm text-green-700 dark:bg-green-950/40 dark:text-green-400">
+        <div className="rounded-xl bg-emerald-50 px-4 py-3 text-sm text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400">
           {m.success}
         </div>
       )}
@@ -78,11 +78,11 @@ export function MedicationsPage() {
               <p className="text-xs text-emerald-600 dark:text-emerald-500">adherence</p>
             </div>
           </div>
-          <div className="flex items-center gap-3 rounded-xl border border-orange-200 bg-orange-50 px-4 py-3 dark:border-orange-900/50 dark:bg-orange-950/30">
-            <Flame className="size-5 text-orange-500" />
+          <div className="flex items-center gap-3 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 dark:border-amber-900/50 dark:bg-amber-950/30">
+            <Flame className="size-5 text-amber-600" />
             <div>
-              <p className="text-lg font-bold text-orange-700 dark:text-orange-400">{m.stats.streak}</p>
-              <p className="text-xs text-orange-600 dark:text-orange-500">day streak</p>
+              <p className="text-lg font-bold text-amber-700 dark:text-amber-400">{m.stats.streak}</p>
+              <p className="text-xs text-amber-600 dark:text-amber-600">day streak</p>
             </div>
           </div>
           <div className="flex items-center gap-3 rounded-xl border border-gray-200 bg-white px-4 py-3 dark:border-gray-700 dark:bg-gray-900">
@@ -342,7 +342,7 @@ export function MedicationsPage() {
                           {log.sideEffects.map((effect, i) => (
                             <span
                               key={i}
-                              className="rounded-full bg-yellow-100 px-2 py-0.5 text-xs text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400"
+                              className="rounded-full bg-amber-100 px-2 py-0.5 text-xs text-amber-700 dark:bg-amber-900/30 dark:text-amber-400"
                             >
                               {effect}
                             </span>
@@ -393,7 +393,7 @@ export function MedicationsPage() {
                     <div className="flex items-center gap-2">
                       <div className="h-2 w-24 overflow-hidden rounded-full bg-gray-200 dark:bg-gray-700">
                         <div
-                          className="h-full rounded-full bg-yellow-400"
+                          className="h-full rounded-full bg-amber-400"
                           style={{
                             width: `${Math.min(100, (effect.count / (m.stats?.totalDoses || 1)) * 100)}%`,
                           }}
@@ -595,10 +595,10 @@ export function MedicationsPage() {
                   {m.sideEffects.map((effect, i) => (
                     <span
                       key={i}
-                      className="inline-flex items-center gap-1 rounded-full bg-yellow-100 px-2.5 py-0.5 text-xs font-medium text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400"
+                      className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-medium text-amber-700 dark:bg-amber-900/30 dark:text-amber-400"
                     >
                       {effect}
-                      <button onClick={() => m.removeSideEffect(i)} className="hover:text-yellow-900 dark:hover:text-yellow-200">
+                      <button onClick={() => m.removeSideEffect(i)} className="hover:text-amber-900 dark:hover:text-amber-200">
                         <X className="size-3" />
                       </button>
                     </span>

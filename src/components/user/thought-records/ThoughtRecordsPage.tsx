@@ -70,7 +70,7 @@ export function ThoughtRecordsPage() {
             </div>
             <button
               onClick={() => openEditor()}
-              className="flex items-center gap-2 rounded-xl bg-violet-600 px-4 py-2 text-sm font-medium text-white hover:bg-violet-700"
+              className="flex items-center gap-2 rounded-xl bg-teal-600 px-4 py-2 text-sm font-medium text-white hover:bg-teal-700"
             >
               <Plus className="size-4" />
               New Record
@@ -78,7 +78,7 @@ export function ThoughtRecordsPage() {
           </div>
 
           {s.success && (
-            <div className="rounded-xl bg-green-50 px-4 py-3 text-sm text-green-700 dark:bg-green-950/40 dark:text-green-400">
+            <div className="rounded-xl bg-emerald-50 px-4 py-3 text-sm text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400">
               {s.success}
             </div>
           )}
@@ -105,7 +105,7 @@ export function ThoughtRecordsPage() {
               {s.stats.avgEmotionAfter != null && (
                 <div className="rounded-xl border border-gray-200 bg-white p-3 dark:border-gray-700 dark:bg-gray-900">
                   <p className="text-xs text-gray-500 dark:text-gray-400">Avg. Distress After</p>
-                  <p className="flex items-center gap-1 text-lg font-bold text-green-600 dark:text-green-400">
+                  <p className="flex items-center gap-1 text-lg font-bold text-emerald-600 dark:text-emerald-400">
                     <TrendingUp className="size-4" />
                     {s.stats.avgEmotionAfter}
                   </p>
@@ -124,7 +124,7 @@ export function ThoughtRecordsPage() {
                   s.fetchRecords({ page: 1, search: e.target.value })
                 }}
                 placeholder="Search records..."
-                className="w-full rounded-xl border border-gray-200 bg-white py-2 pl-9 pr-3 text-sm text-gray-900 placeholder:text-gray-400 focus:border-violet-400 focus:outline-none focus:ring-1 focus:ring-violet-400 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
+                className="w-full rounded-xl border border-gray-200 bg-white py-2 pl-9 pr-3 text-sm text-gray-900 placeholder:text-gray-400 focus:border-teal-400 focus:outline-none focus:ring-1 focus:ring-teal-400 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
               />
             </div>
             <select
@@ -134,7 +134,7 @@ export function ThoughtRecordsPage() {
                 s.setFilterDistortion(v)
                 s.fetchRecords({ page: 1, distortion: v })
               }}
-              className="rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm text-gray-700 focus:border-violet-400 focus:outline-none dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300"
+              className="rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm text-gray-700 focus:border-teal-400 focus:outline-none dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300"
             >
               <option value="">All distortions</option>
               {Object.entries(DISTORTIONS).map(([key, label]) => (
@@ -182,7 +182,7 @@ export function ThoughtRecordsPage() {
                 action={
                   <button
                     onClick={() => openEditor()}
-                    className="flex items-center gap-2 rounded-xl bg-violet-600 px-4 py-2 text-sm font-medium text-white hover:bg-violet-700"
+                    className="flex items-center gap-2 rounded-xl bg-teal-600 px-4 py-2 text-sm font-medium text-white hover:bg-teal-700"
                   >
                     <Plus className="size-4" />
                     Record your first thought

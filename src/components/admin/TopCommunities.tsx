@@ -35,7 +35,7 @@ export function TopCommunities({
                 to="/communities"
                 className="flex items-center gap-3 rounded-xl p-2 transition-colors hover:bg-gray-50 dark:hover:bg-gray-800/60"
               >
-                <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-violet-100 text-xs font-bold text-violet-700 dark:bg-violet-900/40 dark:text-violet-300">
+                <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-gray-100 text-xs font-bold text-gray-700 dark:bg-gray-800 dark:text-gray-300">
                   {c.name.slice(0, 1).toUpperCase()}
                 </div>
                 <div className="min-w-0 flex-1">

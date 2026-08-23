@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react"
 
 const moodConfig = {
   happy: { emoji: "😊", label: "Happy", color: "text-emerald-500" },
-  content: { emoji: "🙂", label: "Content", color: "text-sky-500" },
+  content: { emoji: "🙂", label: "Content", color: "text-teal-500" },
   sad: { emoji: "😢", label: "Sad", color: "text-amber-500" },
   neutral: { emoji: "😐", label: "Neutral", color: "text-gray-400" },
 }
@@ -56,12 +56,12 @@ export function PetPage() {
         </div>
       )}
       {p.info && (
-        <div className="rounded-xl border border-sky-200 bg-sky-50 px-4 py-3 text-sm text-sky-700 dark:border-sky-900/50 dark:bg-sky-950/40 dark:text-sky-400">
+        <div className="rounded-xl border border-teal-200 bg-teal-50 px-4 py-3 text-sm text-teal-700 dark:border-teal-900/50 dark:bg-teal-950/40 dark:text-teal-400">
           {p.info}
         </div>
       )}
       {p.success && (
-        <div className="rounded-xl bg-green-50 px-4 py-3 text-sm text-green-700 dark:bg-green-950/40 dark:text-green-400">
+        <div className="rounded-xl bg-emerald-50 px-4 py-3 text-sm text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400">
           {p.success}
         </div>
       )}
@@ -81,10 +81,10 @@ export function PetPage() {
 
       {p.pet && (
         <>
-          <div className="relative overflow-hidden rounded-2xl border border-violet-200 bg-linear-to-br from-violet-50 to-sky-50 p-8 text-center dark:border-violet-900/50 dark:from-violet-950/30 dark:to-sky-950/30">
+          <div className="relative overflow-hidden rounded-2xl border border-teal-200 bg-linear-to-br from-teal-50 to-emerald-50 p-8 text-center dark:border-teal-900/50 dark:from-teal-950/30 dark:to-emerald-950/30">
             {p.showLevelUp && (
               <div className="absolute inset-0 z-10 flex items-center justify-center">
-                <div className="animate-bounce rounded-2xl bg-yellow-400 px-6 py-3 text-lg font-bold text-yellow-900 shadow-lg dark:bg-yellow-500 dark:text-yellow-950">
+                <div className="animate-bounce rounded-2xl bg-amber-400 px-6 py-3 text-lg font-bold text-amber-900 shadow-lg dark:bg-amber-500 dark:text-amber-950">
                   Level Up! Level {p.levelUpLevel}
                 </div>
               </div>
@@ -94,7 +94,7 @@ export function PetPage() {
               <div
                 className={`animate-[float-y_3s_ease-in-out_infinite] ${petSize(p.pet.level)} transition-all duration-500`}
               >
-                <Bird className="text-violet-600 dark:text-violet-400" strokeWidth={1.5} style={{ width: "1em", height: "1em" }} />
+                <Bird className="text-teal-600 dark:text-teal-400" strokeWidth={1.5} style={{ width: "1em", height: "1em" }} />
               </div>
             </div>
 
@@ -106,7 +106,7 @@ export function PetPage() {
                   onChange={(e) => setNameInput(e.target.value)}
                   maxLength={30}
                   autoFocus
-                  className="flex-1 rounded-lg border border-violet-300 bg-white px-3 py-1.5 text-center text-lg font-semibold text-gray-900 focus:outline-none focus:ring-2 focus:ring-violet-400 dark:border-violet-700 dark:bg-gray-900 dark:text-white"
+                  className="flex-1 rounded-lg border border-teal-300 bg-white px-3 py-1.5 text-center text-lg font-semibold text-gray-900 focus:outline-none focus:ring-2 focus:ring-teal-400 dark:border-teal-700 dark:bg-gray-900 dark:text-white"
                   onKeyDown={(e) => {
                     if (e.key === "Enter") handleRename()
                     if (e.key === "Escape") setEditing(false)
@@ -115,7 +115,7 @@ export function PetPage() {
                 <button
                   onClick={handleRename}
                   disabled={p.saving || !nameInput.trim()}
-                  className="rounded-lg bg-violet-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-violet-700 disabled:opacity-50"
+                  className="rounded-lg bg-teal-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-teal-700 disabled:opacity-50"
                 >
                   Save
                 </button>
@@ -125,7 +125,7 @@ export function PetPage() {
                 <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{p.pet.name}</h2>
                 <button
                   onClick={startEdit}
-                  className="rounded-lg p-1 text-gray-400 hover:bg-violet-100 hover:text-violet-600 dark:hover:bg-violet-900/40"
+                  className="rounded-lg p-1 text-gray-400 hover:bg-teal-100 hover:text-teal-600 dark:hover:bg-teal-900/40"
                 >
                   <Pencil className="size-3.5" />
                 </button>
@@ -145,7 +145,7 @@ export function PetPage() {
               </div>
               <div className="h-2.5 overflow-hidden rounded-full bg-gray-200 dark:bg-gray-700">
                 <div
-                  className="h-full rounded-full bg-linear-to-r from-violet-500 to-sky-500 transition-all duration-500"
+                  className="h-full rounded-full bg-linear-to-r from-teal-500 to-emerald-500 transition-all duration-500"
                   style={{ width: `${xpPercent}%` }}
                 />
               </div>
@@ -181,7 +181,7 @@ export function PetPage() {
                 setShowAdventures(!showAdventures)
                 if (!showAdventures) p.fetchAdventures()
               }}
-              className="flex flex-1 items-center justify-center gap-2 rounded-xl border border-violet-200 bg-violet-50 px-4 py-3 text-sm font-medium text-violet-700 transition-colors hover:bg-violet-100 dark:border-violet-800 dark:bg-violet-950/30 dark:text-violet-300 dark:hover:bg-violet-900/40"
+              className="flex flex-1 items-center justify-center gap-2 rounded-xl border border-teal-200 bg-teal-50 px-4 py-3 text-sm font-medium text-teal-700 transition-colors hover:bg-teal-100 dark:border-teal-800 dark:bg-teal-950/30 dark:text-teal-300 dark:hover:bg-teal-900/40"
             >
               <BookOpen className="size-4" />
               Adventure Log
@@ -191,7 +191,7 @@ export function PetPage() {
           {showAdventures && (
             <div className="space-y-3">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-                <Heart className="mr-1 inline size-4 text-violet-500" />
+                <Heart className="mr-1 inline size-4 text-teal-500" />
                 Adventures
               </h3>
               {p.adventures.length === 0 ? (

@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom"
 import { Leaf, TriangleAlert } from "lucide-react"
 
 import { api } from "@/lib/api"
+import { getErrorMessage } from "@/lib/errors"
 import { InvalidToken } from "@/components/shared/auth/InvalidToken"
 import { ResetPasswordForm } from "@/components/shared/auth/ResetPasswordForm"
 import { ResetPasswordSuccess } from "@/components/shared/auth/ResetPasswordSuccess"

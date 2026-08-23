@@ -73,7 +73,7 @@ export function GratitudePage() {
 
       {/* Today's Prompt */}
       {g.prompt && (
-        <div className="rounded-2xl border border-violet-200 bg-violet-50 p-6 dark:border-violet-900/50 dark:bg-violet-950/30">
+        <div id="gratitude-composer" className="rounded-2xl border border-violet-200 bg-violet-50 p-6 dark:border-violet-900/50 dark:bg-violet-950/30">
           <div className="flex items-start gap-3">
             <Sparkles className="mt-0.5 size-5 shrink-0 text-violet-600 dark:text-violet-400" />
             <div className="flex-1">

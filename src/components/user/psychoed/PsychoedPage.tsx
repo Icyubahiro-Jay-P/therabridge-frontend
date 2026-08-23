@@ -8,30 +8,30 @@ import { EmptyState } from "@/components/user/shared/EmptyState"
 const CATEGORY_ORDER: PsychoedCategory[] = ["cbt", "anxiety", "depression", "stress", "sleep", "relationships"]
 
 const CATEGORY_BG: Record<PsychoedCategory, string> = {
-  cbt: "border-violet-200 bg-violet-50 dark:border-violet-900/50 dark:bg-violet-950/20",
-  anxiety: "border-blue-200 bg-blue-50 dark:border-blue-900/50 dark:bg-blue-950/20",
-  depression: "border-indigo-200 bg-indigo-50 dark:border-indigo-900/50 dark:bg-indigo-950/20",
-  stress: "border-orange-200 bg-orange-50 dark:border-orange-900/50 dark:bg-orange-950/20",
+  cbt: "border-emerald-200 bg-emerald-50 dark:border-emerald-900/50 dark:bg-emerald-950/20",
+  anxiety: "border-teal-200 bg-teal-50 dark:border-teal-900/50 dark:bg-teal-950/20",
+  depression: "border-gray-200 bg-gray-50 dark:border-gray-900/50 dark:bg-gray-950/20",
+  stress: "border-amber-200 bg-amber-50 dark:border-amber-900/50 dark:bg-amber-950/20",
   sleep: "border-teal-200 bg-teal-50 dark:border-teal-900/50 dark:bg-teal-950/20",
-  relationships: "border-pink-200 bg-pink-50 dark:border-pink-900/50 dark:bg-pink-950/20",
+  relationships: "border-emerald-200 bg-emerald-50 dark:border-emerald-900/50 dark:bg-emerald-950/20",
 }
 
 const CATEGORY_DOT: Record<PsychoedCategory, string> = {
-  cbt: "bg-violet-500",
-  anxiety: "bg-blue-500",
-  depression: "bg-indigo-500",
-  stress: "bg-orange-500",
+  cbt: "bg-emerald-500",
+  anxiety: "bg-teal-500",
+  depression: "bg-gray-500",
+  stress: "bg-amber-500",
   sleep: "bg-teal-500",
-  relationships: "bg-pink-500",
+  relationships: "bg-emerald-500",
 }
 
 const CATEGORY_ICON_COLOR: Record<PsychoedCategory, string> = {
-  cbt: "text-violet-600 dark:text-violet-400",
-  anxiety: "text-blue-600 dark:text-blue-400",
-  depression: "text-indigo-600 dark:text-indigo-400",
-  stress: "text-orange-600 dark:text-orange-400",
+  cbt: "text-emerald-600 dark:text-emerald-400",
+  anxiety: "text-teal-600 dark:text-teal-400",
+  depression: "text-gray-600 dark:text-gray-400",
+  stress: "text-amber-600 dark:text-amber-400",
   sleep: "text-teal-600 dark:text-teal-400",
-  relationships: "text-pink-600 dark:text-pink-400",
+  relationships: "text-emerald-600 dark:text-emerald-400",
 }
 
 function ModuleCard({

@@ -32,9 +32,9 @@ export function AssessmentTrendChart({ trend, onBack }: AssessmentTrendChartProp
                 const maxScore = trend.trend.reduce((max, p) => Math.max(max, p.score), 1)
                 const height = (point.score / maxScore) * 140
                 const severityColors: Record<string, string> = {
-                  minimal: "bg-green-400",
-                  mild: "bg-yellow-400",
-                  moderate: "bg-orange-400",
+                  minimal: "bg-emerald-400",
+                  mild: "bg-amber-400",
+                  moderate: "bg-amber-600",
                   moderately_severe: "bg-red-400",
                   severe: "bg-red-600",
                 }
@@ -60,9 +60,9 @@ export function AssessmentTrendChart({ trend, onBack }: AssessmentTrendChartProp
               {["minimal", "mild", "moderate", "moderately_severe", "severe"].map((s) => (
                 <div key={s} className="flex items-center gap-1.5">
                   <div className={`size-2.5 rounded-full ${
-                    s === "minimal" ? "bg-green-400" :
-                    s === "mild" ? "bg-yellow-400" :
-                    s === "moderate" ? "bg-orange-400" :
+                    s === "minimal" ? "bg-emerald-400" :
+                    s === "mild" ? "bg-amber-400" :
+                    s === "moderate" ? "bg-amber-600" :
                     s === "moderately_severe" ? "bg-red-400" : "bg-red-600"
                   }`} />
                   <span className="text-[10px] capitalize text-gray-500 dark:text-gray-400">

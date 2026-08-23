@@ -8,7 +8,7 @@ export function useGratitudeState() {
   const [hasEntryToday, setHasEntryToday] = useState(false)
   const [entries, setEntries] = useState<GratitudeEntry[]>([])
   const [streak, setStreak] = useState<GratitudeStreak | null>(null)
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [info, setInfo] = useState<string | null>(null)

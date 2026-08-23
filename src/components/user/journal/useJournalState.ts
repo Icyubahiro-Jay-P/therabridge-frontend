@@ -1,6 +1,27 @@
-import { useState, useCallback, useRef } from "react"
+import { useState, useCallback, useRef, type Dispatch, type SetStateAction } from "react"
 import * as journalApi from "@/lib/journal-api"
-import type { JournalEntry } from "./types"
+import type { JournalEntry, JournalComment } from "./types"
+import { useAuthStore } from "@/store/auth-store"
+import { getErrorMessage } from "@/lib/errors"
+import { runOptimistic } from "@/lib/optimistic"
+
+/**
+ * Apply one transformation to an entry's comments in both the list and the
+ * open-detail view, so every comment action stays consistent everywhere.
+ */
+function patchEntryComments(
+  setEntries: Dispatch<SetStateAction<JournalEntry[]>>,
+  setSelectedEntry: Dispatch<SetStateAction<JournalEntry | null>>,
+  entryId: string,
+  transform: (comments: JournalComment[]) => JournalComment[],
+) {
+  setEntries((prev) =>
+    prev.map((e) => (e._id === entryId ? { ...e, comments: transform(e.comments) } : e))
+  )
+  setSelectedEntry((prev) =>
+    prev && prev._id === entryId ? { ...prev, comments: transform(prev.comments) } : prev
+  )
+}
 
 export function useJournalState() {
   const [entries, setEntries] = useState<JournalEntry[]>([])
@@ -115,16 +136,34 @@ export function useJournalState() {
 
   const removeEntry = useCallback(
     async (id: string) => {
-      try {
-        await journalApi.deleteEntry(id)
-        setEntries((prev) => prev.filter((e) => e._id !== id))
-        if (selectedEntry?._id === id) setSelectedEntry(null)
-        setSuccess("Entry deleted")
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "Failed to delete entry")
-      }
+      await runOptimistic({
+        lockKey: `journal-entry:${id}`,
+        snapshot: () => ({
+          index: entries.findIndex((e) => e._id === id),
+          entry: entries.find((e) => e._id === id) ?? null,
+        }),
+        apply: () => {
+          setEntries((prev) => prev.filter((e) => e._id !== id))
+          if (selectedEntry?._id === id) setSelectedEntry(null)
+          setSuccess("Entry deleted")
+        },
+        commit: () => journalApi.deleteEntry(id),
+        rollback: ({ index, entry }) => {
+          if (!entry) return
+          setEntries((prev) => {
+            if (prev.some((e) => e._id === id)) return prev
+            const next = [...prev]
+            next.splice(Math.min(Math.max(index, 0), next.length), 0, entry)
+            return next
+          })
+        },
+        onError: (err) => {
+          setSuccess(null)
+          setError(getErrorMessage(err))
+        },
+      })
     },
-    [selectedEntry],
+    [entries, selectedEntry]
   )
 
   const openEntry = useCallback(async (id: string) => {

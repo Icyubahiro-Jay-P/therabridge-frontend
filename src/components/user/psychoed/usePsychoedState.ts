@@ -10,7 +10,7 @@ export function usePsychoedState() {
   const [modules, setModules] = useState<PsychoedModuleSummary[]>([])
   const [activeModule, setActiveModule] = useState<PsychoedModuleDetail | null>(null)
   const [activeProgress, setActiveProgress] = useState<PsychoedProgress | null>(null)
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState<string | null>(null)

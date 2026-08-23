@@ -166,14 +166,24 @@ export function GratitudePage() {
         </div>
       )}
 
-      {g.entries.length === 0 && !g.loading && (
-        <div className="flex flex-col items-center justify-center py-16 text-center">
-          <Sparkles className="mb-4 size-12 text-gray-300 dark:text-gray-600" />
-          <p className="text-gray-500 dark:text-gray-400">No gratitude entries yet.</p>
-          <p className="mt-1 text-sm text-gray-400 dark:text-gray-500">
-            Start your daily gratitude practice above.
-          </p>
-        </div>
+      {!g.error && !g.loading && g.entries.length === 0 && (
+        <EmptyState
+          icon={Sparkles}
+          title="No gratitude entries yet"
+          description="Noticing and writing down things you're grateful for — even one small thing a day — is a proven way to lift your mood. Complete today's prompt above to start your streak."
+          action={
+            g.prompt ? (
+              <button
+                onClick={() =>
+                  document.getElementById("gratitude-composer")?.scrollIntoView({ behavior: "smooth", block: "center" })
+                }
+                className="rounded-xl bg-violet-600 px-4 py-2 text-sm font-medium text-white hover:bg-violet-700"
+              >
+                Write today&apos;s entry
+              </button>
+            ) : undefined
+          }
+        />
       )}
     </div>
   )

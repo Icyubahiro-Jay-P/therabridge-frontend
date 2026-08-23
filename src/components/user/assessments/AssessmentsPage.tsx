@@ -5,6 +5,7 @@ import { AssessmentResult } from "./AssessmentResult"
 import { AssessmentTrendChart } from "./AssessmentTrendChart"
 import { useEffect, useRef, useState } from "react"
 import { ASSESSMENT_QUESTIONS } from "@/lib/assessment-api"
+import { EmptyState } from "@/components/user/shared/EmptyState"
 
 const SEVERITY_COLORS: Record<string, string> = {
   minimal: "bg-green-100 text-green-700 dark:bg-green-950/40 dark:text-green-400",

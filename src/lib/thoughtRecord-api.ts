@@ -45,12 +45,12 @@ export const thoughtRecordApi = {
     outcomeEmotion?: string
     outcomeIntensity?: number
     mood?: string
-  }) => api.post<ThoughtRecord>("/thought-records", data).then((r) => r.data),
+  }) => api.post<ThoughtRecord>("/api/thought-records", data).then((r) => r.data),
 
   list: (params?: { page?: number; limit?: number; distortion?: string; mood?: string; search?: string }) =>
-    api.get<ThoughtRecordListResponse>("/thought-records", { params }).then((r) => r.data),
+    api.get<ThoughtRecordListResponse>("/api/thought-records", { params }).then((r) => r.data),
 
-  get: (id: string) => api.get<ThoughtRecord>(`/thought-records/${id}`).then((r) => r.data),
+  get: (id: string) => api.get<ThoughtRecord>(`/api/thought-records/${id}`).then((r) => r.data),
 
   update: (id: string, data: Partial<{
     situation: string
@@ -64,9 +64,9 @@ export const thoughtRecordApi = {
     outcomeEmotion: string
     outcomeIntensity: number
     mood: string
-  }>) => api.put<ThoughtRecord>(`/thought-records/${id}`, data).then((r) => r.data),
+  }>) => api.put<ThoughtRecord>(`/api/thought-records/${id}`, data).then((r) => r.data),
 
-  delete: (id: string) => api.delete(`/thought-records/${id}`).then((r) => r.data),
+  delete: (id: string) => api.delete(`/api/thought-records/${id}`).then((r) => r.data),
 
-  stats: () => api.get<ThoughtRecordStats>("/thought-records/stats").then((r) => r.data),
+  stats: () => api.get<ThoughtRecordStats>("/api/thought-records/stats").then((r) => r.data),
 }

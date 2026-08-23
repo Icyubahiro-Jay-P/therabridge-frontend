@@ -5,7 +5,7 @@ import type { Medication, MedicationLog, AdherenceStats } from "./types"
 export function useMedicationState() {
   const [medications, setMedications] = useState<Medication[]>([])
   const [activeMedications, setActiveMedications] = useState<Medication[]>([])
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [loadError, setLoadError] = useState<string | null>(null)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)

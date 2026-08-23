@@ -177,16 +177,48 @@ export function useJournalState() {
 
   const addCommentToEntry = useCallback(
     async (entryId: string, content: string) => {
-      if (!content.trim()) return
-      const comment = await journalApi.addComment(entryId, content.trim())
-      setEntries((prev) =>
-        prev.map((e) => (e._id === entryId ? { ...e, comments: [...e.comments, comment] } : e)),
-      )
-      if (selectedEntry?._id === entryId) {
-        setSelectedEntry((prev) => (prev ? { ...prev, comments: [...prev.comments, comment] } : prev))
+      const trimmed = content.trim()
+      if (!trimmed) return
+      const user = useAuthStore.getState().user
+      const tempId = `temp-comment-${Date.now()}-${Math.random()}`
+      const now = new Date().toISOString()
+      const placeholder: JournalComment = {
+        _id: tempId,
+        author: {
+          _id: user?.id ?? "",
+          firstName: user?.firstName ?? "",
+          lastName: user?.lastName ?? "",
+          username: user?.username ?? "",
+          avatar: user?.avatar ?? null,
+        },
+        content: trimmed,
+        createdAt: now,
+        updatedAt: now,
       }
+
+      await runOptimistic({
+        lockKey: `journal-comment:${entryId}`,
+        snapshot: () => null,
+        apply: () =>
+          patchEntryComments(setEntries, setSelectedEntry, entryId, (comments) => [
+            ...comments,
+            placeholder,
+          ]),
+        commit: () => journalApi.addComment(entryId, trimmed),
+        reconcile: (data) => {
+          const saved = data as JournalComment
+          patchEntryComments(setEntries, setSelectedEntry, entryId, (comments) =>
+            comments.map((c) => (c._id === tempId ? saved : c))
+          )
+        },
+        rollback: () =>
+          patchEntryComments(setEntries, setSelectedEntry, entryId, (comments) =>
+            comments.filter((c) => c._id !== tempId)
+          ),
+        onError: (err) => setError(getErrorMessage(err)),
+      })
     },
-    [selectedEntry],
+    [setEntries, setSelectedEntry],
   )
 
   const removeCommentFromEntry = useCallback(

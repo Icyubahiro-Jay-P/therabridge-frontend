@@ -8,9 +8,9 @@ import { ASSESSMENT_QUESTIONS } from "@/lib/assessment-api"
 import { EmptyState } from "@/components/user/shared/EmptyState"
 
 const SEVERITY_COLORS: Record<string, string> = {
-  minimal: "bg-green-100 text-green-700 dark:bg-green-950/40 dark:text-green-400",
-  mild: "bg-yellow-100 text-yellow-700 dark:bg-yellow-950/40 dark:text-yellow-400",
-  moderate: "bg-orange-100 text-orange-700 dark:bg-orange-950/40 dark:text-orange-400",
+  minimal: "bg-emerald-100 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400",
+  mild: "bg-amber-100 text-amber-700 dark:bg-amber-950/40 dark:text-amber-400",
+  moderate: "bg-amber-200 text-amber-800 dark:bg-amber-900/50 dark:text-amber-300",
   moderately_severe: "bg-red-100 text-red-700 dark:bg-red-950/40 dark:text-red-400",
   severe: "bg-red-200 text-red-800 dark:bg-red-950/60 dark:text-red-300",
 }
@@ -114,7 +114,7 @@ export function AssessmentsPage() {
             <div className="mt-4 flex gap-2">
               <button
                 onClick={() => startAssessment(type)}
-                className="flex items-center gap-1 rounded-xl bg-indigo-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-indigo-700"
+                className="flex items-center gap-1 rounded-xl bg-emerald-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-emerald-700"
               >
                 <ClipboardCheck className="size-3.5" />
                 Take Now

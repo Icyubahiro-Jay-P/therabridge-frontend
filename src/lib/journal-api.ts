@@ -1,7 +1,9 @@
-const API_BASE = import.meta.env.VITE_API_URL || "/api"
+const API_BASE = import.meta.env.VITE_API_URL || ""
 
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
-  const res = await fetch(`${API_BASE}${path}`, {
+  // Backend routes are mounted under /api (e.g. /api/journal), matching the
+  // convention used by the shared axios client in @/lib/api.
+  const res = await fetch(`${API_BASE}/api${path}`, {
     credentials: "include",
     ...options,
     headers: {

@@ -32,7 +32,7 @@ export class ErrorBoundary extends React.Component<
   }
 
   componentDidCatch(error: Error) {
-    if (import.meta.env.DEV) {
+    if (IS_DEV) {
       console.error("Error caught by Error Boundary:", error)
     }
   }

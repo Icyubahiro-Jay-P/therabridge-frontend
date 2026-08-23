@@ -223,19 +223,22 @@ export function useJournalState() {
 
   const removeCommentFromEntry = useCallback(
     async (entryId: string, commentId: string) => {
-      await journalApi.deleteComment(entryId, commentId)
-      setEntries((prev) =>
-        prev.map((e) =>
-          e._id === entryId ? { ...e, comments: e.comments.filter((c) => c._id !== commentId) } : e,
-        ),
-      )
-      if (selectedEntry?._id === entryId) {
-        setSelectedEntry((prev) =>
-          prev ? { ...prev, comments: prev.comments.filter((c) => c._id !== commentId) } : prev,
-        )
-      }
+      await runOptimistic({
+        lockKey: `journal-comment-remove:${commentId}`,
+        snapshot: () => ({
+          entryComments: entries.find((e) => e._id === entryId)?.comments ?? [],
+        }),
+        apply: () =>
+          patchEntryComments(setEntries, setSelectedEntry, entryId, (comments) =>
+            comments.filter((c) => c._id !== commentId)
+          ),
+        commit: () => journalApi.deleteComment(entryId, commentId),
+        rollback: ({ entryComments }) =>
+          patchEntryComments(setEntries, setSelectedEntry, entryId, () => entryComments),
+        onError: (err) => setError(getErrorMessage(err)),
+      })
     },
-    [selectedEntry],
+    [entries, setEntries, setSelectedEntry],
   )
 
   return {

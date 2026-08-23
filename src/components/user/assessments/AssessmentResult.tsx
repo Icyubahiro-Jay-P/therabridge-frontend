@@ -10,9 +10,9 @@ const SEVERITY_DESCRIPTIONS: Record<string, string> = {
 }
 
 const SEVERITY_BAR_COLORS: Record<string, string> = {
-  minimal: "bg-green-500",
-  mild: "bg-yellow-500",
-  moderate: "bg-orange-500",
+  minimal: "bg-emerald-500",
+  mild: "bg-amber-400",
+  moderate: "bg-amber-600",
   moderately_severe: "bg-red-500",
   severe: "bg-red-700",
 }
@@ -39,9 +39,9 @@ export function AssessmentResult({ result, onBack }: AssessmentResultProps) {
 
         {/* Score Display */}
         <div className="mt-6 text-center">
-          <div className="inline-flex size-28 items-center justify-center rounded-full bg-indigo-100 dark:bg-indigo-950/50">
-            <span className="text-3xl font-bold text-indigo-600 dark:text-indigo-400">{result.score}</span>
-            <span className="text-sm text-indigo-400">/{result.maxScore}</span>
+          <div className="inline-flex size-28 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-950/50">
+            <span className="text-3xl font-bold text-emerald-600 dark:text-emerald-400">{result.score}</span>
+            <span className="text-sm text-emerald-400">/{result.maxScore}</span>
           </div>
         </div>
 

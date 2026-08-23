@@ -1,4 +1,17 @@
 import axios, { type InternalAxiosRequestConfig } from "axios"
+import {
+  AppClientError,
+  AuthError,
+  ExpectedOutcomeError,
+  LimitError,
+  NetworkError,
+  ValidationError,
+} from "@/lib/errors"
+
+// Re-exported so existing `import { AuthError } from "@/lib/api"` call sites
+// keep working; the canonical home is @/lib/errors.
+export { AuthError, NetworkError, ValidationError, ExpectedOutcomeError, LimitError }
+export type { ErrorSeverity } from "@/lib/errors"
 
 const API_BASE_URL =
   import.meta.env.VITE_API_URL ||

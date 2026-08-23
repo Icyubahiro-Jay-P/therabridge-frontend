@@ -29,14 +29,14 @@ export interface ActivityStats {
 }
 
 export const CATEGORIES = [
-  { value: "social", label: "Social", color: "blue" },
-  { value: "physical", label: "Physical", color: "green" },
-  { value: "creative", label: "Creative", color: "purple" },
-  { value: "productive", label: "Productive", color: "orange" },
-  { value: "relaxation", label: "Relaxation", color: "teal" },
-  { value: "outdoor", label: "Outdoor", color: "emerald" },
-  { value: "learning", label: "Learning", color: "indigo" },
-  { value: "self_care", label: "Self-Care", color: "pink" },
+  { value: "social", label: "Social", color: "teal" },
+  { value: "physical", label: "Physical", color: "emerald" },
+  { value: "creative", label: "Creative", color: "amber" },
+  { value: "productive", label: "Productive", color: "gray" },
+  { value: "relaxation", label: "Relaxation", color: "emerald" },
+  { value: "outdoor", label: "Outdoor", color: "teal" },
+  { value: "learning", label: "Learning", color: "teal" },
+  { value: "self_care", label: "Self-Care", color: "amber" },
   { value: "other", label: "Other", color: "gray" },
 ] as const
 

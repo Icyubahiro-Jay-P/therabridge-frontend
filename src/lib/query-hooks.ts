@@ -383,3 +383,38 @@ export function useDeleteNotification<T extends NotificationLike = NotificationL
     },
   })
 }
+
+/**
+ * Deletes every notification. The list empties instantly and is restored if
+ * the request fails.
+ */
+export function useDeleteAllNotifications<T extends NotificationLike = NotificationLike>() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: async () => {
+      const { data } = await api.delete(`/api/notifications`)
+      return data
+    },
+    onMutate: async () => {
+      await queryClient.cancelQueries({ queryKey: ["notifications"] })
+      const previous = snapshotQueries(queryClient, ["notifications"])
+      patchAllNotificationPages<T>(
+        queryClient,
+        (page) => ({
+          ...page,
+          data: [],
+          total: 0,
+          totalPages: 0,
+        })
+      )
+      return { previous }
+    },
+    onError: (_error, _variables, context) => {
+      restoreQueries(queryClient, context?.previous)
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["notifications"] })
+    },
+  })
+}

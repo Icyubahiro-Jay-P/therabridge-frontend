@@ -15,10 +15,10 @@ const CATEGORY_TABS = [
 ] as const
 
 const CATEGORY_COLORS: Record<string, string> = {
-  anxiety: "bg-blue-100 text-blue-700 dark:bg-blue-950/40 dark:text-blue-400",
-  mood: "bg-violet-100 text-violet-700 dark:bg-violet-950/40 dark:text-violet-400",
-  stress: "bg-orange-100 text-orange-700 dark:bg-orange-950/40 dark:text-orange-400",
-  sleep: "bg-indigo-100 text-indigo-700 dark:bg-indigo-950/40 dark:text-indigo-400",
+  anxiety: "bg-teal-100 text-teal-700 dark:bg-teal-950/40 dark:text-teal-400",
+  mood: "bg-emerald-100 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400",
+  stress: "bg-amber-100 text-amber-700 dark:bg-amber-950/40 dark:text-amber-400",
+  sleep: "bg-teal-100 text-teal-700 dark:bg-teal-950/40 dark:text-teal-400",
   resilience: "bg-emerald-100 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400",
 }
 
@@ -47,7 +47,7 @@ function ProgramCard({
               {program.category}
             </span>
             {isCompleted && (
-              <span className="flex items-center gap-1 rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-700 dark:bg-green-950/40 dark:text-green-400">
+              <span className="flex items-center gap-1 rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-medium text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400">
                 <CheckCircle2 className="size-3" />
                 Done
               </span>
@@ -137,7 +137,7 @@ export function ProgramsPage() {
         </div>
       )}
       {p.success && (
-        <div className="rounded-xl bg-green-50 px-4 py-3 text-sm text-green-700 dark:bg-green-950/40 dark:text-green-400">
+        <div className="rounded-xl bg-emerald-50 px-4 py-3 text-sm text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400">
           {p.success}
         </div>
       )}

@@ -169,14 +169,12 @@ export function AssessmentsPage() {
         </div>
       )}
 
-      {a.assessments.length === 0 && !a.loading && (
-        <div className="flex flex-col items-center justify-center py-16 text-center">
-          <ClipboardCheck className="mb-4 size-12 text-gray-300 dark:text-gray-600" />
-          <p className="text-gray-500 dark:text-gray-400">No assessments taken yet.</p>
-          <p className="mt-1 text-sm text-gray-400 dark:text-gray-500">
-            Take a screening to understand your current mental health.
-          </p>
-        </div>
+      {!a.error && !a.loading && a.assessments.length === 0 && (
+        <EmptyState
+          icon={ClipboardCheck}
+          title="No assessments taken yet"
+          description="These validated screenings (like PHQ-9 and GAD-7) measure symptoms of depression and anxiety so you can track how you're doing over time. Pick a screening above to take your first one."
+        />
       )}
     </div>
   )

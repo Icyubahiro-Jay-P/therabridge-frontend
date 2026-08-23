@@ -45,12 +45,12 @@ const PRIORITY_STYLES: Record<string, { badge: string; ring: string }> = {
     ring: "ring-amber-500/20",
   },
   medium: {
-    badge: "bg-orange-100 text-orange-800 dark:bg-orange-900/40 dark:text-orange-300",
-    ring: "ring-orange-500/20",
+    badge: "bg-amber-600/15 text-amber-700 dark:bg-amber-600/25 dark:text-amber-500",
+    ring: "ring-amber-600/25",
   },
   low: {
-    badge: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/40 dark:text-yellow-300",
-    ring: "ring-yellow-500/20",
+    badge: "bg-amber-300/30 text-amber-600 dark:bg-amber-400/15 dark:text-amber-400",
+    ring: "ring-amber-400/20",
   },
 }
 
@@ -78,8 +78,8 @@ function RecommendationCard({ rec }: { rec: Recommendation }) {
     <div
       className={cn(
         "group relative overflow-hidden rounded-2xl border p-5 transition-all duration-300",
-        "border-amber-200/60 bg-linear-to-br from-amber-50 via-orange-50/30 to-yellow-50/50",
-        "dark:border-amber-800/30 dark:from-amber-950/30 dark:via-orange-950/20 dark:to-yellow-950/20",
+        "border-amber-200/60 bg-linear-to-br from-amber-50 via-amber-50/30 to-amber-100/50",
+        "dark:border-amber-800/30 dark:from-amber-950/30 dark:via-amber-950/20 dark:to-amber-900/20",
         "hover:shadow-lg hover:shadow-amber-500/5",
         styles.ring,
       )}

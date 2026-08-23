@@ -2,7 +2,9 @@ import axios, { type InternalAxiosRequestConfig } from "axios"
 import {
   AppClientError,
   AuthError,
+  EXPECTED_OUTCOME_CODES,
   ExpectedOutcomeError,
+  LIMIT_CODES,
   LimitError,
   NetworkError,
   ValidationError,
@@ -81,27 +83,6 @@ function getRefreshPromise(): Promise<RefreshResult> {
   return refreshPromise
 }
 
-export class AuthError extends Error {
-  constructor(message: string) {
-    super(message)
-    this.name = "AuthError"
-  }
-}
-
-export class NetworkError extends Error {
-  constructor(message: string) {
-    super(message)
-    this.name = "NetworkError"
-  }
-}
-
-export class ValidationError extends Error {
-  constructor(message: string) {
-    super(message)
-    this.name = "ValidationError"
-  }
-}
-
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
@@ -162,23 +143,63 @@ api.interceptors.response.use(
       )
     }
 
+    // Canonical server payload: { error: { message, code, category, requestId } }
+    // with legacy fallbacks for older response shapes.
     const errData = error.response?.data
     const serverMessage =
-      (typeof errData?.message === "string" ? errData.message : null) ||
       (typeof errData?.error?.message === "string"
         ? errData.error.message
         : null) ||
+      (typeof errData?.message === "string" ? errData.message : null) ||
       (typeof errData?.error === "string" ? errData.error : null) ||
       error.message ||
       "Something went wrong"
+    const serverCode =
+      typeof errData?.error?.code === "string" ? errData.error.code : undefined
+    const serverCategory =
+      errData?.error?.category === "SERVER" || errData?.error?.category === "USER"
+        ? (errData.error.category as "SERVER" | "USER")
+        : status >= 500
+          ? ("SERVER" as const)
+          : ("USER" as const)
+    const requestId =
+      typeof errData?.error?.requestId === "string" ? errData.error.requestId : undefined
 
     if (status === 401) {
-      return Promise.reject(new AuthError(serverMessage))
-    }
-    if (status === 400 || status === 409) {
-      return Promise.reject(new ValidationError(serverMessage))
+      return Promise.reject(
+        new AuthError(serverMessage, { code: serverCode, status, category: serverCategory, requestId })
+      )
     }
 
-    return Promise.reject(new Error(serverMessage))
+    // Expected outcomes and reached limits are not failures - present them
+    // gently instead of as red errors.
+    if (serverCode && EXPECTED_OUTCOME_CODES.has(serverCode)) {
+      return Promise.reject(
+        new ExpectedOutcomeError(serverMessage, { code: serverCode, status, category: "USER", requestId })
+      )
+    }
+    if (
+      (serverCode && LIMIT_CODES.has(serverCode)) ||
+      (status === 429 && !serverCode)
+    ) {
+      return Promise.reject(
+        new LimitError(serverMessage, { code: serverCode ?? "RATE_LIMITED", status, category: "USER", requestId })
+      )
+    }
+
+    if (status >= 500) {
+      return Promise.reject(
+        new NetworkError(serverMessage, { code: serverCode ?? "SERVER_ERROR", status, category: "SERVER", severity: "error", requestId })
+      )
+    }
+    if (status === 400 || status === 409 || status === 403 || status === 404) {
+      return Promise.reject(
+        new ValidationError(serverMessage, { code: serverCode, status, category: serverCategory, requestId })
+      )
+    }
+
+    return Promise.reject(
+      new AppClientError({ message: serverMessage, code: serverCode, status, category: serverCategory, requestId })
+    )
   }
 )

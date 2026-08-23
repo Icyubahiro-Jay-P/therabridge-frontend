@@ -55,6 +55,11 @@ export function PetPage() {
           {p.error}
         </div>
       )}
+      {p.info && (
+        <div className="rounded-xl border border-sky-200 bg-sky-50 px-4 py-3 text-sm text-sky-700 dark:border-sky-900/50 dark:bg-sky-950/40 dark:text-sky-400">
+          {p.info}
+        </div>
+      )}
       {p.success && (
         <div className="rounded-xl bg-green-50 px-4 py-3 text-sm text-green-700 dark:bg-green-950/40 dark:text-green-400">
           {p.success}

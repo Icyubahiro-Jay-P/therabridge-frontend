@@ -65,25 +65,55 @@ export function useCopingCardState() {
   }, [])
 
   const toggleFavorite = useCallback(async (id: string) => {
-    try {
-      const updated = await copingCardApi.toggleFavorite(id)
-      setCards((prev) => prev.map((c) => (c._id === id ? updated : c)))
-      lastFetchedCategory.current = ""
-    } catch {
-      setError("Failed to update favorite")
-    }
-  }, [])
+    await runOptimistic({
+      lockKey: `coping-card:favorite:${id}`,
+      snapshot: () => cards.find((c) => c._id === id)?.isFavorite ?? false,
+      apply: () =>
+        setCards((prev) =>
+          prev.map((c) => (c._id === id ? { ...c, isFavorite: !c.isFavorite } : c))
+        ),
+      commit: async () => {
+        const updated = await copingCardApi.toggleFavorite(id)
+        lastFetchedCategory.current = ""
+        return updated
+      },
+      reconcile: (data) => {
+        const updated = data as CopingCard
+        setCards((prev) => prev.map((c) => (c._id === id ? updated : c)))
+      },
+      rollback: (wasFavorite) =>
+        setCards((prev) =>
+          prev.map((c) => (c._id === id ? { ...c, isFavorite: wasFavorite } : c))
+        ),
+      onError: (err) => setError(getErrorMessage(err)),
+    })
+  }, [cards])
 
   const deleteCard = useCallback(async (id: string) => {
-    try {
-      await copingCardApi.delete(id)
-      setCards((prev) => prev.filter((c) => c._id !== id))
-      setCurrentIndex((prev) => Math.max(0, prev - 1))
-      lastFetchedCategory.current = ""
-    } catch {
-      setError("Failed to delete card")
-    }
-  }, [])
+    await runOptimistic({
+      lockKey: `coping-card:delete:${id}`,
+      snapshot: () => {
+        const index = cards.findIndex((c) => c._id === id)
+        return { index, card: index >= 0 ? cards[index] : null }
+      },
+      apply: () => {
+        setCards((prev) => prev.filter((c) => c._id !== id))
+        setCurrentIndex((prev) => Math.max(0, prev - 1))
+        lastFetchedCategory.current = ""
+      },
+      commit: () => copingCardApi.delete(id),
+      rollback: ({ index, card }) => {
+        if (!card) return
+        setCards((prev) => {
+          if (prev.some((c) => c._id === id)) return prev
+          const next = [...prev]
+          next.splice(Math.min(index, next.length), 0, card)
+          return next
+        })
+      },
+      onError: (err) => setError(getErrorMessage(err)),
+    })
+  }, [cards])
 
   const shuffleCards = useCallback(() => {
     setCards((prev) => {

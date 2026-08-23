@@ -160,7 +160,7 @@ export function VideoCallOverlay({
       {callState === "ringing" && incomingCall && (
         <div className="absolute inset-x-0 top-0 flex justify-center pt-6">
           <div className="flex items-center gap-4 rounded-2xl bg-white/10 px-6 py-4 backdrop-blur-md">
-            <div className="h-10 w-10 animate-pulse rounded-full bg-green-500/80" />
+            <div className="h-10 w-10 animate-pulse rounded-full bg-emerald-500/80" />
             <div>
               <p className="text-sm font-medium text-white">Incoming call</p>
               <p className="text-lg font-semibold text-white">
@@ -170,7 +170,7 @@ export function VideoCallOverlay({
             <Button
               onClick={acceptCall}
               size="icon"
-              className="h-12 w-12 rounded-full bg-green-500 hover:bg-green-600"
+              className="h-12 w-12 rounded-full bg-emerald-600 hover:bg-emerald-700"
             >
               <Phone className="h-5 w-5" />
             </Button>

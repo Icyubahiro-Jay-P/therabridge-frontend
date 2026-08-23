@@ -16,7 +16,7 @@ export function AssessmentTrendChart({ trend, onBack }: AssessmentTrendChartProp
 
       <div className="rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-900">
         <h2 className="text-lg font-bold text-gray-900 dark:text-white">
-          {trend?.typeName || "Assessment"} — Score Trend
+          {trend?.typeName || "Assessment"}, Score Trend
         </h2>
         <p className="text-sm text-gray-500 dark:text-gray-400">Last 6 months</p>
 

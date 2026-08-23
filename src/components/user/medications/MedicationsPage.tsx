@@ -306,7 +306,28 @@ export function MedicationsPage() {
               ))}
             </select>
           </div>
-          {m.logs.length === 0 ? (
+          {!m.loading && m.medications.length === 0 ? (
+            <EmptyState
+              icon={Calendar}
+              title="No dose logs yet"
+              description="Every dose you take or skip is recorded here so you and your care team can review your adherence over time."
+              action={
+                <button
+                  onClick={() => m.openForm()}
+                  className="flex items-center gap-2 rounded-xl bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700"
+                >
+                  <Plus className="size-4" />
+                  Add a medication to begin
+                </button>
+              }
+            />
+          ) : m.logs.length === 0 && !m.logsLoading ? (
+            <EmptyState
+              icon={Calendar}
+              title="No dose logs yet"
+              description="Use “Take” or “Skip” on today's medications and your dose history will build up here."
+            />
+          ) : (
             <div className="flex flex-col items-center justify-center py-12 text-center">
               <Calendar className="mb-4 size-12 text-gray-300 dark:text-gray-600" />
               <p className="text-gray-500 dark:text-gray-400">No dose logs yet.</p>
@@ -406,6 +427,14 @@ export function MedicationsPage() {
             <div className="rounded-xl border border-gray-200 bg-white p-4 text-center dark:border-gray-700 dark:bg-gray-900">
               <p className="text-sm text-gray-500 dark:text-gray-400">No side effects logged yet.</p>
             </div>
+          )}
+
+          {!m.stats && (
+            <EmptyState
+              icon={TrendingUp}
+              title="No adherence data yet"
+              description="Once you start logging doses, your adherence rate, streaks and side-effect patterns will appear here."
+            />
           )}
         </div>
       )}

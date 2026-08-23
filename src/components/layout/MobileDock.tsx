@@ -25,7 +25,7 @@ export function MobileDock({
   const homePath = role === "user" ? "/" : "/dashboard"
 
   return (
-    <div className="fixed inset-x-0 bottom-0 z-50 border-t border-slate-200/70 bg-white/95 px-1 py-1 shadow-[0_-1px_20px_rgba(15,23,42,0.08)] backdrop-blur md:hidden dark:border-slate-800/80 dark:bg-slate-950/90">
+    <div className="fixed inset-x-0 bottom-0 z-50 border-t border-gray-200/70 bg-white/95 px-1 py-1 shadow-[0_-1px_20px_rgba(15,23,42,0.08)] backdrop-blur md:hidden dark:border-gray-800/80 dark:bg-gray-950/90">
       <div className="grid grid-cols-5 gap-1">
         <NavLink to={homePath} end className={dockLinkClass}>
           <Home className="size-3.5" />

@@ -19,8 +19,8 @@ function PhoneMockup() {
     { color: "bg-emerald-500", label: "Great" },
     { color: "bg-teal-400", label: "Good" },
     { color: "bg-amber-400", label: "Okay" },
-    { color: "bg-orange-500", label: "Low" },
-    { color: "bg-rose-500", label: "Heavy" },
+    { color: "bg-amber-500", label: "Low" },
+    { color: "bg-red-500", label: "Heavy" },
   ]
 
   return (
@@ -70,7 +70,7 @@ function PhoneMockup() {
             </div>
             <span className="relative flex size-9 items-center justify-center rounded-full bg-white/70 shadow-sm dark:bg-gray-800">
               <Bell className="size-4 text-gray-500 dark:text-gray-400" />
-              <span className="absolute top-2 right-2 size-1.5 rounded-full bg-rose-500" />
+              <span className="absolute top-2 right-2 size-1.5 rounded-full bg-red-500" />
             </span>
           </div>
 

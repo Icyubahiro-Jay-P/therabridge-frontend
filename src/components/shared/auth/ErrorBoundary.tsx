@@ -1,6 +1,7 @@
 import React from "react"
 import type { ReactNode } from "react"
 import { AlertCircle } from "lucide-react"
+import { describeError, IS_DEV } from "@/lib/errors"
 
 interface ErrorBoundaryProps {
   children: ReactNode

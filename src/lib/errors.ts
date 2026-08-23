@@ -103,7 +103,7 @@ export class ExpectedOutcomeError extends AppClientError {
 }
 
 /** Server codes that describe normal outcomes rather than failures. */
-const EXPECTED_OUTCOME_CODES = new Set([
+export const EXPECTED_OUTCOME_CODES = new Set([
   "ALREADY_VERIFIED",
   "ALREADY_ENABLED",
   "ALREADY_MEMBER",
@@ -111,7 +111,7 @@ const EXPECTED_OUTCOME_CODES = new Set([
 ])
 
 /** Server codes for constraints the user simply reached. */
-const LIMIT_CODES = new Set([
+export const LIMIT_CODES = new Set([
   "RATE_LIMITED",
   "EDIT_LIMIT_REACHED",
   "EDIT_WINDOW_EXPIRED",

@@ -126,7 +126,7 @@ export function NotificationsPage() {
     <div className="mx-auto max-w-2xl space-y-6 p-6">
       <NotificationsHeader
         unreadCount={unreadCount}
-        totalCount={displayList.length}
+        totalCount={notifications.length}
         onMarkAllRead={markAllAsRead}
         onDeleteAll={() => setConfirmDeleteAll(true)}
       />

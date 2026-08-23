@@ -39,10 +39,10 @@ export function Avatar({
   const colors = [
     "bg-emerald-500",
     "bg-teal-500",
-    "bg-sky-500",
-    "bg-violet-500",
-    "bg-pink-500",
-    "bg-orange-500",
+    "bg-amber-500",
+    "bg-emerald-600",
+    "bg-teal-600",
+    "bg-gray-500",
   ]
   const color = colors[user.username.charCodeAt(0) % colors.length]
 

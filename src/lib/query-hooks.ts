@@ -332,8 +332,12 @@ export function useMarkAllNotificationsRead<T extends NotificationLike = Notific
     onMutate: async () => {
       await queryClient.cancelQueries({ queryKey: ["notifications"] })
       const previous = snapshotQueries(queryClient, ["notifications"])
-      patchAllNotificationPages<T>(queryClient, (items) =>
-        items.map((n) => ({ ...n, read: true }))
+      patchAllNotificationPages<T>(
+        queryClient,
+        (page) => ({
+          ...page,
+          data: page.data.map((n) => ({ ...n, read: true })),
+        })
       )
       return { previous }
     },

@@ -6,7 +6,7 @@ const MOOD_COLORS: Record<(typeof MOOD_ORDER)[number], string> = {
   great: "bg-emerald-500",
   good: "bg-teal-400",
   okay: "bg-amber-400",
-  bad: "bg-orange-500",
+  bad: "bg-amber-600",
   terrible: "bg-red-500",
 }
 

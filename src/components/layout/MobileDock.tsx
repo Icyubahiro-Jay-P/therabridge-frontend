@@ -47,7 +47,7 @@ export function MobileDock({
           <div className="relative">
             <Bell className="size-3.5" />
             {notificationCount > 0 && (
-              <span className="absolute -top-1 -right-1 flex h-3.5 min-w-3.5 items-center justify-center rounded-full bg-rose-500 px-0.5 text-[8px] font-semibold text-white">
+              <span className="absolute -top-1 -right-1 flex h-3.5 min-w-3.5 items-center justify-center rounded-full bg-red-500 px-0.5 text-[8px] font-semibold text-white">
                 {notificationCount > 9 ? "9+" : notificationCount}
               </span>
             )}

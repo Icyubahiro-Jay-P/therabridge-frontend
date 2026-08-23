@@ -76,7 +76,7 @@ function ActivityViewer({
 
         <div className="mt-6">
           {isCompleted ? (
-            <div className="flex items-center gap-2 rounded-xl bg-green-50 px-4 py-3 text-sm font-medium text-green-700 dark:bg-green-950/40 dark:text-green-400">
+            <div className="flex items-center gap-2 rounded-xl bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400">
               <CheckCircle2 className="size-4" />
               Activity completed
             </div>
@@ -118,7 +118,7 @@ function WeekSection({
     <div
       className={`rounded-2xl border transition-colors ${
         isWeekComplete
-          ? "border-green-200 bg-green-50/50 dark:border-green-900/50 dark:bg-green-950/20"
+          ? "border-emerald-200 bg-emerald-50/50 dark:border-emerald-900/50 dark:bg-emerald-950/20"
           : isCurrentWeek
             ? "border-emerald-300 bg-emerald-50/50 dark:border-emerald-700 dark:bg-emerald-950/20"
             : "border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-900"
@@ -131,7 +131,7 @@ function WeekSection({
         <div
           className={`flex size-8 shrink-0 items-center justify-center rounded-full text-sm font-bold ${
             isWeekComplete
-              ? "bg-green-500 text-white"
+              ? "bg-emerald-500 text-white"
               : isCurrentWeek
                 ? "bg-emerald-500 text-white"
                 : "bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-400"
@@ -178,17 +178,17 @@ function WeekSection({
                 key={activity._id}
                 className={`flex items-center gap-3 rounded-xl p-3 transition-colors ${
                   done
-                    ? "bg-green-50 dark:bg-green-950/30"
+                    ? "bg-emerald-50 dark:bg-emerald-950/30"
                     : "bg-gray-50 hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-750"
                 }`}
               >
                 {done ? (
-                  <CheckCircle2 className="size-4 shrink-0 text-green-500" />
+                  <CheckCircle2 className="size-4 shrink-0 text-emerald-500" />
                 ) : (
                   <Circle className="size-4 shrink-0 text-gray-300 dark:text-gray-600" />
                 )}
                 <div className="flex-1 min-w-0">
-                  <p className={`text-sm font-medium ${done ? "text-green-700 dark:text-green-400" : "text-gray-900 dark:text-white"}`}>
+                  <p className={`text-sm font-medium ${done ? "text-emerald-700 dark:text-emerald-400" : "text-gray-900 dark:text-white"}`}>
                     {activity.title}
                   </p>
                   <div className="flex items-center gap-2 mt-0.5">
@@ -323,7 +323,7 @@ export function ProgramDetail() {
       </button>
 
       {p.success && (
-        <div className="rounded-xl bg-green-50 px-4 py-3 text-sm text-green-700 dark:bg-green-950/40 dark:text-green-400">
+        <div className="rounded-xl bg-emerald-50 px-4 py-3 text-sm text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400">
           {p.success}
         </div>
       )}
@@ -351,7 +351,7 @@ export function ProgramDetail() {
             <div className="flex items-center justify-between text-sm">
               <span className="font-medium text-gray-900 dark:text-white">
                 {isProgramComplete ? (
-                  <span className="flex items-center gap-2 text-green-600 dark:text-green-400">
+                  <span className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400">
                     <Trophy className="size-4" />
                     Program Complete!
                   </span>
@@ -367,7 +367,7 @@ export function ProgramDetail() {
             </div>
             <div className="mt-2 h-2 w-full overflow-hidden rounded-full bg-gray-100 dark:bg-gray-800">
               <div
-                className={`h-full rounded-full transition-all ${isProgramComplete ? "bg-green-500" : "bg-emerald-500"}`}
+                className={`h-full rounded-full transition-all ${isProgramComplete ? "bg-emerald-500" : "bg-emerald-500"}`}
                 style={{ width: `${percentage}%` }}
               />
             </div>
@@ -384,7 +384,7 @@ export function ProgramDetail() {
         )}
 
         {isProgramComplete && (
-          <div className="mt-5 rounded-xl bg-linear-to-r from-emerald-50 to-green-50 p-4 text-center dark:from-emerald-950/30 dark:to-green-950/30">
+          <div className="mt-5 rounded-xl bg-linear-to-r from-emerald-50 to-emerald-50 p-4 text-center dark:from-emerald-950/30 dark:to-emerald-950/30">
             <Trophy className="mx-auto mb-2 size-8 text-emerald-500" />
             <p className="font-semibold text-emerald-700 dark:text-emerald-400">
               Congratulations!

@@ -50,7 +50,7 @@ export function AssessmentQuestionnaire({ type, onComplete, onCancel, saving }: 
       {/* Progress */}
       <div className="h-1.5 overflow-hidden rounded-full bg-gray-100 dark:bg-gray-800">
         <div
-          className="h-full rounded-full bg-indigo-600 transition-all duration-300"
+          className="h-full rounded-full bg-emerald-600 transition-all duration-300"
           style={{ width: `${progress}%` }}
         />
       </div>
@@ -78,17 +78,17 @@ export function AssessmentQuestionnaire({ type, onComplete, onCancel, saving }: 
             onClick={() => selectResponse(option.value)}
             className={`w-full rounded-xl border p-4 text-left transition-colors ${
               currentResponse === option.value
-                ? "border-indigo-400 bg-indigo-50 dark:border-indigo-500 dark:bg-indigo-950/40"
+                ? "border-emerald-400 bg-emerald-50 dark:border-emerald-500 dark:bg-emerald-950/40"
                 : "border-gray-200 bg-white hover:border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:hover:border-gray-600"
             }`}
           >
             <div className="flex items-center justify-between">
-              <span className={`text-sm ${currentResponse === option.value ? "font-medium text-indigo-700 dark:text-indigo-300" : "text-gray-700 dark:text-gray-300"}`}>
+              <span className={`text-sm ${currentResponse === option.value ? "font-medium text-emerald-700 dark:text-emerald-300" : "text-gray-700 dark:text-gray-300"}`}>
                 {option.label}
               </span>
               <div className={`size-5 rounded-full border-2 ${
                 currentResponse === option.value
-                  ? "border-indigo-600 bg-indigo-600"
+                  ? "border-emerald-600 bg-emerald-600"
                   : "border-gray-300 dark:border-gray-600"
               }`}>
                 {currentResponse === option.value && (
@@ -115,7 +115,7 @@ export function AssessmentQuestionnaire({ type, onComplete, onCancel, saving }: 
           <button
             onClick={handleSubmit}
             disabled={!canProceed || saving}
-            className="rounded-xl bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 disabled:opacity-50"
+            className="rounded-xl bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700 disabled:opacity-50"
           >
             {saving ? "Scoring..." : "Complete Assessment"}
           </button>
@@ -123,7 +123,7 @@ export function AssessmentQuestionnaire({ type, onComplete, onCancel, saving }: 
           <button
             onClick={() => setCurrentQ(currentQ + 1)}
             disabled={!canProceed}
-            className="rounded-xl bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 disabled:opacity-50"
+            className="rounded-xl bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700 disabled:opacity-50"
           >
             Next
           </button>

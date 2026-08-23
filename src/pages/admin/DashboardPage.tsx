@@ -135,7 +135,7 @@ export function AdminDashboardPage() {
       value: totals.users,
       icon: Users,
       href: "/users",
-      color: "bg-sky-500",
+      color: "bg-teal-500",
       subtitle: `+${trends.signupsWeek} new this week`,
     },
     {
@@ -151,7 +151,7 @@ export function AdminDashboardPage() {
       value: totals.communities,
       icon: Hash,
       href: "/communities",
-      color: "bg-violet-500",
+      color: "bg-gray-500",
       subtitle: `+${trends.communitiesWeek} created this week`,
     },
     {
@@ -167,7 +167,7 @@ export function AdminDashboardPage() {
 
   const weekCards = [
     { label: "New signups (7d)", value: trends.signupsWeek, icon: UserPlus, color: "bg-teal-500", href: "/users" },
-    { label: "Direct messages (7d)", value: trends.messagesWeek, icon: MessageCircle, color: "bg-sky-500", href: "/users" },
+    { label: "Direct messages (7d)", value: trends.messagesWeek, icon: MessageCircle, color: "bg-teal-500", href: "/users" },
     { label: "Mood check-ins (7d)", value: trends.moodsWeek, icon: Heart, color: "bg-emerald-500", href: "/users" },
     { label: "Exercises completed (7d)", value: trends.exercisesWeek, icon: Activity, color: "bg-amber-500", href: "/users" },
   ]

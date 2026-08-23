@@ -121,7 +121,7 @@ export function ThoughtRecordEditor({ open, record, saving, error, onSave, onClo
             <div
               key={i}
               className={`h-1 flex-1 rounded-full ${
-                i <= step ? "bg-violet-600" : "bg-gray-200 dark:bg-gray-700"
+                i <= step ? "bg-teal-600" : "bg-gray-200 dark:bg-gray-700"
               }`}
             />
           ))}
@@ -145,7 +145,7 @@ export function ThoughtRecordEditor({ open, record, saving, error, onSave, onClo
                 onChange={(e) => setSituation(e.target.value)}
                 maxLength={LIMITS.thoughtRecord.situation}
                 rows={4}
-                className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 placeholder:text-gray-400 focus:border-violet-400 focus:outline-none focus:ring-1 focus:ring-violet-400 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+                className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 placeholder:text-gray-400 focus:border-teal-400 focus:outline-none focus:ring-1 focus:ring-teal-400 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
                 placeholder="e.g., My friend didn't reply to my message for 3 hours..."
               />
                <CharCounter count={situation.length} limit={LIMITS.thoughtRecord.situation} />
@@ -162,7 +162,7 @@ export function ThoughtRecordEditor({ open, record, saving, error, onSave, onClo
                 onChange={(e) => setAutomaticThought(e.target.value)}
                 maxLength={LIMITS.thoughtRecord.automaticThought}
                 rows={4}
-                className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 placeholder:text-gray-400 focus:border-violet-400 focus:outline-none focus:ring-1 focus:ring-violet-400 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+                className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 placeholder:text-gray-400 focus:border-teal-400 focus:outline-none focus:ring-1 focus:ring-teal-400 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
                 placeholder="e.g., They must be angry at me..."
               />
                <CharCounter count={automaticThought.length} limit={LIMITS.thoughtRecord.automaticThought} />
@@ -179,7 +179,7 @@ export function ThoughtRecordEditor({ open, record, saving, error, onSave, onClo
                   value={emotions}
                   onChange={(e) => setEmotions(e.target.value)}
                   maxLength={LIMITS.thoughtRecord.emotions}
-                  className="w-full rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 focus:border-violet-400 focus:outline-none focus:ring-1 focus:ring-violet-400 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+                  className="w-full rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 focus:border-teal-400 focus:outline-none focus:ring-1 focus:ring-teal-400 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
                   placeholder="e.g., Anxiety, rejection, sadness"
                 />
                 <CharCounter count={emotions.length} limit={LIMITS.thoughtRecord.emotions} />
@@ -194,7 +194,7 @@ export function ThoughtRecordEditor({ open, record, saving, error, onSave, onClo
                   max={10}
                   value={emotionIntensity}
                   onChange={(e) => setEmotionIntensity(Number(e.target.value))}
-                  className="w-full accent-violet-600"
+                  className="w-full accent-teal-600"
                 />
                 <div className="flex justify-between text-xs text-gray-400">
                   <span>Mild</span>
@@ -216,7 +216,7 @@ export function ThoughtRecordEditor({ open, record, saving, error, onSave, onClo
                     onClick={() => setDistortionType(d.value)}
                     className={`w-full rounded-xl border p-3 text-left transition-colors ${
                       distortionType === d.value
-                        ? "border-violet-400 bg-violet-50 dark:border-violet-500 dark:bg-violet-950/40"
+                        ? "border-teal-400 bg-teal-50 dark:border-teal-500 dark:bg-teal-950/40"
                         : "border-gray-200 bg-white hover:border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:hover:border-gray-600"
                     }`}
                   >
@@ -239,7 +239,7 @@ export function ThoughtRecordEditor({ open, record, saving, error, onSave, onClo
                   onChange={(e) => setEvidenceFor(e.target.value)}
                   maxLength={LIMITS.thoughtRecord.evidenceFor}
                   rows={3}
-                  className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 placeholder:text-gray-400 focus:border-violet-400 focus:outline-none focus:ring-1 focus:ring-violet-400 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+                  className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 placeholder:text-gray-400 focus:border-teal-400 focus:outline-none focus:ring-1 focus:ring-teal-400 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
                   placeholder="What facts support this thought?"
                 />
                 <CharCounter count={evidenceFor.length} limit={LIMITS.thoughtRecord.evidenceFor} />
@@ -253,7 +253,7 @@ export function ThoughtRecordEditor({ open, record, saving, error, onSave, onClo
                   onChange={(e) => setEvidenceAgainst(e.target.value)}
                   maxLength={LIMITS.thoughtRecord.evidenceAgainst}
                   rows={3}
-                  className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 placeholder:text-gray-400 focus:border-violet-400 focus:outline-none focus:ring-1 focus:ring-violet-400 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+                  className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 placeholder:text-gray-400 focus:border-teal-400 focus:outline-none focus:ring-1 focus:ring-teal-400 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
                   placeholder="What facts contradict this thought?"
                 />
                 <CharCounter count={evidenceAgainst.length} limit={LIMITS.thoughtRecord.evidenceAgainst} />
@@ -263,10 +263,10 @@ export function ThoughtRecordEditor({ open, record, saving, error, onSave, onClo
 
           {step === 5 && (
             <div className="space-y-3">
-              <div className="rounded-xl bg-violet-50 p-4 dark:bg-violet-950/30">
+              <div className="rounded-xl bg-teal-50 p-4 dark:bg-teal-950/30">
                 <div className="flex items-start gap-2">
-                  <Lightbulb className="mt-0.5 size-4 text-violet-600 dark:text-violet-400" />
-                  <p className="text-sm text-violet-700 dark:text-violet-300">
+                  <Lightbulb className="mt-0.5 size-4 text-teal-600 dark:text-teal-400" />
+                  <p className="text-sm text-teal-700 dark:text-teal-300">
                     Write a balanced, realistic thought that considers both the evidence for and against your automatic thought.
                   </p>
                 </div>
@@ -276,7 +276,7 @@ export function ThoughtRecordEditor({ open, record, saving, error, onSave, onClo
                 onChange={(e) => setReframe(e.target.value)}
                 maxLength={LIMITS.thoughtRecord.reframe}
                 rows={4}
-                className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 placeholder:text-gray-400 focus:border-violet-400 focus:outline-none focus:ring-1 focus:ring-violet-400 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+                className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 placeholder:text-gray-400 focus:border-teal-400 focus:outline-none focus:ring-1 focus:ring-teal-400 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
                 placeholder="e.g., My friend may be busy and not replying has nothing to do with me..."
               />
               <CharCounter count={reframe.length} limit={LIMITS.thoughtRecord.reframe} />
@@ -296,7 +296,7 @@ export function ThoughtRecordEditor({ open, record, saving, error, onSave, onClo
             <button
               onClick={() => setStep(step + 1)}
               disabled={!canNext}
-              className="rounded-xl bg-violet-600 px-4 py-2 text-sm font-medium text-white hover:bg-violet-700 disabled:opacity-50"
+              className="rounded-xl bg-teal-600 px-4 py-2 text-sm font-medium text-white hover:bg-teal-700 disabled:opacity-50"
             >
               Next
             </button>
@@ -304,7 +304,7 @@ export function ThoughtRecordEditor({ open, record, saving, error, onSave, onClo
             <button
               onClick={handleSubmit}
               disabled={saving || !reframe.trim()}
-              className="rounded-xl bg-violet-600 px-4 py-2 text-sm font-medium text-white hover:bg-violet-700 disabled:opacity-50"
+              className="rounded-xl bg-teal-600 px-4 py-2 text-sm font-medium text-white hover:bg-teal-700 disabled:opacity-50"
             >
               {saving ? "Saving..." : "Save Record"}
             </button>

@@ -3,6 +3,7 @@ import { usePsychoedState } from "./usePsychoedState"
 import { CATEGORY_META, type PsychoedCategory, type PsychoedModuleSummary } from "@/lib/psychoed-api"
 import { useEffect, useRef } from "react"
 import { PsychoedModuleDetail } from "./PsychoedModuleDetail"
+import { EmptyState } from "@/components/user/shared/EmptyState"
 
 const CATEGORY_ORDER: PsychoedCategory[] = ["cbt", "anxiety", "depression", "stress", "sleep", "relationships"]
 
@@ -202,14 +203,12 @@ export function PsychoedPage() {
         </div>
       )}
 
-      {s.modules.length === 0 && !s.loading && (
-        <div className="flex flex-col items-center justify-center py-16 text-center">
-          <BookOpen className="mb-4 size-12 text-gray-300 dark:text-gray-600" />
-          <p className="text-gray-500 dark:text-gray-400">No modules available yet.</p>
-          <p className="mt-1 text-sm text-gray-400 dark:text-gray-500">
-            Check back soon for new educational content.
-          </p>
-        </div>
+      {!s.error && !s.loading && s.modules.length === 0 && (
+        <EmptyState
+          icon={BookOpen}
+          title="No learning modules yet"
+          description="Learn is your self-guided psychoeducation library — short, interactive lessons on CBT, anxiety, low mood, stress and more. New modules are added by our care team, so check back soon."
+        />
       )}
     </div>
   )

@@ -69,14 +69,27 @@ export function useActivityState() {
   }, [fetchStats])
 
   const deleteActivity = useCallback(async (id: string) => {
-    try {
-      await activityApi.delete(id)
-      setActivities((prev) => prev.filter((a) => a._id !== id))
-      fetchStats()
-    } catch {
-      setError("Failed to delete activity")
-    }
-  }, [fetchStats])
+    await runOptimistic({
+      lockKey: `activity:${id}`,
+      snapshot: () => activities.find((a) => a._id === id) ?? null,
+      apply: () => {
+        setActivities((prev) => prev.filter((a) => a._id !== id))
+        fetchStats()
+      },
+      commit: () => activityApi.delete(id),
+      rollback: (activity) => {
+        if (!activity) return
+        setActivities((prev) => {
+          if (prev.some((a) => a._id === id)) return prev
+          return [...prev, activity].sort(
+            (a, b) => new Date(a.scheduledDate).getTime() - new Date(b.scheduledDate).getTime()
+          )
+        })
+        fetchStats()
+      },
+      onError: (err) => setError(getErrorMessage(err)),
+    })
+  }, [activities, fetchStats])
 
   return {
     activities, stats, loading, saving, error, success,

@@ -8,8 +8,10 @@ const queryConfig: DefaultOptions = {
     retry: 1,
     refetchOnWindowFocus: false,
   },
+  // Mutations never auto-retry: optimistic actions already roll back in
+  // onError, and re-firing non-idempotent writes would double-apply them.
   mutations: {
-    retry: 1,
+    retry: 0,
   },
 }
 

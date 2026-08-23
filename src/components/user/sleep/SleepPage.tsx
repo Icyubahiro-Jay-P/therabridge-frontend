@@ -548,16 +548,24 @@ export function SleepPage() {
       )}
 
       {/* Empty state */}
-      {s.logs.length === 0 && !s.loading && s.stats && s.stats.totalLogs === 0 && (
-        <div className="flex flex-col items-center justify-center py-16 text-center">
-          <Moon className="mb-4 size-12 text-gray-300 dark:text-gray-600" />
-          <p className="text-gray-500 dark:text-gray-400">
-            No sleep logs yet.
-          </p>
-          <p className="mt-1 text-sm text-gray-400 dark:text-gray-500">
-            Start tracking your sleep above.
-          </p>
-        </div>
+      {!s.error && !s.loading && s.logs.length === 0 && (
+        <EmptyState
+          icon={Moon}
+          title="No sleep logs yet"
+          description="Logging your sleep each morning helps you spot patterns between your rest, mood and energy over time."
+          action={
+            <button
+              onClick={() => {
+                setShowForm(true)
+                window.scrollTo({ top: 0, behavior: "smooth" })
+              }}
+              className="flex items-center gap-2 rounded-xl bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700"
+            >
+              <Moon className="size-4" />
+              Log your first night
+            </button>
+          }
+        />
       )}
     </div>
   )

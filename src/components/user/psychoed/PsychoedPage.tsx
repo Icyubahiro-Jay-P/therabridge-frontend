@@ -207,7 +207,7 @@ export function PsychoedPage() {
         <EmptyState
           icon={BookOpen}
           title="No learning modules yet"
-          description="Learn is your self-guided psychoeducation library — short, interactive lessons on CBT, anxiety, low mood, stress and more. New modules are added by our care team, so check back soon."
+          description="Learn is your self-guided psychoeducation library, short, interactive lessons on CBT, anxiety, low mood, stress and more. New modules are added by our care team, so check back soon."
         />
       )}
     </div>

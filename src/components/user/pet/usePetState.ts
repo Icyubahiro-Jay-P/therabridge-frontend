@@ -4,6 +4,7 @@ import {
   type Pet,
   type PetAdventure,
 } from "@/lib/pet-api"
+import { getErrorMessage } from "@/lib/errors"
 
 export function usePetState() {
   const [pet, setPet] = useState<Pet | null>(null)

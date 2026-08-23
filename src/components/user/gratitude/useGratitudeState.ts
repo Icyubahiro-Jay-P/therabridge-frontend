@@ -10,6 +10,7 @@ export function useGratitudeState() {
   const [loading, setLoading] = useState(false)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [info, setInfo] = useState<string | null>(null)
   const [success, setSuccess] = useState<string | null>(null)
   const [hasMore, setHasMore] = useState(false)
 
@@ -86,7 +87,7 @@ export function useGratitudeState() {
 
   return {
     prompt, hasEntryToday, entries, streak,
-    loading, saving, error, success, hasMore,
+    loading, saving, error, info, success, hasMore,
     fetchPrompt, fetchEntries, fetchStreak, createEntry, deleteEntry,
     clearMessages: () => { setError(null); setSuccess(null) },
   }

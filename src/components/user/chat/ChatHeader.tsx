@@ -50,7 +50,7 @@ export function ChatHeader({
               "rounded-lg p-2 transition-colors",
               callDisabled
                 ? "cursor-not-allowed text-gray-300 dark:text-gray-600"
-                : "text-gray-400 hover:bg-blue-50 hover:text-blue-500 dark:hover:bg-blue-900/30"
+                : "text-gray-400 hover:bg-teal-50 hover:text-teal-600 dark:hover:bg-teal-900/30"
             )}
             title="Start video call"
           >

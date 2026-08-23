@@ -16,7 +16,7 @@ export function JournalPage() {
       initializedRef.current = true
       j.fetchEntries({ page: 1, mood: null, search: "" })
     }
-  }) // Intentionally no deps — runs once on mount
+  }) // Intentionally no deps, runs once on mount
 
   return (
     <div className="mx-auto max-w-3xl space-y-6 p-6">

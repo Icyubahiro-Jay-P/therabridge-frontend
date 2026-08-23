@@ -51,17 +51,17 @@ export const CATEGORY_META: Record<PsychoedCategory, { label: string; color: str
 
 export const psychoedApi = {
   getModules: () =>
-    api.get<{ modules: PsychoedModuleSummary[] }>("/psychoed").then((r) => r.data),
+    api.get<{ modules: PsychoedModuleSummary[] }>("/api/psychoed").then((r) => r.data),
 
   getModule: (id: string) =>
-    api.get<{ module: PsychoedModuleDetail; progress: PsychoedProgress | null }>(`/psychoed/${id}`).then((r) => r.data),
+    api.get<{ module: PsychoedModuleDetail; progress: PsychoedProgress | null }>(`/api/psychoed/${id}`).then((r) => r.data),
 
   startModule: (id: string) =>
-    api.post<PsychoedProgress>(`/psychoed/${id}/start`).then((r) => r.data),
+    api.post<PsychoedProgress>(`/api/psychoed/${id}/start`).then((r) => r.data),
 
   completeStep: (id: string, stepIndex: number) =>
-    api.post<PsychoedProgress>(`/psychoed/${id}/complete-step`, { stepIndex }).then((r) => r.data),
+    api.post<PsychoedProgress>(`/api/psychoed/${id}/complete-step`, { stepIndex }).then((r) => r.data),
 
   getMyProgress: () =>
-    api.get<{ inProgress: { module: PsychoedModuleSummary; currentStepIndex: number; completedSteps: number[] }[]; completed: { module: PsychoedModuleSummary }[] }>("/psychoed/progress").then((r) => r.data),
+    api.get<{ inProgress: { module: PsychoedModuleSummary; currentStepIndex: number; completedSteps: number[] }[]; completed: { module: PsychoedModuleSummary }[] }>("/api/psychoed/progress").then((r) => r.data),
 }

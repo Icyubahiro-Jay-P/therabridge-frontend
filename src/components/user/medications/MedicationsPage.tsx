@@ -224,11 +224,6 @@ export function MedicationsPage() {
               }
             />
           ) : (
-            <div className="flex flex-col items-center justify-center py-12 text-center">
-              <Pill className="mb-4 size-12 text-gray-300 dark:text-gray-600" />
-              <p className="text-gray-500 dark:text-gray-400">No medications yet.</p>
-            </div>
-          ) : (
             m.medications.map((med) => (
               <div
                 key={med._id}

@@ -198,10 +198,19 @@ export function ProgramsPage() {
               ))}
             </div>
           ) : p.programs.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-16 text-center">
-              <Route className="mb-4 size-12 text-gray-300 dark:text-gray-600" />
-              <p className="text-gray-500 dark:text-gray-400">No programs available</p>
-            </div>
+            activeTab ? (
+              <EmptyState
+                icon={Route}
+                title="Nothing in this category yet"
+                description="There are no programs under this category right now. Try another category or check back soon."
+              />
+            ) : (
+              <EmptyState
+                icon={Route}
+                title="No programs available yet"
+                description="Programs are structured, multi-week therapeutic journeys created by our care team. New ones are added regularly — check back soon."
+              />
+            )
           ) : (
             <div className="space-y-3">
               {p.programs.map((program) => (

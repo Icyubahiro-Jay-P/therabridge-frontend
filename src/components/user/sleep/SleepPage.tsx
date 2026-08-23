@@ -13,6 +13,7 @@ import {
   BarChart3,
 } from "lucide-react"
 import { useSleepState } from "./useSleepState"
+import { EmptyState } from "@/components/user/shared/EmptyState"
 import { useEffect, useRef, useState } from "react"
 import type { SleepContent } from "@/lib/sleep-api"
 

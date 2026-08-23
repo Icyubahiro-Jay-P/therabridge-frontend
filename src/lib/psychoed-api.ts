@@ -41,12 +41,12 @@ export interface PsychoedProgress {
 }
 
 export const CATEGORY_META: Record<PsychoedCategory, { label: string; color: string }> = {
-  cbt: { label: "CBT", color: "violet" },
-  anxiety: { label: "Anxiety", color: "blue" },
-  depression: { label: "Depression", color: "indigo" },
-  stress: { label: "Stress", color: "orange" },
+  cbt: { label: "CBT", color: "emerald" },
+  anxiety: { label: "Anxiety", color: "teal" },
+  depression: { label: "Depression", color: "gray" },
+  stress: { label: "Stress", color: "amber" },
   sleep: { label: "Sleep", color: "teal" },
-  relationships: { label: "Relationships", color: "pink" },
+  relationships: { label: "Relationships", color: "emerald" },
 }
 
 export const psychoedApi = {

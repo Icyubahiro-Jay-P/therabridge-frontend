@@ -19,9 +19,9 @@ export interface MoodStats {
 
 export const moodOptions = [
   { value: "great", label: "Great", color: "bg-emerald-100 text-emerald-700 border-emerald-300 hover:bg-emerald-200 dark:bg-emerald-900/40 dark:text-emerald-300" },
-  { value: "good", label: "Good", color: "bg-sky-100 text-sky-700 border-sky-300 hover:bg-sky-200 dark:bg-sky-900/40 dark:text-sky-300" },
+  { value: "good", label: "Good", color: "bg-teal-100 text-teal-700 border-teal-300 hover:bg-teal-200 dark:bg-teal-900/40 dark:text-teal-300" },
   { value: "okay", label: "Okay", color: "bg-amber-100 text-amber-700 border-amber-300 hover:bg-amber-200 dark:bg-amber-900/40 dark:text-amber-300" },
-  { value: "bad", label: "Bad", color: "bg-orange-100 text-orange-700 border-orange-300 hover:bg-orange-200 dark:bg-orange-900/40 dark:text-orange-300" },
+  { value: "bad", label: "Bad", color: "bg-amber-200 text-amber-900 border-amber-400 hover:bg-amber-300 dark:bg-amber-800/60 dark:text-amber-200" },
   { value: "terrible", label: "Terrible", color: "bg-red-100 text-red-700 border-red-300 hover:bg-red-200 dark:bg-red-900/40 dark:text-red-300" },
 ]
 

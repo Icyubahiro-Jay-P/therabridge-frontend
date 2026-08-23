@@ -1,6 +1,7 @@
 import { useState, useCallback } from "react"
 import { gratitudeApi, type GratitudePrompt, type GratitudeEntry, type GratitudeStreak } from "@/lib/gratitude-api"
 import { getErrorMessage } from "@/lib/errors"
+import { runOptimistic } from "@/lib/optimistic"
 
 export function useGratitudeState() {
   const [prompt, setPrompt] = useState<GratitudePrompt | null>(null)
@@ -77,13 +78,23 @@ export function useGratitudeState() {
   }, [prompt, fetchStreak])
 
   const deleteEntry = useCallback(async (id: string) => {
-    try {
-      await gratitudeApi.delete(id)
-      setEntries((prev) => prev.filter((e) => e._id !== id))
-    } catch {
-      setError("Failed to delete entry")
-    }
-  }, [])
+    await runOptimistic({
+      lockKey: `gratitude-entry:${id}`,
+      snapshot: () => entries.find((e) => e._id === id) ?? null,
+      apply: () => setEntries((prev) => prev.filter((e) => e._id !== id)),
+      commit: () => gratitudeApi.delete(id),
+      rollback: (entry) => {
+        if (!entry) return
+        setEntries((prev) => {
+          if (prev.some((e) => e._id === id)) return prev
+          const next = [...prev]
+          next.unshift(entry)
+          return next
+        })
+      },
+      onError: (err) => setError(getErrorMessage(err)),
+    })
+  }, [entries])
 
   return {
     prompt, hasEntryToday, entries, streak,

@@ -237,16 +237,19 @@ export function ProgramsPage() {
               ))}
             </div>
           ) : myPrograms.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-16 text-center">
-              <Sparkles className="mb-4 size-12 text-gray-300 dark:text-gray-600" />
-              <p className="text-gray-500 dark:text-gray-400">You haven&apos;t started any programs yet</p>
-              <button
-                onClick={() => setView("browse")}
-                className="mt-3 text-sm font-medium text-emerald-600 hover:underline dark:text-emerald-400"
-              >
-                Browse programs
-              </button>
-            </div>
+            <EmptyState
+              icon={Sparkles}
+              title="You haven&apos;t started any programs yet"
+              description="Pick a program that fits what you're working on and complete short activities each week. Your progress will be tracked here."
+              action={
+                <button
+                  onClick={() => setView("browse")}
+                  className="text-sm font-medium text-emerald-600 hover:underline dark:text-emerald-400"
+                >
+                  Browse programs
+                </button>
+              }
+            />
           ) : (
             <div className="space-y-3">
               {myPrograms.map((program) => (

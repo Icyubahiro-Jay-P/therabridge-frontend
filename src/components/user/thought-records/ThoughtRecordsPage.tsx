@@ -4,6 +4,7 @@ import { ThoughtRecordEditor } from "./ThoughtRecordEditor"
 import { ThoughtRecordCard } from "./ThoughtRecordCard"
 import { ThoughtRecordDetail } from "./ThoughtRecordDetail"
 import { useAuthStore } from "@/store/auth-store"
+import { EmptyState } from "@/components/user/shared/EmptyState"
 import { useEffect, useRef, useState } from "react"
 import type { ThoughtRecord } from "@/lib/thoughtRecord-api"
 
@@ -149,25 +150,46 @@ export function ThoughtRecordsPage() {
           )}
 
           <div className="space-y-3">
-            {s.records.map((record) => (
-              <ThoughtRecordCard
-                key={record._id}
-                record={record}
-                onSelect={() => s.setSelectedRecord(record)}
-                onDelete={() => s.deleteRecord(record._id)}
-                currentUserId={currentUser?.id}
-              />
-            ))}
+            {s.loading && s.records.length === 0 ? (
+              [1, 2, 3].map((i) => (
+                <div key={i} className="h-28 animate-pulse rounded-xl bg-gray-100 dark:bg-gray-800" />
+              ))
+            ) : (
+              s.records.map((record) => (
+                <ThoughtRecordCard
+                  key={record._id}
+                  record={record}
+                  onSelect={() => s.setSelectedRecord(record)}
+                  onDelete={() => s.deleteRecord(record._id)}
+                  currentUserId={currentUser?.id}
+                />
+              ))
+            )}
           </div>
 
-          {s.records.length === 0 && !s.loading && (
-            <div className="flex flex-col items-center justify-center py-16 text-center">
-              <Brain className="mb-4 size-12 text-gray-300 dark:text-gray-600" />
-              <p className="text-gray-500 dark:text-gray-400">No thought records yet.</p>
-              <p className="mt-1 text-sm text-gray-400 dark:text-gray-500">
-                Start challenging negative thoughts to build cognitive flexibility.
-              </p>
-            </div>
+          {!s.error && !s.loading && s.records.length === 0 && (
+            s.searchQuery || s.filterDistortion ? (
+              <EmptyState
+                icon={Search}
+                title="No matching records"
+                description="No thought records match your current search or filter. Try different keywords or clear the filter."
+              />
+            ) : (
+              <EmptyState
+                icon={Brain}
+                title="No thought records yet"
+                description="Thought records are a CBT exercise that helps you catch unhelpful thoughts, examine the evidence and reframe them into more balanced ones."
+                action={
+                  <button
+                    onClick={() => openEditor()}
+                    className="flex items-center gap-2 rounded-xl bg-violet-600 px-4 py-2 text-sm font-medium text-white hover:bg-violet-700"
+                  >
+                    <Plus className="size-4" />
+                    Record your first thought
+                  </button>
+                }
+              />
+            )}
           )}
 
           {s.hasMore && (

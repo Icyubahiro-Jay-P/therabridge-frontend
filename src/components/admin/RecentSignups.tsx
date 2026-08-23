@@ -60,7 +60,7 @@ export function RecentSignups({ signups }: { signups: DashboardSignup[] }) {
                 </div>
                 <div className="text-right">
                   {u.role === "therapist" && (
-                    <p className="flex items-center justify-end gap-1 text-[10px] font-medium text-violet-500">
+                    <p className="flex items-center justify-end gap-1 text-[10px] font-medium text-gray-400">
                       <ShieldCheck className="size-3" /> therapist
                     </p>
                   )}

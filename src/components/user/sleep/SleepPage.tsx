@@ -38,7 +38,7 @@ function TabButton({
       onClick={onClick}
       className={`flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium transition-colors ${
         active
-          ? "bg-indigo-600 text-white shadow-md shadow-indigo-900/30"
+          ? "bg-teal-600 text-white shadow-md shadow-teal-900/30"
           : "text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-200"
       }`}
     >
@@ -62,7 +62,7 @@ function StarRating({
           key={s}
           type="button"
           onClick={() => onChange(s)}
-          className="group/Star focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
+          className="group/Star focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-500"
           aria-label={`Quality ${s}`}
         >
           <Star
@@ -103,12 +103,12 @@ function TrendChart({ data }: { data: { date: string; quality: number }[] }) {
                     d.quality === 0
                       ? "var(--color-border)"
                       : d.quality >= 4
-                        ? "#6366f1"
+                        ? "#059669"
                         : d.quality >= 3
-                          ? "#818cf8"
+                          ? "#10b981"
                           : d.quality >= 2
-                            ? "#a5b4fc"
-                            : "#c7d2fe",
+                            ? "#6ee7b7"
+                            : "#a7f3d0",
                 }}
               />
             </div>
@@ -141,16 +141,16 @@ function ContentCard({
     )
 
   const categoryColors: Record<string, string> = {
-    rain: "bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-400",
+    rain: "bg-teal-100 text-teal-700 dark:bg-teal-900/40 dark:text-teal-400",
     nature: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-400",
-    ambient: "bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-400",
+    ambient: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-400",
     meditation: "bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-400",
     body_scan: "bg-teal-100 text-teal-700 dark:bg-teal-900/40 dark:text-teal-400",
-    breathing: "bg-sky-100 text-sky-700 dark:bg-sky-900/40 dark:text-sky-400",
+    breathing: "bg-teal-100 text-teal-700 dark:bg-teal-900/40 dark:text-teal-400",
   }
 
   return (
-    <div className="group rounded-2xl border border-gray-200 bg-white p-4 transition-all hover:border-indigo-200 hover:shadow-md hover:shadow-indigo-500/5 dark:border-gray-800 dark:bg-gray-900 dark:hover:border-indigo-800">
+    <div className="group rounded-2xl border border-gray-200 bg-white p-4 transition-all hover:border-teal-200 hover:shadow-md hover:shadow-teal-500/5 dark:border-gray-800 dark:bg-gray-900 dark:hover:border-teal-800">
       <div className="flex items-start justify-between gap-3">
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-1.5">
@@ -171,7 +171,7 @@ function ContentCard({
         </div>
         <button
           onClick={onToggle}
-          className="flex size-10 shrink-0 items-center justify-center rounded-full bg-indigo-50 text-indigo-600 transition-colors hover:bg-indigo-100 dark:bg-indigo-950 dark:text-indigo-400 dark:hover:bg-indigo-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
+          className="flex size-10 shrink-0 items-center justify-center rounded-full bg-teal-50 text-teal-600 transition-colors hover:bg-teal-100 dark:bg-teal-950 dark:text-teal-400 dark:hover:bg-teal-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-500"
           aria-label={playing ? "Pause" : "Play"}
         >
           {playing ? <Pause className="size-4" /> : <Play className="size-4 ml-0.5" />}
@@ -249,8 +249,8 @@ export function SleepPage() {
       {/* Header */}
       <div>
         <div className="flex items-center gap-3">
-          <div className="flex size-10 items-center justify-center rounded-xl bg-indigo-100 dark:bg-indigo-900/40">
-            <Moon className="size-5 text-indigo-600 dark:text-indigo-400" />
+          <div className="flex size-10 items-center justify-center rounded-xl bg-teal-100 dark:bg-teal-900/40">
+            <Moon className="size-5 text-teal-600 dark:text-teal-400" />
           </div>
           <div>
             <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
@@ -298,14 +298,14 @@ export function SleepPage() {
               <span className="text-sm font-normal text-gray-400">h</span>
             </p>
           </div>
-          <div className="rounded-2xl border border-orange-200 bg-orange-50 p-4 dark:border-orange-900/50 dark:bg-orange-950/30">
-            <div className="flex items-center gap-2 text-orange-500">
+          <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4 dark:border-amber-900/50 dark:bg-amber-950/30">
+            <div className="flex items-center gap-2 text-amber-500">
               <Flame className="size-4" />
               <span className="text-xs font-medium">Streak</span>
             </div>
-            <p className="mt-2 text-2xl font-bold text-orange-700 dark:text-orange-400">
+            <p className="mt-2 text-2xl font-bold text-amber-700 dark:text-amber-400">
               {s.stats.streak}
-              <span className="text-sm font-normal text-orange-400">d</span>
+              <span className="text-sm font-normal text-amber-400">d</span>
             </p>
           </div>
         </div>
@@ -328,7 +328,7 @@ export function SleepPage() {
       {!showForm && (
         <button
           onClick={() => setShowForm(true)}
-          className="flex w-full items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-indigo-200 bg-indigo-50/50 py-4 text-sm font-medium text-indigo-600 transition-colors hover:border-indigo-300 hover:bg-indigo-50 dark:border-indigo-900/50 dark:bg-indigo-950/20 dark:text-indigo-400 dark:hover:border-indigo-800"
+          className="flex w-full items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-teal-200 bg-teal-50/50 py-4 text-sm font-medium text-teal-600 transition-colors hover:border-teal-300 hover:bg-teal-50 dark:border-teal-900/50 dark:bg-teal-950/20 dark:text-teal-400 dark:hover:border-teal-800"
         >
           <Moon className="size-4" />
           Log Sleep
@@ -336,7 +336,7 @@ export function SleepPage() {
       )}
 
       {showForm && (
-        <div className="rounded-2xl border border-indigo-200 bg-white p-5 dark:border-indigo-900/50 dark:bg-gray-900 space-y-5">
+        <div className="rounded-2xl border border-teal-200 bg-white p-5 dark:border-teal-900/50 dark:bg-gray-900 space-y-5">
           <div className="flex items-center justify-between">
             <h2 className="text-sm font-semibold text-gray-900 dark:text-white">
               Log Last Night's Sleep
@@ -365,7 +365,7 @@ export function SleepPage() {
                 type="time"
                 value={bedtime}
                 onChange={(e) => setBedtime(e.target.value)}
-                className="w-full rounded-xl border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm text-gray-900 focus:border-indigo-400 focus:outline-none focus:ring-1 focus:ring-indigo-400 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+                className="w-full rounded-xl border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm text-gray-900 focus:border-teal-400 focus:outline-none focus:ring-1 focus:ring-teal-400 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
               />
             </div>
             <div>
@@ -376,13 +376,13 @@ export function SleepPage() {
                 type="time"
                 value={wakeTime}
                 onChange={(e) => setWakeTime(e.target.value)}
-                className="w-full rounded-xl border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm text-gray-900 focus:border-indigo-400 focus:outline-none focus:ring-1 focus:ring-indigo-400 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+                className="w-full rounded-xl border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm text-gray-900 focus:border-teal-400 focus:outline-none focus:ring-1 focus:ring-teal-400 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
               />
             </div>
           </div>
 
           {bedtime && wakeTime && (
-            <div className="rounded-xl bg-indigo-50 px-3 py-2 text-xs font-medium text-indigo-600 dark:bg-indigo-950/40 dark:text-indigo-400">
+            <div className="rounded-xl bg-teal-50 px-3 py-2 text-xs font-medium text-teal-600 dark:bg-teal-950/40 dark:text-teal-400">
               <TrendingUp className="mr-1 inline size-3" />
               Calculated:{" "}
               {(() => {
@@ -406,7 +406,7 @@ export function SleepPage() {
               onChange={(e) => setNotes(e.target.value)}
               maxLength={500}
               rows={2}
-              className="w-full rounded-xl border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 focus:border-indigo-400 focus:outline-none focus:ring-1 focus:ring-indigo-400 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+              className="w-full rounded-xl border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 focus:border-teal-400 focus:outline-none focus:ring-1 focus:ring-teal-400 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
               placeholder="How was your sleep?"
             />
             <span className="text-[10px] text-gray-300 dark:text-gray-600">
@@ -423,7 +423,7 @@ export function SleepPage() {
               onChange={(e) => setDreams(e.target.value)}
               maxLength={500}
               rows={2}
-              className="w-full rounded-xl border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 focus:border-indigo-400 focus:outline-none focus:ring-1 focus:ring-indigo-400 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+              className="w-full rounded-xl border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 focus:border-teal-400 focus:outline-none focus:ring-1 focus:ring-teal-400 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
               placeholder="Any dreams you'd like to remember?"
             />
             <span className="text-[10px] text-gray-300 dark:text-gray-600">
@@ -434,7 +434,7 @@ export function SleepPage() {
           <button
             onClick={handleLog}
             disabled={s.saving}
-            className="flex w-full items-center justify-center gap-2 rounded-xl bg-indigo-600 px-4 py-3 text-sm font-medium text-white shadow-md shadow-indigo-900/20 transition-colors hover:bg-indigo-700 disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
+            className="flex w-full items-center justify-center gap-2 rounded-xl bg-teal-600 px-4 py-3 text-sm font-medium text-white shadow-md shadow-teal-900/20 transition-colors hover:bg-teal-700 disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-500"
           >
             <Moon className="size-4" />
             {s.saving ? "Saving..." : "Log Sleep"}
@@ -560,7 +560,7 @@ export function SleepPage() {
                 setShowForm(true)
                 window.scrollTo({ top: 0, behavior: "smooth" })
               }}
-              className="flex items-center gap-2 rounded-xl bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700"
+              className="flex items-center gap-2 rounded-xl bg-teal-600 px-4 py-2 text-sm font-medium text-white hover:bg-teal-700"
             >
               <Moon className="size-4" />
               Log your first night

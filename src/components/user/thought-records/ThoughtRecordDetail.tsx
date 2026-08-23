@@ -101,7 +101,7 @@ export function ThoughtRecordDetail({ record, onBack, onEdit, onDelete, currentU
           </h3>
           <div className="mt-2 flex items-center gap-4">
             <span className="text-sm text-gray-700 dark:text-gray-300">{record.emotions}</span>
-            <span className="rounded-full bg-violet-100 px-2.5 py-0.5 text-xs font-medium text-violet-700 dark:bg-violet-950/40 dark:text-violet-400">
+            <span className="rounded-full bg-teal-100 px-2.5 py-0.5 text-xs font-medium text-teal-700 dark:bg-teal-950/40 dark:text-teal-400">
               {record.emotionIntensity}/10
             </span>
           </div>
@@ -115,8 +115,8 @@ export function ThoughtRecordDetail({ record, onBack, onEdit, onDelete, currentU
               Cognitive Distortion
             </h3>
             <div className="mt-2 flex items-center gap-2">
-              <Brain className="size-4 text-violet-600 dark:text-violet-400" />
-              <span className="text-sm font-medium text-violet-700 dark:text-violet-400">
+              <Brain className="size-4 text-teal-600 dark:text-teal-400" />
+              <span className="text-sm font-medium text-teal-700 dark:text-teal-400">
                 {DISTORTION_LABELS[record.distortionType]}
               </span>
             </div>
@@ -132,9 +132,9 @@ export function ThoughtRecordDetail({ record, onBack, onEdit, onDelete, currentU
             </h3>
             <div className="mt-2 grid gap-4 sm:grid-cols-2">
               {record.evidenceFor && (
-                <div className="rounded-xl bg-green-50 p-4 dark:bg-green-950/20">
-                  <p className="text-xs font-medium text-green-700 dark:text-green-400">Supporting</p>
-                  <p className="mt-1 text-sm text-green-800 dark:text-green-300">{record.evidenceFor}</p>
+                <div className="rounded-xl bg-emerald-50 p-4 dark:bg-emerald-950/20">
+                  <p className="text-xs font-medium text-emerald-700 dark:text-emerald-400">Supporting</p>
+                  <p className="mt-1 text-sm text-emerald-800 dark:text-emerald-300">{record.evidenceFor}</p>
                 </div>
               )}
               {record.evidenceAgainst && (
@@ -150,13 +150,13 @@ export function ThoughtRecordDetail({ record, onBack, onEdit, onDelete, currentU
         {/* Reframe */}
         <div className="mt-6">
           <h3 className="flex items-center gap-2 text-sm font-semibold text-gray-900 dark:text-white">
-            <span className="flex size-6 items-center justify-center rounded-full bg-violet-100 text-xs dark:bg-violet-950/50">6</span>
+            <span className="flex size-6 items-center justify-center rounded-full bg-teal-100 text-xs dark:bg-teal-950/50">6</span>
             Balanced Reframe
           </h3>
-          <div className="mt-2 rounded-xl bg-violet-50 p-4 dark:bg-violet-950/30">
+          <div className="mt-2 rounded-xl bg-teal-50 p-4 dark:bg-teal-950/30">
             <div className="flex items-start gap-2">
-              <Lightbulb className="mt-0.5 size-4 text-violet-600 dark:text-violet-400" />
-              <p className="text-sm text-violet-800 dark:text-violet-200">{record.reframe}</p>
+              <Lightbulb className="mt-0.5 size-4 text-teal-600 dark:text-teal-400" />
+              <p className="text-sm text-teal-800 dark:text-teal-200">{record.reframe}</p>
             </div>
           </div>
         </div>
@@ -175,7 +175,7 @@ export function ThoughtRecordDetail({ record, onBack, onEdit, onDelete, currentU
               </div>
               <div className="text-gray-400">&rarr;</div>
               <div className="text-center">
-                <p className="text-2xl font-bold text-green-600 dark:text-green-400">
+                <p className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">
                   {record.emotionIntensity > 3 ? record.emotionIntensity - 2 : record.emotionIntensity}
                 </p>
                 <p className="text-xs text-gray-500">After</p>

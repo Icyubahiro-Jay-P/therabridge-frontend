@@ -94,22 +94,10 @@ api.interceptors.response.use(
 
     const status = error.response.status
 
-    // Transient proxy/server errors (backend mid-deploy, rate limit, timeout)
-    // are treated as retryable failures - never as a session expiry or confusing
-    // backend error text.
+    // Timeout is always a transient failure - nothing classifiable upstream.
     if (status === 408) {
       return Promise.reject(
         new NetworkError("The request timed out. Please try again.")
-      )
-    }
-    if (status === 429) {
-      return Promise.reject(
-        new NetworkError("Too many requests. Please slow down and try again.")
-      )
-    }
-    if (status >= 500) {
-      return Promise.reject(
-        new NetworkError("Server error. Please try again in a moment.")
       )
     }
 

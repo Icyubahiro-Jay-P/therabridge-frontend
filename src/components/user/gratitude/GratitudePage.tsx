@@ -1,5 +1,6 @@
 import { Sparkles, Flame, BookOpen, Send } from "lucide-react"
 import { useGratitudeState } from "./useGratitudeState"
+import { EmptyState } from "@/components/user/shared/EmptyState"
 import { useEffect, useRef, useState } from "react"
 
 export function GratitudePage() {

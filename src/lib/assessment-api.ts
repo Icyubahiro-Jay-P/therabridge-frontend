@@ -103,15 +103,15 @@ export const RESPONSE_OPTIONS = [
 
 export const assessmentApi = {
   take: (data: { type: string; responses: AssessmentResponse[] }) =>
-    api.post<Assessment>("/assessments", data).then((r) => r.data),
+    api.post<Assessment>("/api/assessments", data).then((r) => r.data),
 
   list: (params?: { type?: string; page?: number }) =>
-    api.get<{ assessments: Assessment[]; total: number }>("/assessments", { params }).then((r) => r.data),
+    api.get<{ assessments: Assessment[]; total: number }>("/api/assessments", { params }).then((r) => r.data),
 
-  get: (id: string) => api.get<Assessment>(`/assessments/${id}`).then((r) => r.data),
+  get: (id: string) => api.get<Assessment>(`/api/assessments/${id}`).then((r) => r.data),
 
   trend: (type: string) =>
-    api.get<AssessmentTrend>("/assessments/trend", { params: { type } }).then((r) => r.data),
+    api.get<AssessmentTrend>("/api/assessments/trend", { params: { type } }).then((r) => r.data),
 
-  delete: (id: string) => api.delete(`/assessments/${id}`).then((r) => r.data),
+  delete: (id: string) => api.delete(`/api/assessments/${id}`).then((r) => r.data),
 }

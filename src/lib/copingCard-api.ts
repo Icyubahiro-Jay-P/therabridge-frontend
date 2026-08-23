@@ -22,12 +22,12 @@ export interface CopingCard {
 }
 
 export const COPING_CARD_CATEGORIES: { value: CopingCardCategory; label: string; color: string }[] = [
-  { value: "anxiety_coping", label: "Anxiety Coping", color: "sky" },
-  { value: "self_compassion", label: "Self-Compassion", color: "rose" },
+  { value: "anxiety_coping", label: "Anxiety Coping", color: "teal" },
+  { value: "self_compassion", label: "Self-Compassion", color: "amber" },
   { value: "motivation", label: "Motivation", color: "amber" },
   { value: "crisis_survival", label: "Crisis Survival", color: "red" },
   { value: "gratitude", label: "Gratitude", color: "emerald" },
-  { value: "encouragement", label: "Encouragement", color: "violet" },
+  { value: "encouragement", label: "Encouragement", color: "teal" },
   { value: "custom", label: "Custom", color: "gray" },
 ]
 

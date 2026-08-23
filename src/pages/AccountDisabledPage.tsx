@@ -13,7 +13,7 @@ export function AccountDisabledPage() {
   }
 
   return (
-    <div className="flex min-h-svh items-center justify-center bg-linear-to-br from-red-50 to-orange-50 p-4 dark:from-gray-950 dark:to-gray-900">
+    <div className="flex min-h-svh items-center justify-center bg-linear-to-br from-red-50 to-amber-50 p-4 dark:from-gray-950 dark:to-gray-900">
       <div className="w-full max-w-md space-y-6 text-center">
         <div className="mx-auto flex size-16 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/30">
           <ShieldOff className="size-8 text-red-600 dark:text-red-400" />

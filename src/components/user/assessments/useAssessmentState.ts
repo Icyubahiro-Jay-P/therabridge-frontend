@@ -4,7 +4,7 @@ import { assessmentApi, type Assessment, type AssessmentTrend } from "@/lib/asse
 export function useAssessmentState() {
   const [assessments, setAssessments] = useState<Assessment[]>([])
   const [trend, setTrend] = useState<AssessmentTrend | null>(null)
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [lastResult, setLastResult] = useState<Assessment | null>(null)

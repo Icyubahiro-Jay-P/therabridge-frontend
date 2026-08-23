@@ -15,7 +15,7 @@ import {
   updatePrivacy as updatePrivacyRequest,
   validateTwoFactor as validateTwoFactorRequest,
 } from "@/lib/auth-api"
-import { AuthError, NetworkError, setAuthHandlers } from "@/lib/api"
+import { AuthError, setAuthHandlers } from "@/lib/api"
 import { getErrorMessage as getTaxonomyMessage } from "@/lib/errors"
 import { connectSocket, disconnectSocket } from "@/lib/socket"
 import {

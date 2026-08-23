@@ -116,6 +116,25 @@ export function GratitudePage() {
         </div>
       )}
 
+      {/* Prompt failed to load — offer a retry instead of silently hiding the composer */}
+      {!g.prompt && !g.loading && g.error && (
+        <div className="rounded-2xl border border-dashed border-violet-200 bg-violet-50/50 p-6 text-center dark:border-violet-900/50 dark:bg-violet-950/20">
+          <Sparkles className="mx-auto mb-2 size-6 text-violet-400" />
+          <p className="text-sm text-gray-500 dark:text-gray-400">
+            We couldn&apos;t load today&apos;s gratitude prompt.
+          </p>
+          <button
+            onClick={() => {
+              g.clearMessages()
+              g.fetchPrompt()
+            }}
+            className="mt-3 rounded-xl bg-violet-600 px-4 py-2 text-sm font-medium text-white hover:bg-violet-700"
+          >
+            Try again
+          </button>
+        </div>
+      )}
+
       {/* Past Entries */}
       {g.entries.length > 0 && (
         <div>

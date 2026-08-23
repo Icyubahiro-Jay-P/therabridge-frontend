@@ -30,6 +30,8 @@ export interface ActivityResult {
 }
 
 export interface FeedResult {
+  /** false when the pet is still full - a normal outcome, not a failure. */
+  fed?: boolean
   pet: Pet
   leveledUp: boolean
   message: string

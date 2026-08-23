@@ -7,14 +7,14 @@ import { CATEGORIES } from "@/lib/activity-api"
 import type { Activity } from "@/lib/activity-api"
 
 const CATEGORY_COLORS: Record<string, string> = {
-  social: "bg-blue-100 text-blue-700 dark:bg-blue-950/40 dark:text-blue-400",
-  physical: "bg-green-100 text-green-700 dark:bg-green-950/40 dark:text-green-400",
-  creative: "bg-purple-100 text-purple-700 dark:bg-purple-950/40 dark:text-purple-400",
-  productive: "bg-orange-100 text-orange-700 dark:bg-orange-950/40 dark:text-orange-400",
-  relaxation: "bg-teal-100 text-teal-700 dark:bg-teal-950/40 dark:text-teal-400",
-  outdoor: "bg-emerald-100 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400",
-  learning: "bg-indigo-100 text-indigo-700 dark:bg-indigo-950/40 dark:text-indigo-400",
-  self_care: "bg-pink-100 text-pink-700 dark:bg-pink-950/40 dark:text-pink-400",
+  social: "bg-teal-100 text-teal-700 dark:bg-teal-950/40 dark:text-teal-400",
+  physical: "bg-emerald-100 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400",
+  creative: "bg-amber-100 text-amber-700 dark:bg-amber-950/40 dark:text-amber-400",
+  productive: "bg-gray-100 text-gray-700 dark:bg-gray-950/40 dark:text-gray-400",
+  relaxation: "bg-emerald-100 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400",
+  outdoor: "bg-teal-100 text-teal-700 dark:bg-teal-950/40 dark:text-teal-400",
+  learning: "bg-teal-100 text-teal-700 dark:bg-teal-950/40 dark:text-teal-400",
+  self_care: "bg-amber-100 text-amber-700 dark:bg-amber-950/40 dark:text-amber-400",
   other: "bg-gray-100 text-gray-700 dark:bg-gray-950/40 dark:text-gray-400",
 }
 
@@ -92,7 +92,7 @@ export function ActivitiesPage() {
       </div>
 
       {a.success && (
-        <div className="rounded-xl bg-green-50 px-4 py-3 text-sm text-green-700 dark:bg-green-950/40 dark:text-green-400">
+        <div className="rounded-xl bg-emerald-50 px-4 py-3 text-sm text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400">
           {a.success}
         </div>
       )}
@@ -153,7 +153,7 @@ export function ActivitiesPage() {
                   {dayActivities.map((act) => (
                     <div
                       key={act._id}
-                      className={`flex items-center gap-3 rounded-lg px-3 py-2 ${act.completed ? "bg-green-50 dark:bg-green-950/20" : "bg-gray-50 dark:bg-gray-800"}`}
+                      className={`flex items-center gap-3 rounded-lg px-3 py-2 ${act.completed ? "bg-emerald-50 dark:bg-emerald-950/20" : "bg-gray-50 dark:bg-gray-800"}`}
                     >
                       <button
                         onClick={() => !act.completed && setCompletingActivity(act)}
@@ -177,7 +177,7 @@ export function ActivitiesPage() {
                             <span className="text-[10px] text-gray-400">{act.scheduledTime}</span>
                           )}
                           {act.completed && act.actualPleasure != null && (
-                            <span className="text-[10px] text-green-600 dark:text-green-400">
+                            <span className="text-[10px] text-emerald-600 dark:text-emerald-400">
                               Pleasure: {act.actualPleasure}/10
                             </span>
                           )}

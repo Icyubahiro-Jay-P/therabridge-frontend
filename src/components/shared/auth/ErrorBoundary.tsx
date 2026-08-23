@@ -77,13 +77,13 @@ function DefaultErrorFallback({
         <p className="text-gray-600 dark:text-gray-300">
           We encountered an unexpected error. Please try again.
         </p>
-        {error && (
+        {error && IS_DEV && (
           <details className="mt-4 text-left text-sm text-gray-500">
             <summary className="cursor-pointer font-mono">
               Error details
             </summary>
             <pre className="mt-2 overflow-auto rounded bg-gray-100 p-2 dark:bg-gray-800">
-              {error.message}
+              {describeError(error)}
             </pre>
           </details>
         )}

@@ -89,6 +89,6 @@ export function useGratitudeState() {
     prompt, hasEntryToday, entries, streak,
     loading, saving, error, info, success, hasMore,
     fetchPrompt, fetchEntries, fetchStreak, createEntry, deleteEntry,
-    clearMessages: () => { setError(null); setSuccess(null) },
+    clearMessages: () => { setError(null); setInfo(null); setSuccess(null) },
   }
 }

@@ -138,12 +138,6 @@ export function MedicationsPage() {
               }
             />
           ) : (
-            <div className="flex flex-col items-center justify-center py-12 text-center">
-              <Pill className="mb-4 size-12 text-gray-300 dark:text-gray-600" />
-              <p className="text-gray-500 dark:text-gray-400">No active medications.</p>
-              <p className="mt-1 text-sm text-gray-400 dark:text-gray-500">Add a medication to start tracking.</p>
-            </div>
-          ) : (
             m.activeMedications.map((med) => (
               <div
                 key={med._id}

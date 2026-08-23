@@ -46,6 +46,12 @@ export function TwoFactorSetup() {
     setError("")
     try {
       const data = await setupTwoFactor()
+      if ("alreadyEnabled" in data && data.alreadyEnabled) {
+        // Already protected is the goal state - show it as success, not error.
+        if (setUser && user) setUser({ ...user, twoFactorEnabled: true })
+        setPhase("enabled")
+        return
+      }
       setSetupData(data)
       setPhase("setup")
     } catch (err) {
@@ -61,6 +67,11 @@ export function TwoFactorSetup() {
     setError("")
     try {
       const result = await verifyTwoFactorSetup(code)
+      if ("alreadyEnabled" in result && result.alreadyEnabled) {
+        if (setUser && user) setUser({ ...user, twoFactorEnabled: true })
+        setPhase("enabled")
+        return
+      }
       setBackupCodes(result.backupCodes)
       setPhase("verify")
       if (setUser && user) setUser({ ...user, twoFactorEnabled: true })

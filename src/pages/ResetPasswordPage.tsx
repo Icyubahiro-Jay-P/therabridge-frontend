@@ -7,11 +7,6 @@ import { InvalidToken } from "@/components/shared/auth/InvalidToken"
 import { ResetPasswordForm } from "@/components/shared/auth/ResetPasswordForm"
 import { ResetPasswordSuccess } from "@/components/shared/auth/ResetPasswordSuccess"
 
-function getErrorMessage(err: unknown): string {
-  if (err instanceof Error) return err.message
-  return "Something went wrong"
-}
-
 export function ResetPasswordPage() {
   const { token } = useParams<{ token: string }>()
   const [password, setPassword] = useState("")

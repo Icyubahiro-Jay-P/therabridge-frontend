@@ -119,7 +119,7 @@ export function JournalEditor({
                   onClick={() => onMoodChange(mood === m ? null : m)}
                   className={`flex items-center gap-1 rounded-lg px-3 py-1.5 text-sm transition-colors ${
                     mood === m
-                      ? "bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300"
+                      ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300"
                       : "bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700"
                   }`}
                 >
@@ -154,7 +154,7 @@ export function JournalEditor({
                     placeholder="Add tag..."
                     className="w-20 rounded-full border-0 bg-transparent text-xs text-gray-600 placeholder:text-gray-400 focus:outline-none dark:text-gray-400"
                   />
-                  <button onClick={addTag} className="text-gray-400 hover:text-blue-500">
+                  <button onClick={addTag} className="text-gray-400 hover:text-emerald-500">
                     <Plus className="size-3" />
                   </button>
                 </div>

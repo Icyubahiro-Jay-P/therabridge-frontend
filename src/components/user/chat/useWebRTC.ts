@@ -242,7 +242,7 @@ export function useWebRTC() {
       const offer = await pc.createOffer()
       await pc.setLocalDescription(offer)
 
-      // Store the offer SDP — we'll send it once the server returns callId
+      // Store the offer SDP, we'll send it once the server returns callId
       pendingOfferRef.current = { sdp: offer, calleeId: targetUserId }
 
       getSocket()?.emit("call:initiate", { calleeId: targetUserId })

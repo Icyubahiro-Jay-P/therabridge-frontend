@@ -3,6 +3,7 @@ import { useProgramState } from "./useProgramState"
 import { useEffect, useRef, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import type { ProgramListItem } from "@/lib/program-api"
+import { EmptyState } from "@/components/user/shared/EmptyState"
 
 const CATEGORY_TABS = [
   { key: undefined, label: "All" },
@@ -239,7 +240,7 @@ export function ProgramsPage() {
           ) : myPrograms.length === 0 ? (
             <EmptyState
               icon={Sparkles}
-              title="You haven&apos;t started any programs yet"
+              title="You haven't started any programs yet"
               description="Pick a program that fits what you're working on and complete short activities each week. Your progress will be tracked here."
               action={
                 <button

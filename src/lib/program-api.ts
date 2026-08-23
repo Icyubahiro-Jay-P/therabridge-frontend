@@ -71,20 +71,20 @@ export interface CompleteActivityResponse {
 export const programApi = {
   list: (category?: string) =>
     api
-      .get<{ programs: ProgramListItem[] }>("/programs", {
+      .get<{ programs: ProgramListItem[] }>("/api/programs", {
         params: category ? { category } : undefined,
       })
       .then((r) => r.data.programs),
 
   get: (id: string) =>
-    api.get<{ program: Program; progress: ProgramProgress | null }>(`/programs/${id}`).then((r) => r.data),
+    api.get<{ program: Program; progress: ProgramProgress | null }>(`/api/programs/${id}`).then((r) => r.data),
 
   start: (id: string) =>
-    api.post<{ progress: ProgramProgress }>(`/programs/${id}/start`).then((r) => r.data.progress),
+    api.post<{ progress: ProgramProgress }>(`/api/programs/${id}/start`).then((r) => r.data.progress),
 
   completeActivity: (id: string, weekIndex: number, activityIndex: number) =>
     api
-      .post<CompleteActivityResponse>(`/programs/${id}/complete`, {
+      .post<CompleteActivityResponse>(`/api/programs/${id}/complete`, {
         weekIndex,
         activityIndex,
       })
@@ -92,6 +92,6 @@ export const programApi = {
 
   myPrograms: () =>
     api
-      .get<{ inProgress: ProgramListItem[]; completed: ProgramListItem[] }>("/programs/mine")
+      .get<{ inProgress: ProgramListItem[]; completed: ProgramListItem[] }>("/api/programs/mine")
       .then((r) => r.data),
 }

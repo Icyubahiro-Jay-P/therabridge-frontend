@@ -1,7 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { api } from "./api"
+import { restoreQueries, snapshotQueries } from "./optimistic"
 
-interface PaginatedResponse<T> {
+export interface PaginatedResponse<T> {
   data: T[]
   total: number
   page: number

@@ -94,7 +94,7 @@ export function JournalEntryDetail({
               </span>
             )}
             {entry.isPublic ? (
-              <span className="flex items-center gap-1 text-xs text-blue-500"><Globe className="size-3" /> Public</span>
+              <span className="flex items-center gap-1 text-xs text-emerald-500"><Globe className="size-3" /> Public</span>
             ) : (
               <span className="flex items-center gap-1 text-xs text-gray-400"><Lock className="size-3" /> Private</span>
             )}
@@ -106,7 +106,7 @@ export function JournalEntryDetail({
           {entry.tags.length > 0 && (
             <div className="mb-6 flex flex-wrap gap-1.5">
               {entry.tags.map((t) => (
-                <span key={t} className="rounded-full bg-blue-50 px-2.5 py-0.5 text-xs text-blue-600 dark:bg-blue-900/30 dark:text-blue-400">
+                <span key={t} className="rounded-full bg-emerald-50 px-2.5 py-0.5 text-xs text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400">
                   {t}
                 </span>
               ))}
@@ -154,7 +154,7 @@ export function JournalEntryDetail({
                 onChange={(e) => setCommentText(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && handlePostComment()}
                 placeholder="Add a comment..."
-                className="flex-1 rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:border-blue-400 focus:outline-none focus:ring-1 focus:ring-blue-400 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
+                className="flex-1 rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:border-emerald-400 focus:outline-none focus:ring-1 focus:ring-emerald-400 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
               />
               <Button
                 onClick={handlePostComment}

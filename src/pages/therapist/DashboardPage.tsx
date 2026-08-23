@@ -142,8 +142,8 @@ export function TherapistDashboardPage() {
 
       <div className="grid gap-4 sm:grid-cols-3">
         <TherapistStatCard icon={Hash} value={ownerCommunities.length} label="Communities you own" color="bg-emerald-100 text-emerald-600 dark:bg-emerald-900/40" />
-        <TherapistStatCard icon={Users} value={totalMembers} label="Total members" color="bg-sky-100 text-sky-600 dark:bg-sky-900/40" />
-        <TherapistStatCard icon={MessageCircle} value={memberCommunities.length} label="Communities joined" color="bg-violet-100 text-violet-600 dark:bg-violet-900/40" />
+        <TherapistStatCard icon={Users} value={totalMembers} label="Total members" color="bg-teal-100 text-teal-600 dark:bg-teal-900/40" />
+        <TherapistStatCard icon={MessageCircle} value={memberCommunities.length} label="Communities joined" color="bg-amber-100 text-amber-600 dark:bg-amber-900/40 dark:text-amber-400" />
       </div>
 
       {clients.length > 0 && (

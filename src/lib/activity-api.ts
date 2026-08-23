@@ -45,17 +45,17 @@ export const activityApi = {
     title: string; category: string; scheduledDate: string;
     scheduledTime?: string; duration?: number; expectedPleasure: number;
     moodBefore?: string; notes?: string;
-  }) => api.post<Activity>("/activities", data).then((r) => r.data),
+  }) => api.post<Activity>("/api/activities", data).then((r) => r.data),
 
   list: (params?: { week?: string; completed?: boolean; category?: string }) =>
-    api.get<{ activities: Activity[] }>("/activities", { params }).then((r) => r.data),
+    api.get<{ activities: Activity[] }>("/api/activities", { params }).then((r) => r.data),
 
-  get: (id: string) => api.get<Activity>(`/activities/${id}`).then((r) => r.data),
+  get: (id: string) => api.get<Activity>(`/api/activities/${id}`).then((r) => r.data),
 
   complete: (id: string, data?: { actualPleasure?: number; moodAfter?: string; notes?: string }) =>
-    api.post<Activity>(`/activities/${id}/complete`, data).then((r) => r.data),
+    api.post<Activity>(`/api/activities/${id}/complete`, data).then((r) => r.data),
 
-  delete: (id: string) => api.delete(`/activities/${id}`).then((r) => r.data),
+  delete: (id: string) => api.delete(`/api/activities/${id}`).then((r) => r.data),
 
-  stats: () => api.get<ActivityStats>("/activities/stats").then((r) => r.data),
+  stats: () => api.get<ActivityStats>("/api/activities/stats").then((r) => r.data),
 }

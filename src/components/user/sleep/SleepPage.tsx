@@ -476,13 +476,18 @@ export function SleepPage() {
             />
           ))}
         </div>
-        {filteredContent.length === 0 && !s.loading && (
-          <div className="flex flex-col items-center justify-center py-12 text-center">
-            <Headphones className="mb-3 size-10 text-gray-300 dark:text-gray-600" />
-            <p className="text-sm text-gray-400 dark:text-gray-500">
-              No content available yet.
-            </p>
-          </div>
+        {!s.contentLoading && filteredContent.length === 0 && (
+          <EmptyState
+            icon={Headphones}
+            title={
+              activeTab === "sound"
+                ? "No sounds available yet"
+                : activeTab === "meditation"
+                  ? "No meditations available yet"
+                  : "No stories available yet"
+            }
+            description="Calming audio to help you unwind and drift off. The sleep library is curated by our care team — new content is added regularly."
+          />
         )}
       </div>
 

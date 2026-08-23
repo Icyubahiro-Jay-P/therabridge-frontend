@@ -189,7 +189,7 @@ export function ThoughtRecordsPage() {
                   </button>
                 }
               />
-            )}
+            ))}
           )}
 
           {s.hasMore && (

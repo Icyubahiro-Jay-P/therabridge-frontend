@@ -18,15 +18,15 @@ const typeIcons: Record<string, typeof Bell> = {
 }
 
 const typeColors: Record<string, string> = {
-  message: "bg-sky-100 text-sky-600 dark:bg-sky-900/40 dark:text-sky-400",
+  message: "bg-teal-100 text-teal-600 dark:bg-teal-900/40 dark:text-teal-400",
   community_invite: "bg-emerald-100 text-emerald-600 dark:bg-emerald-900/40 dark:text-emerald-400",
   exercise_reminder: "bg-amber-100 text-amber-600 dark:bg-amber-900/40 dark:text-amber-400",
-  system: "bg-violet-100 text-violet-600 dark:bg-violet-900/40 dark:text-violet-400",
-  mood_reminder: "bg-pink-100 text-pink-600 dark:bg-pink-900/40 dark:text-pink-400",
+  system: "bg-emerald-100 text-emerald-600 dark:bg-emerald-900/40 dark:text-emerald-400",
+  mood_reminder: "bg-amber-100 text-amber-600 dark:bg-amber-900/40 dark:text-amber-400",
   crisis_alert: "bg-red-100 text-red-600 dark:bg-red-900/40 dark:text-red-400",
   community_update: "bg-teal-100 text-teal-600 dark:bg-teal-900/40 dark:text-teal-400",
-  streak_milestone: "bg-orange-100 text-orange-600 dark:bg-orange-900/40 dark:text-orange-400",
-  mood_checkin: "bg-pink-100 text-pink-600 dark:bg-pink-900/40 dark:text-pink-400",
+  streak_milestone: "bg-amber-100 text-amber-600 dark:bg-amber-900/40 dark:text-amber-400",
+  mood_checkin: "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400",
 }
 
 interface NotificationData {

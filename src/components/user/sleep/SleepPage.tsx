@@ -92,7 +92,7 @@ function TrendChart({ data }: { data: { date: string; quality: number }[] }) {
         return (
           <div key={i} className="flex flex-1 flex-col items-center gap-1.5">
             <span className="text-[10px] font-medium text-gray-400 dark:text-gray-500">
-              {d.quality > 0 ? d.quality.toFixed(1) : "—"}
+              {d.quality > 0 ? d.quality.toFixed(1) : "-"}
             </span>
             <div className="w-full flex items-end justify-center" style={{ height: "80px" }}>
               <div
@@ -317,7 +317,7 @@ export function SleepPage() {
           <div className="flex items-center gap-2 mb-4">
             <BarChart3 className="size-4 text-gray-400 dark:text-gray-500" />
             <h2 className="text-sm font-semibold text-gray-900 dark:text-white">
-              Quality — Last 7 Days
+              Quality, Last 7 Days
             </h2>
           </div>
           <TrendChart data={s.stats.weeklyTrend} />
@@ -487,7 +487,7 @@ export function SleepPage() {
                   ? "No meditations available yet"
                   : "No stories available yet"
             }
-            description="Calming audio to help you unwind and drift off. The sleep library is curated by our care team — new content is added regularly."
+            description="Calming audio to help you unwind and drift off. The sleep library is curated by our care team, new content is added regularly."
           />
         )}
       </div>

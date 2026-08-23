@@ -1,8 +1,13 @@
 import { useState, useEffect } from "react"
 import { TriangleAlert } from "lucide-react"
 
-import { api } from "@/lib/api"
-import { useGetNotifications, useMarkNotificationRead } from "@/lib/query-hooks"
+import {
+  useGetNotifications,
+  useMarkNotificationRead,
+  useMarkAllNotificationsRead,
+  useDeleteNotification,
+  useDeleteAllNotifications,
+} from "@/lib/query-hooks"
 import { NotificationItem } from "@/components/user/notifications/NotificationItem"
 import { NotificationsHeader } from "@/components/user/notifications/NotificationsHeader"
 import { NotificationsEmptyState } from "@/components/user/notifications/NotificationsEmptyState"

@@ -361,7 +361,14 @@ export function useDeleteNotification<T extends NotificationLike = NotificationL
     onMutate: async (notificationId: string) => {
       await queryClient.cancelQueries({ queryKey: ["notifications"] })
       const previous = snapshotQueries(queryClient, ["notifications"])
-      patchAllNotificationPages<PaginatedResponse<T> extends never ? never : T>(queryClient, () => [])
+      patchAllNotificationPages<T>(
+        queryClient,
+        (page) => ({
+          ...page,
+          data: page.data.filter((n) => n._id !== notificationId),
+          total: Math.max(0, page.total - 1),
+        })
+      )
       return { previous }
     },
     onError: (_error, _notificationId, context) => {

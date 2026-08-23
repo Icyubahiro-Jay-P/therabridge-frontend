@@ -271,7 +271,31 @@ export function useGetNotifications<T = unknown>(page = 1, limit = 20) {
   })
 }
 
-export function useMarkNotificationRead() {
+/** Structural subset every notification mutation patches optimistically. */
+export interface NotificationLike {
+  _id: string
+  read: boolean
+}
+
+function patchAllNotificationPages<T extends NotificationLike>(
+  queryClient: ReturnType<typeof useQueryClient>,
+  transform: (items: T[]) => T[],
+) {
+  queryClient.setQueriesData<PaginatedResponse<T>>(
+    { queryKey: ["notifications"] },
+    (old) =>
+      old && {
+        ...old,
+        data: transform(old.data),
+      },
+  )
+}
+
+/**
+ * Marks one notification read. The cache is patched before the request goes
+ * out; on failure the previous state is restored and the error rethrown.
+ */
+export function useMarkNotificationRead<T extends NotificationLike = NotificationLike>() {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -281,7 +305,73 @@ export function useMarkNotificationRead() {
       )
       return data
     },
-    onSuccess: () => {
+    onMutate: async (notificationId: string) => {
+      await queryClient.cancelQueries({ queryKey: ["notifications"] })
+      const previous = snapshotQueries(queryClient, ["notifications"])
+      patchAllNotificationPages<T>(queryClient, (items) =>
+        items.map((n) => (n._id === notificationId ? { ...n, read: true } : n))
+      )
+      return { previous }
+    },
+    onError: (_error, _notificationId, context) => {
+      restoreQueries(queryClient, context?.previous)
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["notifications"] })
+    },
+  })
+}
+
+/**
+ * Marks every notification read. Cache-first like {@link useMarkNotificationRead}.
+ */
+export function useMarkAllNotificationsRead<T extends NotificationLike = NotificationLike>() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: async () => {
+      const { data } = await api.put(`/api/notifications/read-all`)
+      return data
+    },
+    onMutate: async () => {
+      await queryClient.cancelQueries({ queryKey: ["notifications"] })
+      const previous = snapshotQueries(queryClient, ["notifications"])
+      patchAllNotificationPages<T>(queryClient, (items) =>
+        items.map((n) => ({ ...n, read: true }))
+      )
+      return { previous }
+    },
+    onError: (_error, _variables, context) => {
+      restoreQueries(queryClient, context?.previous)
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["notifications"] })
+    },
+  })
+}
+
+/**
+ * Deletes one notification. It disappears from the list instantly and is
+ * restored if the delete fails.
+ */
+export function useDeleteNotification<T extends NotificationLike = NotificationLike>() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: async (notificationId: string) => {
+      const { data } = await api.delete(`/api/notifications/${notificationId}`)
+      return data
+    },
+    onMutate: async (notificationId: string) => {
+      await queryClient.cancelQueries({ queryKey: ["notifications"] })
+      const previous = snapshotQueries(queryClient, ["notifications"])
+      patchAllNotificationPages<PaginatedResponse<T> extends never ? never : T>(queryClient, () => [])
+      return { previous }
+    },
+    onError: (_error, _notificationId, context) => {
+      restoreQueries(queryClient, context?.previous)
+    },
+    onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["notifications"] })
     },
   })

@@ -5,7 +5,7 @@ export function useThoughtRecordState() {
   const [records, setRecords] = useState<ThoughtRecord[]>([])
   const [selectedRecord, setSelectedRecord] = useState<ThoughtRecord | null>(null)
   const [stats, setStats] = useState<ThoughtRecordStats | null>(null)
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState<string | null>(null)

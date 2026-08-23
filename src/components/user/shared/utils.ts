@@ -1,7 +1,6 @@
-export function getErrorMessage(err: unknown): string {
-  if (err instanceof Error) return err.message
-  return "Something went wrong"
-}
+// Canonical implementation lives in lib/errors.ts (env-aware taxonomy);
+// re-exported here so existing relative imports keep working.
+export { getErrorMessage } from "@/lib/errors"
 
 export function timeAgo(dateString: string) {
   const date = new Date(dateString)

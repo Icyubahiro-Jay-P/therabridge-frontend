@@ -41,10 +41,14 @@ export function NotificationsPage() {
   const [deletingId, setDeletingId] = useState<string | null>(null)
 
   const { data, isLoading, isError, error } = useGetNotifications<NotificationItemData>(1, 100)
-  const markReadMutation = useMarkNotificationRead()
+  const markRead = useMarkNotificationRead<NotificationItemData>()
+  const markAllRead = useMarkAllNotificationsRead<NotificationItemData>()
+  const deleteOne = useDeleteNotification<NotificationItemData>()
+  const deleteEverything = useDeleteAllNotifications<NotificationItemData>()
 
+  // Cache patches inside the hooks make this list react instantly; rollback
+  // on failure is handled there too.
   const notifications: NotificationItemData[] = data?.data ?? []
-  const [optimisticNotifications, setOptimisticNotifications] = useState<NotificationItemData[] | null>(null)
 
   useEffect(() => {
     if (!success) return
@@ -52,47 +56,33 @@ export function NotificationsPage() {
     return () => clearTimeout(timer)
   }, [success])
 
-  const displayList = optimisticNotifications ?? notifications
-
   async function markAsRead(id: string) {
-    setOptimisticNotifications((prev) => {
-      const list = prev ?? notifications
-      return list.map((n) => (n._id === id ? { ...n, read: true } : n))
-    })
+    window.dispatchEvent(new Event("notifications-updated"))
     try {
-      await markReadMutation.mutateAsync(id)
-      window.dispatchEvent(new Event("notifications-updated"))
+      await markRead.mutateAsync(id)
     } catch {
-      setOptimisticNotifications(null)
+      window.dispatchEvent(new Event("notifications-updated"))
     }
   }
 
   async function markAllAsRead() {
-    setOptimisticNotifications((prev) => {
-      const list = prev ?? notifications
-      return list.map((n) => ({ ...n, read: true }))
-    })
+    window.dispatchEvent(new Event("notifications-updated"))
     try {
-      await api.put("/api/notifications/read-all")
-      window.dispatchEvent(new Event("notifications-updated"))
+      await markAllRead.mutateAsync()
       setSuccess("All marked as read")
     } catch {
-      setOptimisticNotifications(null)
+      window.dispatchEvent(new Event("notifications-updated"))
     }
   }
 
   async function deleteNotification(id: string) {
     setDeletingId(id)
-    setOptimisticNotifications((prev) => {
-      const list = prev ?? notifications
-      return list.filter((n) => n._id !== id)
-    })
+    window.dispatchEvent(new Event("notifications-updated"))
     try {
-      await api.delete(`/api/notifications/${id}`)
-      window.dispatchEvent(new Event("notifications-updated"))
+      await deleteOne.mutateAsync(id)
       setSuccess("Notification deleted")
     } catch {
-      setOptimisticNotifications(null)
+      window.dispatchEvent(new Event("notifications-updated"))
     } finally {
       setDeletingId(null)
     }
@@ -100,17 +90,15 @@ export function NotificationsPage() {
 
   async function deleteAll() {
     try {
-      await api.delete("/api/notifications")
-      setOptimisticNotifications([])
-      window.dispatchEvent(new Event("notifications-updated"))
+      await deleteEverything.mutateAsync()
       setSuccess("All notifications deleted")
     } catch {
-      setOptimisticNotifications(null)
+      // List already restored by the hook.
     }
     setConfirmDeleteAll(false)
   }
 
-  const unreadCount = displayList.filter((n) => !n.read).length
+  const unreadCount = notifications.filter((n) => !n.read).length
 
   if (isLoading) {
     return (

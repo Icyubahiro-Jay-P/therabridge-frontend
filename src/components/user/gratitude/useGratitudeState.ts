@@ -1,5 +1,6 @@
 import { useState, useCallback } from "react"
 import { gratitudeApi, type GratitudePrompt, type GratitudeEntry, type GratitudeStreak } from "@/lib/gratitude-api"
+import { getErrorMessage } from "@/lib/errors"
 
 export function useGratitudeState() {
   const [prompt, setPrompt] = useState<GratitudePrompt | null>(null)
@@ -48,6 +49,7 @@ export function useGratitudeState() {
     if (!prompt) return null
     setSaving(true)
     setError(null)
+    setInfo(null)
     setSuccess(null)
     try {
       const entry = await gratitudeApi.create({
@@ -55,14 +57,18 @@ export function useGratitudeState() {
         promptText: prompt.text,
         content,
       })
-      setEntries((prev) => [entry, ...prev])
       setHasEntryToday(true)
+      if (entry.alreadyCompleted) {
+        // Already done today is a normal repeat visit, not a failure.
+        setInfo("You've already completed today's gratitude prompt. Come back tomorrow!")
+        return entry
+      }
+      setEntries((prev) => [entry, ...prev])
       fetchStreak()
       setSuccess(entry.pointsEarned ? `Gratitude logged! +${entry.pointsEarned} wellness points` : "Gratitude logged!")
       return entry
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : "Failed to save"
-      setError(msg.includes("already completed") ? msg : "Failed to save gratitude entry")
+      setError(getErrorMessage(err))
       return null
     } finally {
       setSaving(false)

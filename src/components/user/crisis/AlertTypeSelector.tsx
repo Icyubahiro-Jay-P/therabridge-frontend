@@ -2,7 +2,7 @@ import { cn } from "@/lib/utils"
 
 const alertTypes = [
   { value: "immediate_danger", label: "Immediate Danger", color: "bg-red-500", hint: "You are in danger right now" },
-  { value: "severe_distress", label: "Severe Distress", color: "bg-orange-500", hint: "Overwhelming, hard to cope" },
+  { value: "severe_distress", label: "Severe Distress", color: "bg-amber-600", hint: "Overwhelming, hard to cope" },
   { value: "panic_attack", label: "Panic Attack", color: "bg-amber-500", hint: "Racing heart or breathlessness" },
   { value: "self_harm_thoughts", label: "Self-Harm Thoughts", color: "bg-red-600", hint: "Thinking of hurting yourself" },
   { value: "emergency", label: "Emergency", color: "bg-red-700", hint: "Needs emergency care now" },

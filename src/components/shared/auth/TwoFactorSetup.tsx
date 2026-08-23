@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { Loader2, ShieldCheck, ShieldOff, Copy, Check, Eye, EyeOff } from "lucide-react"
+import { Loader2, ShieldCheck, ShieldOff, Copy, Check, Download, Eye, EyeOff } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useAuthStore } from "@/store/auth-store"
 import {
@@ -105,6 +105,28 @@ export function TwoFactorSetup() {
     setTimeout(() => setCopied(false), 2000)
   }
 
+  function downloadBackupCodes() {
+    const content = [
+      "Therabridge - Two-Factor Authentication Backup Codes",
+      `Account: ${user?.email ?? ""}`,
+      `Generated: ${new Date().toISOString()}`,
+      "",
+      ...backupCodes,
+      "",
+      "Each backup code can only be used once.",
+      "Store this file securely - anyone with these codes can access your account.",
+    ].join("\n")
+    const blob = new Blob([content], { type: "text/plain;charset=utf-8" })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement("a")
+    a.href = url
+    a.download = `therabridge-backup-codes-${new Date().toISOString().slice(0, 10)}.txt`
+    document.body.appendChild(a)
+    a.click()
+    a.remove()
+    URL.revokeObjectURL(url)
+  }
+
   if (phase === "verify") {
     return (
       <div className="space-y-4">
@@ -132,6 +154,14 @@ export function TwoFactorSetup() {
             <span className="text-xs font-medium text-gray-500 dark:text-gray-400">
               Backup Codes
             </span>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={downloadBackupCodes}
+              className="flex items-center gap-1 text-xs font-medium text-emerald-600 hover:text-emerald-700 dark:text-emerald-400"
+            >
+              <Download className="size-3" />
+              Download
+            </button>
             <button
               onClick={copyBackupCodes}
               className="flex items-center gap-1 text-xs font-medium text-emerald-600 hover:text-emerald-700 dark:text-emerald-400"
@@ -139,6 +169,7 @@ export function TwoFactorSetup() {
               {copied ? <Check className="size-3" /> : <Copy className="size-3" />}
               {copied ? "Copied" : "Copy"}
             </button>
+          </div>
           </div>
           <div className="grid grid-cols-2 gap-1">
             {backupCodes.map((c) => (

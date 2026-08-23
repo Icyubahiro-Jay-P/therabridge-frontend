@@ -3,12 +3,12 @@ import { CATEGORY_META } from "@/lib/psychoed-api"
 import type { PsychoedModuleDetail as ModuleDetail, PsychoedProgress, PsychoedCategory } from "@/lib/psychoed-api"
 
 const CATEGORY_ACCENT: Record<PsychoedCategory, { bg: string; text: string; lightBg: string }> = {
-  cbt: { bg: "bg-violet-600", text: "text-violet-600 dark:text-violet-400", lightBg: "bg-violet-50 dark:bg-violet-950/20" },
-  anxiety: { bg: "bg-blue-600", text: "text-blue-600 dark:text-blue-400", lightBg: "bg-blue-50 dark:bg-blue-950/20" },
-  depression: { bg: "bg-indigo-600", text: "text-indigo-600 dark:text-indigo-400", lightBg: "bg-indigo-50 dark:bg-indigo-950/20" },
-  stress: { bg: "bg-orange-600", text: "text-orange-600 dark:text-orange-400", lightBg: "bg-orange-50 dark:bg-orange-950/20" },
+  cbt: { bg: "bg-emerald-600", text: "text-emerald-600 dark:text-emerald-400", lightBg: "bg-emerald-50 dark:bg-emerald-950/20" },
+  anxiety: { bg: "bg-teal-600", text: "text-teal-600 dark:text-teal-400", lightBg: "bg-teal-50 dark:bg-teal-950/20" },
+  depression: { bg: "bg-gray-600", text: "text-gray-600 dark:text-gray-400", lightBg: "bg-gray-50 dark:bg-gray-950/20" },
+  stress: { bg: "bg-amber-600", text: "text-amber-600 dark:text-amber-400", lightBg: "bg-amber-50 dark:bg-amber-950/20" },
   sleep: { bg: "bg-teal-600", text: "text-teal-600 dark:text-teal-400", lightBg: "bg-teal-50 dark:bg-teal-950/20" },
-  relationships: { bg: "bg-pink-600", text: "text-pink-600 dark:text-pink-400", lightBg: "bg-pink-50 dark:bg-pink-950/20" },
+  relationships: { bg: "bg-emerald-600", text: "text-emerald-600 dark:text-emerald-400", lightBg: "bg-emerald-50 dark:bg-emerald-950/20" },
 }
 
 function renderMarkdown(text: string) {

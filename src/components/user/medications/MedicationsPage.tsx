@@ -317,11 +317,6 @@ export function MedicationsPage() {
               description="Use “Take” or “Skip” on today's medications and your dose history will build up here."
             />
           ) : (
-            <div className="flex flex-col items-center justify-center py-12 text-center">
-              <Calendar className="mb-4 size-12 text-gray-300 dark:text-gray-600" />
-              <p className="text-gray-500 dark:text-gray-400">No dose logs yet.</p>
-            </div>
-          ) : (
             <div className="space-y-2">
               {m.logs.map((log) => {
                 const medName = typeof log.medication === "object" ? log.medication.name : "Medication"

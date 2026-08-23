@@ -208,7 +208,28 @@ export function MedicationsPage() {
       {view === "all" && (
         <div className="space-y-3">
           <h2 className="text-lg font-semibold text-gray-900 dark:text-white">All Medications</h2>
-          {m.medications.length === 0 ? (
+          {m.loadError ? null : m.loading && m.medications.length === 0 ? (
+            <div className="space-y-3">
+              {[1, 2].map((i) => (
+                <div key={i} className="h-24 animate-pulse rounded-xl bg-gray-100 dark:bg-gray-800" />
+              ))}
+            </div>
+          ) : m.medications.length === 0 ? (
+            <EmptyState
+              icon={Pill}
+              title="No medications yet"
+              description="Your full medication list lives here, including past treatments. Add a medication to start logging doses."
+              action={
+                <button
+                  onClick={() => m.openForm()}
+                  className="flex items-center gap-2 rounded-xl bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700"
+                >
+                  <Plus className="size-4" />
+                  Add your first medication
+                </button>
+              }
+            />
+          ) : (
             <div className="flex flex-col items-center justify-center py-12 text-center">
               <Pill className="mb-4 size-12 text-gray-300 dark:text-gray-600" />
               <p className="text-gray-500 dark:text-gray-400">No medications yet.</p>

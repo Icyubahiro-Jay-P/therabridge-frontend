@@ -12,17 +12,17 @@ const ACTIVITY_ICONS: Record<string, React.ReactNode> = {
 }
 
 const ACTIVITY_COLORS: Record<string, string> = {
-  reading: "bg-blue-100 text-blue-700 dark:bg-blue-950/40 dark:text-blue-400",
-  reflection: "bg-violet-100 text-violet-700 dark:bg-violet-950/40 dark:text-violet-400",
-  exercise: "bg-orange-100 text-orange-700 dark:bg-orange-950/40 dark:text-orange-400",
+  reading: "bg-teal-100 text-teal-700 dark:bg-teal-950/40 dark:text-teal-400",
+  reflection: "bg-emerald-100 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400",
+  exercise: "bg-amber-100 text-amber-700 dark:bg-amber-950/40 dark:text-amber-400",
   checkin: "bg-emerald-100 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400",
 }
 
 const CATEGORY_COLORS: Record<string, string> = {
-  anxiety: "bg-blue-100 text-blue-700 dark:bg-blue-950/40 dark:text-blue-400",
-  mood: "bg-violet-100 text-violet-700 dark:bg-violet-950/40 dark:text-violet-400",
-  stress: "bg-orange-100 text-orange-700 dark:bg-orange-950/40 dark:text-orange-400",
-  sleep: "bg-indigo-100 text-indigo-700 dark:bg-indigo-950/40 dark:text-indigo-400",
+  anxiety: "bg-teal-100 text-teal-700 dark:bg-teal-950/40 dark:text-teal-400",
+  mood: "bg-emerald-100 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400",
+  stress: "bg-amber-100 text-amber-700 dark:bg-amber-950/40 dark:text-amber-400",
+  sleep: "bg-teal-100 text-teal-700 dark:bg-teal-950/40 dark:text-teal-400",
   resilience: "bg-emerald-100 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400",
 }
 

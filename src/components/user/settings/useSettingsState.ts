@@ -51,11 +51,6 @@ function saveSettings(s: Settings) {
   else document.documentElement.classList.remove("calm-mode")
 }
 
-function getErrorMessage(err: unknown): string {
-  if (err instanceof Error) return err.message
-  return "Something went wrong"
-}
-
 export function useSettingsState() {
   const [settings, setSettings] = useState<Settings>(loadSettings)
   const [deletingDMs, setDeletingDMs] = useState(false)

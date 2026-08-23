@@ -29,16 +29,16 @@ export type GratitudeCreateResult = GratitudeEntry & {
 
 export const gratitudeApi = {
   getDailyPrompt: () =>
-    api.get<{ prompt: GratitudePrompt; hasEntryToday: boolean }>("/gratitude/prompt").then((r) => r.data),
+    api.get<{ prompt: GratitudePrompt; hasEntryToday: boolean }>("/api/gratitude/prompt").then((r) => r.data),
 
   create: (data: { promptId: string; promptText: string; content: string }) =>
-    api.post<GratitudeCreateResult>("/gratitude", data).then((r) => r.data),
+    api.post<GratitudeCreateResult>("/api/gratitude", data).then((r) => r.data),
 
   list: (params?: { page?: number }) =>
-    api.get<{ entries: GratitudeEntry[]; hasMore: boolean }>("/gratitude", { params }).then((r) => r.data),
+    api.get<{ entries: GratitudeEntry[]; hasMore: boolean }>("/api/gratitude", { params }).then((r) => r.data),
 
   streak: () =>
-    api.get<GratitudeStreak>("/gratitude/streak").then((r) => r.data),
+    api.get<GratitudeStreak>("/api/gratitude/streak").then((r) => r.data),
 
-  delete: (id: string) => api.delete(`/gratitude/${id}`).then((r) => r.data),
+  delete: (id: string) => api.delete(`/api/gratitude/${id}`).then((r) => r.data),
 }

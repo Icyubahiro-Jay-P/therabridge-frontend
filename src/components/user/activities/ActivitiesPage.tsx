@@ -106,7 +106,7 @@ export function ActivitiesPage() {
           </div>
           <div className="rounded-xl border border-gray-200 bg-white p-3 dark:border-gray-700 dark:bg-gray-900">
             <p className="text-xs text-gray-500 dark:text-gray-400">Completed</p>
-            <p className="text-lg font-bold text-green-600 dark:text-green-400">{a.stats.completedActivities}</p>
+            <p className="text-lg font-bold text-emerald-600 dark:text-emerald-400">{a.stats.completedActivities}</p>
           </div>
           <div className="rounded-xl border border-gray-200 bg-white p-3 dark:border-gray-700 dark:bg-gray-900">
             <p className="text-xs text-gray-500 dark:text-gray-400">Completion</p>
@@ -160,7 +160,7 @@ export function ActivitiesPage() {
                         className="shrink-0"
                       >
                         {act.completed ? (
-                          <CheckCircle2 className="size-5 text-green-500" />
+                          <CheckCircle2 className="size-5 text-emerald-500" />
                         ) : (
                           <Circle className="size-5 text-gray-300 hover:text-emerald-500" />
                         )}

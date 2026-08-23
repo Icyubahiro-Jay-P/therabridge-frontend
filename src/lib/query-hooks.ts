@@ -279,15 +279,11 @@ export interface NotificationLike {
 
 function patchAllNotificationPages<T extends NotificationLike>(
   queryClient: ReturnType<typeof useQueryClient>,
-  transform: (items: T[]) => T[],
+  transform: (page: PaginatedResponse<T>) => PaginatedResponse<T>,
 ) {
   queryClient.setQueriesData<PaginatedResponse<T>>(
     { queryKey: ["notifications"] },
-    (old) =>
-      old && {
-        ...old,
-        data: transform(old.data),
-      },
+    (old) => (old ? transform(old) : old)
   )
 }
 

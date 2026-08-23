@@ -1,5 +1,7 @@
 import { useState, useCallback } from "react"
 import { activityApi, type Activity, type ActivityStats } from "@/lib/activity-api"
+import { getErrorMessage } from "@/lib/errors"
+import { runOptimistic } from "@/lib/optimistic"
 
 export function useActivityState() {
   const [activities, setActivities] = useState<Activity[]>([])

@@ -34,14 +34,14 @@ export interface AssessmentTrend {
 export const ASSESSMENT_QUESTIONS: Record<string, { title: string; description: string; questions: string[] }> = {
   phq9: {
     title: "PHQ-9",
-    description: "Patient Health Questionnaire — Over the last 2 weeks, how often have you been bothered by...",
+    description: "Patient Health Questionnaire, Over the last 2 weeks, how often have you been bothered by...",
     questions: [
       "Little interest or pleasure in doing things",
       "Feeling down, depressed, or hopeless",
       "Trouble falling or staying asleep, or sleeping too much",
       "Feeling tired or having little energy",
       "Poor appetite or overeating",
-      "Feeling bad about yourself — or that you're a failure",
+      "Feeling bad about yourself, or that you're a failure",
       "Trouble concentrating on things",
       "Moving or speaking slowly / being fidgety or restless",
       "Thoughts that you would be better off dead, or of hurting yourself",
@@ -49,7 +49,7 @@ export const ASSESSMENT_QUESTIONS: Record<string, { title: string; description: 
   },
   gad7: {
     title: "GAD-7",
-    description: "Generalized Anxiety Disorder — Over the last 2 weeks, how often have you been bothered by...",
+    description: "Generalized Anxiety Disorder, Over the last 2 weeks, how often have you been bothered by...",
     questions: [
       "Feeling nervous, anxious, or on edge",
       "Not being able to stop or control worrying",
@@ -62,7 +62,7 @@ export const ASSESSMENT_QUESTIONS: Record<string, { title: string; description: 
   },
   pss: {
     title: "PSS-10",
-    description: "Perceived Stress Scale — Over the past month, how often have you...",
+    description: "Perceived Stress Scale, Over the past month, how often have you...",
     questions: [
       "Been upset because of something that happened unexpectedly",
       "Felt that you were unable to control the important things in your life",
@@ -78,7 +78,7 @@ export const ASSESSMENT_QUESTIONS: Record<string, { title: string; description: 
   },
   k10: {
     title: "K10",
-    description: "Kessler Psychological Distress — Over the past 4 weeks, about how often did you...",
+    description: "Kessler Psychological Distress, Over the past 4 weeks, about how often did you...",
     questions: [
       "Feel tired out for no good reason",
       "Feel nervous",

@@ -35,13 +35,13 @@ export function GratitudePage() {
       </div>
 
       {g.success && (
-        <div className="rounded-xl bg-green-50 px-4 py-3 text-sm text-green-700 dark:bg-green-950/40 dark:text-green-400">
+        <div className="rounded-xl bg-emerald-50 px-4 py-3 text-sm text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400">
           {g.success}
         </div>
       )}
 
       {g.info && (
-        <div className="rounded-xl border border-sky-200 bg-sky-50 px-4 py-3 text-sm text-sky-700 dark:border-sky-900/50 dark:bg-sky-950/40 dark:text-sky-400">
+        <div className="rounded-xl border border-teal-200 bg-teal-50 px-4 py-3 text-sm text-teal-700 dark:border-teal-900/50 dark:bg-teal-950/40 dark:text-teal-400">
           {g.info}
         </div>
       )}
@@ -55,11 +55,11 @@ export function GratitudePage() {
       {/* Streak & Stats */}
       {g.streak && (
         <div className="flex gap-3">
-          <div className="flex items-center gap-3 rounded-xl border border-orange-200 bg-orange-50 px-4 py-3 dark:border-orange-900/50 dark:bg-orange-950/30">
-            <Flame className="size-5 text-orange-500" />
+          <div className="flex items-center gap-3 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 dark:border-amber-900/50 dark:bg-amber-950/30">
+            <Flame className="size-5 text-amber-500" />
             <div>
-              <p className="text-lg font-bold text-orange-700 dark:text-orange-400">{g.streak.streak}</p>
-              <p className="text-xs text-orange-600 dark:text-orange-500">day streak</p>
+              <p className="text-lg font-bold text-amber-700 dark:text-amber-400">{g.streak.streak}</p>
+              <p className="text-xs text-amber-600 dark:text-amber-500">day streak</p>
             </div>
           </div>
           <div className="flex items-center gap-3 rounded-xl border border-gray-200 bg-white px-4 py-3 dark:border-gray-700 dark:bg-gray-900">
@@ -74,11 +74,11 @@ export function GratitudePage() {
 
       {/* Today's Prompt */}
       {g.prompt && (
-        <div id="gratitude-composer" className="rounded-2xl border border-violet-200 bg-violet-50 p-6 dark:border-violet-900/50 dark:bg-violet-950/30">
+        <div id="gratitude-composer" className="rounded-2xl border border-teal-200 bg-teal-50 p-6 dark:border-teal-900/50 dark:bg-teal-950/30">
           <div className="flex items-start gap-3">
-            <Sparkles className="mt-0.5 size-5 shrink-0 text-violet-600 dark:text-violet-400" />
+            <Sparkles className="mt-0.5 size-5 shrink-0 text-teal-600 dark:text-teal-400" />
             <div className="flex-1">
-              <p className="text-xs font-medium uppercase tracking-wider text-violet-600 dark:text-violet-400">
+              <p className="text-xs font-medium uppercase tracking-wider text-teal-600 dark:text-teal-400">
                 Today's Prompt
               </p>
               <p className="mt-2 text-lg font-semibold text-gray-900 dark:text-white">
@@ -88,7 +88,7 @@ export function GratitudePage() {
           </div>
 
           {g.hasEntryToday ? (
-            <div className="mt-4 rounded-xl bg-white/60 px-4 py-3 text-sm text-violet-700 dark:bg-violet-900/30 dark:text-violet-300">
+            <div className="mt-4 rounded-xl bg-white/60 px-4 py-3 text-sm text-teal-700 dark:bg-teal-900/30 dark:text-teal-300">
               You've completed today's gratitude prompt! Come back tomorrow for a new one.
             </div>
           ) : (
@@ -98,7 +98,7 @@ export function GratitudePage() {
                 onChange={(e) => setContent(e.target.value)}
                 maxLength={1000}
                 rows={4}
-                className="w-full rounded-xl border border-violet-200 bg-white px-4 py-3 text-sm text-gray-900 placeholder:text-gray-400 focus:border-violet-400 focus:outline-none focus:ring-1 focus:ring-violet-400 dark:border-violet-800 dark:bg-gray-900 dark:text-white"
+                className="w-full rounded-xl border border-teal-200 bg-white px-4 py-3 text-sm text-gray-900 placeholder:text-gray-400 focus:border-teal-400 focus:outline-none focus:ring-1 focus:ring-teal-400 dark:border-teal-800 dark:bg-gray-900 dark:text-white"
                 placeholder="Write what you're grateful for..."
               />
               <div className="flex items-center justify-between">
@@ -106,7 +106,7 @@ export function GratitudePage() {
                 <button
                   onClick={handleSubmit}
                   disabled={!content.trim() || g.saving}
-                  className="flex items-center gap-2 rounded-xl bg-violet-600 px-4 py-2 text-sm font-medium text-white hover:bg-violet-700 disabled:opacity-50"
+                  className="flex items-center gap-2 rounded-xl bg-teal-600 px-4 py-2 text-sm font-medium text-white hover:bg-teal-700 disabled:opacity-50"
                 >
                   <Send className="size-3.5" />
                   {g.saving ? "Saving..." : "Log Gratitude"}
@@ -119,8 +119,8 @@ export function GratitudePage() {
 
       {/* Prompt failed to load — offer a retry instead of silently hiding the composer */}
       {!g.prompt && !g.loading && g.error && (
-        <div className="rounded-2xl border border-dashed border-violet-200 bg-violet-50/50 p-6 text-center dark:border-violet-900/50 dark:bg-violet-950/20">
-          <Sparkles className="mx-auto mb-2 size-6 text-violet-400" />
+        <div className="rounded-2xl border border-dashed border-teal-200 bg-teal-50/50 p-6 text-center dark:border-teal-900/50 dark:bg-teal-950/20">
+          <Sparkles className="mx-auto mb-2 size-6 text-teal-400" />
           <p className="text-sm text-gray-500 dark:text-gray-400">
             We couldn&apos;t load today&apos;s gratitude prompt.
           </p>
@@ -129,7 +129,7 @@ export function GratitudePage() {
               g.clearMessages()
               g.fetchPrompt()
             }}
-            className="mt-3 rounded-xl bg-violet-600 px-4 py-2 text-sm font-medium text-white hover:bg-violet-700"
+            className="mt-3 rounded-xl bg-teal-600 px-4 py-2 text-sm font-medium text-white hover:bg-teal-700"
           >
             Try again
           </button>
@@ -146,7 +146,7 @@ export function GratitudePage() {
                 key={entry._id}
                 className="rounded-xl border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-900"
               >
-                <p className="text-xs font-medium text-violet-600 dark:text-violet-400">
+                <p className="text-xs font-medium text-teal-600 dark:text-teal-400">
                   {entry.promptText}
                 </p>
                 <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">{entry.content}</p>
@@ -178,7 +178,7 @@ export function GratitudePage() {
                 onClick={() =>
                   document.getElementById("gratitude-composer")?.scrollIntoView({ behavior: "smooth", block: "center" })
                 }
-                className="rounded-xl bg-violet-600 px-4 py-2 text-sm font-medium text-white hover:bg-violet-700"
+                className="rounded-xl bg-teal-600 px-4 py-2 text-sm font-medium text-white hover:bg-teal-700"
               >
                 Write today&apos;s entry
               </button>

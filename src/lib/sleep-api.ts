@@ -55,15 +55,15 @@ export const sleepApi = {
     hoursSlept?: number
     notes?: string
     dreams?: string
-  }) => api.post<SleepLog>("/sleep", data).then((r) => r.data),
+  }) => api.post<SleepLog>("/api/sleep", data).then((r) => r.data),
 
   list: (params?: { page?: number; limit?: number }) =>
-    api.get<PaginatedLogs>("/sleep", { params }).then((r) => r.data),
+    api.get<PaginatedLogs>("/api/sleep", { params }).then((r) => r.data),
 
-  stats: () => api.get<SleepStats>("/sleep/stats").then((r) => r.data),
+  stats: () => api.get<SleepStats>("/api/sleep/stats").then((r) => r.data),
 
   content: (params?: { type?: string; category?: string }) =>
-    api.get<{ content: SleepContent[] }>("/sleep/content", { params }).then((r) => r.data),
+    api.get<{ content: SleepContent[] }>("/api/sleep/content", { params }).then((r) => r.data),
 
-  deleteLog: (id: string) => api.delete(`/sleep/${id}`).then((r) => r.data),
+  deleteLog: (id: string) => api.delete(`/api/sleep/${id}`).then((r) => r.data),
 }

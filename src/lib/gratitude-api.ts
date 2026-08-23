@@ -21,12 +21,18 @@ export interface GratitudeStreak {
   totalEntries: number
 }
 
+/** alreadyCompleted: the entry existed for today - a normal outcome. */
+export type GratitudeCreateResult = GratitudeEntry & {
+  alreadyCompleted?: boolean
+  pointsEarned?: number
+}
+
 export const gratitudeApi = {
   getDailyPrompt: () =>
     api.get<{ prompt: GratitudePrompt; hasEntryToday: boolean }>("/gratitude/prompt").then((r) => r.data),
 
   create: (data: { promptId: string; promptText: string; content: string }) =>
-    api.post<GratitudeEntry>("/gratitude", data).then((r) => r.data),
+    api.post<GratitudeCreateResult>("/gratitude", data).then((r) => r.data),
 
   list: (params?: { page?: number }) =>
     api.get<{ entries: GratitudeEntry[]; hasMore: boolean }>("/gratitude", { params }).then((r) => r.data),

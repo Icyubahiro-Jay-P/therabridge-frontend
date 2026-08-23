@@ -144,11 +144,11 @@ export function NotificationsPage() {
           </div>
         </div>
       )}
-      {displayList.length === 0 ? (
+      {notifications.length === 0 ? (
         <NotificationsEmptyState />
       ) : (
         <div className="space-y-2">
-          {displayList.map((n) => (
+          {notifications.map((n) => (
             <NotificationItem
               key={n._id}
               notification={n}

@@ -53,10 +53,10 @@ export const medicationApi = {
     startDate?: string
     endDate?: string | null
     notes?: string | null
-  }) => api.post<Medication>("/medications", data).then((r) => r.data),
+  }) => api.post<Medication>("/api/medications", data).then((r) => r.data),
 
   list: (params?: { active?: boolean }) =>
-    api.get<{ medications: Medication[] }>("/medications", { params }).then((r) => r.data),
+    api.get<{ medications: Medication[] }>("/api/medications", { params }).then((r) => r.data),
 
   update: (id: string, data: Partial<{
     name: string
@@ -67,9 +67,9 @@ export const medicationApi = {
     endDate: string | null
     active: boolean
     notes: string | null
-  }>) => api.put<Medication>(`/medications/${id}`, data).then((r) => r.data),
+  }>) => api.put<Medication>(`/api/medications/${id}`, data).then((r) => r.data),
 
-  delete: (id: string) => api.delete(`/medications/${id}`).then((r) => r.data),
+  delete: (id: string) => api.delete(`/api/medications/${id}`).then((r) => r.data),
 
   logDose: (data: {
     medicationId: string
@@ -77,11 +77,11 @@ export const medicationApi = {
     skipped?: boolean
     sideEffects?: string[]
     notes?: string | null
-  }) => api.post<MedicationLog>("/medications/log", data).then((r) => r.data),
+  }) => api.post<MedicationLog>("/api/medications/log", data).then((r) => r.data),
 
   getLogs: (params?: { page?: number; limit?: number; medicationId?: string }) =>
-    api.get<{ logs: MedicationLog[]; hasMore: boolean }>("/medications/logs", { params }).then((r) => r.data),
+    api.get<{ logs: MedicationLog[]; hasMore: boolean }>("/api/medications/logs", { params }).then((r) => r.data),
 
   getStats: (params?: { medicationId?: string; days?: number }) =>
-    api.get<AdherenceStats>("/medications/stats", { params }).then((r) => r.data),
+    api.get<AdherenceStats>("/api/medications/stats", { params }).then((r) => r.data),
 }

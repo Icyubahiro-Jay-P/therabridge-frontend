@@ -16,6 +16,7 @@ import {
   validateTwoFactor as validateTwoFactorRequest,
 } from "@/lib/auth-api"
 import { AuthError, NetworkError, setAuthHandlers } from "@/lib/api"
+import { getErrorMessage as getTaxonomyMessage } from "@/lib/errors"
 import { connectSocket, disconnectSocket } from "@/lib/socket"
 import {
   syncPushSubscription,
@@ -55,9 +56,9 @@ interface AuthState {
 }
 
 function getErrorMessage(error: unknown, fallback: string): string {
-  if (error instanceof AuthError) return error.message
-  if (error instanceof NetworkError) return error.message
-  if (error instanceof Error) return error.message
+  // Typed errors carry user-facing copy; plain Errors go through the
+  // env-aware taxonomy (generic in production, raw in development).
+  if (error instanceof Error) return getTaxonomyMessage(error)
   return fallback
 }
 

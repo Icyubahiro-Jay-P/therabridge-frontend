@@ -16,17 +16,17 @@ const CATEGORY_META: Record<
 > = {
   anxiety_coping: {
     icon: <Shield className="size-4" />,
-    accent: "sky",
-    ring: "ring-sky-300 dark:ring-sky-600",
-    bg: "bg-sky-50 dark:bg-sky-950/40",
-    text: "text-sky-700 dark:text-sky-300",
+    accent: "teal",
+    ring: "ring-teal-300 dark:ring-teal-600",
+    bg: "bg-teal-50 dark:bg-teal-950/40",
+    text: "text-teal-700 dark:text-teal-300",
   },
   self_compassion: {
     icon: <Heart className="size-4" />,
-    accent: "rose",
-    ring: "ring-rose-300 dark:ring-rose-600",
-    bg: "bg-rose-50 dark:bg-rose-950/40",
-    text: "text-rose-700 dark:text-rose-300",
+    accent: "amber",
+    ring: "ring-amber-300 dark:ring-amber-600",
+    bg: "bg-amber-50 dark:bg-amber-950/40",
+    text: "text-amber-700 dark:text-amber-300",
   },
   motivation: {
     icon: <Zap className="size-4" />,
@@ -51,10 +51,10 @@ const CATEGORY_META: Record<
   },
   encouragement: {
     icon: <Trophy className="size-4" />,
-    accent: "violet",
-    ring: "ring-violet-300 dark:ring-violet-600",
-    bg: "bg-violet-50 dark:bg-violet-950/40",
-    text: "text-violet-700 dark:text-violet-300",
+    accent: "teal",
+    ring: "ring-teal-300 dark:ring-teal-600",
+    bg: "bg-teal-50 dark:bg-teal-950/40",
+    text: "text-teal-700 dark:text-teal-300",
   },
   custom: {
     icon: <Sparkles className="size-4" />,
@@ -222,7 +222,7 @@ export function CopingCardsPage() {
       </div>
 
       {s.success && (
-        <div className="rounded-xl bg-green-50 px-4 py-3 text-sm text-green-700 dark:bg-green-950/40 dark:text-green-400">
+        <div className="rounded-xl bg-emerald-50 px-4 py-3 text-sm text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400">
           {s.success}
         </div>
       )}

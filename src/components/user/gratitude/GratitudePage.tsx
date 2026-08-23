@@ -117,7 +117,7 @@ export function GratitudePage() {
         </div>
       )}
 
-      {/* Prompt failed to load — offer a retry instead of silently hiding the composer */}
+      {/* Prompt failed to load, offer a retry instead of silently hiding the composer */}
       {!g.prompt && !g.loading && g.error && (
         <div className="rounded-2xl border border-dashed border-teal-200 bg-teal-50/50 p-6 text-center dark:border-teal-900/50 dark:bg-teal-950/20">
           <Sparkles className="mx-auto mb-2 size-6 text-teal-400" />
@@ -171,7 +171,7 @@ export function GratitudePage() {
         <EmptyState
           icon={Sparkles}
           title="No gratitude entries yet"
-          description="Noticing and writing down things you're grateful for — even one small thing a day — is a proven way to lift your mood. Complete today's prompt above to start your streak."
+          description="Noticing and writing down things you're grateful for, even one small thing a day, is a proven way to lift your mood. Complete today's prompt above to start your streak."
           action={
             g.prompt ? (
               <button

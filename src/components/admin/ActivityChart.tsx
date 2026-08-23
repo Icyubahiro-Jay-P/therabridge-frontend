@@ -3,8 +3,8 @@ import { LineChart as LineChartIcon } from "lucide-react"
 import type { DashboardActivityPoint } from "./dashboard-types"
 
 const SERIES = [
-  { key: "messages", label: "DMs", color: "#0ea5e9" },
-  { key: "communityMessages", label: "Community", color: "#8b5cf6" },
+  { key: "messages", label: "DMs", color: "#0f766e" },
+  { key: "communityMessages", label: "Community", color: "#6b7280" },
   { key: "moods", label: "Mood logs", color: "#10b981" },
   { key: "exercises", label: "Exercises", color: "#f59e0b" },
   { key: "crises", label: "Crises", color: "#ef4444" },

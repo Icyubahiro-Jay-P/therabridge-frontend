@@ -10,7 +10,8 @@ export function useSleepState() {
   const [logs, setLogs] = useState<SleepLog[]>([])
   const [content, setContent] = useState<SleepContent[]>([])
   const [stats, setStats] = useState<SleepStats | null>(null)
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
+  const [contentLoading, setContentLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState<string | null>(null)
@@ -44,6 +45,8 @@ export function useSleepState() {
       setContent(res.content)
     } catch {
       // non-critical
+    } finally {
+      setContentLoading(false)
     }
   }, [])
 
@@ -85,6 +88,7 @@ export function useSleepState() {
     content,
     stats,
     loading,
+    contentLoading,
     saving,
     error,
     success,

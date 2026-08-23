@@ -11,6 +11,7 @@ export function usePetState() {
   const [loading, setLoading] = useState(false)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [info, setInfo] = useState<string | null>(null)
   const [success, setSuccess] = useState<string | null>(null)
   const [showLevelUp, setShowLevelUp] = useState(false)
   const [levelUpLevel, setLevelUpLevel] = useState(0)
@@ -39,10 +40,16 @@ export function usePetState() {
   const feedPet = useCallback(async () => {
     setSaving(true)
     setError(null)
+    setInfo(null)
     setSuccess(null)
     try {
       const result = await petApi.feed()
       setPet(result.pet)
+      if (result.fed === false) {
+        // A full companion is a normal game state - inform, don't alarm.
+        setInfo(result.message)
+        return null
+      }
       setSuccess(result.message)
       if (result.leveledUp) {
         setLevelUpLevel(result.pet.level)
@@ -51,8 +58,7 @@ export function usePetState() {
       }
       return result
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : "Failed to feed pet"
-      setError(msg)
+      setError(getErrorMessage(err))
       return null
     } finally {
       setSaving(false)
@@ -67,8 +73,7 @@ export function usePetState() {
       setPet(updated)
       setSuccess("Renamed successfully!")
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : "Failed to rename"
-      setError(msg)
+      setError(getErrorMessage(err))
     } finally {
       setSaving(false)
     }
@@ -80,6 +85,7 @@ export function usePetState() {
     loading,
     saving,
     error,
+    info,
     success,
     showLevelUp,
     levelUpLevel,
@@ -89,6 +95,7 @@ export function usePetState() {
     renamePet,
     clearMessages: () => {
       setError(null)
+      setInfo(null)
       setSuccess(null)
     },
   }

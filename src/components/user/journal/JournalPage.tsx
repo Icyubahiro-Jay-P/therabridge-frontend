@@ -39,7 +39,7 @@ export function JournalPage() {
             </div>
             <button
               onClick={() => j.openEditor()}
-              className="flex items-center gap-2 rounded-xl bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+              className="flex items-center gap-2 rounded-xl bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700"
             >
               <Plus className="size-4" />
               New Entry
@@ -47,7 +47,7 @@ export function JournalPage() {
           </div>
 
           {j.success && (
-            <div className="rounded-xl bg-green-50 px-4 py-3 text-sm text-green-700 dark:bg-green-950/40 dark:text-green-400">
+            <div className="rounded-xl bg-emerald-50 px-4 py-3 text-sm text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400">
               {j.success}
             </div>
           )}
@@ -63,7 +63,7 @@ export function JournalPage() {
                   j.fetchEntries({ page: 1, mood: j.filterMood, search: e.target.value })
                 }}
                 placeholder="Search entries..."
-                className="w-full rounded-xl border border-gray-200 bg-white py-2 pl-9 pr-3 text-sm text-gray-900 placeholder:text-gray-400 focus:border-blue-400 focus:outline-none focus:ring-1 focus:ring-blue-400 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
+                className="w-full rounded-xl border border-gray-200 bg-white py-2 pl-9 pr-3 text-sm text-gray-900 placeholder:text-gray-400 focus:border-emerald-400 focus:outline-none focus:ring-1 focus:ring-emerald-400 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
               />
             </div>
             <select
@@ -73,7 +73,7 @@ export function JournalPage() {
                 j.setFilterMood(v)
                 j.fetchEntries({ page: 1, mood: v, search: j.searchQuery })
               }}
-              className="rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm text-gray-700 focus:border-blue-400 focus:outline-none dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300"
+              className="rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm text-gray-700 focus:border-emerald-400 focus:outline-none dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300"
             >
               <option value="">All moods</option>
               <option value="great">Great</option>

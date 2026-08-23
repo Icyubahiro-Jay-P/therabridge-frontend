@@ -5,11 +5,6 @@ import { api } from "@/lib/api"
 import { ForgotPasswordForm } from "@/components/shared/auth/ForgotPasswordForm"
 import { ForgotPasswordSuccess } from "@/components/shared/auth/ForgotPasswordSuccess"
 
-function getErrorMessage(err: unknown): string {
-  if (err instanceof Error) return err.message
-  return "Something went wrong"
-}
-
 export function ForgotPasswordPage() {
   const [email, setEmail] = useState("")
   const [sending, setSending] = useState(false)

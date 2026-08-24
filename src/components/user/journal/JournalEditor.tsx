@@ -153,6 +153,7 @@ export function JournalEditor({
                     onChange={(e) => setTagInput(e.target.value)}
                     onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), addTag())}
                     placeholder="Add tag..."
+                    maxLength={LIMITS.journal.tag}
                     className="w-20 rounded-full border-0 bg-transparent text-xs text-gray-600 placeholder:text-gray-400 focus:outline-none dark:text-gray-400"
                   />
                   <button onClick={addTag} className="text-gray-400 hover:text-emerald-500">

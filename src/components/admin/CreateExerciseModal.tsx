@@ -229,7 +229,6 @@ export function CreateExerciseModal({ onClose }: { onClose: () => void }) {
             </button>
           </div>
         </form>
-      </div>
-    </div>
+    </Modal>
   )
 }

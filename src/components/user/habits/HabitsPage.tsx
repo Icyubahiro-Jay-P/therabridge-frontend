@@ -195,7 +195,7 @@ export function HabitsPage() {
         <div className="grid grid-cols-3 gap-3">
           <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 dark:border-emerald-900/50 dark:bg-emerald-950/30">
             <p className="text-lg font-bold text-emerald-700 dark:text-emerald-400">
-              {progress === null ? "—" : `${progress}%`}
+              {progress === null ? "0%" : `${progress}%`}
             </p>
             <p className="text-xs text-emerald-600 dark:text-emerald-500">
               {h.summary.date === todayKey() ? "today" : "that day"}
@@ -239,7 +239,7 @@ export function HabitsPage() {
       {h.loading && h.habits.length === 0 ? (
         <div className="space-y-3">
           {[...Array(3)].map((_, i) => (
-            <div key={i} className="h-[76px] animate-pulse rounded-xl bg-gray-100 dark:bg-gray-800" />
+            <div key={i} className="h-19 animate-pulse rounded-xl bg-gray-100 dark:bg-gray-800" />
           ))}
         </div>
       ) : activeHabits.length === 0 ? (

@@ -634,8 +634,7 @@ export function MedicationsPage() {
                 {m.saving ? "Saving..." : "Log Dose (+2 pts)"}
               </button>
             </div>
-          </div>
-        </div>
+        </Modal>
       )}
     </div>
   )

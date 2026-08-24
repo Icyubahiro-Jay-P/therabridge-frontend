@@ -39,6 +39,17 @@ export const LIMITS = {
     reframe: 500,
     outcomeEmotion: 300,
   },
+  journal: {
+    title: 200,
+    content: 5000,
+    comment: 1000,
+    tag: 30,
+    maxTags: 10,
+  },
+  habit: {
+    name: 80,
+    emoji: 8,
+  },
 } as const
 
 export type CharLimit = number

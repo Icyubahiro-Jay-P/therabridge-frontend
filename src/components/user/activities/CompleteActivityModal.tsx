@@ -1,6 +1,7 @@
 import { X, CheckCircle2 } from "lucide-react"
 import { useState } from "react"
 import type { Activity } from "@/lib/activity-api"
+import { Modal } from "@/components/ui/modal"
 
 const MOOD_OPTIONS = [
   { value: "great", label: "Great", emoji: "😊" },
@@ -33,8 +34,7 @@ export function CompleteActivityModal({ activity, onClose, onComplete, saving }:
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-      <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl dark:bg-gray-900">
+    <Modal open onClose={onClose} panelClassName="max-w-md">
         <div className="mb-4 flex items-center justify-between">
           <h2 className="text-lg font-bold text-gray-900 dark:text-white">Complete Activity</h2>
           <button onClick={onClose} className="rounded-lg p-1 text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800">
@@ -119,7 +119,6 @@ export function CompleteActivityModal({ activity, onClose, onComplete, saving }:
             {saving ? "Saving..." : "Complete"}
           </button>
         </div>
-      </div>
-    </div>
+    </Modal>
   )
 }

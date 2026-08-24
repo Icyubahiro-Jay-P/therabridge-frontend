@@ -58,11 +58,7 @@ export function useSleepState() {
       const entry = await sleepApi.log(data)
       setLogs((prev) => [entry, ...prev])
       fetchStats()
-      setSuccess(
-        entry.pointsEarned
-          ? `Sleep logged! +${entry.pointsEarned} wellness points`
-          : "Sleep logged!",
-      )
+      setSuccess("Sleep logged!")
       return entry
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : "Failed to save"

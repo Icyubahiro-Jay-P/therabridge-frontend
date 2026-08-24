@@ -2,6 +2,7 @@ import { X, Lightbulb } from "lucide-react"
 import { useEffect, useState } from "react"
 import { LIMITS } from "@/lib/limits"
 import { CharCounter } from "@/components/ui/char-counter"
+import { Modal } from "@/components/ui/modal"
 import type { ThoughtRecord } from "@/lib/thoughtRecord-api"
 
 const DISTORTIONS = [
@@ -99,8 +100,7 @@ export function ThoughtRecordEditor({ open, record, saving, error, onSave, onClo
   ]
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-      <div className="w-full max-w-lg rounded-2xl bg-white p-6 shadow-xl dark:bg-gray-900">
+    <Modal open={open} onClose={onClose}>
         <div className="mb-4 flex items-center justify-between">
           <div>
             <h2 className="text-lg font-bold text-gray-900 dark:text-white">
@@ -310,7 +310,6 @@ export function ThoughtRecordEditor({ open, record, saving, error, onSave, onClo
             </button>
           )}
         </div>
-      </div>
-    </div>
+    </Modal>
   )
 }

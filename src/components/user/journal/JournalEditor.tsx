@@ -146,7 +146,7 @@ export function JournalEditor({
                   </button>
                 </span>
               ))}
-              {tags.length < 10 && (
+              {tags.length < LIMITS.journal.maxTags && (
                 <div className="flex items-center gap-1">
                   <input
                     value={tagInput}

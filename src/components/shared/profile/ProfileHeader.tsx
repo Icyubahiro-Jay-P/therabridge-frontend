@@ -1,5 +1,6 @@
 import { User as UserIcon } from "lucide-react"
 import AvatarActions from "@/components/user/shared/AvatarActions"
+import { XpSticker } from "@/components/shared/profile/XpSticker"
 import type { PublicProfile } from "@/types/user"
 
 const API_BASE_URL =
@@ -37,6 +38,7 @@ export function ProfileHeader({ profile }: { profile: PublicProfile }) {
         <p className="text-sm text-gray-500 dark:text-gray-400">
           @{profile.username}
         </p>
+        <XpSticker score={profile.exerciseScore} className="mt-2" />
         {profile.bio ? (
           <p className="mt-2 max-w-lg text-sm text-gray-600 dark:text-gray-300">
             {profile.bio}

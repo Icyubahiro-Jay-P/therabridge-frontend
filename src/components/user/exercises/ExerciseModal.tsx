@@ -10,6 +10,7 @@ import {
   Wind,
   X,
 } from "lucide-react"
+import { Modal } from "@/components/ui/modal"
 
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
@@ -106,8 +107,7 @@ export function ExerciseModal({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
-      <div className="relative w-full max-w-lg rounded-2xl border border-gray-200 bg-white shadow-2xl dark:border-gray-700 dark:bg-gray-900">
+    <Modal open onClose={onClose} panelClassName="relative p-0 border border-gray-200 shadow-2xl dark:border-gray-700">
         <div
           className="rounded-t-2xl p-6 text-white"
           style={{
@@ -219,7 +219,6 @@ export function ExerciseModal({
             </>
           )}
         </div>
-      </div>
-    </div>
+    </Modal>
   )
 }

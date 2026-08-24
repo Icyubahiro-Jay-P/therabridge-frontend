@@ -104,7 +104,7 @@ export const habitsApi = {
   create: (payload: HabitPayload) =>
     api.post<Habit>("/api/habits", payload).then((r) => r.data),
 
-  update: (id: string, payload: HabitPayload) =>
+  update: (id: string, payload: Partial<HabitPayload>) =>
     api.put<Habit>(`/api/habits/${id}`, payload).then((r) => r.data),
 
   remove: (id: string) =>

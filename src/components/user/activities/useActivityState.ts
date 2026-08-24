@@ -58,7 +58,7 @@ export function useActivityState() {
       const completed = await activityApi.complete(id, data)
       setActivities((prev) => prev.map((a) => (a._id === id ? completed : a)))
       fetchStats()
-      setSuccess(completed.pointsEarned ? `Activity completed! +${completed.pointsEarned} wellness points` : "Activity completed!")
+      setSuccess("Activity completed!")
       return completed
     } catch {
       setError("Failed to complete activity")

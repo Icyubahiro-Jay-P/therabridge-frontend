@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { Loader2, Plus, Trash2, X } from "lucide-react"
 import { api } from "@/lib/api"
+import { Modal } from "@/components/ui/modal"
 
 const EXERCISE_TYPES = [
   { value: "breathing", label: "Breathing" },
@@ -86,11 +87,7 @@ export function CreateExerciseModal({ onClose }: { onClose: () => void }) {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm" onClick={onClose}>
-      <div
-        className="w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl bg-white p-6 shadow-2xl dark:bg-gray-900"
-        onClick={(e) => e.stopPropagation()}
-      >
+    <Modal open onClose={onClose} panelClassName="max-h-[90vh] overflow-y-auto shadow-2xl">
         <div className="mb-6 flex items-center justify-between">
           <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Create exercise</h2>
           <button onClick={onClose} className="rounded-lg p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600 dark:hover:bg-gray-800">

@@ -141,6 +141,9 @@ const UserMedicationsPage = lazy(() =>
 const UserPetPage = lazy(() =>
   import("@/components/user/pet/PetPage").then((mod) => ({ default: mod.PetPage }))
 )
+const UserHabitsPage = lazy(() =>
+  import("@/components/user/habits/HabitsPage").then((mod) => ({ default: mod.HabitsPage }))
+)
 
 const AdminDashboardPage = lazy(() =>
   import("@/pages/admin/DashboardPage").then((mod) => ({

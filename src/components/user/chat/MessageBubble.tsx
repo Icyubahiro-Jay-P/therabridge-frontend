@@ -8,6 +8,7 @@ import {
   Reply,
   TriangleAlert,
 } from "lucide-react"
+import { Modal } from "@/components/ui/modal"
 import { cn } from "@/lib/utils"
 import type { DirectMessage } from "./types"
 import { Avatar } from "./Avatar"

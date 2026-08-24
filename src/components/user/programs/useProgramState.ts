@@ -85,9 +85,7 @@ export function useProgramState() {
         setActiveProgress(result.progress)
 
         if (result.weekCompleted) {
-          setSuccess(
-            `Week completed! +${result.pointsEarned} wellness points`,
-          )
+          setSuccess("Week completed!")
         } else if (result.percentage === 100) {
           setSuccess("Program completed! Congratulations!")
         }

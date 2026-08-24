@@ -52,7 +52,7 @@ export function useCopingCardState() {
       const card = await copingCardApi.create({ text, category })
       setCards((prev) => [card, ...prev])
       lastFetchedCategory.current = ""
-      setSuccess(card.pointsEarned ? `Card created! +${card.pointsEarned} wellness points` : "Card created!")
+      setSuccess("Card created!")
       setShowCreate(false)
       return card
     } catch (err: unknown) {

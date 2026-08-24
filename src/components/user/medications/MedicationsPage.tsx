@@ -5,6 +5,7 @@ import {
 import { useMedicationState } from "./useMedicationState"
 import { FREQUENCY_LABELS } from "@/lib/medication-api"
 import { EmptyState } from "@/components/user/shared/EmptyState"
+import { Modal } from "@/components/ui/modal"
 import { useEffect, useRef, useState } from "react"
 
 export function MedicationsPage() {

@@ -67,7 +67,7 @@ export function useThoughtRecordState() {
       const record = await thoughtRecordApi.create(data)
       setRecords((prev) => [record, ...prev])
       fetchStats()
-      setSuccess(record.pointsEarned ? `Thought record saved! +${record.pointsEarned} wellness points` : "Thought record saved!")
+      setSuccess("Thought record saved!")
       return record
     } catch {
       setError("Failed to save thought record")

@@ -69,7 +69,7 @@ export function PetPage() {
       <div>
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Your Companion</h1>
         <p className="text-sm text-gray-500 dark:text-gray-400">
-          Your pet grows stronger with every self-care step you take!
+          A little companion to keep you company on your self-care journey.
         </p>
       </div>
 
@@ -174,7 +174,7 @@ export function PetPage() {
               className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-emerald-600 px-4 py-3 text-sm font-medium text-white transition-colors hover:bg-emerald-700 disabled:opacity-50"
             >
               <UtensilsCrossed className="size-4" />
-              {p.saving ? "Feeding..." : "Feed (+5 XP)"}
+              {p.saving ? "Feeding..." : "Feed"}
             </button>
             <button
               onClick={() => {
@@ -197,7 +197,7 @@ export function PetPage() {
               {p.adventures.length === 0 ? (
                 <div className="rounded-xl border border-dashed border-gray-300 bg-gray-50 py-8 text-center dark:border-gray-700 dark:bg-gray-900/50">
                   <p className="text-sm text-gray-400">
-                    No adventures yet. Keep completing self-care activities!
+                    No adventures yet.
                   </p>
                 </div>
               ) : (
@@ -219,7 +219,7 @@ export function PetPage() {
           )}
 
           <p className="text-center text-xs text-gray-400 dark:text-gray-500">
-            {p.pet.name} grows stronger with every self-care step you take.
+            {p.pet.name} is happy to be by your side.
           </p>
         </>
       )}

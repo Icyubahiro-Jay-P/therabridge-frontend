@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { Loader2, Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { Modal } from "@/components/ui/modal"
 
 interface DangerModalProps {
   open: boolean
@@ -36,8 +37,7 @@ export function DangerModal({ open, title, description, confirmLabel, confirmInp
     onConfirm()
   }
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-      <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl dark:bg-gray-900 dark:ring-1 dark:ring-white/10">
+    <Modal open={open} onClose={onCancel} panelClassName="max-w-md shadow-2xl dark:ring-1 dark:ring-white/10">
         <div className="mb-1 flex size-12 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/30">
           <Trash2 className="size-6 text-red-600 dark:text-red-400" />
         </div>
@@ -57,7 +57,6 @@ export function DangerModal({ open, title, description, confirmLabel, confirmInp
             {loading ? <Loader2 className="size-4 animate-spin" /> : confirmLabel}
           </Button>
         </div>
-      </div>
-    </div>
+    </Modal>
   )
 }

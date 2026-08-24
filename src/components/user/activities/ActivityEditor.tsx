@@ -2,6 +2,7 @@ import { X } from "lucide-react"
 import { useState } from "react"
 import { CATEGORIES } from "@/lib/activity-api"
 import { LIMITS } from "@/lib/limits"
+import { Modal } from "@/components/ui/modal"
 
 interface ActivityEditorProps {
   open: boolean
@@ -48,8 +49,7 @@ export function ActivityEditor({ open, onClose, onSave, saving }: ActivityEditor
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-      <div className="w-full max-w-lg rounded-2xl bg-white p-6 shadow-xl dark:bg-gray-900">
+    <Modal open={open} onClose={onClose}>
         <div className="mb-4 flex items-center justify-between">
           <h2 className="text-lg font-bold text-gray-900 dark:text-white">Plan an Activity</h2>
           <button onClick={onClose} className="rounded-lg p-1 text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800">
@@ -155,7 +155,6 @@ export function ActivityEditor({ open, onClose, onSave, saving }: ActivityEditor
             {saving ? "Saving..." : "Plan Activity"}
           </button>
         </div>
-      </div>
-    </div>
+    </Modal>
   )
 }

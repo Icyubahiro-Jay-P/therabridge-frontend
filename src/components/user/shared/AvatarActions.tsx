@@ -8,6 +8,7 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu"
+import { Modal } from "@/components/ui/modal"
 import { ConfirmModal } from "@/components/admin/ConfirmModal"
 
 interface Props {

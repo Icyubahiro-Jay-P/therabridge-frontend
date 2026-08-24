@@ -45,27 +45,25 @@ export function useHabitsState() {
       if (pendingTogglesRef.current.has(`${habitId}:${date}`)) return
       pendingTogglesRef.current.add(`${habitId}:${date}`)
 
-      let snapshotCompleted: string[] | null = null
-      let snapshotSummary: HabitsSummary | null = null
+      const target = habits.find((x) => x._id === habitId)
+      if (!target) return
+      const wasDone = target.completedDates.includes(date)
+
       setHabits((prev) =>
         prev.map((h) => {
           if (h._id !== habitId) return h
-          snapshotCompleted = [...h.completedDates]
-          snapshotSummary = summary
-          const has = h.completedDates.includes(date)
-          const next = has
+          const next = wasDone
             ? h.completedDates.filter((d) => d !== date)
             : [...h.completedDates, date].sort()
           return { ...h, completedDates: next }
         }),
       )
-      if (summary && !snapshotSummary) snapshotSummary = summary
+      const snapshotCompleted = [...target.completedDates]
+      const snapshotSummary = summary
 
       setSummary((prev) => {
         if (!prev || prev.date !== date) return prev
-        const habit = habits.find((h) => h._id === habitId)
-        if (!habit?.daysOfWeek.includes(new Date(`${date}T00:00:00`).getDay())) return prev
-        const wasDone = (snapshotCompleted ?? habit.completedDates).includes(date)
+        if (!target.daysOfWeek.includes(new Date(`${date}T00:00:00`).getDay())) return prev
         return {
           ...prev,
           todayCompleted: Math.max(0, prev.todayCompleted + (wasDone ? -1 : 1)),
@@ -86,11 +84,9 @@ export function useHabitsState() {
         setError(null)
       } catch (err) {
         // Roll back the optimistic flip on failure.
-        if (snapshotCompleted) {
-          setHabits((prev) =>
-            prev.map((h) => (h._id === habitId ? { ...h, completedDates: snapshotCompleted! } : h)),
-          )
-        }
+        setHabits((prev) =>
+          prev.map((h) => (h._id === habitId ? { ...h, completedDates: snapshotCompleted } : h)),
+        )
         if (snapshotSummary) setSummary(snapshotSummary)
         setError(getErrorMessage(err))
         setSuccess(null)

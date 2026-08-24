@@ -95,8 +95,7 @@ export default function AvatarActions({
         />
 
         {viewOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
-            <div className="max-h-full max-w-full">
+          <Modal open onClose={() => setViewOpen(false)} panelClassName="max-h-full max-w-full bg-transparent p-0 shadow-none">
               <button
                 onClick={() => setViewOpen(false)}
                 className="mb-4 rounded bg-white/30 px-3 py-1 text-sm"
@@ -108,8 +107,7 @@ export default function AvatarActions({
                 alt={name || "Avatar"}
                 className="max-h-[80vh] max-w-[80vw] rounded-xl object-contain"
               />
-            </div>
-          </div>
+          </Modal>
         )}
       </div>
     )

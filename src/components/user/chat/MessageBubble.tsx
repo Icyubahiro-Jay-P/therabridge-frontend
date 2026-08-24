@@ -270,8 +270,7 @@ export const MessageBubble = memo(function MessageBubble({
                 {deleting === msg._id ? "Unsending..." : "Unsend"}
               </button>
             </div>
-          </div>
-        </div>
+        </Modal>
       )}
       {showHistoryFor === msg._id && hasEdits && (
         <EditHistory

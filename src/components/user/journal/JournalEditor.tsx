@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Switch } from "@/components/ui/switch"
+import { Modal } from "@/components/ui/modal"
 import { LIMITS } from "@/lib/limits"
 
 const MOODS = ["great", "good", "okay", "bad", "terrible"] as const

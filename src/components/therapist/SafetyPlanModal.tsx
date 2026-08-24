@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { Loader2, ShieldCheck, TriangleAlert, X } from "lucide-react"
 
 import { api } from "@/lib/api"
+import { Modal } from "@/components/ui/modal"
 import {
   emptySafetyPlan,
   SAFETY_PLAN_SECTIONS,
@@ -51,8 +52,7 @@ export function SafetyPlanModal({
   )
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
-      <div className="flex max-h-[85vh] w-full max-w-lg flex-col rounded-2xl border border-gray-200 bg-white shadow-2xl dark:border-gray-700 dark:bg-gray-900">
+    <Modal open onClose={onClose} panelClassName="flex max-h-[85vh] max-w-lg flex-col border border-gray-200 shadow-2xl dark:border-gray-700 p-0">
         <div className="flex items-center justify-between border-b border-gray-100 px-6 py-4 dark:border-gray-800">
           <h2 className="flex items-center gap-2 text-lg font-bold text-gray-900 dark:text-white">
             <ShieldCheck className="size-5 text-emerald-600" />
@@ -101,7 +101,6 @@ export function SafetyPlanModal({
             </div>
           )}
         </div>
-      </div>
-    </div>
+    </Modal>
   )
 }

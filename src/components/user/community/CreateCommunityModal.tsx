@@ -162,7 +162,6 @@ export function CreateCommunityModal({
             )}
           </Button>
         </form>
-      </div>
-    </div>
+    </Modal>
   )
 }

@@ -59,8 +59,7 @@ export function CreateCommunityModal({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
-      <div className="w-full max-w-md rounded-2xl border border-gray-200 bg-white p-6 shadow-2xl dark:border-gray-700 dark:bg-gray-900">
+    <Modal open onClose={onClose} panelClassName="max-w-md border border-gray-200 shadow-2xl dark:border-gray-700">
         <div className="mb-4 flex items-center justify-between">
           <h2 className="text-lg font-bold text-gray-900 dark:text-white">
             Create a community

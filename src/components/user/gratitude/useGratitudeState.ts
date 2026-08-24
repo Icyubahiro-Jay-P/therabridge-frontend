@@ -67,7 +67,7 @@ export function useGratitudeState() {
       }
       setEntries((prev) => [entry, ...prev])
       fetchStreak()
-      setSuccess(entry.pointsEarned ? `Gratitude logged! +${entry.pointsEarned} wellness points` : "Gratitude logged!")
+      setSuccess("Gratitude logged!")
       return entry
     } catch (err: unknown) {
       setError(getErrorMessage(err))

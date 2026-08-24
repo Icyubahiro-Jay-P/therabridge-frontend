@@ -67,7 +67,7 @@ export function JournalEditor({
 
   const addTag = () => {
     const t = tagInput.trim()
-    if (t && !tags.includes(t) && tags.length < 10) {
+    if (t && !tags.includes(t) && tags.length < LIMITS.journal.maxTags) {
       onTagsChange([...tags, t])
       setTagInput("")
     }

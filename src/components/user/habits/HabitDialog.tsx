@@ -3,6 +3,7 @@ import { X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Switch } from "@/components/ui/switch"
+import { Modal } from "@/components/ui/modal"
 import {
   HABIT_COLORS,
   colorClasses,
@@ -52,8 +53,7 @@ export function HabitDialog({ open, editing, saving, error, onSave, onClose }: H
     })
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-      <div className="w-full max-w-lg rounded-2xl bg-white p-6 shadow-xl dark:bg-gray-900">
+    <Modal open={open} onClose={onClose}>
         <div className="mb-4 flex items-center justify-between">
           <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
             {editing ? "Edit Habit" : "New Habit"}
@@ -160,7 +160,6 @@ export function HabitDialog({ open, editing, saving, error, onSave, onClose }: H
             {saving ? "Saving..." : editing ? "Update" : "Create"}
           </Button>
         </div>
-      </div>
-    </div>
+    </Modal>
   )
 }

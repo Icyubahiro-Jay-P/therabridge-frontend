@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
 import { api } from "@/lib/api"
 import { LIMITS } from "@/lib/limits"
+import { Modal } from "@/components/ui/modal"
 import { getErrorMessage } from "./utils"
 import type { Community, CommunityCategory } from "./types"
 

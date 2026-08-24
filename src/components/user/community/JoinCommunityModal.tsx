@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { api } from "@/lib/api"
 import { LIMITS } from "@/lib/limits"
+import { Modal } from "@/components/ui/modal"
 import { getErrorMessage } from "./utils"
 import type { Community } from "./types"
 

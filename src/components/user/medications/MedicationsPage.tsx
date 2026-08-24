@@ -425,8 +425,7 @@ export function MedicationsPage() {
 
       {/* ADD/EDIT MEDICATION MODAL */}
       {m.formOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-          <div className="w-full max-w-md space-y-4 rounded-2xl bg-white p-6 shadow-xl dark:bg-gray-900">
+        <Modal open onClose={m.closeForm} panelClassName="max-w-md space-y-4">
             <div className="flex items-center justify-between">
               <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
                 {m.editingMed ? "Edit Medication" : "Add Medication"}
@@ -540,8 +539,7 @@ export function MedicationsPage() {
                 {m.saving ? "Saving..." : m.editingMed ? "Update" : "Add Medication"}
               </button>
             </div>
-          </div>
-        </div>
+        </Modal>
       )}
 
       {/* SIDE EFFECT MODAL */}

@@ -99,7 +99,6 @@ export function JoinCommunityModal({
             )}
           </Button>
         </form>
-      </div>
-    </div>
+    </Modal>
   )
 }

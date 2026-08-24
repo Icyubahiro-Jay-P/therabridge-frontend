@@ -100,7 +100,7 @@ export function JournalEditor({
             placeholder="Title"
             value={title}
             onChange={(e) => onTitleChange(e.target.value)}
-            maxLength={200}
+            maxLength={LIMITS.journal.title}
           />
 
           <Textarea
@@ -108,7 +108,7 @@ export function JournalEditor({
             value={content}
             onChange={(e) => onContentChange(e.target.value)}
             rows={6}
-            maxLength={5000}
+            maxLength={LIMITS.journal.content}
           />
 
           <div>

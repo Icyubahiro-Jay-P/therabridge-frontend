@@ -180,7 +180,6 @@ export function JournalEditor({
             {saving ? "Saving..." : isEditing ? "Update" : "Save"}
           </Button>
         </div>
-      </div>
-    </div>
+    </Modal>
   )
 }

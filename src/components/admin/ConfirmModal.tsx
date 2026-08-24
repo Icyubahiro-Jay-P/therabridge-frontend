@@ -24,8 +24,7 @@ export function ConfirmModal({
   if (!open) return null
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
-      <div className="w-full max-w-md rounded-2xl border border-gray-200 bg-white p-6 shadow-2xl dark:border-gray-700 dark:bg-gray-900">
+    <Modal open={open} onClose={onCancel} panelClassName="max-w-md border border-gray-200 shadow-2xl dark:border-gray-700">
         <div className="mb-1 flex size-12 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/30">
           <AlertTriangle className="size-6 text-red-600 dark:text-red-400" />
         </div>
@@ -43,7 +42,6 @@ export function ConfirmModal({
             {loading ? <Loader2 className="size-4 animate-spin" /> : confirmLabel}
           </Button>
         </div>
-      </div>
-    </div>
+    </Modal>
   )
 }

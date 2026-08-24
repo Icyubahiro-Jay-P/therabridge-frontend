@@ -238,14 +238,7 @@ export const MessageBubble = memo(function MessageBubble({
         />
       )}
       {confirmUnsend && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
-          onClick={() => setConfirmUnsend(false)}
-        >
-          <div
-            className="mx-4 w-full max-w-sm rounded-2xl bg-white p-6 shadow-xl dark:bg-gray-900"
-            onClick={(e) => e.stopPropagation()}
-          >
+        <Modal open onClose={() => setConfirmUnsend(false)} panelClassName="mx-4 max-w-sm">
             <div className="mb-4 flex items-center gap-3">
               <span className="flex size-10 items-center justify-center rounded-full bg-red-100 text-red-600 dark:bg-red-900/40 dark:text-red-400">
                 <TriangleAlert className="size-5" />

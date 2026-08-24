@@ -44,6 +44,7 @@ function HabitCard({
   const scheduledToday = habit.daysOfWeek.includes(viewDay)
   const completed = habit.completedDates.includes(viewDate)
   const isToday = viewDate === todayKey()
+  const isFuture = viewDate > todayKey()
 
   // Last 7 days ending at the viewed date.
   const weekDots = Array.from({ length: 7 }, (_, i) => {

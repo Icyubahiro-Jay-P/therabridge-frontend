@@ -1,4 +1,5 @@
 import AvatarActions from "@/components/user/shared/AvatarActions"
+import { XpSticker } from "@/components/shared/profile/XpSticker"
 import type { User } from "@/types/user"
 
 interface Props {
@@ -36,6 +37,7 @@ export function ProfileHeader({
         <p className="text-sm text-gray-500 dark:text-gray-400">
           @{user.username}
         </p>
+        <XpSticker score={user.exerciseScore} className="mt-2" />
         {user.bio && (
           <p className="mt-2 max-w-lg text-sm text-gray-600 dark:text-gray-300">
             {user.bio}

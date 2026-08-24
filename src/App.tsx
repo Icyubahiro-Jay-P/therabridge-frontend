@@ -620,6 +620,14 @@ export function App() {
                 }
               />
               <Route
+                path="/habits"
+                element={
+                  <ErrorBoundaryRoute>
+                    <UserHabitsPage />
+                  </ErrorBoundaryRoute>
+                }
+              />
+              <Route
                 path="/clients"
                 element={
                   <ErrorBoundaryRoute>

@@ -1,5 +1,6 @@
 import { LogOut } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { Modal } from "@/components/ui/modal"
 
 export function LogoutModal({
   open, onConfirm, onCancel, loading,
@@ -12,8 +13,7 @@ export function LogoutModal({
   if (!open) return null
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-      <div className="w-full max-w-sm rounded-2xl bg-white p-6 shadow-2xl dark:bg-gray-900 dark:ring-1 dark:ring-white/10">
+    <Modal open={open} onClose={onCancel} panelClassName="max-w-sm shadow-2xl dark:ring-1 dark:ring-white/10">
         <div className="mb-1 flex size-12 items-center justify-self-center justify-center rounded-full bg-red-100 dark:bg-red-900/30">
           <LogOut className="size-6 text-red-600 dark:text-red-400" />
         </div>
@@ -32,7 +32,6 @@ export function LogoutModal({
             {loading ? "Logging out..." : "Log out"}
           </Button>
         </div>
-      </div>
-    </div>
+    </Modal>
   )
 }

@@ -9,6 +9,7 @@ import App from "./App.tsx"
 import { ThemeProvider } from "@/components/shared/theme-provider.tsx"
 import { ErrorBoundary } from "@/components/shared/auth/ErrorBoundary"
 import { TooltipProvider } from "@/components/ui/tooltip"
+import { OnboardingProvider } from "@/components/onboarding/OnboardingProvider"
 import { queryClient } from "@/lib/query-client"
 
 createRoot(document.getElementById("root")!).render(
@@ -19,7 +20,9 @@ createRoot(document.getElementById("root")!).render(
       <QueryClientProvider client={queryClient}>
         <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
           <TooltipProvider>
-            <App />
+            <OnboardingProvider>
+              <App />
+            </OnboardingProvider>
             <Toaster position="bottom-right" closeButton />
           </TooltipProvider>
         </ThemeProvider>

@@ -135,25 +135,6 @@ export async function changePassword(
   await api.post("/api/users/change-password", payload)
 }
 
-export async function forgotPassword(email: string): Promise<string> {
-  const { data } = await api.post<{ success: boolean; data: string }>(
-    "/api/users/forgot-password",
-    { email }
-  )
-  return data.data
-}
-
-export async function resetPassword(
-  token: string,
-  password: string
-): Promise<string> {
-  const { data } = await api.post<{ success: boolean; message: string }>(
-    `/api/users/reset-password/${token}`,
-    { password }
-  )
-  return data.message
-}
-
 export async function verifyEmail(code: string): Promise<{ message: string }> {
   const { data } = await api.post<{ message: string; isAccountVerified: boolean }>(
     "/api/users/verify-email",

@@ -1,5 +1,4 @@
 import { useChatStore } from "@/store/chat-store"
-import { useAuthStore } from "@/store/auth-store"
 import { ChatHeader } from "./ChatHeader"
 import { MessageArea } from "./MessageArea"
 import { MessageInput } from "./MessageInput"
@@ -16,11 +15,6 @@ export function ChatView({
   onStartCall?: () => void
 }) {
   const partner = useChatStore((s) => s.partner)
-  const error = useChatStore((s) => s.error)
-  const loadingMessages = useChatStore((s) => s.loadingMessages)
-  const messages = useChatStore((s) => s.messages)
-  const currentUserId = useAuthStore((s) => s.user?.id)
-
   if (!partner) return null
 
   return (

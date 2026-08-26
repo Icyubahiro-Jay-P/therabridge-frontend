@@ -2,6 +2,8 @@ import { memo } from "react"
 import { Link } from "react-router-dom"
 import { CheckCheck, Reply } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { useCommunityStore } from "@/store/community-store"
+import { useAuthStore } from "@/store/auth-store"
 import type { CommunityMessage } from "./types"
 import { Avatar } from "./Avatar"
 import { VoiceMessagePlayer } from "../shared/VoiceMessagePlayer"
@@ -9,17 +11,15 @@ import { timeAgo } from "../shared/utils"
 
 export const MessageBubble = memo(function MessageBubble({
   msg,
-  isMe,
-  onToggleTimestamp,
-  selectedTimestampMessage,
-  onReply,
 }: {
   msg: CommunityMessage
-  isMe: boolean
-  onToggleTimestamp: (id: string) => void
-  selectedTimestampMessage: string | null
-  onReply: (msg: CommunityMessage) => void
 }) {
+  const currentUserId = useAuthStore((s) => s.user?.id)
+  const isMe = msg.sender._id === (currentUserId ?? "")
+  const toggleTimestamp = useCommunityStore((s) => s.toggleTimestamp)
+  const selectedTimestampMessage = useCommunityStore((s) => s.selectedTimestampMessage)
+  const startReply = useCommunityStore((s) => s.startReply)
+
   const showTime = selectedTimestampMessage === msg._id
   const readCount = msg.readBy?.length ?? 0
   const isUnsent = !!msg.unsent
@@ -49,7 +49,7 @@ export const MessageBubble = memo(function MessageBubble({
           <button
             onClick={(e) => {
               e.stopPropagation()
-              onReply(msg)
+              startReply(msg)
             }}
             className={cn(
               "absolute top-1/2 z-10 flex size-6 -translate-y-1/2 items-center justify-center rounded-full border border-gray-200 bg-white opacity-0 shadow-sm transition-opacity hover:bg-gray-100 group-hover/msg:opacity-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700",
@@ -59,10 +59,10 @@ export const MessageBubble = memo(function MessageBubble({
             <Reply className="size-3 text-gray-500 dark:text-gray-400" />
           </button>
           <div
-            onClick={() => onToggleTimestamp(msg._id)}
+            onClick={() => toggleTimestamp(msg._id)}
             onDoubleClick={(e) => {
               e.stopPropagation()
-              onReply(msg)
+              startReply(msg)
             }}
             className={cn(
               "wrap-break-words min-w-0 cursor-pointer overflow-hidden rounded-2xl px-3.5 py-2 text-sm",

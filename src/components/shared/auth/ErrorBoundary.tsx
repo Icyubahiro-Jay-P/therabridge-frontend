@@ -68,28 +68,30 @@ function DefaultErrorFallback({
   onRetry: () => void
 }) {
   return (
-    <div className="flex min-h-screen items-center justify-center p-4">
-      <div className="max-w-md space-y-4 text-center">
+    <div className="flex min-h-screen items-center justify-center bg-background p-4">
+      <div className="max-w-md space-y-4 rounded-xl border border-border bg-card p-8 text-center shadow-sm">
         <div className="flex justify-center">
-          <AlertCircle className="h-12 w-12 text-red-500" />
+          <AlertCircle className="h-12 w-12 text-destructive" />
         </div>
-        <h2 className="text-2xl font-bold">Oops! Something went wrong</h2>
-        <p className="text-gray-600 dark:text-gray-300">
+        <h2 className="text-2xl font-bold text-foreground">
+          Oops! Something went wrong
+        </h2>
+        <p className="text-muted-foreground">
           We encountered an unexpected error. Please try again.
         </p>
         {error && IS_DEV && (
-          <details className="mt-4 text-left text-sm text-gray-500">
+          <details className="mt-4 text-left text-sm text-muted-foreground">
             <summary className="cursor-pointer font-mono">
               Error details
             </summary>
-            <pre className="mt-2 overflow-auto rounded bg-gray-100 p-2 dark:bg-gray-800">
+            <pre className="mt-2 overflow-auto rounded bg-muted p-2 text-foreground">
               {describeError(error)}
             </pre>
           </details>
         )}
         <button
           onClick={onRetry}
-          className="mt-6 inline-flex items-center rounded-lg bg-teal-600 hover:bg-teal-700 px-6 py-2 text-sm font-medium text-white"
+          className="mt-6 inline-flex items-center rounded-lg bg-primary px-6 py-2 text-sm font-medium text-primary-foreground shadow-sm transition-colors hover:bg-primary/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
         >
           Try Again
         </button>

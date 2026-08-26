@@ -203,6 +203,7 @@ export function ThoughtRecordsPage() {
       )}
 
       <ThoughtRecordEditor
+        key={editingRecord?._id ?? "new"}
         open={editorOpen}
         record={editingRecord}
         saving={s.saving}

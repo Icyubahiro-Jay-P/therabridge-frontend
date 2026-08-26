@@ -8,7 +8,6 @@ import type { Community } from "./types"
 
 export function useCommunityEffects() {
   const navigate = useNavigate()
-  const currentUser = useAuthStore((s) => s.user)
 
   const inviteKey = useCommunityStore((s) => s.inviteKey)
   const communities = useCommunityStore((s) => s.communities)

@@ -54,8 +54,16 @@ export function useCommunityEffects(state: {
               prev.find((c) => c._id === data._id) ? prev : [...prev, data]
             )
           }
-        } catch {
-          if (mounted) setError("Community not found.")
+        } catch (err: unknown) {
+          if (mounted) {
+            const axiosErr = err as { response?: { data?: { error?: { code?: string; message?: string } } } }
+            const code = axiosErr?.response?.data?.error?.code
+            if (code === "PENDING_APPROVAL") {
+              setError("Your join request is pending approval.")
+            } else {
+              setError("Community not found.")
+            }
+          }
         }
       }
       void fetchByKey()

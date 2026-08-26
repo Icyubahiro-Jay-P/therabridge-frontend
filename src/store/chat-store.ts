@@ -152,7 +152,13 @@ export const useChatStore = create<ChatState & ChatActions>()((set, get) => ({
   setSearchResults: (v) => set({ searchResults: v }),
   setSearching: (v) => set({ searching: v }),
   setPartner: (v) => set({ partner: v }),
-  setMessages: (v) => setArrayState(set, "messages", v),
+  setMessages: (v) => {
+    if (typeof v === "function") {
+      set((state) => ({ messages: v(state.messages) }))
+    } else {
+      set({ messages: v })
+    }
+  },
   setLoadingMessages: (v) => set({ loadingMessages: v }),
   setNextCursor: (v) => set({ nextCursor: v }),
   setHasOlderMessages: (v) => set({ hasOlderMessages: v }),

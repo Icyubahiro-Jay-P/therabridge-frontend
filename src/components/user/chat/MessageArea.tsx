@@ -1,6 +1,5 @@
 import { PhoneOff } from "lucide-react"
 import { useChatStore } from "@/store/chat-store"
-import { useAuthStore } from "@/store/auth-store"
 import { MessageArea as SharedMessageArea } from "../shared/MessageArea"
 import { MessageBubble } from "./MessageBubble"
 
@@ -8,7 +7,6 @@ export function MessageArea() {
   const error = useChatStore((s) => s.error)
   const loadingMessages = useChatStore((s) => s.loadingMessages)
   const messages = useChatStore((s) => s.messages)
-  const currentUserId = useAuthStore((s) => s.user?.id)
   const loadOlderMessages = useChatStore((s) => s.loadOlderMessages)
   const loadingOlder = useChatStore((s) => s.loadingOlder)
   const hasOlderMessages = useChatStore((s) => s.hasOlderMessages)

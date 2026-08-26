@@ -110,7 +110,7 @@ api.interceptors.response.use(
     // Auth endpoints (login/register/refresh) are excluded to avoid loops.
     if (
       status === 401 &&
-      !/\/api\/users\/(login|register|refresh|verify-email|resend-verification)$/.test(url) &&
+      !/\/api\/users\/(login|register|refresh|verify-email|resend-verification|2fa\/validate)$/.test(url) &&
       config &&
       !config._retry
     ) {

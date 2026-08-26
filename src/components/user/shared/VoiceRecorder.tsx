@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react"
+import { useState, useRef, useEffect, useCallback } from "react"
 import { X, Send, Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
@@ -23,6 +23,8 @@ export function VoiceRecorder({
   const rafRef = useRef<number>(0)
   const durationRef = useRef(0)
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
+  const onCancelRef = useRef(onCancel)
+  onCancelRef.current = onCancel
 
   useEffect(() => {
     let cancelled = false
@@ -78,7 +80,7 @@ export function VoiceRecorder({
         }
         rafRef.current = requestAnimationFrame(drawWave)
       } catch {
-        onCancel()
+        onCancelRef.current()
       }
     }
     void init()

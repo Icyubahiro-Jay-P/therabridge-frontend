@@ -1,6 +1,5 @@
 import { LogOut, PanelLeftClose, PanelLeftOpen } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { cn } from "@/lib/utils"
 
 export function SidebarFooter({
   isMinimized, isHidden, username, onToggleSidebar, onLogoutClick,

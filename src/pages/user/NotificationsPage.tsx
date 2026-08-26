@@ -129,6 +129,8 @@ export function NotificationsPage() {
         totalCount={notifications.length}
         onMarkAllRead={markAllAsRead}
         onDeleteAll={() => setConfirmDeleteAll(true)}
+        markingAllRead={markAllRead.isPending}
+        deletingAll={deleteEverything.isPending}
       />
       {success && (
         <div className="flex items-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700 dark:border-emerald-900/50 dark:bg-emerald-950/40 dark:text-emerald-300">
@@ -139,8 +141,8 @@ export function NotificationsPage() {
         <div className="flex items-center justify-between rounded-xl border border-red-200 bg-red-50 px-4 py-3 dark:border-red-900/50 dark:bg-red-950/30">
           <span className="text-sm text-red-700 dark:text-red-400">Delete all notifications?</span>
           <div className="flex gap-2">
-            <button onClick={() => setConfirmDeleteAll(false)} className="rounded-lg px-3 py-1 text-sm text-gray-600 hover:bg-gray-200 dark:text-gray-400 dark:hover:bg-gray-800">Cancel</button>
-            <button onClick={deleteAll} className="rounded-lg bg-red-600 px-3 py-1 text-sm text-white hover:bg-red-700">Delete</button>
+            <button onClick={() => setConfirmDeleteAll(false)} disabled={deleteEverything.isPending} className="rounded-lg px-3 py-1 text-sm text-gray-600 hover:bg-gray-200 dark:text-gray-400 dark:hover:bg-gray-800 disabled:opacity-50">Cancel</button>
+            <button onClick={deleteAll} disabled={deleteEverything.isPending} className="rounded-lg bg-red-600 px-3 py-1 text-sm text-white hover:bg-red-700 disabled:opacity-50">{deleteEverything.isPending ? "Deleting..." : "Delete"}</button>
           </div>
         </div>
       )}

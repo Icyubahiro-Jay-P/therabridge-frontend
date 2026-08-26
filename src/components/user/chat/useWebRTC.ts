@@ -18,6 +18,7 @@ interface IncomingCall {
   callerId: string
   callerName: string
   callerUsername: string
+  callerAvatar?: string | null
 }
 
 // Mutable ref for values needed inside socket handlers

@@ -1,5 +1,5 @@
 import { useContext, useCallback } from "react"
-import { OnboardingContext } from "./OnboardingProvider"
+import { OnboardingContext } from "./onboarding-context"
 import { useOnboardingStore } from "@/store/onboarding-store"
 import { TIPS } from "@/lib/onboarding/config"
 

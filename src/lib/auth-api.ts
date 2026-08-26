@@ -33,6 +33,7 @@ type RawUser = {
   exerciseStreak?: number
   longestLoginStreak?: number
   longestExerciseStreak?: number
+  twoFactorEnabled?: boolean
 }
 
 function normalizeUser(raw: RawUser): User {

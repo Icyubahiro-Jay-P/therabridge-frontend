@@ -1,5 +1,5 @@
 import { Pill, TrendingUp, Flame } from "lucide-react"
-import type { AdherenceStats } from "./types"
+import type { AdherenceStats } from "@/lib/medication-api"
 
 export function MedicationsStatsBar({ stats }: { stats: AdherenceStats }) {
   return (

@@ -5,6 +5,22 @@
       "destination": "/google3cdb1ef0ca6c39d9.html"
     },
     {
+      "source": "/api/:path*",
+      "destination": "https://therabridge-backend.onrender.com/api/:path*"
+    },
+    {
+      "source": "/socket.io/:path*",
+      "destination": "https://therabridge-backend.onrender.com/socket.io/:path*"
+    },
+    {
+      "source": "/uploads/:path*",
+      "destination": "https://therabridge-backend.onrender.com/uploads/:path*"
+    },
+    {
+      "source": "/health",
+      "destination": "https://therabridge-backend.onrender.com/health"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }

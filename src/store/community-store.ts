@@ -116,7 +116,13 @@ export const useCommunityStore = create<CommunityState & CommunityActions>()((se
   setLoading: (v) => set({ loading: v }),
   setError: (v) => set({ error: v }),
   setActive: (v) => set({ active: v }),
-  setMessages: (v) => setArrayState(set, "messages", v),
+  setMessages: (v) => {
+    if (typeof v === "function") {
+      set((state) => ({ messages: v(state.messages) }))
+    } else {
+      set({ messages: v })
+    }
+  },
   setLoadingMessages: (v) => set({ loadingMessages: v }),
   setNewMessage: (v) => set({ newMessage: v }),
   setSending: (v) => set({ sending: v }),

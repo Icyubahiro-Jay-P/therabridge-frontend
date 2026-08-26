@@ -370,20 +370,20 @@ export function App() {
               </ErrorBoundaryRoute>
             }
           />
+          <Route
+            path="/verify-2fa"
+            element={
+              <ErrorBoundaryRoute>
+                <VerifyTwoFactorPage />
+              </ErrorBoundaryRoute>
+            }
+          />
           <Route element={<ProtectedRoute />}>
           <Route
             path="/verify-email"
             element={
               <ErrorBoundaryRoute>
                 <VerifyEmailPage />
-              </ErrorBoundaryRoute>
-            }
-          />
-          <Route
-            path="/verify-2fa"
-            element={
-              <ErrorBoundaryRoute>
-                <VerifyTwoFactorPage />
               </ErrorBoundaryRoute>
             }
           />

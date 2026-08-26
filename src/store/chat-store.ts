@@ -97,7 +97,7 @@ interface ChatActions {
   cancelEdit: () => void
   toggleTimestamp: (id: string) => void
   loadOlderMessages: () => Promise<void>
-  openDM: (user: ChatUser) => void
+  openDM: () => void
   resetChat: () => void
 }
 

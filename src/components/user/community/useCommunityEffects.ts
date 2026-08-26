@@ -1,21 +1,24 @@
 import { useEffect } from "react"
 import { useNavigate } from "react-router-dom"
+import { useAuthStore } from "@/store/auth-store"
+import { useCommunityStore } from "@/store/community-store"
 import { api } from "@/lib/api"
 import { getErrorMessage } from "./utils"
 import type { Community } from "./types"
 
-export function useCommunityEffects(state: {
-  inviteKey?: string
-  communities: Community[]
-  setCommunities: React.Dispatch<React.SetStateAction<Community[]>>
-  setLoading: (v: boolean) => void
-  setError: (v: string | null) => void
-  setActive: (v: Community | null) => void
-  active: Community | null
-}) {
+export function useCommunityEffects() {
   const navigate = useNavigate()
-  const { inviteKey, communities, active, setCommunities, setLoading, setError, setActive } = state
+  const currentUser = useAuthStore((s) => s.user)
 
+  const inviteKey = useCommunityStore((s) => s.inviteKey)
+  const communities = useCommunityStore((s) => s.communities)
+  const active = useCommunityStore((s) => s.active)
+  const setCommunities = useCommunityStore((s) => s.setCommunities)
+  const setLoading = useCommunityStore((s) => s.setLoading)
+  const setError = useCommunityStore((s) => s.setError)
+  const setActive = useCommunityStore((s) => s.setActive)
+
+  // ── Load communities ──
   useEffect(() => {
     async function load() {
       setLoading(true)
@@ -31,13 +34,14 @@ export function useCommunityEffects(state: {
     void load()
   }, [setCommunities, setLoading, setError])
 
+  // ── Resolve active community from inviteKey ──
   useEffect(() => {
     if (!inviteKey) {
       setActive(null)
       return
     }
     const found = communities.find(
-      (c) => c.inviteKey === inviteKey!.toUpperCase()
+      (c) => c.inviteKey === inviteKey.toUpperCase(),
     )
     if (found) {
       setActive(found)
@@ -46,12 +50,12 @@ export function useCommunityEffects(state: {
       async function fetchByKey() {
         try {
           const { data } = await api.get<Community>(
-            `/api/chat/communities/by-key/${inviteKey}`
+            `/api/chat/communities/by-key/${inviteKey}`,
           )
           if (mounted) {
             setActive(data)
             setCommunities((prev) =>
-              prev.find((c) => c._id === data._id) ? prev : [...prev, data]
+              prev.find((c) => c._id === data._id) ? prev : [...prev, data],
             )
           }
         } catch (err: unknown) {
@@ -71,9 +75,17 @@ export function useCommunityEffects(state: {
     }
   }, [inviteKey, communities, setActive, setCommunities, setError])
 
+  // ── Navigate when active community changes ──
   useEffect(() => {
     if (active && inviteKey !== active.inviteKey) {
       navigate(`/community/${active.inviteKey}`, { replace: true })
+    }
+  }, [active, inviteKey, navigate])
+
+  // ── Navigate after leave/delete ──
+  useEffect(() => {
+    if (!active && inviteKey) {
+      navigate("/community")
     }
   }, [active, inviteKey, navigate])
 }

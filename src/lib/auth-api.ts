@@ -209,6 +209,7 @@ export interface TwoFactorSetupResponse {
   message: string
   qrCode: string
   secret: string
+  alreadyEnabled?: boolean
 }
 
 export interface TwoFactorStatusResponse {

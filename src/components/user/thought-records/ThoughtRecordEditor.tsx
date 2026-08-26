@@ -1,5 +1,5 @@
 import { X, Lightbulb } from "lucide-react"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { LIMITS } from "@/lib/limits"
 import { CharCounter } from "@/components/ui/char-counter"
 import { Modal } from "@/components/ui/modal"
@@ -41,37 +41,14 @@ interface ThoughtRecordEditorProps {
 
 export function ThoughtRecordEditor({ open, record, saving, error, onSave, onClose }: ThoughtRecordEditorProps) {
   const [step, setStep] = useState(0)
-  const [situation, setSituation] = useState("")
-  const [automaticThought, setAutomaticThought] = useState("")
-  const [emotions, setEmotions] = useState("")
-  const [emotionIntensity, setEmotionIntensity] = useState(5)
-  const [distortionType, setDistortionType] = useState("none")
-  const [evidenceFor, setEvidenceFor] = useState("")
-  const [evidenceAgainst, setEvidenceAgainst] = useState("")
-  const [reframe, setReframe] = useState("")
-
-  useEffect(() => {
-    if (record) {
-      setSituation(record.situation)
-      setAutomaticThought(record.automaticThought)
-      setEmotions(record.emotions)
-      setEmotionIntensity(record.emotionIntensity)
-      setDistortionType(record.distortionType)
-      setEvidenceFor(record.evidenceFor || "")
-      setEvidenceAgainst(record.evidenceAgainst || "")
-      setReframe(record.reframe)
-    } else {
-      setSituation("")
-      setAutomaticThought("")
-      setEmotions("")
-      setEmotionIntensity(5)
-      setDistortionType("none")
-      setEvidenceFor("")
-      setEvidenceAgainst("")
-      setReframe("")
-    }
-    setStep(0)
-  }, [record, open])
+  const [situation, setSituation] = useState(record?.situation ?? "")
+  const [automaticThought, setAutomaticThought] = useState(record?.automaticThought ?? "")
+  const [emotions, setEmotions] = useState(record?.emotions ?? "")
+  const [emotionIntensity, setEmotionIntensity] = useState(record?.emotionIntensity ?? 5)
+  const [distortionType, setDistortionType] = useState(record?.distortionType ?? "none")
+  const [evidenceFor, setEvidenceFor] = useState(record?.evidenceFor ?? "")
+  const [evidenceAgainst, setEvidenceAgainst] = useState(record?.evidenceAgainst ?? "")
+  const [reframe, setReframe] = useState(record?.reframe ?? "")
 
   if (!open) return null
 

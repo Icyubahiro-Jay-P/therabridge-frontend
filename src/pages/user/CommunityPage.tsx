@@ -1,7 +1,11 @@
+import { useCallback } from "react"
+import { useNavigate } from "react-router-dom"
 import { ShieldOff } from "lucide-react"
 import { useCommunityState } from "@/components/user/community/useCommunityState"
 import { useCommunityEffects } from "@/components/user/community/useCommunityEffects"
 import { useMessagePolling } from "@/components/user/community/useMessagePolling"
+import { useCommunityStore } from "@/store/community-store"
+import { useAuthStore } from "@/store/auth-store"
 import { Sidebar } from "@/components/user/community/Sidebar"
 import { ChatHeader } from "@/components/user/community/ChatHeader"
 import { MessageArea } from "@/components/user/community/MessageArea"
@@ -15,132 +19,118 @@ import { GuardOverlay } from "@/components/privacy/GuardOverlay"
 import { WatermarkCanvas } from "@/components/privacy/WatermarkCanvas"
 import { useScreenshotGuard } from "@/hooks/useScreenshotGuard"
 import { loadSetting } from "@/components/user/chat/utils"
+import type { Community } from "@/components/user/community/types"
 
 export function CommunityPage() {
-  const c = useCommunityState()
-  useCommunityEffects(c)
-  useMessagePolling({ ...c, currentUserId: c.currentUser?.id })
+  useCommunityState()
+  useCommunityEffects()
+  useMessagePolling()
+
+  const navigate = useNavigate()
+  const currentUser = useAuthStore((s) => s.user)
+  const active = useCommunityStore((s) => s.active)
+  const screenshotProtected = useCommunityStore((s) => s.screenshotProtected)
+  const showJoin = useCommunityStore((s) => s.showJoin)
+  const showCreate = useCommunityStore((s) => s.showCreate)
+  const showSettings = useCommunityStore((s) => s.showSettings)
 
   const watermarkEnabled = loadSetting("watermarkEnabled", false)
   const guard = useScreenshotGuard({
     mode: "blackout",
-    enabled: c.screenshotProtected,
-    active: !!c.active,
+    enabled: screenshotProtected,
+    active: !!active,
   })
   const canCreate =
-    c.currentUser?.role === "therapist" || c.currentUser?.role === "admin"
+    currentUser?.role === "therapist" || currentUser?.role === "admin"
+
+  const handleSelectCommunity = useCallback((c: Community) => {
+    useCommunityStore.getState().selectCommunity(c)
+    navigate(`/community/${c.inviteKey}`)
+  }, [navigate])
+
+  const handleJoin = useCallback((c2: Community) => {
+    useCommunityStore.getState().setCommunities((prev) =>
+      prev.find((p) => p._id === c2._id) ? prev : [c2, ...prev],
+    )
+    handleSelectCommunity(c2)
+  }, [handleSelectCommunity])
 
   return (
     <div className="flex h-full overflow-hidden select-none">
-      <ScreenshotOverlay screenshotProtected={c.screenshotProtected} active={c.active} />
-      {c.showJoin && (
+      <ScreenshotOverlay screenshotProtected={screenshotProtected} active={active} />
+      {showJoin && (
         <JoinCommunityModal
-          onClose={() => c.setShowJoin(false)}
-          onJoin={(c2) => {
-            c.setCommunities((prev) => prev.find((p) => p._id === c2._id) ? prev : [c2, ...prev])
-            c.selectCommunity(c2)
-          }}
+          onClose={() => useCommunityStore.setState({ showJoin: false })}
+          onJoin={handleJoin}
         />
       )}
-      {c.showCreate && (
+      {showCreate && (
         <CreateCommunityModal
-          onClose={() => c.setShowCreate(false)}
-          onCreate={c.onCreated}
+          onClose={() => useCommunityStore.setState({ showCreate: false })}
+          onCreate={useCommunityStore.getState().onCreated}
         />
       )}
-      {c.showSettings && c.active && c.currentUser && (
+      {showSettings && active && currentUser && (
         <CommunitySettingsModal
-          community={c.active}
-          currentUserId={c.currentUser.id}
+          community={active}
+          currentUserId={currentUser.id}
           canModerate={
-            c.currentUser.role === "admin" ||
-            c.active.owner._id === c.currentUser.id ||
-            c.active.moderators?.some(
-              (m) => m._id === c.currentUser?.id
+            currentUser.role === "admin" ||
+            active.owner._id === currentUser.id ||
+            active.moderators?.some(
+              (m) => m._id === currentUser?.id,
             ) === true
           }
           canLeave={
-            c.active.owner._id !== c.currentUser.id &&
-            c.currentUser.role !== "admin"
+            active.owner._id !== currentUser.id &&
+            currentUser.role !== "admin"
           }
-          onClose={() => c.setShowSettings(false)}
+          onClose={() => useCommunityStore.setState({ showSettings: false })}
           onUpdate={(updated) => {
-            c.setActive(updated)
-            c.setCommunities((prev) => prev.map((p) => (p._id === updated._id ? updated : p)))
+            useCommunityStore.setState((state) => ({
+              active: updated,
+              communities: state.communities.map((p) =>
+                p._id === updated._id ? updated : p,
+              ),
+            }))
           }}
           onLeave={() => {
-            void c.leaveActive()
-            c.setShowSettings(false)
+            void useCommunityStore.getState().leaveActive()
+            useCommunityStore.setState({ showSettings: false })
           }}
           onDelete={() => {
             if (confirm("Delete this community? This cannot be undone.")) {
-              void c.deleteActive()
+              void useCommunityStore.getState().deleteActive()
             }
-            c.setShowSettings(false)
+            useCommunityStore.setState({ showSettings: false })
           }}
         />
       )}
-      {c.mobileSidebarOpen && (
-        <div
-          className="fixed inset-0 z-40 bg-black/50 md:hidden"
-          onClick={() => c.setMobileSidebarOpen(false)}
-        />
-      )}
       <Sidebar
-        communities={c.communities}
-        loading={c.loading}
-        active={c.active}
-        currentUserId={c.currentUser?.id}
+        onSelectCommunity={handleSelectCommunity}
+        onJoinClick={() => useCommunityStore.setState({ showJoin: true })}
+        onCreateClick={() => useCommunityStore.setState({ showCreate: true })}
         canCreate={canCreate}
-        onSelectCommunity={c.selectCommunity}
-        onJoinClick={() => c.setShowJoin(true)}
-        onCreateClick={() => c.setShowCreate(true)}
-        mobileSidebarOpen={c.mobileSidebarOpen}
-        onCloseMobile={() => c.setMobileSidebarOpen(false)}
       />
       <div className="flex flex-1 flex-col">
-        {!c.active ? (
+        {!active ? (
           <EmptyState />
         ) : (
           <div className="relative flex min-h-0 flex-1 flex-col">
-            <ChatHeader
-              community={c.active}
-              screenshotProtected={c.screenshotProtected}
-              onToggleScreenshot={() => c.setScreenshotProtected((v) => !v)}
-              onOpenSettings={() => c.setShowSettings(true)}
-              onOpenMobile={() => c.setMobileSidebarOpen(true)}
-            />
-            <MessageArea
-              error={c.error}
-              loadingMessages={c.loadingMessages}
-              messages={c.messages}
-              currentUserId={c.currentUser?.id}
-              onToggleTimestamp={c.toggleTimestamp}
-              selectedTimestampMessage={c.selectedTimestampMessage}
-              onReply={c.startReply}
-            />
-            {c.active.isDisabled && (
+            <ChatHeader />
+            <MessageArea />
+            {active.isDisabled && (
               <div className="flex items-center gap-2 border-t border-red-200 bg-red-50 px-4 py-2.5 text-sm text-red-600 dark:border-red-900/50 dark:bg-red-950/30 dark:text-red-400">
                 <ShieldOff className="size-4 shrink-0" />
                 This community has been disabled. Messaging is disabled.
               </div>
             )}
-            <MessageInput
-              value={c.newMessage}
-              onChange={c.setNewMessage}
-              onSend={c.sendMessage}
-              onSendVoice={c.sendVoiceNote}
-              sending={c.sending}
-              communityName={c.active.name}
-              disabled={c.active.isDisabled}
-              replyTo={c.replyToMessage}
-              onCancelReply={c.cancelReply}
-            />
+            <MessageInput communityName={active.name} disabled={active.isDisabled} />
             <GuardOverlay mode="blackout" visible={guard.guarded} />
             <WatermarkCanvas
               enabled={watermarkEnabled}
-              seed={c.currentUser?.id ?? ""}
-              label={c.currentUser?.username}
+              seed={currentUser?.id ?? ""}
+              label={currentUser?.username}
             />
           </div>
         )}

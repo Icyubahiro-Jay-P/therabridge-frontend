@@ -185,13 +185,13 @@ export function ChatPage() {
       {currentUser?.id && (
         <VideoCallOverlay
           userId={currentUser.id}
-          callState={(webrtc.callState ?? "idle") as "idle" | "calling" | "ringing" | "connecting" | "connected" | "ended"}
+          callState={webrtc.callState}
           peerId={webrtc.peerId}
-          localStream={webrtc.localStream ?? null}
-          remoteStream={webrtc.remoteStream ?? null}
-          incomingCall={webrtc.incomingCall ?? null}
-          isMuted={webrtc.isMuted ?? false}
-          isVideoOff={webrtc.isVideoOff ?? false}
+          localStream={webrtc.localStream}
+          remoteStream={webrtc.remoteStream}
+          incomingCall={webrtc.incomingCall}
+          isMuted={webrtc.isMuted}
+          isVideoOff={webrtc.isVideoOff}
           acceptCall={webrtc.acceptCall}
           rejectCall={webrtc.rejectCall}
           endCall={webrtc.endCall}

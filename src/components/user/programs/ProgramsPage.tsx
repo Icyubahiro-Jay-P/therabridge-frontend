@@ -115,6 +115,7 @@ export function ProgramsPage() {
 
   useEffect(() => {
     p.fetchPrograms(activeTab)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeTab])
 
   const myPrograms = [...p.myInProgress, ...p.myCompleted]

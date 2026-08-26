@@ -1,5 +1,6 @@
 import { Headphones, Sparkles, BookOpen, Play, Pause } from "lucide-react"
-import { TabButton, formatDuration } from "./sleepComponents"
+import { TabButton } from "./sleepComponents"
+import { formatDuration } from "./sleepUtils"
 import { EmptyState } from "@/components/user/shared/EmptyState"
 import type { SleepContent } from "@/lib/sleep-api"
 

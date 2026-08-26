@@ -26,7 +26,7 @@ function createSocket(): Socket {
 
 export function connectSocket(): Socket | null {
   if (typeof window === "undefined") return null
-  if (!socket || !socket.connected) {
+  if (!socket || socket.connected === false) {
     socket?.disconnect()
     socket = createSocket()
   }

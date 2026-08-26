@@ -1,9 +1,6 @@
 import { Star } from "lucide-react"
 
-export function formatDuration(seconds: number) {
-  const m = Math.floor(seconds / 60)
-  return `${m} min`
-}
+export { formatDuration } from "./sleepUtils"
 
 export function TabButton({
   active,

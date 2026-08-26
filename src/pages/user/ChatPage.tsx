@@ -123,7 +123,7 @@ export function ChatPage() {
   }
 
   const handleOpenDM = useCallback((user: ChatUser) => {
-    useChatStore.getState().openDM(user)
+    useChatStore.getState().openDM()
     navigate(`/chat/${user.username}`)
   }, [navigate])
 

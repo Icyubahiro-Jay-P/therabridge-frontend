@@ -158,8 +158,5 @@ export {
   RootRoute,
   RequireRole,
   AuthInitializer,
-  PageSkeleton,
-  RouteErrorFallback,
   ErrorBoundaryRoute,
-  suspenseFallback,
 }

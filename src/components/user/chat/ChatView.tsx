@@ -1,4 +1,3 @@
-import type { RefObject } from "react"
 import { useChatStore } from "@/store/chat-store"
 import { useAuthStore } from "@/store/auth-store"
 import { ChatHeader } from "./ChatHeader"
@@ -10,13 +9,11 @@ export function ChatView({
   onToggleScreenshot,
   callState,
   onStartCall,
-  messagesEndRef,
 }: {
   screenshotProtected: boolean
   onToggleScreenshot: () => void
   callState?: string
   onStartCall?: () => void
-  messagesEndRef: RefObject<HTMLDivElement | null>
 }) {
   const partner = useChatStore((s) => s.partner)
   const error = useChatStore((s) => s.error)
@@ -35,7 +32,7 @@ export function ChatView({
         onCall={onStartCall}
         callDisabled={callState !== "idle"}
       />
-      <MessageArea messagesEndRef={messagesEndRef} />
+      <MessageArea />
       <MessageInput partnerName={partner.firstName} />
     </>
   )

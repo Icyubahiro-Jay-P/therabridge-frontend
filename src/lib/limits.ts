@@ -51,7 +51,3 @@ export const LIMITS = {
     emoji: 8,
   },
 } as const
-
-export type CharLimit = number
-
-export const charCount = (value: string): number => value.length

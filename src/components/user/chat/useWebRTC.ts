@@ -231,23 +231,27 @@ export function useWebRTC() {
   // ==================== ACTIONS ====================
   const startCall = useCallback(
     async (targetUserId: string) => {
-      const stream = await getLocalStream()
-      const pc = createPeerConnection(targetUserId)
+      try {
+        const stream = await getLocalStream()
+        const pc = createPeerConnection(targetUserId)
 
-      stream.getTracks().forEach((track) => pc.addTrack(track, stream))
+        stream.getTracks().forEach((track) => pc.addTrack(track, stream))
 
-      setPeerId(targetUserId)
-      setCallState("calling")
+        setPeerId(targetUserId)
+        setCallState("calling")
 
-      const offer = await pc.createOffer()
-      await pc.setLocalDescription(offer)
+        const offer = await pc.createOffer()
+        await pc.setLocalDescription(offer)
 
-      // Store the offer SDP, we'll send it once the server returns callId
-      pendingOfferRef.current = { sdp: offer, calleeId: targetUserId }
+        pendingOfferRef.current = { sdp: offer, calleeId: targetUserId }
 
-      getSocket()?.emit("call:initiate", { calleeId: targetUserId })
+        getSocket()?.emit("call:initiate", { calleeId: targetUserId })
+      } catch {
+        cleanup()
+        setCallState("idle")
+      }
     },
-    [getLocalStream, createPeerConnection],
+    [getLocalStream, createPeerConnection, cleanup],
   )
 
   const acceptCall = useCallback(() => {

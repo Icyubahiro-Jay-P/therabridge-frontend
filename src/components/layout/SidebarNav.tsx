@@ -18,10 +18,18 @@ export function SidebarNav({
 
   return (
     <nav className="flex min-h-0 flex-1 flex-col gap-1 overflow-y-auto p-3">
-      <NavItem to="/" icon={homeIcon} label={homeLabel} minimized={isMinimized} end onClick={closeMobile} />
-      <NavItemWithBadge to="/chat" icon={<MessageCircle className="size-4" />} label="Chat" minimized={isMinimized} badge={unreadCount} onClick={closeMobile} />
-      <NavItem to="/community" icon={<Users className="size-4" />} label="Community" minimized={isMinimized} onClick={closeMobile} />
-      <NavItem to="/mood" icon={<Heart className="size-4" />} label="Mood" minimized={isMinimized} onClick={closeMobile} />
+      <div data-onboarding-id="home-dashboard">
+        <NavItem to="/" icon={homeIcon} label={homeLabel} minimized={isMinimized} end onClick={closeMobile} />
+      </div>
+      <div data-onboarding-id="chat-nav">
+        <NavItemWithBadge to="/chat" icon={<MessageCircle className="size-4" />} label="Chat" minimized={isMinimized} badge={unreadCount} onClick={closeMobile} />
+      </div>
+      <div data-onboarding-id="community-nav">
+        <NavItem to="/community" icon={<Users className="size-4" />} label="Community" minimized={isMinimized} onClick={closeMobile} />
+      </div>
+      <div data-onboarding-id="mood-nav">
+        <NavItem to="/mood" icon={<Heart className="size-4" />} label="Mood" minimized={isMinimized} onClick={closeMobile} />
+      </div>
       <NavItem to="/journal" icon={<NotebookPen className="size-4" />} label="Journal" minimized={isMinimized} onClick={closeMobile} />
       <NavItem to="/habits" icon={<Repeat className="size-4" />} label="Habits" minimized={isMinimized} onClick={closeMobile} />
       <NavItem to="/thought-records" icon={<Brain className="size-4" />} label="Thought Records" minimized={isMinimized} onClick={closeMobile} />

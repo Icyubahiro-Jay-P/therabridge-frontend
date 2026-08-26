@@ -1,5 +1,5 @@
 import { lazy, Suspense, useEffect } from "react"
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom"
+import { Navigate, Route, Routes } from "react-router-dom"
 
 import { GuestRoute, ProtectedRoute } from "@/components/shared/auth/ProtectedRoute"
 import { AppLayout } from "@/components/layout/AppLayout"
@@ -319,9 +319,8 @@ function ErrorBoundaryRoute({ children }: { children: React.ReactNode }) {
 
 export function App() {
   return (
-    <BrowserRouter>
-      <AuthInitializer>
-        <Routes>
+    <AuthInitializer>
+      <Routes>
           <Route
             path="/"
             element={
@@ -680,9 +679,8 @@ export function App() {
           />
           <Route path="/404" element={<NotFoundPage />} />
           <Route path="*" element={<NotFoundPage />} />
-        </Routes>
-      </AuthInitializer>
-    </BrowserRouter>
+      </Routes>
+    </AuthInitializer>
   )
 }
 

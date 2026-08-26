@@ -13,10 +13,6 @@
       "destination": "https://therabridge-backend.onrender.com/socket.io/:path*"
     },
     {
-      "source": "/uploads/:path*",
-      "destination": "https://therabridge-backend.onrender.com/uploads/:path*"
-    },
-    {
       "source": "/health",
       "destination": "https://therabridge-backend.onrender.com/health"
     },

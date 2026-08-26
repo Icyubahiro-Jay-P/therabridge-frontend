@@ -106,7 +106,13 @@ export const useCommunityStore = create<CommunityState & CommunityActions>()((se
 
   // ── Simple setters ──
   setInviteKey: (v) => set({ inviteKey: v }),
-  setCommunities: (v) => setArrayState(set, "communities", v),
+  setCommunities: (v) => {
+    if (typeof v === "function") {
+      set((state) => ({ communities: v(state.communities) }))
+    } else {
+      set({ communities: v })
+    }
+  },
   setLoading: (v) => set({ loading: v }),
   setError: (v) => set({ error: v }),
   setActive: (v) => set({ active: v }),

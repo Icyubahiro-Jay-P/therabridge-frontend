@@ -68,8 +68,6 @@ function VideoElement({
 
     const handleVisibility = () => {
       if (document.visibilityState === "visible" && streamRef.current) {
-        el.srcObject = null
-        el.srcObject = streamRef.current
         el.play().catch(() => {})
       }
     }

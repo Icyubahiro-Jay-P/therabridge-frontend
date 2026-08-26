@@ -101,18 +101,6 @@ interface ChatActions {
   resetChat: () => void
 }
 
-function setArrayState<T>(
-  set: (partial: Partial<ChatState>) => void,
-  key: keyof Pick<ChatState, "conversations" | "messages">,
-  value: T[] | ((prev: T[]) => T[]),
-) {
-  if (typeof value === "function") {
-    set((state) => ({ [key]: (value as (prev: T[]) => T[])((state[key] as T[])) }))
-  } else {
-    set({ [key]: value } as Partial<ChatState>)
-  }
-}
-
 export const useChatStore = create<ChatState & ChatActions>()((set, get) => ({
   // ── Initial state ──
   username: null,
@@ -147,7 +135,13 @@ export const useChatStore = create<ChatState & ChatActions>()((set, get) => ({
   // ── Simple setters ──
   setUsername: (username) => set({ username }),
   setIsTherry: (v) => set({ isTherry: v }),
-  setConversations: (v) => setArrayState(set, "conversations", v),
+  setConversations: (v) => {
+    if (typeof v === "function") {
+      set((state) => ({ conversations: v(state.conversations) }))
+    } else {
+      set({ conversations: v })
+    }
+  },
   setLoadingList: (v) => set({ loadingList: v }),
   setSuggestions: (v) => set({ suggestions: v }),
   setLoadingSuggestions: (v) => set({ loadingSuggestions: v }),

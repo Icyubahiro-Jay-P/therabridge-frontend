@@ -45,7 +45,10 @@ function VideoElement({
 }) {
   const ref = useRef<HTMLVideoElement>(null)
   const streamRef = useRef(stream)
-  streamRef.current = stream
+
+  useEffect(() => {
+    streamRef.current = stream
+  }, [stream])
 
   useEffect(() => {
     const el = ref.current

@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useCallback } from "react"
+import { useState, useRef, useEffect } from "react"
 import { X, Send, Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
@@ -24,7 +24,10 @@ export function VoiceRecorder({
   const durationRef = useRef(0)
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
   const onCancelRef = useRef(onCancel)
-  onCancelRef.current = onCancel
+
+  useEffect(() => {
+    onCancelRef.current = onCancel
+  })
 
   useEffect(() => {
     let cancelled = false

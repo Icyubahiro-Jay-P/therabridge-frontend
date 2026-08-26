@@ -1,25 +1,18 @@
 import { Hash, Menu, Settings, Shield, ShieldOff } from "lucide-react"
 import { cn } from "@/lib/utils"
-import type { Community } from "./types"
+import { useCommunityStore } from "@/store/community-store"
 
-export function ChatHeader({
-  community,
-  screenshotProtected,
-  onToggleScreenshot,
-  onOpenSettings,
-  onOpenMobile,
-}: {
-  community: Community
-  screenshotProtected: boolean
-  onToggleScreenshot: () => void
-  onOpenSettings: () => void
-  onOpenMobile: () => void
-}) {
+export function ChatHeader() {
+  const active = useCommunityStore((s) => s.active)
+  const screenshotProtected = useCommunityStore((s) => s.screenshotProtected)
+
+  if (!active) return null
+
   return (
     <div className="flex items-center justify-between border-b border-gray-200 px-4 py-3.5 dark:border-gray-700/60">
       <div className="flex items-center gap-2 min-w-0">
         <button
-          onClick={onOpenMobile}
+          onClick={() => useCommunityStore.setState({ mobileSidebarOpen: true })}
           className="flex size-8 shrink-0 items-center justify-center rounded-lg hover:bg-gray-100 md:hidden dark:hover:bg-gray-800"
           aria-label="Open sidebar"
         >
@@ -31,12 +24,12 @@ export function ChatHeader({
           </span>
           <div className="min-w-0">
             <p className="truncate font-semibold text-gray-900 dark:text-white">
-              {community.name}
+              {active.name}
             </p>
             <p className="text-xs text-gray-400">
-              {community.members.length} members · Key:{" "}
+              {active.members.length} members · Key:{" "}
               <span className="font-mono font-semibold tracking-widest text-emerald-600 dark:text-emerald-400">
-                {community.inviteKey}
+                {active.inviteKey}
               </span>
             </p>
           </div>
@@ -44,14 +37,14 @@ export function ChatHeader({
       </div>
       <div className="flex items-center gap-1">
         <button
-          onClick={onOpenSettings}
+          onClick={() => useCommunityStore.setState({ showSettings: true })}
           className="rounded-lg p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-600 dark:hover:bg-gray-800"
           aria-label="Community settings"
         >
           <Settings className="size-4" />
         </button>
         <button
-          onClick={onToggleScreenshot}
+          onClick={() => useCommunityStore.setState({ screenshotProtected: !screenshotProtected })}
           className={cn(
             "rounded-lg p-2 transition-colors",
             screenshotProtected

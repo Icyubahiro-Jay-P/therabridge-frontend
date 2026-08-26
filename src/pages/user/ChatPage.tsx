@@ -1,14 +1,12 @@
-import { useEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
+import { useNavigate } from "react-router-dom"
 import { Loader2, Menu } from "lucide-react"
 
 import { useChatState } from "@/components/user/chat/useChatState"
 import { useChatEffects } from "@/components/user/chat/useChatEffects"
 import { useWebRTC } from "@/components/user/chat/useWebRTC"
-import { Sidebar } from "@/components/user/chat/Sidebar"
-import { EmptyState } from "@/components/user/chat/EmptyState"
-import { ChatView } from "@/components/user/chat/ChatView"
-import { VideoCallOverlay } from "@/components/user/chat/VideoCallOverlay"
-import { TherryChat } from "@/components/user/chat/TherryChat"
+import { useChatStore } from "@/store/chat-store"
+import { useAuthStore } from "@/store/auth-store"
 import { ScreenshotOverlay } from "@/components/user/community/ScreenshotOverlay"
 import { useScreenshotNotices } from "@/components/user/chat/useScreenshotNotices"
 import { GuardOverlay } from "@/components/privacy/GuardOverlay"
@@ -16,30 +14,34 @@ import { WatermarkCanvas } from "@/components/privacy/WatermarkCanvas"
 import { useScreenshotGuard } from "@/hooks/useScreenshotGuard"
 import { loadSetting } from "@/components/user/chat/utils"
 import { getSocket } from "@/lib/socket"
+import type { ChatUser } from "@/components/user/chat/types"
 import type { DirectMessage } from "@/components/user/chat/types"
 
-export function ChatPage() {
-  const c = useChatState()
-  useChatEffects({
-    ...c,
-    currentUserId: c.currentUser?.id,
-    setEditingId: c.setEditingId,
-    setEditingContent: c.setEditingContent,
-  })
+import { Sidebar } from "@/components/user/chat/Sidebar"
+import { EmptyState } from "@/components/user/chat/EmptyState"
+import { ChatView } from "@/components/user/chat/ChatView"
+import { VideoCallOverlay } from "@/components/user/chat/VideoCallOverlay"
+import { TherryChat } from "@/components/user/chat/TherryChat"
 
+export function ChatPage() {
+  const { username, isTherry, messagesEndRef } = useChatState()
+  useChatEffects(username)
+
+  const navigate = useNavigate()
   const webrtc = useWebRTC()
+
+  const partner = useChatStore((s) => s.partner)
+  const currentUser = useAuthStore((s) => s.user)
 
   const partnerIdRef = useRef<string | null>(null)
   useEffect(() => {
-    partnerIdRef.current = c.partner?._id ?? null
+    partnerIdRef.current = partner?._id ?? null
   })
 
+  // ── Screenshot notice socket listener ──
   useEffect(() => {
     const socket = getSocket()
     if (!socket) return
-
-    const currentUserId = c.currentUser?.id
-    const setMessages = c.setMessages
 
     function onScreenshotNotice(data: {
       messageId: string
@@ -49,7 +51,7 @@ export function ChatPage() {
       timestamp: string
     }) {
       if (data.conversationId !== partnerIdRef.current) return
-      if (data.initiatorId === currentUserId) return
+      if (data.initiatorId === currentUser?.id) return
 
       const notice: DirectMessage = {
         _id: data.messageId,
@@ -61,16 +63,17 @@ export function ChatPage() {
         kind: "screenshot-notice",
         noticeType: "possible_screenshot",
       }
-      setMessages((prev) => {
-        if (prev.some((m) => m._id === notice._id)) return prev
-        return [...prev, notice]
+      useChatStore.setState((state) => {
+        if (state.messages.some((m) => m._id === notice._id)) return state
+        return { messages: [...state.messages, notice] }
       })
     }
 
     socket.on("possible_screenshot", onScreenshotNotice)
     return () => { socket.off("possible_screenshot", onScreenshotNotice) }
-  }, [c.partner?._id, c.currentUser?.id, c.setMessages])
+  }, [partner?._id, currentUser?.id])
 
+  // ── Privacy shield state (localStorage-backed) ──
   const [privacyShield, setPrivacyShield] = useState(() => ({
     screenshotProtected: loadSetting("screenshotProtection", false),
     watermarkEnabled: loadSetting("watermarkEnabled", false),
@@ -97,10 +100,10 @@ export function ChatPage() {
   const guard = useScreenshotGuard({
     mode: "blackout",
     enabled: privacyShield.screenshotProtected,
-    active: !!c.partner && !c.isTherry,
+    active: !!partner && !isTherry,
     onSensitivityEvent: (e) => {
-      if (e.type === "shortcut" && c.partner) {
-        reportPossibleScreenshot(c.partner._id)
+      if (e.type === "shortcut" && partner) {
+        reportPossibleScreenshot(partner._id)
       }
     },
   })
@@ -119,38 +122,27 @@ export function ChatPage() {
     })
   }
 
+  const handleOpenDM = useCallback((user: ChatUser) => {
+    useChatStore.getState().openDM(user)
+    navigate(`/chat/${user.username}`)
+  }, [navigate])
+
   return (
     <div className="flex min-h-0 flex-1 overflow-hidden">
-      <ScreenshotOverlay screenshotProtected={privacyShield.screenshotProtected} active={!!c.partner} />
-      {c.mobileSidebarOpen && (
-        <div
-          className="fixed inset-0 z-40 bg-black/50 md:hidden"
-          onClick={() => c.setMobileSidebarOpen(false)}
-        />
-      )}
+      <ScreenshotOverlay screenshotProtected={privacyShield.screenshotProtected} active={!!partner} />
       <Sidebar
-        mobileSidebarOpen={c.mobileSidebarOpen}
-        onCloseSidebar={() => c.setMobileSidebarOpen(false)}
-        searchQuery={c.searchQuery}
-        setSearchQuery={c.setSearchQuery}
-        searching={c.searching}
-        searchResults={c.searchResults}
-        onSelectUser={c.openDM}
-        loadingList={c.loadingList}
-        conversations={c.conversations}
-        partner={c.partner}
-        onSelectConv={c.openDM}
-        showPreviews={c.showPreviews}
-        isTherry={c.isTherry}
-        onTherryClick={() => { c.setMobileSidebarOpen(false); c.navigate("/chat/therry") }}
-        suggestions={c.suggestions}
-        loadingSuggestions={c.loadingSuggestions}
+        onSelectUser={handleOpenDM}
+        onSelectConv={handleOpenDM}
+        onTherryClick={() => {
+          useChatStore.setState({ mobileSidebarOpen: false })
+          navigate("/chat/therry")
+        }}
       />
       <div className="relative flex min-h-0 flex-1 flex-col">
-        {c.isTherry ? (
-          <TherryChat onToggleSidebar={() => c.setMobileSidebarOpen(true)} />
-        ) : !c.partner ? (
-          c.username ? (
+        {isTherry ? (
+          <TherryChat onToggleSidebar={() => useChatStore.setState({ mobileSidebarOpen: true })} />
+        ) : !partner ? (
+          username ? (
             <div className="flex flex-1 items-center justify-center">
               <Loader2 className="size-6 animate-spin text-gray-400" />
             </div>
@@ -158,7 +150,7 @@ export function ChatPage() {
             <>
               <div className="flex items-center border-b border-gray-200 px-4 py-3.5 md:hidden dark:border-gray-700/60">
                 <button
-                  onClick={() => c.setMobileSidebarOpen(true)}
+                  onClick={() => useChatStore.setState({ mobileSidebarOpen: true })}
                   className="flex size-8 shrink-0 items-center justify-center rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
                 >
                   <Menu className="size-4 text-gray-500" />
@@ -175,58 +167,25 @@ export function ChatPage() {
         ) : (
           <div className="relative flex min-h-0 flex-1 flex-col">
             <ChatView
-              partner={c.partner}
-              onToggleSidebar={() => c.setMobileSidebarOpen(true)}
               screenshotProtected={privacyShield.screenshotProtected}
               onToggleScreenshot={toggleScreenshotProtection}
-              error={c.error}
-              loadingMessages={c.loadingMessages}
-              messages={c.messages}
-              currentUserId={c.currentUser?.id}
-              editingId={c.editingId}
-              editingContent={c.editingContent}
-              setEditingContent={c.setEditingContent}
-              onStartEdit={c.startEdit}
-              onReply={c.startReply}
-              onSaveEdit={c.handleSaveEdit}
-              onCancelEdit={c.cancelEdit}
-              onUnsend={c.handleUnsend}
-              menuOpenId={c.menuOpenId}
-              setMenuOpenId={c.setMenuOpenId}
-              onToggleTimestamp={c.toggleTimestamp}
-              selectedTimestampMessage={c.selectedTimestampMessage}
-              showHistoryFor={c.showHistoryFor}
-              setShowHistoryFor={c.setShowHistoryFor}
-              deleting={c.deleting}
-              newMessage={c.newMessage}
-              setNewMessage={c.setNewMessage}
-              sending={c.sending}
-              onSend={c.sendMessage}
-              onSendVoice={c.sendVoiceNote}
-              enterToSend={c.enterToSend}
-              replyTo={c.replyToMessage}
-              onCancelReply={c.cancelReply}
-              onLoadOlder={c.loadOlderMessages}
-              loadingOlder={c.loadingOlder}
-              hasOlder={c.hasOlderMessages}
               callState={webrtc.callState}
-              onStartCall={() => webrtc.startCall(c.partner!._id)}
+              onStartCall={() => webrtc.startCall(partner._id)}
+              messagesEndRef={messagesEndRef}
             />
             <GuardOverlay mode="blackout" visible={guard.guarded} />
             <WatermarkCanvas
               enabled={privacyShield.watermarkEnabled}
-              seed={c.currentUser?.id ?? ""}
-              label={c.currentUser?.username}
+              seed={currentUser?.id ?? ""}
+              label={currentUser?.username}
             />
           </div>
         )}
       </div>
 
-      {/* Video call overlay - rendered at page level so incoming calls show
-          even when the user is viewing a different conversation or no conversation */}
-      {c.currentUser?.id && (
+      {currentUser?.id && (
         <VideoCallOverlay
-          userId={c.currentUser.id}
+          userId={currentUser.id}
           callState={(webrtc.callState ?? "idle") as "idle" | "calling" | "ringing" | "connecting" | "connected" | "ended"}
           peerId={webrtc.peerId}
           localStream={webrtc.localStream ?? null}
@@ -241,9 +200,9 @@ export function ChatPage() {
           toggleVideo={webrtc.toggleVideo}
           partnerName={
             webrtc.incomingCall?.callerName
-            ?? (c.partner ? `${c.partner.firstName} ${c.partner.lastName}` : "")
+            ?? (partner ? `${partner.firstName} ${partner.lastName}` : "")
           }
-          partnerAvatar={c.partner?.avatar ?? undefined}
+          partnerAvatar={partner?.avatar ?? undefined}
         />
       )}
     </div>

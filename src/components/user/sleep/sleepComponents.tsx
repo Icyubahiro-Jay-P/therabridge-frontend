@@ -1,7 +1,5 @@
 import { Star } from "lucide-react"
 
-export { formatDuration } from "./sleepUtils"
-
 export function TabButton({
   active,
   onClick,

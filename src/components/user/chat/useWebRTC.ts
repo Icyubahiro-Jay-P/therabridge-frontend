@@ -108,8 +108,9 @@ export function useWebRTC() {
       callerId,
       callerName,
       callerUsername,
+      callerAvatar,
     }: IncomingCall & { callId: string }) => {
-      setIncomingCall({ callId: cid, callerId, callerName, callerUsername })
+      setIncomingCall({ callId: cid, callerId, callerName, callerUsername, callerAvatar })
       setCallState("ringing")
       setCallId(cid)
       callRef.callId = cid

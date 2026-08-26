@@ -1,46 +1,34 @@
 import { cn } from "@/lib/utils"
 import { X } from "lucide-react"
+import { useChatStore } from "@/store/chat-store"
 import { SearchSection } from "./SearchSection"
 import { ConversationList } from "./ConversationList"
 import { SuggestedUsers } from "./SuggestedUsers"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import type { ChatUser, Conversation } from "./types"
+import type { ChatUser } from "./types"
 
 export function Sidebar({
-  mobileSidebarOpen,
-  onCloseSidebar,
-  searchQuery,
-  setSearchQuery,
-  searching,
-  searchResults,
   onSelectUser,
-  loadingList,
-  conversations,
-  partner,
   onSelectConv,
-  showPreviews,
-  isTherry,
   onTherryClick,
-  suggestions,
-  loadingSuggestions,
 }: {
-  mobileSidebarOpen: boolean
-  onCloseSidebar: () => void
-  searchQuery: string
-  setSearchQuery: (v: string) => void
-  searching: boolean
-  searchResults: ChatUser[]
   onSelectUser: (user: ChatUser) => void
-  loadingList: boolean
-  conversations: Conversation[]
-  partner: ChatUser | null
   onSelectConv: (user: ChatUser) => void
-  showPreviews: boolean
-  isTherry: boolean
   onTherryClick: () => void
-  suggestions: ChatUser[]
-  loadingSuggestions: boolean
 }) {
+  const mobileSidebarOpen = useChatStore((s) => s.mobileSidebarOpen)
+  const searchQuery = useChatStore((s) => s.searchQuery)
+  const setSearchQuery = useChatStore((s) => s.setSearchQuery)
+  const searching = useChatStore((s) => s.searching)
+  const searchResults = useChatStore((s) => s.searchResults)
+  const loadingList = useChatStore((s) => s.loadingList)
+  const conversations = useChatStore((s) => s.conversations)
+  const partner = useChatStore((s) => s.partner)
+  const showPreviews = useChatStore((s) => s.showPreviews)
+  const isTherry = useChatStore((s) => s.isTherry)
+  const suggestions = useChatStore((s) => s.suggestions)
+  const loadingSuggestions = useChatStore((s) => s.loadingSuggestions)
+
   return (
     <aside
       className={cn(
@@ -83,7 +71,7 @@ export function Sidebar({
       <div className="flex items-center justify-between border-t border-gray-200 px-3 py-2 md:hidden dark:border-gray-700/60">
         <span className="text-xs font-medium text-gray-400">Chats</span>
         <button
-          onClick={onCloseSidebar}
+          onClick={() => useChatStore.setState({ mobileSidebarOpen: false })}
           className="flex size-7 items-center justify-center rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"
         >
           <X className="size-4 text-gray-500" />

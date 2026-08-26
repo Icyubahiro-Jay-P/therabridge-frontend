@@ -17,7 +17,7 @@ export function SidebarNav({
   const homeLabel = role === "user" ? "Home" : "Dashboard"
 
   return (
-    <nav className="flex min-h-0 flex-1 flex-col gap-1 overflow-y-auto p-3">
+    <nav className={cn("flex min-h-0 flex-1 flex-col gap-1 overflow-y-auto", isMinimized ? "p-1" : "p-3")}>
       <div data-onboarding-id="home-dashboard">
         <NavItem to="/" icon={homeIcon} label={homeLabel} minimized={isMinimized} end onClick={closeMobile} />
       </div>

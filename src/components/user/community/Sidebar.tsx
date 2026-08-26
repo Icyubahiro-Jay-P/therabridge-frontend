@@ -2,32 +2,28 @@ import { KeyRound, Plus, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { cn } from "@/lib/utils"
-import type { Community } from "./types"
+import { useCommunityStore } from "@/store/community-store"
+import { useAuthStore } from "@/store/auth-store"
 import { CommunityList } from "./CommunityList"
+import type { Community } from "./types"
 
 export function Sidebar({
-  communities,
-  loading,
-  active,
-  currentUserId,
-  canCreate,
   onSelectCommunity,
   onJoinClick,
   onCreateClick,
-  mobileSidebarOpen,
-  onCloseMobile,
+  canCreate,
 }: {
-  communities: Community[]
-  loading: boolean
-  active: Community | null
-  currentUserId?: string
-  canCreate?: boolean
   onSelectCommunity: (c: Community) => void
   onJoinClick: () => void
   onCreateClick: () => void
-  mobileSidebarOpen: boolean
-  onCloseMobile: () => void
+  canCreate?: boolean
 }) {
+  const communities = useCommunityStore((s) => s.communities)
+  const loading = useCommunityStore((s) => s.loading)
+  const active = useCommunityStore((s) => s.active)
+  const mobileSidebarOpen = useCommunityStore((s) => s.mobileSidebarOpen)
+  const currentUserId = useAuthStore((s) => s.user?.id)
+
   return (
     <aside
       className={cn(
@@ -69,7 +65,7 @@ export function Sidebar({
       <div className="flex items-center justify-between border-t border-gray-200 px-3 py-2 md:hidden dark:border-gray-700/60">
         <span className="text-xs font-medium text-gray-400">Communities</span>
         <button
-          onClick={onCloseMobile}
+          onClick={() => useCommunityStore.setState({ mobileSidebarOpen: false })}
           className="flex size-7 items-center justify-center rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"
           aria-label="Close sidebar"
         >

@@ -1,20 +1,9 @@
-import { createContext, useCallback, useEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { useLocation } from "react-router-dom"
 import { useOnboardingStore } from "@/store/onboarding-store"
 import { TIPS, FIRST_TIP_DELAY_MS, TIP_COOLDOWN_MS } from "@/lib/onboarding/config"
 import { Coachmark } from "./Coachmark"
-
-interface OnboardingContextValue {
-  /** Programmatically trigger a tip by ID */
-  showTip: (tipId: string) => void
-  /** Dismiss the currently active tip */
-  dismissActiveTip: () => void
-}
-
-export const OnboardingContext = createContext<OnboardingContextValue>({
-  showTip: () => {},
-  dismissActiveTip: () => {},
-})
+import { OnboardingContext } from "./onboarding-context"
 
 export function OnboardingProvider({ children }: { children: React.ReactNode }) {
   const location = useLocation()
@@ -32,7 +21,6 @@ export function OnboardingProvider({ children }: { children: React.ReactNode }) 
   } = useOnboardingStore()
 
   const [cooldownUntil, setCooldownUntil] = useState(0)
-  const initTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   // Reset session on mount (new login)
   useEffect(() => {
@@ -43,7 +31,7 @@ export function OnboardingProvider({ children }: { children: React.ReactNode }) 
   useEffect(() => {
     const eligible = TIPS.filter((tip) => {
       if (tip.trigger.type === "route") {
-        return location.pathname === tip.trigger.path || 
+        return location.pathname === tip.trigger.path ||
                (tip.trigger.path !== "/" && location.pathname.startsWith(tip.trigger.path))
       }
       if (tip.trigger.type === "first-session") return true
@@ -51,12 +39,13 @@ export function OnboardingProvider({ children }: { children: React.ReactNode }) 
     }).map((t) => t.id)
 
     setEligibleTips([...new Set([...eligibleTipIds, ...eligible])])
-  }, [location.pathname, setEligibleTips]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [location.pathname]) // eslint-disable-line react-hooks/exhaustive-deps
 
   // Delay timer for delayed tips
   useEffect(() => {
     if (onboardingDisabled || sessionLimitReached()) return
 
+    const timers: ReturnType<typeof setTimeout>[] = []
     const delayedTips = TIPS.filter((t) => t.trigger.type === "delay")
     for (const tip of delayedTips) {
       const trigger = tip.trigger as { type: "delay"; afterMs: number }
@@ -66,8 +55,9 @@ export function OnboardingProvider({ children }: { children: React.ReactNode }) 
       const timer = setTimeout(() => {
         setEligibleTips([...eligibleTipIds, tip.id])
       }, trigger.afterMs)
-      return () => clearTimeout(timer)
+      timers.push(timer)
     }
+    return () => timers.forEach(clearTimeout)
   }, [eligibleTipIds, onboardingDisabled, sessionLimitReached, setEligibleTips, shouldShowTip])
 
   // Determine which tip to show

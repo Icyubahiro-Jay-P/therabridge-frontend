@@ -124,7 +124,7 @@ export function Coachmark({
     <>
       {/* Highlight ring */}
       <div
-        className="pointer-events-none fixed z-[9998] rounded-xl ring-2 ring-emerald-500/60 ring-offset-2 ring-offset-transparent transition-all duration-300"
+        className="pointer-events-none fixed z-9998 rounded-xl ring-2 ring-emerald-500/60 ring-offset-2 ring-offset-transparent transition-all duration-300"
         style={{
           top: highlight.top - 4,
           left: highlight.left - 4,
@@ -135,7 +135,7 @@ export function Coachmark({
 
       {/* Backdrop */}
       <div
-        className="fixed inset-0 z-[9997] bg-black/20"
+        className="fixed inset-0 z-9997 bg-black/20"
         onClick={onDismiss}
       />
 
@@ -144,7 +144,7 @@ export function Coachmark({
         ref={tooltipRef}
         role="tooltip"
         className={cn(
-          "fixed z-[9999] w-72 rounded-xl border border-gray-200 bg-white p-4 shadow-xl dark:border-gray-700 dark:bg-gray-900",
+          "fixed z-9999 w-72 rounded-xl border border-gray-200 bg-white p-4 shadow-xl dark:border-gray-700 dark:bg-gray-900",
           "animate-in fade-in-0 zoom-in-95",
         )}
         style={{

@@ -1,6 +1,5 @@
 import { useEffect } from "react"
 import { useNavigate } from "react-router-dom"
-import { useAuthStore } from "@/store/auth-store"
 import { useCommunityStore } from "@/store/community-store"
 import { api } from "@/lib/api"
 import { getErrorMessage } from "./utils"

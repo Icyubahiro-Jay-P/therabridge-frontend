@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom"
 import { Leaf } from "lucide-react"
+import { cn } from "@/lib/utils"
 
 export function SidebarHeader({
   isMinimized,
@@ -9,14 +10,22 @@ export function SidebarHeader({
   closeMobile: () => void
 }) {
   return (
-    <div className="flex h-16 shrink-0 items-center border-b border-gray-200 px-5 dark:border-gray-800">
+    <div
+      className={cn(
+        "flex h-10 shrink-0 items-center border-b border-gray-200 dark:border-gray-800",
+        isMinimized ? "justify-center" : "px-5"
+      )}
+    >
       <Link
         to="/"
         onClick={closeMobile}
-        className="inline-flex items-center gap-2.5 font-bold text-gray-900 dark:text-white"
+        className={cn(
+          "inline-flex items-center font-bold text-gray-900 dark:text-white",
+          isMinimized ? "" : "gap-2.5"
+        )}
       >
-        <span className="inline-flex size-8 items-center justify-center rounded-lg bg-linear-to-br from-emerald-500 to-teal-600 shadow-sm">
-          <Leaf className="size-4 text-white" />
+        <span className="inline-flex size-5 items-center justify-center rounded-md bg-linear-to-br from-emerald-500 to-teal-600 shadow-sm">
+          <Leaf className="size-3 text-white" />
         </span>
         {!isMinimized && "Therabridge"}
       </Link>

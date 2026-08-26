@@ -1,6 +1,6 @@
 import { useState, useCallback, useRef } from "react"
 import { medicationApi } from "@/lib/medication-api"
-import type { Medication, MedicationLog, AdherenceStats } from "./types"
+import type { Medication, MedicationLog, AdherenceStats } from "@/lib/medication-api"
 
 export function useMedicationState() {
   const [medications, setMedications] = useState<Medication[]>([])

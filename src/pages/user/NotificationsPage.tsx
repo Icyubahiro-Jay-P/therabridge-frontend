@@ -49,6 +49,7 @@ export function NotificationsPage() {
   // Cache patches inside the hooks make this list react instantly; rollback
   // on failure is handled there too.
   const notifications: NotificationItemData[] = data?.data ?? []
+  const unreadCount = data?.total != null ? notifications.filter((n) => !n.read).length : notifications.filter((n) => !n.read).length
 
   useEffect(() => {
     if (!success) return
@@ -89,16 +90,15 @@ export function NotificationsPage() {
   }
 
   async function deleteAll() {
+    window.dispatchEvent(new Event("notifications-updated"))
     try {
       await deleteEverything.mutateAsync()
       setSuccess("All notifications deleted")
     } catch {
-      // List already restored by the hook.
+      window.dispatchEvent(new Event("notifications-updated"))
     }
     setConfirmDeleteAll(false)
   }
-
-  const unreadCount = notifications.filter((n) => !n.read).length
 
   if (isLoading) {
     return (

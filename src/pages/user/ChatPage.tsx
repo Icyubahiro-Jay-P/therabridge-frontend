@@ -24,7 +24,7 @@ import { VideoCallOverlay } from "@/components/user/chat/VideoCallOverlay"
 import { TherryChat } from "@/components/user/chat/TherryChat"
 
 export function ChatPage() {
-  const { username, isTherry, messagesEndRef } = useChatState()
+  const { username, isTherry } = useChatState()
   useChatEffects(username)
 
   const navigate = useNavigate()
@@ -171,7 +171,6 @@ export function ChatPage() {
               onToggleScreenshot={toggleScreenshotProtection}
               callState={webrtc.callState}
               onStartCall={() => webrtc.startCall(partner._id)}
-              messagesEndRef={messagesEndRef}
             />
             <GuardOverlay mode="blackout" visible={guard.guarded} />
             <WatermarkCanvas

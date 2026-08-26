@@ -1,5 +1,4 @@
 import { useCommunityStore } from "@/store/community-store"
-import { useAuthStore } from "@/store/auth-store"
 import { MessageArea as SharedMessageArea } from "../shared/MessageArea"
 import { MessageBubble } from "./MessageBubble"
 

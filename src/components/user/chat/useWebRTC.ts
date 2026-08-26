@@ -124,27 +124,33 @@ export function useWebRTC() {
       sdp: RTCSessionDescriptionInit
       callerId: string
     }) => {
-      const stream = await getLocalStream()
-      const pc = createPeerConnection(callerId)
+      try {
+        const stream = await getLocalStream()
+        const pc = createPeerConnection(callerId)
 
-      await pc.setRemoteDescription(new RTCSessionDescription(sdp))
+        await pc.setRemoteDescription(new RTCSessionDescription(sdp))
 
-      stream.getTracks().forEach((track) => pc.addTrack(track, stream))
+        stream.getTracks().forEach((track) => pc.addTrack(track, stream))
 
-      const answer = await pc.createAnswer()
-      await pc.setLocalDescription(answer)
+        const answer = await pc.createAnswer()
+        await pc.setLocalDescription(answer)
 
-      socket.emit("call:answer", {
-        callId: cid,
-        sdp: pc.localDescription?.toJSON(),
-        callerId,
-      })
+        socket.emit("call:answer", {
+          callId: cid,
+          sdp: pc.localDescription?.toJSON(),
+          callerId,
+        })
 
-      setCallState("connecting")
-      setCallId(cid)
-      callRef.callId = cid
-      setPeerId(callerId)
-      setIncomingCall(null)
+        setCallState("connecting")
+        setCallId(cid)
+        callRef.callId = cid
+        setPeerId(callerId)
+        setIncomingCall(null)
+      } catch {
+        socket.emit("call:reject", { callId: cid })
+        cleanup()
+        setCallState("idle")
+      }
     }
 
     const handleAnswer = async ({
@@ -228,6 +234,19 @@ export function useWebRTC() {
     }
   }, [cleanup, createPeerConnection, getLocalStream])
 
+  // End call and clean up resources when the hook unmounts (e.g. navigation away)
+  useEffect(() => {
+    return () => {
+      if (callRef.callId) {
+        getSocket()?.emit("call:end", { callId: callRef.callId })
+      }
+      pcRef.current?.close()
+      pcRef.current = null
+      localStreamRef.current?.getTracks().forEach((t) => t.stop())
+      localStreamRef.current = null
+    }
+  }, [])
+
   // ==================== ACTIONS ====================
   const startCall = useCallback(
     async (targetUserId: string) => {
@@ -243,7 +262,10 @@ export function useWebRTC() {
         const offer = await pc.createOffer()
         await pc.setLocalDescription(offer)
 
-        pendingOfferRef.current = { sdp: offer, calleeId: targetUserId }
+        pendingOfferRef.current = {
+          sdp: pc.localDescription!.toJSON(),
+          calleeId: targetUserId,
+        }
 
         getSocket()?.emit("call:initiate", { calleeId: targetUserId })
       } catch {

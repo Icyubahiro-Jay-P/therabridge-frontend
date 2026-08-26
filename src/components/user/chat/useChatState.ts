@@ -87,6 +87,7 @@ export function useChatState() {
   async function sendMessage() {
     if (!newMessage.trim() || !partner) return
     setSending(true)
+    setError(null)
     try {
       const payload: { recipientId: string; content: string; replyToMessageId?: string } = {
         recipientId: partner._id,

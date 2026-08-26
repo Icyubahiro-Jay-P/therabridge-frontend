@@ -10,6 +10,8 @@ import {
 } from "lucide-react"
 import { Modal } from "@/components/ui/modal"
 import { cn } from "@/lib/utils"
+import { useChatStore } from "@/store/chat-store"
+import { useAuthStore } from "@/store/auth-store"
 import type { DirectMessage } from "./types"
 import { Avatar } from "./Avatar"
 import { MessageActions } from "./MessageActions"
@@ -19,33 +21,23 @@ import { formatTime, timeAgo } from "../shared/utils"
 
 export const MessageBubble = memo(function MessageBubble({
   msg,
-  isMe,
-  editingId,
-  onStartEdit,
-  onReply,
-  onUnsend,
-  menuOpenId,
-  setMenuOpenId,
-  onToggleTimestamp,
-  selectedTimestampMessage,
-  showHistoryFor,
-  setShowHistoryFor,
-  deleting,
 }: {
   msg: DirectMessage
-  isMe: boolean
-  editingId: string | null
-  onStartEdit: (msg: DirectMessage) => void
-  onReply: (msg: DirectMessage) => void
-  onUnsend: (id: string) => void
-  menuOpenId: string | null
-  setMenuOpenId: (id: string | null) => void
-  onToggleTimestamp: (id: string) => void
-  selectedTimestampMessage: string | null
-  showHistoryFor: string | null
-  setShowHistoryFor: (id: string | null) => void
-  deleting: string | null
 }) {
+  const currentUserId = useAuthStore((s) => s.user?.id)
+  const editingId = useChatStore((s) => s.editingId)
+  const startEdit = useChatStore((s) => s.startEdit)
+  const startReply = useChatStore((s) => s.startReply)
+  const handleUnsend = useChatStore((s) => s.handleUnsend)
+  const menuOpenId = useChatStore((s) => s.menuOpenId)
+  const setMenuOpenId = useChatStore((s) => s.setMenuOpenId)
+  const toggleTimestamp = useChatStore((s) => s.toggleTimestamp)
+  const selectedTimestampMessage = useChatStore((s) => s.selectedTimestampMessage)
+  const showHistoryFor = useChatStore((s) => s.showHistoryFor)
+  const setShowHistoryFor = useChatStore((s) => s.setShowHistoryFor)
+  const deleting = useChatStore((s) => s.deleting)
+
+  const isMe = msg.sender._id === (currentUserId ?? "")
   const [confirmUnsend, setConfirmUnsend] = useState(false)
   const isUnsent = msg.unsent
   const isEditing = editingId === msg._id
@@ -105,7 +97,7 @@ export const MessageBubble = memo(function MessageBubble({
                 <button
                   onClick={(e) => {
                     e.stopPropagation()
-                    onReply(msg)
+                    startReply(msg)
                   }}
                   className={cn(
                     "absolute top-1/2 z-10 flex size-6 -translate-y-1/2 items-center justify-center rounded-full border border-gray-200 bg-white opacity-0 shadow-sm transition-opacity hover:bg-gray-100 group-hover/msg:opacity-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700",
@@ -115,10 +107,10 @@ export const MessageBubble = memo(function MessageBubble({
                   <Reply className="size-3 text-gray-500 dark:text-gray-400" />
                 </button>
                 <div
-                  onClick={() => onToggleTimestamp(msg._id)}
+                  onClick={() => toggleTimestamp(msg._id)}
                   onDoubleClick={(e) => {
                     e.stopPropagation()
-                    onReply(msg)
+                    startReply(msg)
                   }}
                   className={cn(
                     "wrap-break-words relative min-w-0 cursor-pointer overflow-hidden rounded-2xl text-sm",
@@ -224,10 +216,10 @@ export const MessageBubble = memo(function MessageBubble({
         <MessageActions
           isMe={isMe}
           editAllowed={editAllowed}
-          onEdit={() => onStartEdit(msg)}
+          onEdit={() => startEdit(msg)}
           onReply={() => {
             setMenuOpenId(null)
-            onReply(msg)
+            startReply(msg)
           }}
           onUnsend={() => {
             setMenuOpenId(null)
@@ -261,7 +253,7 @@ export const MessageBubble = memo(function MessageBubble({
               </button>
               <button
                 onClick={() => {
-                  onUnsend(msg._id)
+                  handleUnsend(msg._id)
                   setConfirmUnsend(false)
                 }}
                 disabled={deleting === msg._id}

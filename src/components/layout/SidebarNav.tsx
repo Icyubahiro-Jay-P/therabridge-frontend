@@ -13,7 +13,8 @@ export function SidebarNav({
   notificationCount: number
   role: string
 }) {
-  const homeIcon = role === "user" ? <Home className="size-4" /> : <LayoutDashboard className="size-4" />
+  const iconSize = isMinimized ? "size-5" : "size-4"
+  const homeIcon = role === "user" ? <Home className={iconSize} /> : <LayoutDashboard className={iconSize} />
   const homeLabel = role === "user" ? "Home" : "Dashboard"
 
   return (
@@ -22,47 +23,47 @@ export function SidebarNav({
         <NavItem to="/" icon={homeIcon} label={homeLabel} minimized={isMinimized} end onClick={closeMobile} />
       </div>
       <div data-onboarding-id="chat-nav">
-        <NavItemWithBadge to="/chat" icon={<MessageCircle className="size-4" />} label="Chat" minimized={isMinimized} badge={unreadCount} onClick={closeMobile} />
+        <NavItemWithBadge to="/chat" icon={<MessageCircle className={iconSize} />} label="Chat" minimized={isMinimized} badge={unreadCount} onClick={closeMobile} />
       </div>
       <div data-onboarding-id="community-nav">
-        <NavItem to="/community" icon={<Users className="size-4" />} label="Community" minimized={isMinimized} onClick={closeMobile} />
+        <NavItem to="/community" icon={<Users className={iconSize} />} label="Community" minimized={isMinimized} onClick={closeMobile} />
       </div>
       <div data-onboarding-id="mood-nav">
-        <NavItem to="/mood" icon={<Heart className="size-4" />} label="Mood" minimized={isMinimized} onClick={closeMobile} />
+        <NavItem to="/mood" icon={<Heart className={iconSize} />} label="Mood" minimized={isMinimized} onClick={closeMobile} />
       </div>
-      <NavItem to="/journal" icon={<NotebookPen className="size-4" />} label="Journal" minimized={isMinimized} onClick={closeMobile} />
-      <NavItem to="/habits" icon={<Repeat className="size-4" />} label="Habits" minimized={isMinimized} onClick={closeMobile} />
-      <NavItem to="/thought-records" icon={<Brain className="size-4" />} label="Thought Records" minimized={isMinimized} onClick={closeMobile} />
-      <NavItem to="/assessments" icon={<ClipboardCheck className="size-4" />} label="Assessments" minimized={isMinimized} onClick={closeMobile} />
-      <NavItem to="/gratitude" icon={<Sparkles className="size-4" />} label="Gratitude" minimized={isMinimized} onClick={closeMobile} />
-      <NavItem to="/activities" icon={<Calendar className="size-4" />} label="Activities" minimized={isMinimized} onClick={closeMobile} />
-      <NavItem to="/learn" icon={<BookOpen className="size-4" />} label="Learn" minimized={isMinimized} onClick={closeMobile} />
-      <NavItem to="/sleep" icon={<Moon className="size-4" />} label="Sleep" minimized={isMinimized} onClick={closeMobile} />
-      <NavItem to="/medications" icon={<Pill className="size-4" />} label="Medications" minimized={isMinimized} onClick={closeMobile} />
-      <NavItem to="/pet" icon={<Bird className="size-4" />} label="Companion" minimized={isMinimized} onClick={closeMobile} />
-      <NavItem to="/programs" icon={<Route className="size-4" />} label="Programs" minimized={isMinimized} onClick={closeMobile} />
-      <NavItem to="/coping-cards" icon={<Layers className="size-4" />} label="Coping Cards" minimized={isMinimized} onClick={closeMobile} />
-      <NavItem to="/safety-plan" icon={<ShieldCheck className="size-4" />} label="Safety Plan" minimized={isMinimized} onClick={closeMobile} />
+      <NavItem to="/journal" icon={<NotebookPen className={iconSize} />} label="Journal" minimized={isMinimized} onClick={closeMobile} />
+      <NavItem to="/habits" icon={<Repeat className={iconSize} />} label="Habits" minimized={isMinimized} onClick={closeMobile} />
+      <NavItem to="/thought-records" icon={<Brain className={iconSize} />} label="Thought Records" minimized={isMinimized} onClick={closeMobile} />
+      <NavItem to="/assessments" icon={<ClipboardCheck className={iconSize} />} label="Assessments" minimized={isMinimized} onClick={closeMobile} />
+      <NavItem to="/gratitude" icon={<Sparkles className={iconSize} />} label="Gratitude" minimized={isMinimized} onClick={closeMobile} />
+      <NavItem to="/activities" icon={<Calendar className={iconSize} />} label="Activities" minimized={isMinimized} onClick={closeMobile} />
+      <NavItem to="/learn" icon={<BookOpen className={iconSize} />} label="Learn" minimized={isMinimized} onClick={closeMobile} />
+      <NavItem to="/sleep" icon={<Moon className={iconSize} />} label="Sleep" minimized={isMinimized} onClick={closeMobile} />
+      <NavItem to="/medications" icon={<Pill className={iconSize} />} label="Medications" minimized={isMinimized} onClick={closeMobile} />
+      <NavItem to="/pet" icon={<Bird className={iconSize} />} label="Companion" minimized={isMinimized} onClick={closeMobile} />
+      <NavItem to="/programs" icon={<Route className={iconSize} />} label="Programs" minimized={isMinimized} onClick={closeMobile} />
+      <NavItem to="/coping-cards" icon={<Layers className={iconSize} />} label="Coping Cards" minimized={isMinimized} onClick={closeMobile} />
+      <NavItem to="/safety-plan" icon={<ShieldCheck className={iconSize} />} label="Safety Plan" minimized={isMinimized} onClick={closeMobile} />
       {(role === "user" || role === "therapist") && (
-        <NavItem to="/therapists" icon={<Stethoscope className="size-4" />} label="Therapists" minimized={isMinimized} onClick={closeMobile} />
+        <NavItem to="/therapists" icon={<Stethoscope className={iconSize} />} label="Therapists" minimized={isMinimized} onClick={closeMobile} />
       )}
       {role === "therapist" && (
-        <NavItem to="/clients" icon={<User className="size-4" />} label="Clients" minimized={isMinimized} onClick={closeMobile} />
+        <NavItem to="/clients" icon={<User className={iconSize} />} label="Clients" minimized={isMinimized} onClick={closeMobile} />
       )}
       {role === "admin" && (
         <>
-          <NavItem to="/users" icon={<User className="size-4" />} label="Users" minimized={isMinimized} onClick={closeMobile} />
-          <NavItem to="/communities" icon={<Shield className="size-4" />} label="Communities" minimized={isMinimized} onClick={closeMobile} />
-          <NavItem to="/audit" icon={<ShieldCheck className="size-4" />} label="Audit log" minimized={isMinimized} onClick={closeMobile} />
+          <NavItem to="/users" icon={<User className={iconSize} />} label="Users" minimized={isMinimized} onClick={closeMobile} />
+          <NavItem to="/communities" icon={<Shield className={iconSize} />} label="Communities" minimized={isMinimized} onClick={closeMobile} />
+          <NavItem to="/audit" icon={<ShieldCheck className={iconSize} />} label="Audit log" minimized={isMinimized} onClick={closeMobile} />
         </>
       )}
       <div className="mt-auto" />
       <div data-onboarding-id="crisis-nav">
-        <NavItem to="/crisis" icon={<AlertTriangle className="size-4" />} label="Crisis Support" minimized={isMinimized} onClick={closeMobile} />
+        <NavItem to="/crisis" icon={<AlertTriangle className={iconSize} />} label="Crisis Support" minimized={isMinimized} onClick={closeMobile} />
       </div>
-      <NavItemWithBadge to="/notifications" icon={<Bell className="size-4" />} label="Notifications" minimized={isMinimized} badge={notificationCount} onClick={closeMobile} />
-      <NavItem to="/settings" icon={<Settings className="size-4" />} label="Settings" minimized={isMinimized} onClick={closeMobile} />
-      <NavItem to="/profile" icon={<User className="size-4" />} label="Profile" minimized={isMinimized} onClick={closeMobile} />
+      <NavItemWithBadge to="/notifications" icon={<Bell className={iconSize} />} label="Notifications" minimized={isMinimized} badge={notificationCount} onClick={closeMobile} />
+      <NavItem to="/settings" icon={<Settings className={iconSize} />} label="Settings" minimized={isMinimized} onClick={closeMobile} />
+      <NavItem to="/profile" icon={<User className={iconSize} />} label="Profile" minimized={isMinimized} onClick={closeMobile} />
     </nav>
   )
 }

@@ -1,6 +1,6 @@
 import { X } from "lucide-react"
 import { Modal } from "@/components/ui/modal"
-import type { Medication } from "./types"
+import type { Medication } from "@/lib/medication-api"
 
 interface SideEffectModalProps {
   pendingLogMedication: Medication

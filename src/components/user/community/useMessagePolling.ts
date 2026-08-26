@@ -1,18 +1,18 @@
 import { useEffect } from "react"
+import { useAuthStore } from "@/store/auth-store"
+import { useCommunityStore } from "@/store/community-store"
 import { api } from "@/lib/api"
 import { getSocket } from "@/lib/socket"
 import { playMessageSound } from "@/lib/sound"
 import { getErrorMessage } from "./utils"
 import type { Community, CommunityMessage } from "./types"
 
-export function useMessagePolling(state: {
-  active: Community | null
-  currentUserId?: string
-  setMessages: React.Dispatch<React.SetStateAction<CommunityMessage[]>>
-  setLoadingMessages: (v: boolean) => void
-  setError: (v: string | null) => void
-}) {
-  const { active, currentUserId, setMessages, setLoadingMessages, setError } = state
+export function useMessagePolling() {
+  const active = useCommunityStore((s) => s.active)
+  const currentUserId = useAuthStore((s) => s.user?.id)
+  const setMessages = useCommunityStore((s) => s.setMessages)
+  const setLoadingMessages = useCommunityStore((s) => s.setLoadingMessages)
+  const setError = useCommunityStore((s) => s.setError)
 
   useEffect(() => {
     if (!active) {
@@ -29,7 +29,7 @@ export function useMessagePolling(state: {
     async function load() {
       try {
         const { data } = await api.get<Community>(
-          `/api/chat/communities/${communityId}`
+          `/api/chat/communities/${communityId}`,
         )
         if (!mounted) return
         setMessages(Array.isArray(data.messages) ? data.messages : [])
@@ -41,7 +41,6 @@ export function useMessagePolling(state: {
       }
     }
     void load()
-    // Mark the room read when it's opened, matching the DM thread behavior.
     void api.post(`/api/chat/communities/${communityId}/read`).catch(() => {})
 
     const socket = getSocket()
@@ -79,8 +78,8 @@ export function useMessagePolling(state: {
       if (!payload || payload.communityId !== communityId) return
       setMessages((prev) =>
         prev.map((m) =>
-          m._id === payload.message._id ? payload.message : m
-        )
+          m._id === payload.message._id ? payload.message : m,
+        ),
       )
     }
 
@@ -91,8 +90,8 @@ export function useMessagePolling(state: {
       if (!payload || payload.communityId !== communityId) return
       setMessages((prev) =>
         prev.map((m) =>
-          m._id === payload.message._id ? payload.message : m
-        )
+          m._id === payload.message._id ? payload.message : m,
+        ),
       )
     }
 

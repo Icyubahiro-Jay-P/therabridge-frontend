@@ -105,7 +105,9 @@ export function useMoodState() {
     setError(null)
     setSuccess(null)
     try {
-      const { data } = await api.post<MoodEntry>("/api/mood", { mood: selectedMood, note, intensity, factors })
+      const { data } = await api.post<MoodEntry>("/api/mood", { mood: selectedMood, note, intensity, factors }, {
+        headers: { "Idempotency-Key": `mood-${Date.now()}-${Math.random().toString(36).slice(2)}` },
+      })
       setMoods((prev) => [data, ...prev])
       setSuccess("Mood logged!")
       setSelectedMood("")

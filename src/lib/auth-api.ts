@@ -58,6 +58,7 @@ function normalizeUser(raw: RawUser): User {
     exerciseStreak: raw.exerciseStreak,
     longestLoginStreak: raw.longestLoginStreak,
     longestExerciseStreak: raw.longestExerciseStreak,
+    twoFactorEnabled: raw.twoFactorEnabled,
   }
 }
 

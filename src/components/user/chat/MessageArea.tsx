@@ -1,15 +1,10 @@
-import type { RefObject } from "react"
 import { PhoneOff } from "lucide-react"
 import { useChatStore } from "@/store/chat-store"
 import { useAuthStore } from "@/store/auth-store"
 import { MessageArea as SharedMessageArea } from "../shared/MessageArea"
 import { MessageBubble } from "./MessageBubble"
 
-export function MessageArea({
-  messagesEndRef,
-}: {
-  messagesEndRef: RefObject<HTMLDivElement | null>
-}) {
+export function MessageArea() {
   const error = useChatStore((s) => s.error)
   const loadingMessages = useChatStore((s) => s.loadingMessages)
   const messages = useChatStore((s) => s.messages)
@@ -26,7 +21,6 @@ export function MessageArea({
       onLoadOlder={loadOlderMessages}
       loadingOlder={loadingOlder}
       hasOlder={hasOlderMessages}
-      messagesEndRef={messagesEndRef}
       renderMessage={(msg) => {
         const m = msg as import("./types").DirectMessage
         if (m.kind === "screenshot-notice") {

@@ -293,7 +293,7 @@ export function MedicationsPage() {
             <EmptyState
               icon={Calendar}
               title="No dose logs yet"
-              description="Use "Take" or "Skip" on today's medications and your dose history will build up here."
+              description={'Use "Take" or "Skip" on today\'s medications and your dose history will build up here.'}
             />
           ) : (
             <div className="space-y-2">

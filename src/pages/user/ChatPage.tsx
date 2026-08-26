@@ -201,7 +201,11 @@ export function ChatPage() {
             webrtc.incomingCall?.callerName
             ?? (partner ? `${partner.firstName} ${partner.lastName}` : "")
           }
-          partnerAvatar={partner?.avatar ?? undefined}
+          partnerAvatar={
+            webrtc.incomingCall?.callerAvatar
+            ?? partner?.avatar
+            ?? undefined
+          }
         />
       )}
     </div>

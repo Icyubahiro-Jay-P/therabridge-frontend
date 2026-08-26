@@ -80,18 +80,6 @@ interface CommunityActions {
   toggleTimestamp: (id: string) => void
 }
 
-function setArrayState<T>(
-  set: (partial: Partial<CommunityState>) => void,
-  key: keyof Pick<CommunityState, "communities" | "messages">,
-  value: T[] | ((prev: T[]) => T[]),
-) {
-  if (typeof value === "function") {
-    set((state) => ({ [key]: (value as (prev: T[]) => T[])((state[key] as T[])) }))
-  } else {
-    set({ [key]: value } as Partial<CommunityState>)
-  }
-}
-
 export const useCommunityStore = create<CommunityState & CommunityActions>()((set, get) => ({
   // ── Initial state ──
   inviteKey: null,

@@ -63,7 +63,9 @@ export function CrisisPage() {
     setSending(true)
     setError(null)
     try {
-      const { data } = await api.post("/api/crisis", { alertType, description, severity, requestContact })
+      const { data } = await api.post("/api/crisis", { alertType, description, severity, requestContact }, {
+        headers: { "Idempotency-Key": `crisis-${Date.now()}-${Math.random().toString(36).slice(2)}` },
+      })
       setSent(true)
       setResources(data.resources || [])
       setMyAlerts((prev) => [data.crisis, ...prev])

@@ -315,7 +315,7 @@ export const useChatStore = create<ChatState & ChatActions>()((set, get) => ({
     }
   },
 
-  openDM: (user) => {
+  openDM: () => {
     set({ searchQuery: "", searchResults: [], mobileSidebarOpen: false })
   },
 

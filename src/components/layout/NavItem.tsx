@@ -2,11 +2,10 @@ import { type ReactNode } from "react"
 import { NavLink } from "react-router-dom"
 import { cn } from "@/lib/utils"
 
-function baseClass(minimized: boolean) {
+function baseClass() {
   return ({ isActive }: { isActive: boolean }) =>
     cn(
-      "flex items-center rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-150",
-      minimized ? "justify-center px-2.5" : "gap-3",
+      "flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-150",
       isActive
         ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-400"
         : "text-gray-500 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-100"
@@ -24,7 +23,7 @@ export function NavItem({
   onClick?: () => void
 }) {
   return (
-    <NavLink to={to} end={end} className={baseClass(minimized)} onClick={onClick}>
+    <NavLink to={to} end={end} className={baseClass()} onClick={onClick}>
       {icon}
       {!minimized && <span>{label}</span>}
     </NavLink>
@@ -42,7 +41,7 @@ export function NavItemWithBadge({
   onClick?: () => void
 }) {
   return (
-    <NavLink to={to} className={baseClass(minimized)} onClick={onClick}>
+    <NavLink to={to} className={baseClass()} onClick={onClick}>
       <div className="relative">
         {icon}
         {badge !== undefined && badge > 0 && (

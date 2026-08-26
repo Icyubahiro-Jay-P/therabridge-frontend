@@ -1,4 +1,4 @@
-import { CheckCheck, Trash2 } from "lucide-react"
+import { CheckCheck, Trash2, Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 export function NotificationsHeader({
@@ -6,11 +6,15 @@ export function NotificationsHeader({
   totalCount,
   onMarkAllRead,
   onDeleteAll,
+  markingAllRead,
+  deletingAll,
 }: {
   unreadCount: number
   totalCount: number
   onMarkAllRead: () => void
   onDeleteAll: () => void
+  markingAllRead?: boolean
+  deletingAll?: boolean
 }) {
   return (
     <div className="flex items-center justify-between">
@@ -22,13 +26,13 @@ export function NotificationsHeader({
       </div>
       <div className="flex gap-2">
         {unreadCount > 0 && (
-          <Button variant="outline" size="sm" onClick={onMarkAllRead}>
-            <CheckCheck className="size-3.5" /> Mark all read
+          <Button variant="outline" size="sm" onClick={onMarkAllRead} disabled={markingAllRead}>
+            {markingAllRead ? <Loader2 className="size-3.5 animate-spin" /> : <CheckCheck className="size-3.5" />} Mark all read
           </Button>
         )}
         {totalCount > 0 && (
-          <Button variant="outline" size="sm" onClick={onDeleteAll} className="text-red-500 hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-950/30">
-            <Trash2 className="size-3.5" /> Delete all
+          <Button variant="outline" size="sm" onClick={onDeleteAll} disabled={deletingAll} className="text-red-500 hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-950/30">
+            {deletingAll ? <Loader2 className="size-3.5 animate-spin" /> : <Trash2 className="size-3.5" />} Delete all
           </Button>
         )}
       </div>

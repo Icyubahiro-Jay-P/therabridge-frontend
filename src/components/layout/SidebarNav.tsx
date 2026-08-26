@@ -57,7 +57,9 @@ export function SidebarNav({
         </>
       )}
       <div className="mt-auto" />
-      <NavItem to="/crisis" icon={<AlertTriangle className="size-4" />} label="Crisis Support" minimized={isMinimized} onClick={closeMobile} />
+      <div data-onboarding-id="crisis-nav">
+        <NavItem to="/crisis" icon={<AlertTriangle className="size-4" />} label="Crisis Support" minimized={isMinimized} onClick={closeMobile} />
+      </div>
       <NavItemWithBadge to="/notifications" icon={<Bell className="size-4" />} label="Notifications" minimized={isMinimized} badge={notificationCount} onClick={closeMobile} />
       <NavItem to="/settings" icon={<Settings className="size-4" />} label="Settings" minimized={isMinimized} onClick={closeMobile} />
       <NavItem to="/profile" icon={<User className="size-4" />} label="Profile" minimized={isMinimized} onClick={closeMobile} />

@@ -193,7 +193,7 @@ export function useMedicationState() {
     } finally {
       setSaving(false)
     }
-  }, [pendingLogMedication, sideEffects, logNotes, medicationApi])
+  }, [pendingLogMedication, sideEffects, logNotes])
 
   const fetchLogs = useCallback(async (opts: { page?: number; medicationId?: string; append?: boolean }) => {
     setLogsLoading(true)

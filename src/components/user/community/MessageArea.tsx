@@ -7,8 +7,6 @@ export function MessageArea() {
   const error = useCommunityStore((s) => s.error)
   const loadingMessages = useCommunityStore((s) => s.loadingMessages)
   const messages = useCommunityStore((s) => s.messages)
-  const currentUserId = useAuthStore((s) => s.user?.id)
-  const selectedTimestampMessage = useCommunityStore((s) => s.selectedTimestampMessage)
 
   return (
     <SharedMessageArea
@@ -21,8 +19,6 @@ export function MessageArea() {
           <MessageBubble
             key={m._id}
             msg={m}
-            isMe={m.sender._id === (currentUserId ?? "")}
-            selectedTimestampMessage={selectedTimestampMessage}
           />
         )
       }}

@@ -2,6 +2,7 @@ import { useChatStore } from "@/store/chat-store"
 import { ChatHeader } from "./ChatHeader"
 import { MessageArea } from "./MessageArea"
 import { MessageInput } from "./MessageInput"
+import type { CallState } from "./useWebRTC"
 
 export function ChatView({
   screenshotProtected,
@@ -11,7 +12,7 @@ export function ChatView({
 }: {
   screenshotProtected: boolean
   onToggleScreenshot: () => void
-  callState?: string
+  callState?: CallState
   onStartCall?: () => void
 }) {
   const partner = useChatStore((s) => s.partner)

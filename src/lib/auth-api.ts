@@ -222,8 +222,8 @@ export async function setupTwoFactor(): Promise<TwoFactorSetupResponse> {
   return data
 }
 
-export async function verifyTwoFactorSetup(code: string): Promise<{ message: string; backupCodes: string[] }> {
-  const { data } = await api.post<{ message: string; backupCodes: string[] }>(
+export async function verifyTwoFactorSetup(code: string): Promise<{ message: string; backupCodes: string[]; alreadyEnabled?: boolean }> {
+  const { data } = await api.post<{ message: string; backupCodes: string[]; alreadyEnabled?: boolean }>(
     "/api/users/2fa/verify-setup",
     { code }
   )

@@ -74,9 +74,12 @@ export function useProtectedContent({
   // Create the viewing session when protection is active and we have a contentId.
   useEffect(() => {
     const shouldOpen = enabled && active && !!contentId
-    setSessionReady(false)
-    if (!shouldOpen) return
+    if (!shouldOpen) {
+      setSessionReady(false)
+      return
+    }
 
+    setSessionReady(false)
     let cancelled = false
     void openProtectedSession({
       contentId,

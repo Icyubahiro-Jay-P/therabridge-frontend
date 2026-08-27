@@ -42,7 +42,6 @@ import {
   UserPetPage,
   UserHabitsPage,
   UserSessionsPage,
-  UserBillingPage,
   UserTherapistProfilePage,
   AdminUsersPage,
   AdminCommunitiesPage,
@@ -216,14 +215,6 @@ export function App() {
                 element={
                   <ErrorBoundaryRoute>
                     <UserSessionsPage />
-                  </ErrorBoundaryRoute>
-                }
-              />
-              <Route
-                path="/billing"
-                element={
-                  <ErrorBoundaryRoute>
-                    <UserBillingPage />
                   </ErrorBoundaryRoute>
                 }
               />

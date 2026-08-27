@@ -1,6 +1,6 @@
 import {
   Home, LayoutDashboard, MessageCircle, Users, Heart,
-  Stethoscope, User, Shield, ShieldCheck, AlertTriangle, Bell, Settings, Brain, ClipboardCheck, Sparkles, Calendar, Route, BookOpen, Moon, Pill, Bird, Layers, NotebookPen, Repeat,
+  Stethoscope, User, Shield, ShieldCheck, AlertTriangle, Bell, Settings, Brain, ClipboardCheck, Sparkles, Calendar, Route, BookOpen, Moon, Pill, Bird, Layers, NotebookPen, Repeat, Video, CreditCard,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { NavItem, NavItemWithBadge } from "./NavItem"
@@ -46,6 +46,10 @@ export function SidebarNav({
       <NavItem to="/safety-plan" icon={<ShieldCheck className="size-4" />} label="Safety Plan" minimized={isMinimized} onClick={closeMobile} />
       {(role === "user" || role === "therapist") && (
         <NavItem to="/therapists" icon={<Stethoscope className="size-4" />} label="Therapists" minimized={isMinimized} onClick={closeMobile} />
+      )}
+      <NavItem to="/sessions" icon={<Video className="size-4" />} label="Sessions" minimized={isMinimized} onClick={closeMobile} />
+      {(role === "user" || role === "therapist") && (
+        <NavItem to="/billing" icon={<CreditCard className="size-4" />} label="Billing" minimized={isMinimized} onClick={closeMobile} />
       )}
       {role === "therapist" && (
         <NavItem to="/clients" icon={<User className="size-4" />} label="Clients" minimized={isMinimized} onClick={closeMobile} />

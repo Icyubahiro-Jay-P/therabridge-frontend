@@ -60,7 +60,7 @@ export function BookSessionModal({
   }, [open])
 
   const slotsByDate = useMemo(() => {
-    if (!availability) return []
+    if (!availability) return [] as [string, string[]][]
     const map = new Map<string, Set<string>>()
     for (const slot of availability.slots) {
       const set = map.get(slot.date) ?? new Set<string>()

@@ -18,7 +18,7 @@ React 19 + TypeScript SPA for Therabridge, a mental wellness platform connecting
 - **Data Privacy & Compliance** - Persistent AI-disclosure modal, self-serve data export, account deletion, and retention notices
 - **Live Crisis Escalation** - Therry auto-detects crisis language and surfaces an in-chat crisis card with region hotlines and one-tap therapist notification
 - **Email Verification & Onboarding** - 6-digit code verification flow with resend cooldown, unverified banner, and a skippable two-step onboarding (avatar + bio)
-- **Admin Analytics Dashboard** - KPI overview with 7/30-day trends and a 14-day activity line chart with toggleable legend series
+- **Admin Analytics Dashboard** - KPI overview with 7/30-day trends and a 14-day activity line chart with toggleable legend series.
 
 ## Stack
 

@@ -110,16 +110,36 @@ export function useScreenshotGuard({
       reveal()
     }
 
+    function onFullscreenChange() {
+      if (!document.fullscreenElement) onEventRef.current?.({ type: "fullscreen-exit" })
+    }
+
+    function onVisibilityLifecycle() {
+      // `freeze` is reported by the Page Lifecycle API when the browser freezes
+      // the page - a common moment for screen-recording/capture to start.
+      onEventRef.current?.({ type: "page-freeze" })
+    }
+
+    function onPageHide() {
+      onEventRef.current?.({ type: "page-hide" })
+    }
+
     window.addEventListener("keydown", onKeyDown, true)
     document.addEventListener("visibilitychange", onVisibility)
     window.addEventListener("blur", onWindowBlur)
     window.addEventListener("focus", onWindowFocus)
+    document.addEventListener("fullscreenchange", onFullscreenChange)
+    document.addEventListener("freeze", onVisibilityLifecycle)
+    window.addEventListener("pagehide", onPageHide)
 
     return () => {
       window.removeEventListener("keydown", onKeyDown, true)
       document.removeEventListener("visibilitychange", onVisibility)
       window.removeEventListener("blur", onWindowBlur)
       window.removeEventListener("focus", onWindowFocus)
+      document.removeEventListener("fullscreenchange", onFullscreenChange)
+      document.removeEventListener("freeze", onVisibilityLifecycle)
+      window.removeEventListener("pagehide", onPageHide)
       clearTimer()
     }
   }, [enabled, active, hide, reveal, shortcut, clearTimer])

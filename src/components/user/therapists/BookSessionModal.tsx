@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react"
+import { useMemo, useState } from "react"
 import { CalendarCheck, TriangleAlert, X } from "lucide-react"
 import { Modal } from "@/components/ui/modal"
 import { Button } from "@/components/ui/button"
@@ -49,15 +49,6 @@ export function BookSessionModal({
     open ? therapist._id : undefined
   )
   const createAppointment = useCreateAppointment()
-
-  useEffect(() => {
-    if (open) {
-      setSelectedDate("")
-      setSelectedTime("")
-      setNotes("")
-      setFormError(null)
-    }
-  }, [open])
 
   const slotsByDate = useMemo(() => {
     if (!availability) return [] as [string, string[]][]

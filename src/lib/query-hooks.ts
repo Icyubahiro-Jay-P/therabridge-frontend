@@ -14,7 +14,7 @@ import {
   createTherapistReview as createReviewRequest,
 } from "./sessions-api"
 import { getBillingStatus, createCheckoutSession, cancelSubscription } from "./billing-api"
-import type { Appointment, AppointmentStatus, Review } from "@/types/sessions"
+import type { Appointment, AppointmentStatus } from "@/types/sessions"
 import type { TherapistProfile } from "@/types/user"
 
 export interface PaginatedResponse<T> {
@@ -152,7 +152,10 @@ export function useCancelAppointment() {
     onMutate: async (id: string) => {
       await queryClient.cancelQueries({ queryKey: ["my-appointments"] })
       await queryClient.cancelQueries({ queryKey: ["therapist-appointments"] })
-      const previous = snapshotQueries(queryClient, ["my-appointments", "therapist-appointments"])
+      const previous = [
+        ...snapshotQueries(queryClient, ["my-appointments"]),
+        ...snapshotQueries(queryClient, ["therapist-appointments"]),
+      ]
       patchAppointmentListQuery(queryClient, id, { status: "cancelled", cancelled: true })
       return { previous }
     },
@@ -179,7 +182,10 @@ export function useUpdateAppointmentStatus() {
     onMutate: async ({ id, status }: { id: string; status: AppointmentStatus }) => {
       await queryClient.cancelQueries({ queryKey: ["my-appointments"] })
       await queryClient.cancelQueries({ queryKey: ["therapist-appointments"] })
-      const previous = snapshotQueries(queryClient, ["my-appointments", "therapist-appointments"])
+      const previous = [
+        ...snapshotQueries(queryClient, ["my-appointments"]),
+        ...snapshotQueries(queryClient, ["therapist-appointments"]),
+      ]
       patchAppointmentListQuery(queryClient, id, { status })
       return { previous }
     },

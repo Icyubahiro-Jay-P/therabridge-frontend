@@ -5,6 +5,7 @@ import { AvatarUpload } from "@/components/user/profile/AvatarUpload"
 import { PasswordForm } from "@/components/user/profile/PasswordForm"
 import { ProfileForm } from "@/components/user/profile/ProfileForm"
 import { ProfileHeader } from "@/components/user/profile/ProfileHeader"
+import { TherapistDetailsForm } from "@/components/user/profile/TherapistDetailsForm"
 import { useProfileState } from "@/components/user/profile/useProfileState"
 
 export function ProfilePage() {
@@ -85,6 +86,8 @@ export function ProfilePage() {
         onFieldChange={updateProfileField}
         onSubmit={handleProfileSubmit}
       />
+
+      {user.role === "therapist" && <TherapistDetailsForm />}
 
       <PasswordForm
         isLoading={isLoading}

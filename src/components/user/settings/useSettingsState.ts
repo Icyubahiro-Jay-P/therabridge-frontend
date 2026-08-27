@@ -1,6 +1,7 @@
 import { useState, useCallback } from "react"
 import { api } from "@/lib/api"
 import { getErrorMessage } from "@/lib/errors"
+import { useAuthStore } from "@/store/auth-store"
 
 export interface Settings {
   messagePreviews: boolean
@@ -67,6 +68,14 @@ export function useSettingsState() {
     saveSettings(next)
     if (key === "screenshotProtection") {
       window.dispatchEvent(new CustomEvent("screenshot-protection-change", { detail: value }))
+    }
+    if (key === "screenshotProtection" || key === "watermarkEnabled") {
+      // Persist to the authenticated user's server profile so the preference
+      // follows them across devices. Best-effort: never blocks the UI.
+      void useAuthStore
+        .getState()
+        .updateChatSettings({ [key]: value })
+        .catch(() => {})
     }
     window.dispatchEvent(new Event("storage"))
   }

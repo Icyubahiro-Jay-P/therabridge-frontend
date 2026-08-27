@@ -13,8 +13,7 @@ export interface UseProtectedContentOptions {
   ownerId?: string
   enabled?: boolean
   active?: boolean
-  mode?: ScreenshotGuardMode
-  /** Per-view snapshot so the classifier shares the exact same signals. */
+  mode?: "blur" | "blackout"
   onCapture?: (info: { eventType: CaptureEventType; confidence: string }) => void
 }
 
@@ -43,17 +42,42 @@ export function useProtectedContent({
   onCapture,
 }: UseProtectedContentOptions): ProtectedContentState {
   const [sessionReady, setSessionReady] = useState(false)
+
+  // Keep the latest options available to async callbacks without forcing
+  // re-subscriptions. Updated in an effect (never during render).
   const optsRef = useRef({ contentType, protectionMode, ownerId })
-  optsRef.current = { contentType, protectionMode, ownerId }
+  useEffect(() => {
+    optsRef.current = { contentType, protectionMode, ownerId }
+  }, [contentType, protectionMode, ownerId])
+
+  const report = useCallback(
+    (signal: SensitivitySignal) => {
+      if (!contentId) return
+      const classification = classifySensitivitySignal(signal)
+      void reportScreenshotEvent(
+        {
+          contentId,
+          contentType: optsRef.current.contentType,
+          platform: WEB_PLATFORM.platform,
+          detectionMethod: classification.detectionMethod,
+          confidence: classification.confidence,
+          eventType: classification.eventType,
+        },
+        { contentId, eventType: classification.eventType },
+      ).then(() => {
+        onCapture?.({ eventType: classification.eventType, confidence: classification.confidence })
+      })
+    },
+    [contentId, onCapture],
+  )
 
   // Create the viewing session when protection is active and we have a contentId.
   useEffect(() => {
-    if (!enabled || !active || !contentId) {
-      setSessionReady(false)
-      return
-    }
-    let cancelled = false
+    const shouldOpen = enabled && active && !!contentId
     setSessionReady(false)
+    if (!shouldOpen) return
+
+    let cancelled = false
     void openProtectedSession({
       contentId,
       contentType: optsRef.current.contentType,
@@ -68,25 +92,6 @@ export function useProtectedContent({
       clearProtectedSession(contentId)
     }
   }, [enabled, active, contentId])
-
-  const report = useCallback(
-    (signal: SensitivitySignal) => {
-      const classification = classifySensitivitySignal(signal)
-      if (!contentId) return
-      void reportScreenshotEvent(
-        {
-          contentId,
-          contentType: optsRef.current.contentType,
-          platform: WEB_PLATFORM.platform,
-          detectionMethod: classification.detectionMethod,
-          confidence: classification.confidence,
-          eventType: classification.eventType,
-        },
-        { contentId, eventType: classification.eventType },
-      ).then(() => onCapture?.({ eventType: classification.eventType, confidence: classification.confidence }))
-    },
-    [contentId, onCapture],
-  )
 
   // Shortcut guard: PrtScr etc is a *probable* signal, not confirmation.
   useEffect(() => {
@@ -109,6 +114,7 @@ export function useProtectedContent({
     onSensitivityEvent: (ev) => {
       if (ev.type === "hidden") report("visibility-hidden")
       if (ev.type === "visible") report("window-focus")
+      if (ev.type === "fullscreen-exit") report("visibility-hidden")
     },
   })
 

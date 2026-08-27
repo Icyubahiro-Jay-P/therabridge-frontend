@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react"
 import { ShieldAlert } from "lucide-react"
-import { isScreenshotShortcut } from "@/lib/screenshotShortcuts"
 
 function loadSetting<T>(key: string, fallback: T): T {
   try {
@@ -34,22 +33,14 @@ export function ScreenshotProtection() {
   useEffect(() => {
     if (!enabled) return
 
-    function onKeyDown(e: KeyboardEvent) {
-      if (isScreenshotShortcut(e)) {
-        e.preventDefault()
-        e.stopPropagation()
-        setBlurred(true)
-      }
-    }
-
     function onVisibility() {
       setBlurred(document.hidden || document.visibilityState === "hidden")
     }
 
-    window.addEventListener("keydown", onKeyDown, true)
+    window.addEventListener("blur", onVisibility)
     document.addEventListener("visibilitychange", onVisibility)
     return () => {
-      window.removeEventListener("keydown", onKeyDown, true)
+      window.removeEventListener("blur", onVisibility)
       document.removeEventListener("visibilitychange", onVisibility)
     }
   }, [enabled])

@@ -13,7 +13,6 @@ export interface TherapistListItem {
   rating?: number
   reviewCount?: number
   specialization?: string[]
-  sessionPrice?: number
 }
 
 function StarsBadge({ rating }: { rating: number }) {
@@ -64,7 +63,7 @@ export function TherapistCard({ therapist }: { therapist: TherapistListItem }) {
         <p className="mt-3 text-sm italic text-gray-400">No bio yet.</p>
       )}
 
-      {(therapist.specialization?.length || therapist.sessionPrice != null) && (
+      (therapist.specialization?.length ?? 0) > 0 && (
         <div className="mt-3 flex flex-wrap items-center gap-1.5">
           {therapist.specialization?.slice(0, 3).map((spec) => (
             <span
@@ -74,12 +73,6 @@ export function TherapistCard({ therapist }: { therapist: TherapistListItem }) {
               {spec}
             </span>
           ))}
-          {therapist.sessionPrice != null && therapist.sessionPrice > 0 && (
-            <span className="ml-auto text-sm font-semibold text-gray-800 dark:text-gray-200">
-              ${therapist.sessionPrice}
-              <span className="text-xs font-normal text-gray-400">/session</span>
-            </span>
-          )}
         </div>
       )}
 

@@ -3,6 +3,7 @@ import { api } from "./api"
 import { restoreQueries, snapshotQueries } from "./optimistic"
 import {
   getTherapistByUsername,
+  getTherapistById,
   getTherapistReviews,
   getAvailability,
   getMyAppointments,

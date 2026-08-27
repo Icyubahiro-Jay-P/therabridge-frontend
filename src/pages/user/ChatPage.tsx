@@ -54,28 +54,10 @@ export function ChatPage() {
     }
   }, [])
 
-  const { reportPossibleScreenshot } = useScreenshotNotices()
   const guard = useScreenshotGuard({
     mode: "blackout",
     enabled: privacyShield.screenshotProtected,
     active: !!partner && !isTherry,
-    onSensitivityEvent: (e) => {
-      if (e.type === "shortcut" && partner) {
-        reportPossibleScreenshot(partner._id)
-      }
-    },
-  })
-
-  // Viewer-session-gated screenshot reporting (audit + bell notification).
-  // Kept alongside the legacy in-thread chip so both the paper trail and the
-  // real-time UX are preserved without double-reporting to the same endpoint.
-  useProtectedContent({
-    contentId: partner?._id ?? "",
-    contentType: "message",
-    protectionMode: "notify",
-    ownerId: partner?._id,
-    enabled: privacyShield.screenshotProtected,
-    active: !!partner && !isTherry && !!currentUser?.id,
   })
 
   function toggleScreenshotProtection() {

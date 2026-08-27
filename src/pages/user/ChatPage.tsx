@@ -12,6 +12,7 @@ import { useScreenshotNotices } from "@/components/user/chat/useScreenshotNotice
 import { GuardOverlay } from "@/components/privacy/GuardOverlay"
 import { WatermarkCanvas } from "@/components/privacy/WatermarkCanvas"
 import { useScreenshotGuard } from "@/hooks/useScreenshotGuard"
+import { useProtectedContent } from "@/hooks/useProtectedContent"
 import { loadSetting } from "@/components/user/chat/utils"
 import { getSocket } from "@/lib/socket"
 import type { ChatUser } from "@/components/user/chat/types"
@@ -106,6 +107,18 @@ export function ChatPage() {
         reportPossibleScreenshot(partner._id)
       }
     },
+  })
+
+  // Viewer-session-gated screenshot reporting (audit + bell notification).
+  // Kept alongside the legacy in-thread chip so both the paper trail and the
+  // real-time UX are preserved without double-reporting to the same endpoint.
+  useProtectedContent({
+    contentId: partner?._id ?? "",
+    contentType: "message",
+    protectionMode: "notify",
+    ownerId: partner?._id,
+    enabled: privacyShield.screenshotProtected,
+    active: !!partner && !isTherry && !!currentUser?.id,
   })
 
   function toggleScreenshotProtection() {

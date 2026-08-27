@@ -6,13 +6,6 @@ export interface WeeklyAvailabilitySlot {
   endTime: string
 }
 
-export interface Subscription {
-  plan: string
-  status: string
-  cycleEndsAt?: string
-  stripeCustomerId?: string
-}
-
 export interface User {
   id: string
   username: string
@@ -39,9 +32,7 @@ export interface User {
   credentials?: string
   yearsExperience?: number
   languages?: string[]
-  sessionPrice?: number
   weeklyAvailability?: WeeklyAvailabilitySlot[]
-  subscription?: Subscription
 }
 
 export interface TherapistProfile extends User {
@@ -105,7 +96,6 @@ export interface UpdateProfilePayload {
   credentials?: string
   yearsExperience?: number
   languages?: string[]
-  sessionPrice?: number
   weeklyAvailability?: WeeklyAvailabilitySlot[]
 }
 

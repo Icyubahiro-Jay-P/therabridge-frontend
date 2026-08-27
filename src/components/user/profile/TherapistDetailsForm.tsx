@@ -60,7 +60,7 @@ export function TherapistDetailsForm() {
     setMessage("")
     setError("")
     const price = sessionPrice ? Number(sessionPrice) : undefined
-    if (sessionPrice && (Number.isNaN(price) || price <= 0)) {
+    if (sessionPrice && (Number.isNaN(price) || (price ?? 0) <= 0)) {
       setError("Session price must be a positive number.")
       return
     }

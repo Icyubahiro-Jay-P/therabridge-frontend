@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom"
-import { Briefcase, MessageCircle, Star, Stethoscope, User as UserIcon } from "lucide-react"
+import { Briefcase, MessageCircle, Stethoscope, User as UserIcon } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { Stars } from "./Stars"
 
 export interface TherapistListItem {
   _id: string
@@ -15,20 +16,14 @@ export interface TherapistListItem {
   sessionPrice?: number
 }
 
-function Stars({ rating }: { rating: number }) {
-  const full = Math.round(rating)
+function StarsBadge({ rating }: { rating: number }) {
   return (
-    <>
-      {Array.from({ length: 5 }).map((_, i) => (
-        <Star
-          key={i}
-          className={`size-3.5 ${i < full ? "fill-amber-400 text-amber-400" : "text-gray-300 dark:text-gray-600"}`}
-        />
-      ))}
-      <span className="ml-2 text-xs text-gray-400">
+    <span className="flex items-center gap-0.5">
+      <Stars rating={rating} />
+      <span className="ml-1 text-xs text-gray-400">
         {rating > 0 ? rating.toFixed(1) : "New"}
       </span>
-    </>
+    </span>
   )
 }
 
@@ -53,7 +48,7 @@ export function TherapistCard({ therapist }: { therapist: TherapistListItem }) {
       </div>
 
       <div className="mt-4 flex items-center gap-0.5">
-        <Stars rating={rating} />
+        <StarsBadge rating={rating} />
         {therapist.reviewCount > 0 && (
           <span className="text-xs text-gray-400">
             ({therapist.reviewCount} {therapist.reviewCount === 1 ? "review" : "reviews"})

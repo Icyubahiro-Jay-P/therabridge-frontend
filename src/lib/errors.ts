@@ -108,6 +108,8 @@ export const EXPECTED_OUTCOME_CODES = new Set([
   "ALREADY_ENABLED",
   "ALREADY_MEMBER",
   "DUPLICATE_ERROR",
+  "SLOT_UNAVAILABLE",
+  "PAYMENTS_UNAVAILABLE",
 ])
 
 /** Server codes for constraints the user simply reached. */

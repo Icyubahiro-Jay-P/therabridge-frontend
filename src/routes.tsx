@@ -136,6 +136,15 @@ const UserPetPage = lazy(() =>
 const UserHabitsPage = lazy(() =>
   import("@/components/user/habits/HabitsPage").then((mod) => ({ default: mod.HabitsPage }))
 )
+const UserSessionsPage = lazy(() =>
+  import("@/pages/user/SessionsPage").then((mod) => ({ default: mod.SessionsPage }))
+)
+const UserBillingPage = lazy(() =>
+  import("@/pages/user/BillingPage").then((mod) => ({ default: mod.BillingPage }))
+)
+const UserTherapistProfilePage = lazy(() =>
+  import("@/pages/user/TherapistProfilePage").then((mod) => ({ default: mod.TherapistProfilePage }))
+)
 
 const AdminDashboardPage = lazy(() =>
   import("@/pages/admin/DashboardPage").then((mod) => ({
@@ -207,6 +216,9 @@ export {
   UserMedicationsPage,
   UserPetPage,
   UserHabitsPage,
+  UserSessionsPage,
+  UserBillingPage,
+  UserTherapistProfilePage,
   AdminDashboardPage,
   AdminUsersPage,
   AdminCommunitiesPage,

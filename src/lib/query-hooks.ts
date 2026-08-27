@@ -1,6 +1,20 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { api } from "./api"
 import { restoreQueries, snapshotQueries } from "./optimistic"
+import {
+  getTherapistByUsername,
+  getTherapistReviews,
+  getAvailability,
+  getMyAppointments,
+  getTherapistAppointments as fetchTherapistAppointments,
+  createAppointment as createAppointmentRequest,
+  cancelAppointment as cancelAppointmentRequest,
+  updateAppointmentStatus as updateAppointmentStatusRequest,
+  createTherapistReview as createReviewRequest,
+} from "./sessions-api"
+import { getBillingStatus, createCheckoutSession, cancelSubscription } from "./billing-api"
+import type { Appointment, AppointmentStatus, Review } from "@/types/sessions"
+import type { TherapistProfile } from "@/types/user"
 
 export interface PaginatedResponse<T> {
   data: T[]

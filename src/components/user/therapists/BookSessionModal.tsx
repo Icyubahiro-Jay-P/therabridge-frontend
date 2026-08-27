@@ -10,7 +10,6 @@ export interface BookableTherapist {
   _id: string
   firstName: string
   lastName: string
-  sessionPrice?: number
 }
 
 const DAY_NAMES = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
@@ -61,8 +60,6 @@ export function BookSessionModal({
     return [...map.entries()].map(([date, times]) => [date, [...times]] as [string, string[]])
   }, [availability])
 
-  const prices = therapist.sessionPrice ?? NaN
-
   async function handleBook() {
     if (!selectedDate || !selectedTime) {
       setFormError("Please pick a date and time.")
@@ -94,11 +91,6 @@ export function BookSessionModal({
           </h2>
           <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
             With {therapist.firstName} {therapist.lastName}
-            {Number.isFinite(prices) && prices > 0 && (
-              <span className="ml-1 text-gray-700 dark:text-gray-300">
-                · ${prices}/session
-              </span>
-            )}
           </p>
         </div>
         <button

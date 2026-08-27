@@ -215,8 +215,6 @@ function patchAppointmentListQuery(
   }
 }
 
-export { getTherapistById }
-
 /** Structural subset every notification mutation patches optimistically. */
 export interface NotificationLike {
   _id: string

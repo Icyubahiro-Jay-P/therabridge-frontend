@@ -1,4 +1,4 @@
-// Data shapes for therapist reviews, appointments/sessions, and billing.
+// Data shapes for therapist reviews and appointments/sessions.
 // Mirrors the backend response contracts (controllers in backend/controllers).
 
 export interface Reviewer {
@@ -44,7 +44,6 @@ export interface Appointment {
   type: string
   notes?: string
   status: AppointmentStatus
-  paid: boolean
   cancelled?: boolean
   cancelledBy?: string
   cancelledAt?: string | null
@@ -54,26 +53,4 @@ export interface Appointment {
 export interface AvailabilityResponse {
   duration: number
   slots: { date: string; time: string }[]
-}
-
-export interface BillingPayment {
-  _id: string
-  user: string
-  provider: string
-  intent: "subscribe" | "session"
-  amount?: number
-  currency?: string
-  status: string
-  appointment?: { _id: string; start?: string; status?: string } | null
-  createdAt: string
-}
-
-export interface BillingStatus {
-  subscription: {
-    plan: string
-    status: string
-    cycleEndsAt?: string | null
-    stripeCustomerId?: string
-  } | null
-  payments: BillingPayment[]
 }

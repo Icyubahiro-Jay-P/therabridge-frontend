@@ -7,6 +7,9 @@ export type SensitivityEvent =
   | { type: "shortcut" }
   | { type: "hidden" }
   | { type: "visible" }
+  | { type: "fullscreen-exit" }
+  | { type: "page-hide" }
+  | { type: "page-freeze" }
 
 export interface UseScreenshotGuardOptions {
   mode?: ScreenshotGuardMode

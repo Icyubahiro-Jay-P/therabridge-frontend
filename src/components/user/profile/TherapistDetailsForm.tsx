@@ -23,7 +23,6 @@ export function TherapistDetailsForm() {
   const [credentials, setCredentials] = useState(user?.credentials ?? "")
   const [yearsExperience, setYearsExperience] = useState(user?.yearsExperience ? String(user.yearsExperience) : "")
   const [languages, setLanguages] = useState((user?.languages ?? []).join(", "))
-  const [sessionPrice, setSessionPrice] = useState(user?.sessionPrice ? String(user.sessionPrice) : "")
   const [availability, setAvailability] = useState<WeeklyAvailabilitySlot[]>(user?.weeklyAvailability ?? [])
   const [message, setMessage] = useState("")
   const [error, setError] = useState("")
@@ -59,11 +58,6 @@ export function TherapistDetailsForm() {
     e.preventDefault()
     setMessage("")
     setError("")
-    const price = sessionPrice ? Number(sessionPrice) : undefined
-    if (sessionPrice && (Number.isNaN(price) || (price ?? 0) <= 0)) {
-      setError("Session price must be a positive number.")
-      return
-    }
     setSaving(true)
     try {
       await updateProfile({
@@ -71,7 +65,6 @@ export function TherapistDetailsForm() {
         credentials: credentials.trim() || undefined,
         yearsExperience: yearsExperience ? Number(yearsExperience) : undefined,
         languages: parseList(languages),
-        sessionPrice: price,
         weeklyAvailability: availability.length ? availability : undefined,
       })
       setMessage("Professional details saved.")
@@ -146,18 +139,6 @@ export function TherapistDetailsForm() {
                 value={languages}
                 onChange={(e) => setLanguages(e.target.value)}
                 placeholder="English, Spanish…"
-                disabled={saving}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="th-price">Session price (USD per session)</Label>
-              <Input
-                id="th-price"
-                type="number"
-                min={1}
-                step="1"
-                value={sessionPrice}
-                onChange={(e) => setSessionPrice(e.target.value)}
                 disabled={saving}
               />
             </div>

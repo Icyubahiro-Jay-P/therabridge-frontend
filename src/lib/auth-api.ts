@@ -28,6 +28,13 @@ type RawUser = {
   updatedAt?: string
   privacySettings?: PrivacySettings
   chatSettings?: ChatSettings
+  specialization?: string[]
+  credentials?: string
+  yearsExperience?: number
+  languages?: string[]
+  sessionPrice?: number
+  weeklyAvailability?: NonNullable<User["weeklyAvailability"]>
+  subscription?: User["subscription"]
   exerciseScore?: number
   loginStreak?: number
   exerciseStreak?: number
@@ -59,6 +66,13 @@ function normalizeUser(raw: RawUser): User {
     longestLoginStreak: raw.longestLoginStreak,
     longestExerciseStreak: raw.longestExerciseStreak,
     twoFactorEnabled: raw.twoFactorEnabled,
+    specialization: raw.specialization,
+    credentials: raw.credentials,
+    yearsExperience: raw.yearsExperience,
+    languages: raw.languages,
+    sessionPrice: raw.sessionPrice,
+    weeklyAvailability: raw.weeklyAvailability,
+    subscription: raw.subscription,
   }
 }
 

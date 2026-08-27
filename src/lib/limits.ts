@@ -50,4 +50,18 @@ export const LIMITS = {
     name: 80,
     emoji: 8,
   },
+  therapist: {
+    credentials: 200,
+    languages: 10,
+    specialization: 10,
+    maxAvailabilitySlots: 20,
+  },
+  review: {
+    title: 80,
+    content: 500,
+  },
+  appointment: {
+    notes: 500,
+    dayRange: 30,
+  },
 } as const

@@ -67,6 +67,155 @@ export function useGetNotifications<T = unknown>(page = 1, limit = 20) {
   })
 }
 
+// Therapist detail + reviews
+export function useTherapistProfile(username: string | undefined) {
+  return useQuery({
+    queryKey: ["therapist", username],
+    queryFn: () => getTherapistByUsername(username!),
+    enabled: !!username,
+    staleTime: 60 * 1000,
+  })
+}
+
+export function useTherapistForId(id: string | undefined) {
+  return useQuery({
+    queryKey: ["therapist-id", id],
+    queryFn: () => getTherapistById(id!),
+    enabled: !!id,
+    staleTime: 60 * 1000,
+  })
+}
+
+export function useTherapistReviews(therapistId: string | undefined) {
+  return useQuery({
+    queryKey: ["therapist-reviews", therapistId],
+    queryFn: () => getTherapistReviews(therapistId!, 1, 20),
+    enabled: !!therapistId,
+    staleTime: 30 * 1000,
+  })
+}
+
+export function useCreateReview() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: createReviewRequest,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["therapist-reviews"] })
+      queryClient.invalidateQueries({ queryKey: ["therapist"] })
+      queryClient.invalidateQueries({ queryKey: ["therapists"] })
+    },
+  })
+}
+
+// Appointments / sessions
+export function useAvailability(therapistId: string | undefined, duration = 50) {
+  return useQuery({
+    queryKey: ["availability", therapistId, duration],
+    queryFn: () => getAvailability(therapistId!, 14, duration),
+    enabled: !!therapistId,
+    staleTime: 30 * 1000,
+  })
+}
+
+export function useMyAppointments() {
+  return useQuery({
+    queryKey: ["my-appointments"],
+    queryFn: getMyAppointments,
+    staleTime: 10 * 1000,
+  })
+}
+
+export function useTherapistAppointments() {
+  return useQuery({
+    queryKey: ["therapist-appointments"],
+    queryFn: fetchTherapistAppointments,
+    staleTime: 10 * 1000,
+  })
+}
+
+export function useCreateAppointment() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: createAppointmentRequest,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["my-appointments"] })
+      queryClient.invalidateQueries({ queryKey: ["availability"] })
+    },
+  })
+}
+
+export function useCancelAppointment() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: cancelAppointmentRequest,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["my-appointments"] })
+      queryClient.invalidateQueries({ queryKey: ["therapist-appointments"] })
+    },
+  })
+}
+
+export function useUpdateAppointmentStatus() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: ({
+      id,
+      status,
+    }: {
+      id: string
+      status: AppointmentStatus
+    }) => updateAppointmentStatusRequest(id, status),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["my-appointments"] })
+      queryClient.invalidateQueries({ queryKey: ["therapist-appointments"] })
+      queryClient.invalidateQueries({ queryKey: ["billing"] })
+    },
+  })
+}
+
+// Billing
+export function useBillingStatus() {
+  return useQuery({
+    queryKey: ["billing"],
+    queryFn: getBillingStatus,
+    staleTime: 15 * 1000,
+  })
+}
+
+export function useCreateCheckout() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: createCheckoutSession,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["billing"] })
+    },
+  })
+}
+
+export function useCancelSubscription() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: cancelSubscription,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["billing"] })
+    },
+  })
+}
+
+function patchAppointmentListQuery(
+  queryClient: ReturnType<typeof useQueryClient>,
+  id: string,
+  patch: Partial<Appointment>
+) {
+  for (const key of ["my-appointments", "therapist-appointments"]) {
+    queryClient.setQueriesData<Appointment[]>({ queryKey: [key] }, (old) =>
+      old ? old.map((a) => (a._id === id ? { ...a, ...patch } : a)) : old
+    )
+  }
+}
+
+export { getTherapistById }
+
 /** Structural subset every notification mutation patches optimistically. */
 export interface NotificationLike {
   _id: string

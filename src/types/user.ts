@@ -43,6 +43,8 @@ export interface TherapistProfile extends User {
 
 export interface ChatSettings {
   readReceipts: boolean
+  screenshotProtection?: boolean
+  watermarkEnabled?: boolean
 }
 
 export interface PrivacySettings {

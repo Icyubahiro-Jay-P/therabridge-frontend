@@ -1,24 +1,46 @@
 import { useNavigate } from "react-router-dom"
-import { Briefcase, MessageCircle, Star, User as UserIcon } from "lucide-react"
+import { Briefcase, MessageCircle, Star, Stethoscope, User as UserIcon } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
-interface Therapist {
+export interface TherapistListItem {
   _id: string
   username: string
   firstName: string
   lastName: string
   bio?: string
   role: string
+  rating?: number
+  reviewCount?: number
+  specialization?: string[]
+  sessionPrice?: number
 }
 
-export function TherapistCard({ therapist }: { therapist: Therapist }) {
+function Stars({ rating }: { rating: number }) {
+  const full = Math.round(rating)
+  return (
+    <>
+      {Array.from({ length: 5 }).map((_, i) => (
+        <Star
+          key={i}
+          className={`size-3.5 ${i < full ? "fill-amber-400 text-amber-400" : "text-gray-300 dark:text-gray-600"}`}
+        />
+      ))}
+      <span className="ml-2 text-xs text-gray-400">
+        {rating > 0 ? rating.toFixed(1) : "New"}
+      </span>
+    </>
+  )
+}
+
+export function TherapistCard({ therapist }: { therapist: TherapistListItem }) {
   const navigate = useNavigate()
+  const rating = therapist.rating ?? 0
 
   return (
     <div className="group flex flex-col rounded-2xl border border-gray-200 bg-white p-5 shadow-sm transition-all hover:-translate-y-1 hover:shadow-md dark:border-gray-700/60 dark:bg-gray-900">
       <div className="flex items-center gap-4">
         <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-600 dark:bg-emerald-900/40 dark:text-emerald-400">
-          <UserIcon className="size-6" />
+          <Stethoscope className="size-6" />
         </div>
         <div className="min-w-0">
           <h3 className="font-semibold text-gray-900 dark:text-white">
@@ -31,10 +53,12 @@ export function TherapistCard({ therapist }: { therapist: Therapist }) {
       </div>
 
       <div className="mt-4 flex items-center gap-0.5">
-        {Array.from({ length: 5 }).map((_, i) => (
-          <Star key={i} className="size-3.5 fill-amber-400 text-amber-400" />
-        ))}
-        <span className="ml-2 text-xs text-gray-400">5.0</span>
+        <Stars rating={rating} />
+        {therapist.reviewCount > 0 && (
+          <span className="text-xs text-gray-400">
+            ({therapist.reviewCount} {therapist.reviewCount === 1 ? "review" : "reviews"})
+          </span>
+        )}
       </div>
 
       {therapist.bio ? (
@@ -43,6 +67,25 @@ export function TherapistCard({ therapist }: { therapist: Therapist }) {
         </p>
       ) : (
         <p className="mt-3 text-sm italic text-gray-400">No bio yet.</p>
+      )}
+
+      {(therapist.specialization?.length || therapist.sessionPrice != null) && (
+        <div className="mt-3 flex flex-wrap items-center gap-1.5">
+          {therapist.specialization?.slice(0, 3).map((spec) => (
+            <span
+              key={spec}
+              className="rounded-full bg-gray-100 px-2 py-0.5 text-xs text-gray-600 dark:bg-gray-800 dark:text-gray-300"
+            >
+              {spec}
+            </span>
+          ))}
+          {therapist.sessionPrice != null && therapist.sessionPrice > 0 && (
+            <span className="ml-auto text-sm font-semibold text-gray-800 dark:text-gray-200">
+              ${therapist.sessionPrice}
+              <span className="text-xs font-normal text-gray-400">/session</span>
+            </span>
+          )}
+        </div>
       )}
 
       <div className="mt-4 flex gap-2 pt-3 border-t border-gray-100 dark:border-gray-800">
@@ -57,9 +100,9 @@ export function TherapistCard({ therapist }: { therapist: Therapist }) {
           size="sm"
           variant="outline"
           className="flex-1"
-          onClick={() => navigate(`/user/@${therapist.username}`)}
+          onClick={() => navigate(`/therapists/${therapist.username}`)}
         >
-          View profile
+          <UserIcon className="size-3.5" /> View profile
         </Button>
       </div>
     </div>

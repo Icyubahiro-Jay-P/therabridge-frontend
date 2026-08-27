@@ -41,6 +41,9 @@ import {
   UserMedicationsPage,
   UserPetPage,
   UserHabitsPage,
+  UserSessionsPage,
+  UserBillingPage,
+  UserTherapistProfilePage,
   AdminUsersPage,
   AdminCommunitiesPage,
   AdminAuditLogPage,
@@ -197,6 +200,30 @@ export function App() {
                 element={
                   <ErrorBoundaryRoute>
                     <UserTherapistsPage />
+                  </ErrorBoundaryRoute>
+                }
+              />
+              <Route
+                path="/therapists/:username"
+                element={
+                  <ErrorBoundaryRoute>
+                    <UserTherapistProfilePage />
+                  </ErrorBoundaryRoute>
+                }
+              />
+              <Route
+                path="/sessions"
+                element={
+                  <ErrorBoundaryRoute>
+                    <UserSessionsPage />
+                  </ErrorBoundaryRoute>
+                }
+              />
+              <Route
+                path="/billing"
+                element={
+                  <ErrorBoundaryRoute>
+                    <UserBillingPage />
                   </ErrorBoundaryRoute>
                 }
               />

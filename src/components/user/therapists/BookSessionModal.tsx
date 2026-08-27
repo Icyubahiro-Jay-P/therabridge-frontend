@@ -61,13 +61,13 @@ export function BookSessionModal({
 
   const slotsByDate = useMemo(() => {
     if (!availability) return []
-    const map = new Map<string, string[]>()
+    const map = new Map<string, Set<string>>()
     for (const slot of availability.slots) {
-      const list = map.get(slot.date) ?? []
-      list.push(slot.time)
-      map.set(slot.date, list)
+      const set = map.get(slot.date) ?? new Set<string>()
+      set.add(slot.time)
+      map.set(slot.date, set)
     }
-    return [...map.entries()]
+    return [...map.entries()].map(([date, times]) => [date, [...times]] as [string, string[]])
   }, [availability])
 
   const prices = therapist.sessionPrice ?? NaN

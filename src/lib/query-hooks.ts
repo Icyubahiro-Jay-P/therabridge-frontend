@@ -15,7 +15,6 @@ import {
 } from "./sessions-api"
 import { getBillingStatus, createCheckoutSession, cancelSubscription } from "./billing-api"
 import type { Appointment, AppointmentStatus } from "@/types/sessions"
-import type { TherapistProfile } from "@/types/user"
 
 export interface PaginatedResponse<T> {
   data: T[]

@@ -136,11 +136,6 @@ export function TherapistProfilePage() {
                   {therapist.languages.join(", ")}
                 </span>
               ) : null}
-              {therapist.sessionPrice != null && therapist.sessionPrice > 0 && (
-                <span className="font-semibold text-gray-800 dark:text-gray-200">
-                  ${therapist.sessionPrice} / session
-                </span>
-              )}
             </div>
 
             <div className="mt-3 flex items-center gap-2">
@@ -293,7 +288,6 @@ export function TherapistProfilePage() {
           _id: therapistId!,
           firstName: therapist.firstName,
           lastName: therapist.lastName,
-          sessionPrice: therapist.sessionPrice,
         }}
         open={bookingOpen}
         onClose={() => setBookingOpen(false)}

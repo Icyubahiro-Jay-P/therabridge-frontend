@@ -236,10 +236,9 @@ function UserSessions() {
                     key={a._id}
                     appointment={a}
                     role="user"
-                    busy={cancel.isPending || paying === a._id}
+                    busy={cancel.isPending}
                     onCancel={handleCancel}
                     onStatus={() => undefined}
-                    onPay={handlePay}
                   />
                 ))}
               </ul>
@@ -257,7 +256,6 @@ function UserSessions() {
                     busy={cancel.isPending}
                     onCancel={handleCancel}
                     onStatus={() => undefined}
-                    onPay={handlePay}
                   />
                 ))}
               </ul>
@@ -274,8 +272,8 @@ function UserSessions() {
           onClose={closeModal}
           onBooked={() => {
             closeModal()
-            setFlash("Session booked! You can pay for it below when ready.")
-          }}
+            setFlash("Session booked!")
+          }}}
         />
       )}
     </div>
@@ -356,7 +354,6 @@ function TherapistSessions() {
               busy={statusMutation.isPending || cancel.isPending}
               onCancel={handleCancel}
               onStatus={handleStatus}
-              onPay={() => undefined}
             />
           ))}
         </ul>

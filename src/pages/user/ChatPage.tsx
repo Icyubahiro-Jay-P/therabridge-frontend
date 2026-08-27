@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { Loader2, Menu } from "lucide-react"
 
@@ -13,7 +13,6 @@ import { WatermarkCanvas } from "@/components/privacy/WatermarkCanvas"
 import { useScreenshotGuard } from "@/hooks/useScreenshotGuard"
 import { loadSetting } from "@/components/user/chat/utils"
 import type { ChatUser } from "@/components/user/chat/types"
-import type { DirectMessage } from "@/components/user/chat/types"
 
 import { Sidebar } from "@/components/user/chat/Sidebar"
 import { EmptyState } from "@/components/user/chat/EmptyState"

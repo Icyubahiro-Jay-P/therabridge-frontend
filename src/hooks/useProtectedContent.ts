@@ -75,11 +75,11 @@ export function useProtectedContent({
   useEffect(() => {
     const shouldOpen = enabled && active && !!contentId
     if (!shouldOpen) {
-      setSessionReady(false)
+      queueMicrotask(() => setSessionReady(false))
       return
     }
 
-    setSessionReady(false)
+    queueMicrotask(() => setSessionReady(false))
     let cancelled = false
     void openProtectedSession({
       contentId,

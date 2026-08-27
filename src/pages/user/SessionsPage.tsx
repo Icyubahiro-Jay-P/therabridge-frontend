@@ -273,7 +273,7 @@ function UserSessions() {
           onBooked={() => {
             closeModal()
             setFlash("Session booked!")
-          }}}
+          }}
         />
       )}
     </div>

@@ -149,7 +149,17 @@ export function useCancelAppointment() {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: cancelAppointmentRequest,
-    onSuccess: () => {
+    onMutate: async (id: string) => {
+      await queryClient.cancelQueries({ queryKey: ["my-appointments"] })
+      await queryClient.cancelQueries({ queryKey: ["therapist-appointments"] })
+      const previous = snapshotQueries(queryClient, ["my-appointments", "therapist-appointments"])
+      patchAppointmentListQuery(queryClient, id, { status: "cancelled", cancelled: true })
+      return { previous }
+    },
+    onError: (_error, _id, context) => {
+      restoreQueries(queryClient, context?.previous)
+    },
+    onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["my-appointments"] })
       queryClient.invalidateQueries({ queryKey: ["therapist-appointments"] })
     },
@@ -166,7 +176,17 @@ export function useUpdateAppointmentStatus() {
       id: string
       status: AppointmentStatus
     }) => updateAppointmentStatusRequest(id, status),
-    onSuccess: () => {
+    onMutate: async ({ id, status }: { id: string; status: AppointmentStatus }) => {
+      await queryClient.cancelQueries({ queryKey: ["my-appointments"] })
+      await queryClient.cancelQueries({ queryKey: ["therapist-appointments"] })
+      const previous = snapshotQueries(queryClient, ["my-appointments", "therapist-appointments"])
+      patchAppointmentListQuery(queryClient, id, { status })
+      return { previous }
+    },
+    onError: (_error, _vars, context) => {
+      restoreQueries(queryClient, context?.previous)
+    },
+    onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["my-appointments"] })
       queryClient.invalidateQueries({ queryKey: ["therapist-appointments"] })
       queryClient.invalidateQueries({ queryKey: ["billing"] })

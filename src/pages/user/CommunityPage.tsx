@@ -18,7 +18,6 @@ import { CommunitySettingsModal } from "@/components/user/community/CommunitySet
 import { GuardOverlay } from "@/components/privacy/GuardOverlay"
 import { WatermarkCanvas } from "@/components/privacy/WatermarkCanvas"
 import { useScreenshotGuard } from "@/hooks/useScreenshotGuard"
-import { useProtectedContent } from "@/hooks/useProtectedContent"
 import { loadSetting } from "@/components/user/chat/utils"
 import type { Community } from "@/components/user/community/types"
 
@@ -42,16 +41,6 @@ export function CommunityPage() {
     active: !!active,
   })
 
-  // Session-gated screenshot reporting for the active community. The community
-  // owner is the content owner to notify.
-  useProtectedContent({
-    contentId: active?._id ?? "",
-    contentType: "other",
-    protectionMode: "notify",
-    ownerId: active?.owner?._id,
-    enabled: screenshotProtected,
-    active: !!active && !!currentUser?.id,
-  })
   const canCreate =
     currentUser?.role === "therapist" || currentUser?.role === "admin"
 

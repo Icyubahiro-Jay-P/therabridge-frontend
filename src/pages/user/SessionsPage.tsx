@@ -142,29 +142,47 @@ function SessionCard({
 
 function UserSessions() {
   const navigate = useNavigate()
-  const [searchParams] = useSearchParams()
+  const [searchParams, setSearchParams] = useSearchParams()
   const { data: appointments, isLoading, isError } = useMyAppointments()
   const cancel = useCancelAppointment()
   const checkout = useCreateCheckout()
-  const therapistId = useTherapistForId(searchParams.get("book") ?? undefined)
 
-  const [bookedTherapist, setBookedTherapist] = useState<{ _id: string; firstName: string; lastName: string; sessionPrice?: number } | null>(null)
-  const [bookingOpen, setBookingOpen] = useState(false)
+  const bookId = searchParams.get("book") ?? undefined
+  const { data: bookTherapistData } = useTherapistForId(bookId)
+
+  const autoBookTherapist = useMemo(
+    () =>
+      bookTherapistData
+        ? {
+            _id: bookTherapistData._id ?? bookTherapistData.id,
+            firstName: bookTherapistData.firstName,
+            lastName: bookTherapistData.lastName,
+            sessionPrice: bookTherapistData.sessionPrice,
+          }
+        : null,
+    [bookTherapistData]
+  )
+  const [manualTherapist, setManualTherapist] = useState<{
+    _id: string
+    firstName: string
+    lastName: string
+    sessionPrice?: number
+  } | null>(null)
+
   const [flash, setFlash] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [paying, setPaying] = useState<string | null>(null)
 
-  useEffect(() => {
-    if (therapistId.data) {
-      setBookedTherapist({
-        _id: therapistId.data._id ?? therapistId.data.id,
-        firstName: therapistId.data.firstName,
-        lastName: therapistId.data.lastName,
-        sessionPrice: therapistId.data.sessionPrice,
-      })
-      setBookingOpen(true)
+  const effectiveTherapist = autoBookTherapist ?? manualTherapist
+  const modalOpen = !!effectiveTherapist
+
+  function closeModal() {
+    if (autoBookTherapist) {
+      setSearchParams({}, { replace: true })
+    } else {
+      setManualTherapist(null)
     }
-  }, [therapistId.data])
+  }
 
   const { upcoming, past } = useMemo(() => {
     const list = [...(appointments ?? [])].sort((a, b) => new Date(b.start).getTime() - new Date(a.start).getTime())
@@ -275,15 +293,16 @@ function UserSessions() {
         </>
       )}
 
-      {bookedTherapist && (
+      {effectiveTherapist && (
         <BookSessionModal
-          therapist={bookedTherapist}
-          open={bookingOpen}
-          onClose={() => {
-            setBookingOpen(false)
-            setBookedTherapist(null)
+          key={modalOpen ? effectiveTherapist._id : "closed"}
+          therapist={effectiveTherapist}
+          open={modalOpen}
+          onClose={closeModal}
+          onBooked={() => {
+            closeModal()
+            setFlash("Session booked! You can pay for it below when ready.")
           }}
-          onBooked={() => setFlash("Session booked! You can pay for it below when ready.")}
         />
       )}
     </div>

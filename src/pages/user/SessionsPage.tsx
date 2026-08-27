@@ -3,7 +3,6 @@ import { useNavigate, useSearchParams } from "react-router-dom"
 import {
   CalendarDays,
   CheckCircle2,
-  CreditCard,
   MessageCircle,
   TriangleAlert,
   Video,
@@ -17,7 +16,6 @@ import {
   useTherapistAppointments,
   useCancelAppointment,
   useUpdateAppointmentStatus,
-  useCreateCheckout,
   useTherapistForId,
 } from "@/lib/query-hooks"
 import { getErrorMessage } from "@/lib/errors"
@@ -59,14 +57,12 @@ function SessionCard({
   role,
   onCancel,
   onStatus,
-  onPay,
   busy,
 }: {
   appointment: Appointment
   role: string
   onCancel: (id: string) => void
   onStatus: (id: string, status: "completed" | "missed" | "cancelled") => void
-  onPay: (id: string) => void
   busy: boolean
 }) {
   const navigate = useNavigate()

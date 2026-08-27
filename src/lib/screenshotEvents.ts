@@ -12,7 +12,7 @@ import type {
 
 const CLIENT_DEDUP_WINDOW_MS = 6000
 const clientDedup = new Map<string, number>()
-let sessionTokenCache = new Map<string, string>()
+const sessionTokenCache = new Map<string, string>()
 
 function dedupKey(contentId: string, eventType: string): string {
   return `${contentId}:${eventType}:${Math.floor(Date.now() / CLIENT_DEDUP_WINDOW_MS)}`

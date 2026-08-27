@@ -70,7 +70,6 @@ function SessionCard({
   busy: boolean
 }) {
   const navigate = useNavigate()
-  const isUpcoming = appointment.status === "confirmed" && new Date(appointment.start).getTime() > Date.now()
   const therapist =
     typeof appointment.therapist === "object" ? appointment.therapist : undefined
 
@@ -110,19 +109,15 @@ function SessionCard({
         )}
         {role === "therapist" && appointment.status === "confirmed" && (
           <>
-            <Button size="sm" disabled={busy} onClick={() => onStatus(appointment._id, isUpcoming ? "cancelled" : "completed")}>
-              <CheckCircle2 className="size-3.5" />
-              {isUpcoming ? "Mark cancelled" : "Mark completed"}
+            <Button size="sm" disabled={busy} onClick={() => onStatus(appointment._id, "completed")}>
+              <CheckCircle2 className="size-3.5" /> Mark completed
             </Button>
-            {isUpcoming && (
-              <Button size="sm" variant="outline" disabled={busy} onClick={() => onStatus(appointment._id, "missed")}>
-                <XCircle className="size-3.5" />
-                Mark missed
-              </Button>
-            )}
+            <Button size="sm" variant="outline" disabled={busy} onClick={() => onStatus(appointment._id, "missed")}>
+              <XCircle className="size-3.5" /> Mark missed
+            </Button>
           </>
         )}
-        {(appointment.status === "confirmed" || appointment.status === "missed") && (
+        {appointment.status === "confirmed" && (
           <Button size="sm" variant="outline" disabled={busy} onClick={() => onCancel(appointment._id)}>
             <XCircle className="size-3.5" /> Cancel
           </Button>

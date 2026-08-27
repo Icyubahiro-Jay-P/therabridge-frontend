@@ -3,19 +3,9 @@ import { TriangleAlert } from "lucide-react"
 
 import { useGetTherapists } from "@/lib/query-hooks"
 import { TherapistSearchFilters } from "@/components/user/therapists/TherapistSearchFilters"
-import { TherapistCard } from "@/components/user/therapists/TherapistCard"
+import { TherapistCard, type TherapistListItem } from "@/components/user/therapists/TherapistCard"
 import { TherapistsEmptyState } from "@/components/user/therapists/TherapistsEmptyState"
 import { Skeleton } from "@/components/ui/skeleton"
-
-interface Therapist {
-  _id: string
-  username: string
-  firstName: string
-  lastName: string
-  email: string
-  bio?: string
-  role: string
-}
 
 function TherapistCardSkeleton() {
   return (
@@ -38,9 +28,9 @@ function TherapistCardSkeleton() {
 
 export function TherapistsPage() {
   const [searchQuery, setSearchQuery] = useState("")
-  const { data, isLoading, isError, error } = useGetTherapists<Therapist>(1, 50)
+  const { data, isLoading, isError, error } = useGetTherapists<TherapistListItem>(1, 50)
 
-  const therapists: Therapist[] = data?.data ?? []
+  const therapists: TherapistListItem[] = data?.data ?? []
   const filtered = therapists.filter((t) => {
     if (!searchQuery) return true
     const q = searchQuery.toLowerCase()

@@ -49,7 +49,7 @@ export function TherapistCard({ therapist }: { therapist: TherapistListItem }) {
 
       <div className="mt-4 flex items-center gap-0.5">
         <StarsBadge rating={rating} />
-        {therapist.reviewCount > 0 && (
+        {(therapist.reviewCount ?? 0) > 0 && (
           <span className="text-xs text-gray-400">
             ({therapist.reviewCount} {therapist.reviewCount === 1 ? "review" : "reviews"})
           </span>

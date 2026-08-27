@@ -1,9 +1,10 @@
 import { useScreenshotGuard } from "./useScreenshotGuard"
+import type { ContentType, ProtectionMode } from "@/lib/protectionTypes"
 
 export interface UseProtectedContentOptions {
   contentId: string
-  contentType?: "message" | "community" | "photo" | "video" | "document" | "profile" | "other"
-  protectionMode?: "notify" | "block"
+  contentType?: ContentType
+  protectionMode?: ProtectionMode
   ownerId?: string
   enabled?: boolean
   active?: boolean

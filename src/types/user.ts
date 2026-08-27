@@ -1,5 +1,18 @@
 export type UserRole = "user" | "admin" | "therapist"
 
+export interface WeeklyAvailabilitySlot {
+  dayOfWeek: number
+  startTime: string
+  endTime: string
+}
+
+export interface Subscription {
+  plan: string
+  status: string
+  cycleEndsAt?: string
+  stripeCustomerId?: string
+}
+
 export interface User {
   id: string
   username: string
@@ -22,6 +35,18 @@ export interface User {
   longestLoginStreak?: number
   longestExerciseStreak?: number
   twoFactorEnabled?: boolean
+  specialization?: string[]
+  credentials?: string
+  yearsExperience?: number
+  languages?: string[]
+  sessionPrice?: number
+  weeklyAvailability?: WeeklyAvailabilitySlot[]
+  subscription?: Subscription
+}
+
+export interface TherapistProfile extends User {
+  rating: number
+  reviewCount: number
 }
 
 export interface ChatSettings {
@@ -75,6 +100,12 @@ export interface UpdateProfilePayload {
   lastName?: string
   dateOfBirth?: string
   bio?: string
+  specialization?: string[]
+  credentials?: string
+  yearsExperience?: number
+  languages?: string[]
+  sessionPrice?: number
+  weeklyAvailability?: WeeklyAvailabilitySlot[]
 }
 
 export interface ChangePasswordPayload {

@@ -45,6 +45,7 @@ export interface User {
 }
 
 export interface TherapistProfile extends User {
+  _id?: string
   rating: number
   reviewCount: number
 }

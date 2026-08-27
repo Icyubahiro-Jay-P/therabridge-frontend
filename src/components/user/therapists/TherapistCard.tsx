@@ -63,7 +63,7 @@ export function TherapistCard({ therapist }: { therapist: TherapistListItem }) {
         <p className="mt-3 text-sm italic text-gray-400">No bio yet.</p>
       )}
 
-      (therapist.specialization?.length ?? 0) > 0 && (
+      {therapist.specialization?.length ? (
         <div className="mt-3 flex flex-wrap items-center gap-1.5">
           {therapist.specialization?.slice(0, 3).map((spec) => (
             <span
@@ -74,7 +74,7 @@ export function TherapistCard({ therapist }: { therapist: TherapistListItem }) {
             </span>
           ))}
         </div>
-      )}
+      ) : null}
 
       <div className="mt-4 flex gap-2 pt-3 border-t border-gray-100 dark:border-gray-800">
         <Button

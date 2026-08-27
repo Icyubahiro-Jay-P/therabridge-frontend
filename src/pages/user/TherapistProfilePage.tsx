@@ -288,6 +288,7 @@ export function TherapistProfilePage() {
       </div>
 
       <BookSessionModal
+        key={bookingOpen ? "open" : "closed"}
         therapist={{
           _id: therapistId!,
           firstName: therapist.firstName,

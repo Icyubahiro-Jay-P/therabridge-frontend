@@ -13,7 +13,6 @@ import {
   updateAppointmentStatus as updateAppointmentStatusRequest,
   createTherapistReview as createReviewRequest,
 } from "./sessions-api"
-import { getBillingStatus, createCheckoutSession, cancelSubscription } from "./billing-api"
 import type { Appointment, AppointmentStatus } from "@/types/sessions"
 
 export interface PaginatedResponse<T> {
@@ -194,36 +193,6 @@ export function useUpdateAppointmentStatus() {
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["my-appointments"] })
       queryClient.invalidateQueries({ queryKey: ["therapist-appointments"] })
-      queryClient.invalidateQueries({ queryKey: ["billing"] })
-    },
-  })
-}
-
-// Billing
-export function useBillingStatus() {
-  return useQuery({
-    queryKey: ["billing"],
-    queryFn: getBillingStatus,
-    staleTime: 15 * 1000,
-  })
-}
-
-export function useCreateCheckout() {
-  const queryClient = useQueryClient()
-  return useMutation({
-    mutationFn: createCheckoutSession,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["billing"] })
-    },
-  })
-}
-
-export function useCancelSubscription() {
-  const queryClient = useQueryClient()
-  return useMutation({
-    mutationFn: cancelSubscription,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["billing"] })
     },
   })
 }

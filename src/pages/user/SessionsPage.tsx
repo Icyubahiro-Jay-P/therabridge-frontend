@@ -97,12 +97,6 @@ function SessionCard({
       ) : null}
 
       <div className="mt-4 flex flex-wrap gap-2">
-        {role !== "therapist" && appointment.status === "confirmed" && (
-          <Button size="sm" variant="outline" disabled={busy} onClick={() => onPay(appointment._id)}>
-            <CreditCard className="size-3.5" />
-            {appointment.paid ? "Paid" : "Pay for session"}
-          </Button>
-        )}
         {role === "therapist" && appointment.status === "confirmed" && (
           <>
             <Button size="sm" disabled={busy} onClick={() => onStatus(appointment._id, "completed")}>
@@ -141,7 +135,6 @@ function UserSessions() {
   const [searchParams, setSearchParams] = useSearchParams()
   const { data: appointments, isLoading, isError } = useMyAppointments()
   const cancel = useCancelAppointment()
-  const checkout = useCreateCheckout()
 
   const bookId = searchParams.get("book") ?? undefined
   const { data: bookTherapistData } = useTherapistForId(bookId)
@@ -153,7 +146,6 @@ function UserSessions() {
             _id: bookTherapistData._id ?? bookTherapistData.id,
             firstName: bookTherapistData.firstName,
             lastName: bookTherapistData.lastName,
-            sessionPrice: bookTherapistData.sessionPrice,
           }
         : null,
     [bookTherapistData]
@@ -162,12 +154,10 @@ function UserSessions() {
     _id: string
     firstName: string
     lastName: string
-    sessionPrice?: number
   } | null>(null)
 
   const [flash, setFlash] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
-  const [paying, setPaying] = useState<string | null>(null)
 
   const effectiveTherapist = autoBookTherapist ?? manualTherapist
   const modalOpen = !!effectiveTherapist
@@ -195,19 +185,6 @@ function UserSessions() {
       setFlash("Session cancelled.")
     } catch (err) {
       setError(getErrorMessage(err))
-    }
-  }
-
-  async function handlePay(id: string) {
-    setError(null)
-    setPaying(id)
-    try {
-      const { checkoutUrl } = await checkout.mutateAsync({ intent: "session", appointmentId: id })
-      if (checkoutUrl) window.location.href = checkoutUrl
-    } catch (err) {
-      setError(getErrorMessage(err))
-    } finally {
-      setPaying(null)
     }
   }
 

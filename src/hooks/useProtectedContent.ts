@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react"
 import { useScreenshotGuard } from "./useScreenshotGuard"
-import { classifySensitivitySignal, type SensitivitySignal } from "@/lib/classification"
+import { classifySensitivitySignal, shouldReport, type SensitivitySignal } from "@/lib/classification"
 import { openProtectedSession, reportScreenshotEvent, clearProtectedSession } from "@/lib/screenshotEvents"
 import { WEB_PLATFORM } from "@/lib/protectionTypes"
 import type { ContentType, ProtectionMode, CaptureEventType } from "@/lib/protectionTypes"
@@ -54,6 +54,10 @@ export function useProtectedContent({
     (signal: SensitivitySignal) => {
       if (!contentId) return
       const classification = classifySensitivitySignal(signal)
+      // Only report signals that carry some weight. Refocus/focus events are
+      // informational and would otherwise spam the backend + falsely notify the
+      // owner. Honest: "visible" == unknown, and it's suppressed by design.
+      if (!shouldReport(classification)) return
       void reportScreenshotEvent(
         {
           contentId,

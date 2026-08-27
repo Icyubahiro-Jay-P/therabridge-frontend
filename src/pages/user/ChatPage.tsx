@@ -31,46 +31,6 @@ export function ChatPage() {
   const partner = useChatStore((s) => s.partner)
   const currentUser = useAuthStore((s) => s.user)
 
-  const partnerIdRef = useRef<string | null>(null)
-  useEffect(() => {
-    partnerIdRef.current = partner?._id ?? null
-  })
-
-  // ── Screenshot notice socket listener ──
-  useEffect(() => {
-    const socket = getSocket()
-    if (!socket) return
-
-    function onScreenshotNotice(data: {
-      messageId: string
-      initiatorId: string
-      initiatorName: string
-      conversationId: string
-      timestamp: string
-    }) {
-      if (data.conversationId !== partnerIdRef.current) return
-      if (data.initiatorId === currentUser?.id) return
-
-      const notice: DirectMessage = {
-        _id: data.messageId,
-        sender: { _id: data.initiatorId, username: "", firstName: data.initiatorName, lastName: "" },
-        recipient: { _id: data.conversationId, username: "", firstName: "", lastName: "" },
-        content: `${data.initiatorName} took a screenshot`,
-        read: false,
-        createdAt: data.timestamp,
-        kind: "screenshot-notice",
-        noticeType: "possible_screenshot",
-      }
-      useChatStore.setState((state) => {
-        if (state.messages.some((m) => m._id === notice._id)) return state
-        return { messages: [...state.messages, notice] }
-      })
-    }
-
-    socket.on("possible_screenshot", onScreenshotNotice)
-    return () => { socket.off("possible_screenshot", onScreenshotNotice) }
-  }, [partner?._id, currentUser?.id])
-
   // ── Privacy shield state (localStorage-backed) ──
   const [privacyShield, setPrivacyShield] = useState(() => ({
     screenshotProtected: loadSetting("screenshotProtection", false),

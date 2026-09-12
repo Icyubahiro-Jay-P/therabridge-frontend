@@ -33,6 +33,15 @@ export interface User {
   yearsExperience?: number
   languages?: string[]
   weeklyAvailability?: WeeklyAvailabilitySlot[]
+  pendingTherapistRequest?: PendingTherapistRequest | null
+}
+
+export interface PendingTherapistRequest {
+  id: string
+  username: string
+  firstName: string
+  lastName: string
+  avatar?: string | null
 }
 
 export interface TherapistProfile extends User {

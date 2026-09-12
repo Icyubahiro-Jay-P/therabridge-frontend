@@ -9,6 +9,7 @@ import { PrivacyToggles } from "@/components/user/settings/PrivacyToggles"
 import { DataPrivacySection } from "@/components/user/settings/DataPrivacySection"
 import { DeleteAccountModal } from "@/components/user/settings/DeleteAccountModal"
 import { DeviceNotificationsToggle } from "@/components/user/settings/DeviceNotificationsToggle"
+import { PendingTherapistRequestCard } from "@/components/user/settings/PendingTherapistRequestCard"
 import { TwoFactorSetup } from "@/components/shared/auth/TwoFactorSetup"
 import { playTestSound } from "@/lib/sound"
 
@@ -45,6 +46,8 @@ export function SettingsPage() {
           {success}
         </div>
       )}
+
+      <PendingTherapistRequestCard />
 
       <ChatSettings
         settings={settings}

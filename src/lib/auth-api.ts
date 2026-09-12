@@ -39,6 +39,13 @@ type RawUser = {
   longestLoginStreak?: number
   longestExerciseStreak?: number
   twoFactorEnabled?: boolean
+  pendingTherapistRequest?: {
+    _id: string
+    username: string
+    firstName: string
+    lastName: string
+    avatar?: string | null
+  } | null
 }
 
 function normalizeUser(raw: RawUser): User {
@@ -69,6 +76,15 @@ function normalizeUser(raw: RawUser): User {
     yearsExperience: raw.yearsExperience,
     languages: raw.languages,
     weeklyAvailability: raw.weeklyAvailability,
+    pendingTherapistRequest: raw.pendingTherapistRequest
+      ? {
+          id: raw.pendingTherapistRequest._id,
+          username: raw.pendingTherapistRequest.username,
+          firstName: raw.pendingTherapistRequest.firstName,
+          lastName: raw.pendingTherapistRequest.lastName,
+          avatar: raw.pendingTherapistRequest.avatar,
+        }
+      : null,
   }
 }
 

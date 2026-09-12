@@ -22,7 +22,7 @@ export function SidebarFooter({
           )}
           title={isMinimized ? "Expand sidebar" : "Minimize sidebar"}
         >
-          {isMinimized ? <PanelLeftOpen className="size-4" /> : <PanelLeftClose className="size-4" />}
+          {isMinimized ? <PanelLeftOpen className="size-4 shrink-0" /> : <PanelLeftClose className="size-4 shrink-0" />}
           {!isMinimized && <span className="text-sm">Collapse</span>}
         </button>
       )}
@@ -40,7 +40,7 @@ export function SidebarFooter({
           isMinimized ? "justify-center px-0" : "gap-1.5"
         )}
       >
-        <LogOut className="size-3.5" />
+        <LogOut className="size-3.5 shrink-0" />
         {!isMinimized && "Logout"}
       </Button>
     </div>

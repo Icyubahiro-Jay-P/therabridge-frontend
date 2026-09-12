@@ -6,7 +6,7 @@ function baseClass(minimized: boolean) {
   return ({ isActive }: { isActive: boolean }) =>
     cn(
       "flex items-center rounded-xl py-2.5 text-sm font-medium transition-all duration-150",
-      minimized ? "justify-center px-2.5" : "gap-3 px-3",
+      minimized ? "justify-center px-0" : "gap-3 px-3",
       isActive
         ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-400"
         : "text-gray-500 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-100"
@@ -25,7 +25,7 @@ export function NavItem({
 }) {
   return (
     <NavLink to={to} end={end} className={baseClass(minimized)} onClick={onClick}>
-      {icon}
+      <span className="inline-flex shrink-0 [&_svg]:shrink-0">{icon}</span>
       {!minimized && <span>{label}</span>}
     </NavLink>
   )
@@ -43,7 +43,7 @@ export function NavItemWithBadge({
 }) {
   return (
     <NavLink to={to} className={baseClass(minimized)} onClick={onClick}>
-      <div className="relative">
+      <div className="relative shrink-0 [&_svg]:shrink-0">
         {icon}
         {badge !== undefined && badge > 0 && (
           <span className="absolute -top-1.5 -right-1.5 flex min-w-[16px] items-center justify-center rounded-full bg-emerald-600 px-1 py-0.5 text-[10px] leading-none font-bold text-white">

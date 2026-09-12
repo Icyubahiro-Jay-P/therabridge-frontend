@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { Loader2, Plus, Search, UserPlus } from "lucide-react"
+import { Clock, Loader2, Plus, Search, UserPlus } from "lucide-react"
 
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
@@ -35,6 +35,7 @@ interface FullUserData {
 export function TherapistClientsPage() {
   const [clients, setClients] = useState<ChatUser[]>([])
   const [discover, setDiscover] = useState<ChatUser[]>([])
+  const [pendingRequests, setPendingRequests] = useState<ChatUser[]>([])
   const [loading, setLoading] = useState(true)
   const [adding, setAdding] = useState<string | null>(null)
   const [search, setSearch] = useState("")
@@ -118,11 +119,13 @@ export function TherapistClientsPage() {
   async function addClient(userId: string) {
     setAdding(userId)
     try {
+      // Sends a connection request the user must accept - they aren't
+      // added to the roster (and don't grant access to their data) until then.
       const { data } = await api.post<{ client: ChatUser }>("/api/users/therapist/clients", { userId })
-      setClients((prev) => [...prev, data.client])
+      setPendingRequests((prev) => [...prev, data.client])
       setDiscover((prev) => prev.filter((p) => p._id !== userId))
     } catch {
-      // Backend rejects (e.g. user already has a therapist) - ignore for now.
+      // Backend rejects (e.g. user already has a therapist, or a request is already pending) - ignore for now.
     } finally {
       setAdding(null)
     }
@@ -136,6 +139,30 @@ export function TherapistClientsPage() {
           The users you manage. Add people you've chatted with to your client roster to bring them into your communities.
         </p>
       </div>
+
+      {pendingRequests.length > 0 && (
+        <div className="rounded-2xl border border-amber-200 bg-amber-50 p-5 dark:border-amber-900/40 dark:bg-amber-950/20">
+          <h2 className="mb-3 flex items-center gap-2 text-sm font-semibold text-amber-900 dark:text-amber-300">
+            <Clock className="size-4" /> Pending requests
+          </h2>
+          <p className="mb-3 text-sm text-amber-800/80 dark:text-amber-300/70">
+            Waiting on these clients to accept your connection request.
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {pendingRequests.map((p) => (
+              <span
+                key={p._id}
+                className="inline-flex items-center gap-2 rounded-full border border-amber-200 bg-white py-1 pr-3 pl-1 text-sm dark:border-amber-900/40 dark:bg-gray-900"
+              >
+                <span className="flex size-6 items-center justify-center rounded-full bg-amber-100 text-xs font-bold text-amber-700 dark:bg-amber-900/40 dark:text-amber-300">
+                  {p.firstName[0]}{p.lastName[0]}
+                </span>
+                {p.firstName} {p.lastName}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
 
       {discover.length > 0 && (
         <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-700/60 dark:bg-gray-900">

@@ -46,7 +46,7 @@ export function NavItemWithBadge({
       <div className="relative shrink-0 [&_svg]:shrink-0">
         {icon}
         {badge !== undefined && badge > 0 && (
-          <span className="absolute -top-1.5 -right-1.5 flex min-w-[16px] items-center justify-center rounded-full bg-emerald-600 px-1 py-0.5 text-[10px] leading-none font-bold text-white">
+          <span className="absolute -top-1.5 -right-1.5 flex min-w-4 items-center justify-center rounded-full bg-emerald-600 px-1 py-0.5 text-[10px] leading-none font-bold text-white">
             {badge > 99 ? "99+" : badge}
           </span>
         )}

@@ -2,6 +2,7 @@ import { useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { useCommunityStore } from "@/store/community-store"
 import { api } from "@/lib/api"
+import { getSocket } from "@/lib/socket"
 import { getErrorMessage } from "./utils"
 import type { Community } from "./types"
 
@@ -86,4 +87,45 @@ export function useCommunityEffects() {
       navigate("/community")
     }
   }, [active, inviteKey, navigate])
+
+  // ── Live membership/moderation sync ──
+  // Join/kick/promote/demote/settings changes are broadcast as a lightweight
+  // "something changed, refetch" signal (mirroring DM's conversations_updated)
+  // so every open tab's member/moderator list and settings stay current
+  // instead of only updating for the tab that made the change.
+  useEffect(() => {
+    const socket = getSocket()
+    if (!socket) return
+    function onCommunityUpdated({ communityId }: { communityId: string }) {
+      void api
+        .get<Community[]>("/api/chat/communities")
+        .then(({ data }) => {
+          setCommunities(data)
+          const current = useCommunityStore.getState().active
+          if (current?._id === communityId) {
+            const updated = data.find((c) => c._id === communityId)
+            if (updated) setActive(updated)
+          }
+        })
+        .catch(() => {})
+    }
+    socket.on("community_updated", onCommunityUpdated)
+    return () => { socket.off("community_updated", onCommunityUpdated) }
+  }, [setCommunities, setActive])
+
+  // ── Removed-from-community notice ──
+  useEffect(() => {
+    const socket = getSocket()
+    if (!socket) return
+    function onCommunityRemoved({ communityId }: { communityId: string }) {
+      setCommunities((prev) => prev.filter((c) => c._id !== communityId))
+      const current = useCommunityStore.getState().active
+      if (current?._id === communityId) {
+        setActive(null)
+        setError("You were removed from this community.")
+      }
+    }
+    socket.on("community_removed", onCommunityRemoved)
+    return () => { socket.off("community_removed", onCommunityRemoved) }
+  }, [setCommunities, setActive, setError])
 }

@@ -1,6 +1,7 @@
-import { useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { BotIcon, Loader2 } from "lucide-react"
 import { api } from "@/lib/api"
+import { Modal } from "@/components/ui/modal"
 
 interface AiDisclosureModalProps {
   open: boolean
@@ -9,12 +10,17 @@ interface AiDisclosureModalProps {
 
 // Persistent disclosure that Therry is an AI companion, not a licensed
 // therapist. Shown until the user acknowledges (stored server-side on the
-// user record via POST /api/users/ai-disclosure).
+// user record via POST /api/users/ai-disclosure). Acknowledging is the only
+// way out - onClose is intentionally a no-op so Escape/backdrop-click can't
+// dismiss it without the user actually agreeing.
 export function AiDisclosureModal({ open, onAcknowledge }: AiDisclosureModalProps) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const acknowledgeButtonRef = useRef<HTMLButtonElement>(null)
 
-  if (!open) return null
+  useEffect(() => {
+    if (open) acknowledgeButtonRef.current?.focus()
+  }, [open])
 
   async function acknowledge() {
     setLoading(true)
@@ -34,8 +40,7 @@ export function AiDisclosureModal({ open, onAcknowledge }: AiDisclosureModalProp
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
-      <div className="w-full max-w-md rounded-2xl border border-gray-200 bg-white p-6 shadow-2xl dark:border-gray-700 dark:bg-gray-900">
+    <Modal open={open} onClose={() => {}} panelClassName="max-w-md border border-gray-200 dark:border-gray-700">
         <div className="mb-1 flex size-12 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-900/40">
           <BotIcon className="size-6 text-emerald-600" />
         </div>
@@ -67,6 +72,7 @@ export function AiDisclosureModal({ open, onAcknowledge }: AiDisclosureModalProp
             Crisis support
           </a>
           <button
+            ref={acknowledgeButtonRef}
             onClick={acknowledge}
             disabled={loading}
             className="flex-1 rounded-xl bg-emerald-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-emerald-700 disabled:opacity-50"
@@ -74,7 +80,6 @@ export function AiDisclosureModal({ open, onAcknowledge }: AiDisclosureModalProp
             {loading ? <Loader2 className="mx-auto size-4 animate-spin" /> : "I understand"}
           </button>
         </div>
-      </div>
-    </div>
+    </Modal>
   )
 }

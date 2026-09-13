@@ -129,6 +129,21 @@ export const MessageBubble = memo(function MessageBubble({
                       isUnsent && "italic opacity-60"
                     )}
                   >
+                    {!isUnsent && msg.replyTo && (
+                      <div
+                        className={cn(
+                          "mb-1.5 rounded-md border-l-2 px-2 py-1 text-xs opacity-80",
+                          isMe
+                            ? "border-white/50 bg-white/10"
+                            : "border-emerald-500 bg-black/5 dark:bg-white/5"
+                        )}
+                      >
+                        <p className="font-medium">{msg.replyTo.senderUsername}</p>
+                        <p className="truncate">
+                          {msg.replyTo.type === "voice" ? "🎤 Voice message" : msg.replyTo.content}
+                        </p>
+                      </div>
+                    )}
                     {isUnsent ? (
                       <p className="wrap-break-words whitespace-pre-wrap italic">
                         Message unsent

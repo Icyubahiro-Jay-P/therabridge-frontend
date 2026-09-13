@@ -5,8 +5,10 @@ import { loadSetting } from "@/components/user/shared/utils"
 import { CHAT_PAGE_SIZE } from "@/components/user/chat/utils"
 import type { ChatUser, Conversation, DirectMessage, ReplySnapshot } from "@/components/user/chat/types"
 
-// Module-level ref to prevent concurrent older-message fetches
-let loadingOlderRef = false
+// Per-conversation guard against concurrent/overlapping older-message
+// fetches - keyed by partner id so loading one conversation's history can
+// never block, or get spliced into, another's.
+const loadingOlderIds = new Set<string>()
 
 interface ChatState {
   // Route (synced by useChatState hook)
@@ -179,8 +181,8 @@ export const useChatStore = create<ChatState & ChatActions>()((set, get) => ({
 
   // ── Compound actions ──
   sendMessage: async () => {
-    const { newMessage, partner, replyToMessage } = get()
-    if (!newMessage.trim() || !partner) return
+    const { newMessage, partner, replyToMessage, sending } = get()
+    if (!newMessage.trim() || !partner || sending) return
     set({ sending: true, error: null })
     try {
       const payload: { recipientId: string; content: string; replyToMessageId?: string } = {
@@ -191,11 +193,14 @@ export const useChatStore = create<ChatState & ChatActions>()((set, get) => ({
         payload.replyToMessageId = replyToMessage._id
       }
       const { data } = await api.post<DirectMessage>("/api/chat/send", payload)
-      set((state) => ({
-        messages: [...state.messages, data],
-        newMessage: "",
-        replyToMessage: null,
-      }))
+      set((state) => {
+        // Upsert by _id rather than a raw push: the real-time socket echo of
+        // this same message can arrive before this response does, and would
+        // otherwise be duplicated alongside it.
+        const map = new Map(state.messages.map((m) => [m._id, m]))
+        map.set(data._id, data)
+        return { messages: [...map.values()], newMessage: "", replyToMessage: null }
+      })
     } catch (err) {
       set({ error: getErrorMessage(err) })
     } finally {
@@ -204,8 +209,8 @@ export const useChatStore = create<ChatState & ChatActions>()((set, get) => ({
   },
 
   sendVoiceNote: async (blob, duration) => {
-    const { partner, replyToMessage } = get()
-    if (!partner) return
+    const { partner, replyToMessage, sending } = get()
+    if (!partner || sending) return
     set({ sending: true })
     try {
       const formData = new FormData()
@@ -218,7 +223,11 @@ export const useChatStore = create<ChatState & ChatActions>()((set, get) => ({
       const { data } = await api.post<DirectMessage>("/api/chat/voice", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       })
-      set((state) => ({ messages: [...state.messages, data], replyToMessage: null }))
+      set((state) => {
+        const map = new Map(state.messages.map((m) => [m._id, m]))
+        map.set(data._id, data)
+        return { messages: [...map.values()], replyToMessage: null }
+      })
     } catch (err) {
       set({ error: getErrorMessage(err) })
     } finally {

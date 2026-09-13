@@ -69,14 +69,11 @@ export function useChatEffects(username?: string) {
     }
     let mounted = true
     async function resolveAndFetch() {
+      // Clears messages/reply/edit/menu/timestamp state left over from
+      // whatever conversation was open before, so none of it leaks into
+      // this one.
+      resetChat()
       setLoadingMessages(true)
-      setMessages([])
-      setNextCursor(null)
-      setHasOlderMessages(false)
-      setLoadingOlder(false)
-      setError(null)
-      setEditingId(null)
-      setEditingContent("")
       try {
         const { data } = await api.get(`/api/users/${username}`)
         const user: ChatUser = {

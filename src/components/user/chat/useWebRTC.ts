@@ -37,6 +37,13 @@ export function useWebRTC() {
   const pcRef = useRef<RTCPeerConnection | null>(null)
   const localStreamRef = useRef<MediaStream | null>(null)
   const pendingOfferRef = useRef<{ sdp: RTCSessionDescriptionInit; calleeId: string } | null>(null)
+  // The callee's SDP offer, stashed on `call:offer` but not acted on
+  // (no media/peer-connection is touched) until the user explicitly accepts.
+  const pendingIncomingOfferRef = useRef<{ callId: string; sdp: RTCSessionDescriptionInit; callerId: string } | null>(null)
+  // ICE candidates that arrive before a remote description has been set
+  // (possible on both ends) are buffered here and flushed once it is, rather
+  // than being silently dropped.
+  const pendingIceCandidatesRef = useRef<RTCIceCandidateInit[]>([])
 
   const cleanup = useCallback(() => {
     pcRef.current?.close()
@@ -47,8 +54,11 @@ export function useWebRTC() {
     setRemoteStream(null)
     setCallId(null)
     setPeerId(null)
+    setIncomingCall(null)
     callRef.callId = null
     pendingOfferRef.current = null
+    pendingIncomingOfferRef.current = null
+    pendingIceCandidatesRef.current = []
     setIsMuted(false)
     setIsVideoOff(false)
   }, [])
@@ -117,7 +127,10 @@ export function useWebRTC() {
       setPeerId(callerId)
     }
 
-    const handleOffer = async ({
+    // Only stashes the offer - no media/peer-connection is created until the
+    // user explicitly accepts (see acceptCall), so a call never activates
+    // the callee's camera/mic or connects before they've agreed to it.
+    const handleOffer = ({
       callId: cid,
       sdp,
       callerId,
@@ -126,33 +139,7 @@ export function useWebRTC() {
       sdp: RTCSessionDescriptionInit
       callerId: string
     }) => {
-      try {
-        const stream = await getLocalStream()
-        const pc = createPeerConnection(callerId)
-
-        await pc.setRemoteDescription(new RTCSessionDescription(sdp))
-
-        stream.getTracks().forEach((track) => pc.addTrack(track, stream))
-
-        const answer = await pc.createAnswer()
-        await pc.setLocalDescription(answer)
-
-        socket.emit("call:answer", {
-          callId: cid,
-          sdp: pc.localDescription?.toJSON(),
-          callerId,
-        })
-
-        setCallState("connecting")
-        setCallId(cid)
-        callRef.callId = cid
-        setPeerId(callerId)
-        setIncomingCall(null)
-      } catch {
-        socket.emit("call:reject", { callId: cid })
-        cleanup()
-        setCallState("idle")
-      }
+      pendingIncomingOfferRef.current = { callId: cid, sdp, callerId }
     }
 
     const handleAnswer = async ({
@@ -163,6 +150,14 @@ export function useWebRTC() {
     }) => {
       if (!pcRef.current) return
       await pcRef.current.setRemoteDescription(new RTCSessionDescription(sdp))
+      for (const candidate of pendingIceCandidatesRef.current) {
+        try {
+          await pcRef.current.addIceCandidate(new RTCIceCandidate(candidate))
+        } catch {
+          // ICE candidate failure is non-fatal
+        }
+      }
+      pendingIceCandidatesRef.current = []
       setCallState("connected")
     }
 
@@ -172,7 +167,14 @@ export function useWebRTC() {
       callId: string
       candidate: RTCIceCandidateInit
     }) => {
-      if (!pcRef.current) return
+      // Buffer instead of dropping: a candidate can arrive before the local
+      // peer connection exists yet (callee hasn't accepted) or before its
+      // remote description is set (a caller/callee race), in which case
+      // addIceCandidate would fail.
+      if (!pcRef.current || !pcRef.current.remoteDescription) {
+        pendingIceCandidatesRef.current.push(candidate)
+        return
+      }
       try {
         await pcRef.current.addIceCandidate(new RTCIceCandidate(candidate))
       } catch {
@@ -234,7 +236,7 @@ export function useWebRTC() {
       socket.off("call:missed", handleCallMissed)
       socket.off("call:initiated", handleCallInitiated)
     }
-  }, [cleanup, createPeerConnection, getLocalStream])
+  }, [cleanup])
 
   // End call and clean up resources when the hook unmounts (e.g. navigation away)
   useEffect(() => {
@@ -278,12 +280,47 @@ export function useWebRTC() {
     [getLocalStream, createPeerConnection, cleanup],
   )
 
-  const acceptCall = useCallback(() => {
-    if (!incomingCall) return
-    // The offer arrives via socket handleOffer which sets up the peer connection
-    // This just transitions the UI state
-    setCallState("connecting")
-  }, [incomingCall])
+  const acceptCall = useCallback(async () => {
+    const pending = pendingIncomingOfferRef.current
+    if (!incomingCall || !pending) return
+    const { callId: cid, sdp, callerId } = pending
+    try {
+      const stream = await getLocalStream()
+      const pc = createPeerConnection(callerId)
+
+      await pc.setRemoteDescription(new RTCSessionDescription(sdp))
+      for (const candidate of pendingIceCandidatesRef.current) {
+        try {
+          await pc.addIceCandidate(new RTCIceCandidate(candidate))
+        } catch {
+          // ICE candidate failure is non-fatal
+        }
+      }
+      pendingIceCandidatesRef.current = []
+
+      stream.getTracks().forEach((track) => pc.addTrack(track, stream))
+
+      const answer = await pc.createAnswer()
+      await pc.setLocalDescription(answer)
+
+      getSocket()?.emit("call:answer", {
+        callId: cid,
+        sdp: pc.localDescription?.toJSON(),
+        callerId,
+      })
+
+      setCallState("connecting")
+      setCallId(cid)
+      callRef.callId = cid
+      setPeerId(callerId)
+      setIncomingCall(null)
+      pendingIncomingOfferRef.current = null
+    } catch {
+      getSocket()?.emit("call:reject", { callId: cid })
+      cleanup()
+      setCallState("idle")
+    }
+  }, [incomingCall, getLocalStream, createPeerConnection, cleanup])
 
   const rejectCall = useCallback(() => {
     if (!incomingCall) return
@@ -291,9 +328,9 @@ export function useWebRTC() {
       callId: incomingCall.callId,
       callerId: incomingCall.callerId,
     })
-    setIncomingCall(null)
+    cleanup()
     setCallState("idle")
-  }, [incomingCall])
+  }, [incomingCall, cleanup])
 
   const endCall = useCallback(() => {
     if (callRef.callId) {

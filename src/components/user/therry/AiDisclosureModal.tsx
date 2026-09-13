@@ -13,7 +13,10 @@ interface AiDisclosureModalProps {
 // user record via POST /api/users/ai-disclosure). Acknowledging is the only
 // way out - onClose is intentionally a no-op so Escape/backdrop-click can't
 // dismiss it without the user actually agreeing.
-export function AiDisclosureModal({ open, onAcknowledge }: AiDisclosureModalProps) {
+export function AiDisclosureModal({
+  open,
+  onAcknowledge,
+}: AiDisclosureModalProps) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const acknowledgeButtonRef = useRef<HTMLButtonElement>(null)
@@ -40,46 +43,58 @@ export function AiDisclosureModal({ open, onAcknowledge }: AiDisclosureModalProp
   }
 
   return (
-    <Modal open={open} onClose={() => {}} panelClassName="max-w-md border border-gray-200 dark:border-gray-700">
-        <div className="mb-1 flex size-12 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-900/40">
-          <BotIcon className="size-6 text-emerald-600" />
-        </div>
-        <h3 className="mt-4 text-lg font-semibold text-gray-900 dark:text-white">
-          A note about Therry
-        </h3>
-        <div className="mt-2 space-y-2 text-sm leading-relaxed text-gray-500 dark:text-gray-400">
-          <p>
-            Therry is an AI companion, not a licensed therapist or medical
-            provider. It is here to listen and support you, but it cannot
-            diagnose, treat, or replace professional care.
-          </p>
-          <p>
-            If you are in immediate danger or thinking about harming yourself,
-            please call <strong className="text-gray-700 dark:text-gray-200">911</strong> or{" "}
-            <strong className="text-gray-700 dark:text-gray-200">988</strong> right away.
-          </p>
-          <p>
-            Your conversations are encrypted and stored securely so you can
-            track your journey.
-          </p>
-        </div>
-        {error && <p className="mt-3 text-sm text-red-600 dark:text-red-400">{error}</p>}
-        <div className="mt-5 flex gap-3">
-          <a
-            href="/crisis"
-            className="flex-1 rounded-xl border border-gray-200 px-4 py-2.5 text-center text-sm font-medium text-gray-600 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800"
-          >
-            Crisis support
-          </a>
-          <button
-            ref={acknowledgeButtonRef}
-            onClick={acknowledge}
-            disabled={loading}
-            className="flex-1 rounded-xl bg-emerald-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-emerald-700 disabled:opacity-50"
-          >
-            {loading ? <Loader2 className="mx-auto size-4 animate-spin" /> : "I understand"}
-          </button>
-        </div>
+    <Modal
+      open={open}
+      onClose={() => {}}
+      panelClassName="max-w-md border border-gray-200 dark:border-gray-700"
+    >
+      <div className="mb-1 flex size-12 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-900/40">
+        <BotIcon className="size-6 text-emerald-600" />
+      </div>
+      <h3 className="mt-4 text-lg font-semibold text-gray-900 dark:text-white">
+        A note about Therry
+      </h3>
+      <div className="mt-2 space-y-2 text-sm leading-relaxed text-gray-500 dark:text-gray-400">
+        <p>
+          Therry is an AI companion, not a licensed therapist or medical
+          provider. It is here to listen and support you, but it cannot
+          diagnose, treat, or replace professional care.
+        </p>
+        <p>
+          If you are in immediate danger or thinking about harming yourself,
+          please call{" "}
+          <strong className="text-gray-700 dark:text-gray-200">911</strong> or{" "}
+          <strong className="text-gray-700 dark:text-gray-200">988</strong>{" "}
+          right away.
+        </p>
+        <p>
+          Your conversations are encrypted and stored securely so you can track
+          your journey.
+        </p>
+      </div>
+      {error && (
+        <p className="mt-3 text-sm text-red-600 dark:text-red-400">{error}</p>
+      )}
+      <div className="mt-5 flex gap-3">
+        <a
+          href="/crisis"
+          className="flex-1 rounded-xl border border-gray-200 px-4 py-2.5 text-center text-sm font-medium text-gray-600 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800"
+        >
+          Crisis support
+        </a>
+        <button
+          ref={acknowledgeButtonRef}
+          onClick={acknowledge}
+          disabled={loading}
+          className="flex-1 rounded-xl bg-emerald-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-emerald-700 disabled:opacity-50"
+        >
+          {loading ? (
+            <Loader2 className="mx-auto size-4 animate-spin" />
+          ) : (
+            "I understand"
+          )}
+        </button>
+      </div>
     </Modal>
   )
 }

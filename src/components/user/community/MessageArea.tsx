@@ -6,12 +6,18 @@ export function MessageArea() {
   const error = useCommunityStore((s) => s.error)
   const loadingMessages = useCommunityStore((s) => s.loadingMessages)
   const messages = useCommunityStore((s) => s.messages)
+  const loadOlderMessages = useCommunityStore((s) => s.loadOlderMessages)
+  const loadingOlder = useCommunityStore((s) => s.loadingOlder)
+  const hasOlderMessages = useCommunityStore((s) => s.hasOlderMessages)
 
   return (
     <SharedMessageArea
       error={error}
       loadingMessages={loadingMessages}
       messages={messages}
+      onLoadOlder={loadOlderMessages}
+      loadingOlder={loadingOlder}
+      hasOlder={hasOlderMessages}
       renderMessage={(msg) => {
         const m = msg as import("./types").CommunityMessage
         return (

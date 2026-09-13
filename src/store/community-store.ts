@@ -141,9 +141,9 @@ export const useCommunityStore = create<CommunityState & CommunityActions>()((se
 
   // ── Compound actions ──
   sendMessage: async () => {
-    const { newMessage, active, replyToMessage } = get()
-    if (!newMessage.trim() || !active) return
-    set({ sending: true })
+    const { newMessage, active, replyToMessage, sending } = get()
+    if (!newMessage.trim() || !active || sending) return
+    set({ sending: true, error: null })
     try {
       const payload: { content: string; replyToMessageId?: string } = {
         content: newMessage.trim(),
@@ -155,11 +155,13 @@ export const useCommunityStore = create<CommunityState & CommunityActions>()((se
         `/api/chat/communities/${active._id}/messages`,
         payload,
       )
-      set((state) => ({
-        messages: [...state.messages, data],
-        newMessage: "",
-        replyToMessage: null,
-      }))
+      set((state) => {
+        // Upsert by _id: the real-time socket echo of this same message can
+        // arrive before this response does, and would otherwise duplicate it.
+        const map = new Map(state.messages.map((m) => [m._id, m]))
+        map.set(data._id, data)
+        return { messages: [...map.values()], newMessage: "", replyToMessage: null }
+      })
     } catch (err) {
       set({ error: getErrorMessage(err) })
     } finally {
@@ -168,9 +170,9 @@ export const useCommunityStore = create<CommunityState & CommunityActions>()((se
   },
 
   sendVoiceNote: async (blob, duration) => {
-    const { active, replyToMessage } = get()
-    if (!active) return
-    set({ sending: true })
+    const { active, replyToMessage, sending } = get()
+    if (!active || sending) return
+    set({ sending: true, error: null })
     try {
       const formData = new FormData()
       formData.append("audio", blob, "voice.webm")
@@ -183,7 +185,11 @@ export const useCommunityStore = create<CommunityState & CommunityActions>()((se
         formData,
         { headers: { "Content-Type": "multipart/form-data" } },
       )
-      set((state) => ({ messages: [...state.messages, data], replyToMessage: null }))
+      set((state) => {
+        const map = new Map(state.messages.map((m) => [m._id, m]))
+        map.set(data._id, data)
+        return { messages: [...map.values()], replyToMessage: null }
+      })
     } catch (err) {
       set({ error: getErrorMessage(err) })
     } finally {
@@ -274,8 +280,9 @@ export const useCommunityStore = create<CommunityState & CommunityActions>()((se
   },
 
   handleSaveEdit: async () => {
-    const { editingId, editingContent, active } = get()
-    if (!editingId || !editingContent.trim() || !active) return
+    const { editingId, editingContent, active, sending } = get()
+    if (!editingId || !editingContent.trim() || !active || sending) return
+    set({ sending: true })
     try {
       const { data } = await api.put<CommunityMessage>(
         `/api/chat/communities/${active._id}/messages/${editingId}`,
@@ -288,6 +295,8 @@ export const useCommunityStore = create<CommunityState & CommunityActions>()((se
       }))
     } catch (err) {
       set({ error: getErrorMessage(err) })
+    } finally {
+      set({ sending: false })
     }
   },
 

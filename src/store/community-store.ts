@@ -245,6 +245,13 @@ export const useCommunityStore = create<CommunityState & CommunityActions>()((se
       editingId: null,
       editingContent: "",
       error: null,
+      // Message history and pagination cursor belong to whatever community
+      // was open before too - useMessagePolling loads the new room's first
+      // page itself once `active` changes.
+      messages: [],
+      nextCursor: null,
+      hasOlderMessages: false,
+      loadingOlder: false,
     }),
 
   onCreated: (c) => {
@@ -339,5 +346,41 @@ export const useCommunityStore = create<CommunityState & CommunityActions>()((se
     set((state) => ({
       selectedTimestampMessage: state.selectedTimestampMessage === id ? null : id,
     }))
+  },
+
+  loadOlderMessages: async () => {
+    const { active, nextCursor } = get()
+    if (!active || !nextCursor || loadingOlderIds.has(active._id)) return
+    const requestedCommunityId = active._id
+    loadingOlderIds.add(requestedCommunityId)
+    set({ loadingOlder: true })
+    try {
+      const { data } = await api.get<{ data: CommunityMessage[]; nextCursor: string | null }>(
+        `/api/chat/communities/${requestedCommunityId}?cursor=${encodeURIComponent(nextCursor)}&limit=${CHAT_PAGE_SIZE}`,
+      )
+      // Bail if the user has since switched communities - this response no
+      // longer belongs to whatever room is now open.
+      if (get().active?._id !== requestedCommunityId) return
+      const older = Array.isArray(data.data) ? data.data : []
+      set((state) => {
+        const map = new Map<string, CommunityMessage>()
+        for (const m of older) map.set(m._id, m)
+        for (const m of state.messages) map.set(m._id, m)
+        return {
+          messages: [...map.values()],
+          nextCursor: data.nextCursor ?? null,
+          hasOlderMessages: !!data.nextCursor,
+        }
+      })
+    } catch (err) {
+      if (get().active?._id === requestedCommunityId) {
+        set({ error: getErrorMessage(err) })
+      }
+    } finally {
+      loadingOlderIds.delete(requestedCommunityId)
+      if (get().active?._id === requestedCommunityId) {
+        set({ loadingOlder: false })
+      }
+    }
   },
 }))

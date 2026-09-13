@@ -272,8 +272,9 @@ export const useChatStore = create<ChatState & ChatActions>()((set, get) => ({
   },
 
   handleSaveEdit: async () => {
-    const { editingId, editingContent } = get()
-    if (!editingId || !editingContent.trim()) return
+    const { editingId, editingContent, sending } = get()
+    if (!editingId || !editingContent.trim() || sending) return
+    set({ sending: true })
     try {
       const { data } = await api.put<DirectMessage>(`/api/chat/edit/${editingId}`, {
         content: editingContent.trim(),
@@ -285,6 +286,8 @@ export const useChatStore = create<ChatState & ChatActions>()((set, get) => ({
       }))
     } catch (err) {
       set({ error: getErrorMessage(err) })
+    } finally {
+      set({ sending: false })
     }
   },
 

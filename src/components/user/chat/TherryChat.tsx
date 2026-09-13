@@ -46,6 +46,10 @@ export function TherryChat({ onToggleSidebar }: { onToggleSidebar: () => void })
   const [editingId, setEditingId] = useState<string | null>(null)
   const [editingContent, setEditingContent] = useState("")
   const [disclosureOpen, setDisclosureOpen] = useState(false)
+  // null = not yet determined (still checking) - sending is blocked until
+  // this is explicitly true, so a fast message can't slip through during
+  // the initial check or while the modal is still rendering.
+  const [disclosureAcknowledged, setDisclosureAcknowledged] = useState<boolean | null>(null)
   const [crisisOpen, setCrisisOpen] = useState(false)
   const [hotlines, setHotlines] = useState<Hotline[]>([])
   const [activeExercise, setActiveExercise] = useState<Exercise | null>(null)
@@ -85,25 +89,36 @@ export function TherryChat({ onToggleSidebar }: { onToggleSidebar: () => void })
 
   // Show the AI disclosure until the user acknowledges it (persisted server-side).
   // sessionStorage keeps it from re-prompting every navigation within a session.
+  // Sending is gated on disclosureAcknowledged (below), not just on whether
+  // the modal happens to be open, so a message can't be sent during this
+  // check or while the modal is still rendering.
   useEffect(() => {
     let mounted = true
+    if (sessionStorage.getItem(DISCLOSURE_SESSION_KEY)) {
+      setDisclosureAcknowledged(true)
+      return
+    }
     async function checkDisclosure() {
       try {
         const { data } = await api.get<{ aiDisclosureAcknowledgedAt?: string | null }>(
           "/api/users/profile"
         )
+        if (!mounted) return
         if (data.aiDisclosureAcknowledgedAt) {
           sessionStorage.setItem(DISCLOSURE_SESSION_KEY, "true")
-        } else if (mounted && !sessionStorage.getItem(DISCLOSURE_SESSION_KEY)) {
+          setDisclosureAcknowledged(true)
+        } else {
           setDisclosureOpen(true)
+          setDisclosureAcknowledged(false)
         }
       } catch {
-        if (mounted && !sessionStorage.getItem(DISCLOSURE_SESSION_KEY)) {
+        if (mounted) {
           setDisclosureOpen(true)
+          setDisclosureAcknowledged(false)
         }
       }
     }
-    if (!sessionStorage.getItem(DISCLOSURE_SESSION_KEY)) void checkDisclosure()
+    void checkDisclosure()
     return () => {
       mounted = false
     }
@@ -132,6 +147,10 @@ export function TherryChat({ onToggleSidebar }: { onToggleSidebar: () => void })
 
   async function handleSend(content: string) {
     if (!content.trim() || sending) return
+    if (disclosureAcknowledged !== true) {
+      setDisclosureOpen(true)
+      return
+    }
 
     if (editingId) {
       await handleSaveEdit()
@@ -324,6 +343,7 @@ export function TherryChat({ onToggleSidebar }: { onToggleSidebar: () => void })
         open={disclosureOpen}
         onAcknowledge={() => {
           sessionStorage.setItem(DISCLOSURE_SESSION_KEY, "true")
+          setDisclosureAcknowledged(true)
           setDisclosureOpen(false)
         }}
       />

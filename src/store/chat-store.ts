@@ -349,6 +349,11 @@ export const useChatStore = create<ChatState & ChatActions>()((set, get) => ({
       error: null,
       editingId: null,
       editingContent: "",
+      newMessage: "",
+      replyToMessage: null,
+      menuOpenId: null,
+      selectedTimestampMessage: null,
+      showHistoryFor: null,
     })
   },
 }))

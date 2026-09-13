@@ -140,6 +140,9 @@ export const useCommunityStore = create<CommunityState & CommunityActions>()((se
     }
   },
   setLoadingMessages: (v) => set({ loadingMessages: v }),
+  setNextCursor: (v) => set({ nextCursor: v }),
+  setHasOlderMessages: (v) => set({ hasOlderMessages: v }),
+  setLoadingOlder: (v) => set({ loadingOlder: v }),
   setNewMessage: (v) => set({ newMessage: v }),
   setSending: (v) => set({ sending: v }),
   setShowJoin: (v) => set({ showJoin: v }),

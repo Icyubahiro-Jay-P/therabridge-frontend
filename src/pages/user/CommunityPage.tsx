@@ -19,6 +19,7 @@ import { GuardOverlay } from "@/components/privacy/GuardOverlay"
 import { WatermarkCanvas } from "@/components/privacy/WatermarkCanvas"
 import { useScreenshotGuard } from "@/hooks/useScreenshotGuard"
 import { loadSetting } from "@/components/user/chat/utils"
+import { canModerateCommunity } from "@/lib/communityPermissions"
 import type { Community } from "@/components/user/community/types"
 
 export function CommunityPage() {
@@ -75,13 +76,7 @@ export function CommunityPage() {
         <CommunitySettingsModal
           community={active}
           currentUserId={currentUser.id}
-          canModerate={
-            currentUser.role === "admin" ||
-            active.owner._id === currentUser.id ||
-            active.moderators?.some(
-              (m) => m._id === currentUser?.id,
-            ) === true
-          }
+          canModerate={canModerateCommunity(currentUser, active)}
           canLeave={
             active.owner._id !== currentUser.id &&
             currentUser.role !== "admin"

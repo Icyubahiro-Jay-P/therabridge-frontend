@@ -90,6 +90,7 @@ interface CommunityActions {
   handleSaveEdit: () => Promise<void>
   cancelEdit: () => void
   toggleTimestamp: (id: string) => void
+  loadOlderMessages: () => Promise<void>
 }
 
 export const useCommunityStore = create<CommunityState & CommunityActions>()((set, get) => ({
@@ -101,6 +102,9 @@ export const useCommunityStore = create<CommunityState & CommunityActions>()((se
   active: null,
   messages: [],
   loadingMessages: false,
+  nextCursor: null,
+  hasOlderMessages: false,
+  loadingOlder: false,
   newMessage: "",
   sending: false,
   showJoin: false,

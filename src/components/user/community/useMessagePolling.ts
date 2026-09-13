@@ -8,19 +8,24 @@ import { getErrorMessage } from "./utils"
 import type { Community, CommunityMessage } from "./types"
 
 export function useMessagePolling() {
-  const active = useCommunityStore((s) => s.active)
+  // Keyed on the id (a primitive), not the `active` object itself - any
+  // settings/membership update replaces `active` with a new object
+  // reference for the same community, and depending on the object would
+  // tear down and rebuild this whole effect (wiping messages, rejoining the
+  // socket room) for no reason.
+  const activeId = useCommunityStore((s) => s.active?._id)
   const currentUserId = useAuthStore((s) => s.user?.id)
   const setMessages = useCommunityStore((s) => s.setMessages)
   const setLoadingMessages = useCommunityStore((s) => s.setLoadingMessages)
   const setError = useCommunityStore((s) => s.setError)
 
   useEffect(() => {
-    if (!active) {
+    if (!activeId) {
       setMessages([])
       return
     }
 
-    const communityId = active._id
+    const communityId = activeId
     let mounted = true
 
     setLoadingMessages(true)
@@ -113,5 +118,5 @@ export function useMessagePolling() {
         socket.off("community_message_unsent", onCommunityMessageUnsent)
       }
     }
-  }, [active, currentUserId, setMessages, setLoadingMessages, setError])
+  }, [activeId, currentUserId, setMessages, setLoadingMessages, setError])
 }

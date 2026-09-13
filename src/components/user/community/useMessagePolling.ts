@@ -5,7 +5,8 @@ import { api } from "@/lib/api"
 import { getSocket } from "@/lib/socket"
 import { playMessageSound } from "@/lib/sound"
 import { getErrorMessage } from "./utils"
-import type { Community, CommunityMessage } from "./types"
+import { CHAT_PAGE_SIZE } from "../chat/utils"
+import type { CommunityMessage } from "./types"
 
 export function useMessagePolling() {
   // Keyed on the id (a primitive), not the `active` object itself - any
@@ -18,6 +19,8 @@ export function useMessagePolling() {
   const setMessages = useCommunityStore((s) => s.setMessages)
   const setLoadingMessages = useCommunityStore((s) => s.setLoadingMessages)
   const setError = useCommunityStore((s) => s.setError)
+  const setNextCursor = useCommunityStore((s) => s.setNextCursor)
+  const setHasOlderMessages = useCommunityStore((s) => s.setHasOlderMessages)
 
   useEffect(() => {
     if (!activeId) {
@@ -33,11 +36,13 @@ export function useMessagePolling() {
 
     async function load() {
       try {
-        const { data } = await api.get<Community>(
-          `/api/chat/communities/${communityId}`,
+        const { data } = await api.get<{ data: CommunityMessage[]; nextCursor: string | null }>(
+          `/api/chat/communities/${communityId}?limit=${CHAT_PAGE_SIZE}`,
         )
         if (!mounted) return
-        setMessages(Array.isArray(data.messages) ? data.messages : [])
+        setMessages(Array.isArray(data.data) ? data.data : [])
+        setNextCursor(data.nextCursor ?? null)
+        setHasOlderMessages(!!data.nextCursor)
       } catch (err) {
         if (!mounted) return
         setError(getErrorMessage(err))
@@ -120,5 +125,5 @@ export function useMessagePolling() {
         socket.off("community_message_unsent", onCommunityMessageUnsent)
       }
     }
-  }, [activeId, currentUserId, setMessages, setLoadingMessages, setError])
+  }, [activeId, currentUserId, setMessages, setLoadingMessages, setError, setNextCursor, setHasOlderMessages])
 }

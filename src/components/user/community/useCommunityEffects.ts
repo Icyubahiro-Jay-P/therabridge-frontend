@@ -37,13 +37,15 @@ export function useCommunityEffects() {
   useEffect(() => {
     if (!inviteKey) {
       setActive(null)
+      setError(null)
       return
     }
+    setError(null)
     const found = communities.find(
       (c) => c.inviteKey === inviteKey.toUpperCase(),
     )
     if (found) {
-      setActive(found)
+      useCommunityStore.getState().selectCommunity(found)
     } else {
       let mounted = true
       async function fetchByKey() {
@@ -52,7 +54,7 @@ export function useCommunityEffects() {
             `/api/chat/communities/by-key/${inviteKey}`,
           )
           if (mounted) {
-            setActive(data)
+            useCommunityStore.getState().selectCommunity(data)
             setCommunities((prev) =>
               prev.find((c) => c._id === data._id) ? prev : [...prev, data],
             )

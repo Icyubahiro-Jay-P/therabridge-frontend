@@ -1,7 +1,16 @@
-import { Users } from "lucide-react"
+import { TriangleAlert, Users } from "lucide-react"
 import { EmptyState as SharedEmptyState } from "../shared/EmptyState"
 
-export function EmptyState() {
+export function EmptyState({ error }: { error?: string | null }) {
+  if (error) {
+    return (
+      <SharedEmptyState
+        icon={TriangleAlert}
+        title="Can't open this community"
+        description={error}
+      />
+    )
+  }
   return (
     <SharedEmptyState
       icon={Users}

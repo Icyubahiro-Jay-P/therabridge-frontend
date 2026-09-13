@@ -56,6 +56,8 @@ export function SettingsForm({
         value={name}
         onChange={(e) => onNameChange(e.target.value.slice(0, LIMITS.community.name))}
         disabled={!isOwner}
+        required
+        minLength={2}
         maxLength={LIMITS.community.name}
       />
       <label className="text-sm font-medium text-gray-700 dark:text-gray-300">

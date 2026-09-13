@@ -42,11 +42,16 @@ export function CommunitySettingsModal({
 
   async function handleSave() {
     if (!isOwner) return
+    const trimmedName = name.trim()
+    if (trimmedName.length < 2) {
+      setError("Community name must be at least 2 characters.")
+      return
+    }
     setSaving(true)
     setError(null)
     try {
       const { data } = await api.put<Community>(`/api/chat/communities/${community._id}`, {
-        name,
+        name: trimmedName,
         description,
         category,
         isPrivate,

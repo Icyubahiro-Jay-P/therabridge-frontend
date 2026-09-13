@@ -71,9 +71,11 @@ export function useMessagePolling() {
           playMessageSound()
         return [...map.values()]
       })
-      void api
-        .post(`/api/chat/communities/${communityId}/read`)
-        .catch(() => {})
+      if (payload.message.sender?._id !== currentUserId) {
+        void api
+          .post(`/api/chat/communities/${communityId}/read`)
+          .catch(() => {})
+      }
     }
 
     function onCommunityMessageUpdated(payload: {

@@ -30,6 +30,7 @@ export function CommunityPage() {
   const navigate = useNavigate()
   const currentUser = useAuthStore((s) => s.user)
   const active = useCommunityStore((s) => s.active)
+  const error = useCommunityStore((s) => s.error)
   const screenshotProtected = useCommunityStore((s) => s.screenshotProtected)
   const showJoin = useCommunityStore((s) => s.showJoin)
   const showCreate = useCommunityStore((s) => s.showCreate)
@@ -110,7 +111,7 @@ export function CommunityPage() {
       />
       <div className="flex flex-1 flex-col">
         {!active ? (
-          <EmptyState />
+          <EmptyState error={error} />
         ) : (
           <div className="relative flex min-h-0 flex-1 flex-col">
             <ChatHeader />

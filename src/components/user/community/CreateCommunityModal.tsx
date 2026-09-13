@@ -39,11 +39,16 @@ export function CreateCommunityModal({
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
+    const trimmedName = name.trim()
+    if (trimmedName.length < 2) {
+      setError("Community name must be at least 2 characters.")
+      return
+    }
     setLoading(true)
     setError(null)
     try {
       const { data } = await api.post<Community>("/api/chat/communities", {
-        name,
+        name: trimmedName,
         description,
         category,
         isPrivate,

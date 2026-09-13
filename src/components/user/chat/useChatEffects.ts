@@ -22,9 +22,6 @@ export function useChatEffects(username?: string) {
   const setLoadingMessages = useChatStore((s) => s.setLoadingMessages)
   const setNextCursor = useChatStore((s) => s.setNextCursor)
   const setHasOlderMessages = useChatStore((s) => s.setHasOlderMessages)
-  const setLoadingOlder = useChatStore((s) => s.setLoadingOlder)
-  const setEditingId = useChatStore((s) => s.setEditingId)
-  const setEditingContent = useChatStore((s) => s.setEditingContent)
   const setShowPreviews = useChatStore((s) => s.setShowPreviews)
   const setEnterToSend = useChatStore((s) => s.setEnterToSend)
   const resetChat = useChatStore((s) => s.resetChat)
@@ -118,16 +115,45 @@ export function useChatEffects(username?: string) {
     setMessages,
     setNextCursor,
     setHasOlderMessages,
-    setLoadingOlder,
     setError,
-    setEditingId,
-    setEditingContent,
     setLoadingMessages,
     setConversations,
     resetChat,
   ])
 
   // ── Socket listeners for DM events ──
+  // Runs regardless of whether a conversation is currently open, so the
+  // sidebar's conversation list and unread badges stay live even while the
+  // user is sitting on the empty-state/sidebar view.
+  useEffect(() => {
+    const socket = getSocket()
+    if (!socket) return
+
+    function onConversationsUpdated() {
+      void api
+        .get<{ data: Conversation[] }>("/api/chat/conversations")
+        .then(({ data }) => {
+          const list = Array.isArray(data.data) ? data.data : []
+          setConversations(list)
+          // If this update still shows unread messages for the conversation
+          // the user currently has open, they're already seeing them - the
+          // optimistic "0 unread" from opening it may have been overwritten
+          // by this refetch, so re-assert it rather than leaving a stale badge.
+          const openPartnerId = useChatStore.getState().partner?._id
+          if (openPartnerId) {
+            const openConvo = list.find((c) => c.partner._id === openPartnerId)
+            if (openConvo && openConvo.unread > 0) {
+              markConversationRead(openPartnerId)
+            }
+          }
+        })
+        .catch(() => {})
+    }
+
+    socket.on("conversations_updated", onConversationsUpdated)
+    return () => { socket.off("conversations_updated", onConversationsUpdated) }
+  }, [setConversations])
+
   const partner = useChatStore((s) => s.partner)
   useEffect(() => {
     if (!partner) return
@@ -174,24 +200,13 @@ export function useChatEffects(username?: string) {
       )
     }
 
-    function onConversationsUpdated() {
-      void api
-        .get<{ data: Conversation[] }>("/api/chat/conversations")
-        .then(({ data }) => {
-          setConversations(Array.isArray(data.data) ? data.data : [])
-        })
-        .catch(() => {})
-    }
-
     socket.on("dm_message", onDmMessage)
     socket.on("dm_message_updated", onDmUpdated)
     socket.on("dm_message_unsent", onDmUnsent)
-    socket.on("conversations_updated", onConversationsUpdated)
     return () => {
       socket.off("dm_message", onDmMessage)
       socket.off("dm_message_updated", onDmUpdated)
       socket.off("dm_message_unsent", onDmUnsent)
-      socket.off("conversations_updated", onConversationsUpdated)
     }
-  }, [partner, currentUserId, setMessages, setConversations])
+  }, [partner, currentUserId, setMessages])
 }

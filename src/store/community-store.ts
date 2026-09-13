@@ -3,6 +3,12 @@ import { api } from "@/lib/api"
 import { getErrorMessage } from "@/lib/errors"
 import type { Community, CommunityMessage } from "@/components/user/community/types"
 import type { ReplySnapshot } from "@/components/user/chat/types"
+import { CHAT_PAGE_SIZE } from "@/components/user/chat/utils"
+
+// Per-community guard against concurrent/overlapping older-message fetches -
+// keyed by community id so loading one room's history can never block, or
+// get spliced into, another's (mirrors chat-store's loadingOlderIds).
+const loadingOlderIds = new Set<string>()
 
 interface CommunityState {
   // Route (synced by useCommunityState hook)
@@ -19,6 +25,9 @@ interface CommunityState {
   // Messages
   messages: CommunityMessage[]
   loadingMessages: boolean
+  nextCursor: string | null
+  hasOlderMessages: boolean
+  loadingOlder: boolean
   newMessage: string
   sending: boolean
 
@@ -49,6 +58,9 @@ interface CommunityActions {
   setActive: (v: Community | null) => void
   setMessages: (v: CommunityMessage[] | ((prev: CommunityMessage[]) => CommunityMessage[])) => void
   setLoadingMessages: (v: boolean) => void
+  setNextCursor: (v: string | null) => void
+  setHasOlderMessages: (v: boolean) => void
+  setLoadingOlder: (v: boolean) => void
   setNewMessage: (v: string) => void
   setSending: (v: boolean) => void
   setShowJoin: (v: boolean) => void

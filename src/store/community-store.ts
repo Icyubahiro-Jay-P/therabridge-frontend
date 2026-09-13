@@ -212,7 +212,21 @@ export const useCommunityStore = create<CommunityState & CommunityActions>()((se
 
   cancelReply: () => set({ replyToMessage: null }),
 
-  selectCommunity: (c) => set({ active: c }),
+  selectCommunity: (c) =>
+    set({
+      active: c,
+      // Reply/draft/menu state belongs to whatever community was open
+      // before - carrying it over would attach a reply meant for one
+      // community's message to a message posted in another.
+      newMessage: "",
+      replyToMessage: null,
+      menuOpenId: null,
+      selectedTimestampMessage: null,
+      showHistoryFor: null,
+      editingId: null,
+      editingContent: "",
+      error: null,
+    }),
 
   onCreated: (c) => {
     set((state) => ({

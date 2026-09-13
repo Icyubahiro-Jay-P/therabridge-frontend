@@ -49,7 +49,9 @@ export function TherryChat({ onToggleSidebar }: { onToggleSidebar: () => void })
   // null = not yet determined (still checking) - sending is blocked until
   // this is explicitly true, so a fast message can't slip through during
   // the initial check or while the modal is still rendering.
-  const [disclosureAcknowledged, setDisclosureAcknowledged] = useState<boolean | null>(null)
+  const [disclosureAcknowledged, setDisclosureAcknowledged] = useState<boolean | null>(
+    () => (sessionStorage.getItem(DISCLOSURE_SESSION_KEY) ? true : null)
+  )
   const [crisisOpen, setCrisisOpen] = useState(false)
   const [hotlines, setHotlines] = useState<Hotline[]>([])
   const [activeExercise, setActiveExercise] = useState<Exercise | null>(null)
@@ -93,11 +95,8 @@ export function TherryChat({ onToggleSidebar }: { onToggleSidebar: () => void })
   // the modal happens to be open, so a message can't be sent during this
   // check or while the modal is still rendering.
   useEffect(() => {
+    if (disclosureAcknowledged === true) return
     let mounted = true
-    if (sessionStorage.getItem(DISCLOSURE_SESSION_KEY)) {
-      setDisclosureAcknowledged(true)
-      return
-    }
     async function checkDisclosure() {
       try {
         const { data } = await api.get<{ aiDisclosureAcknowledgedAt?: string | null }>(
@@ -122,6 +121,10 @@ export function TherryChat({ onToggleSidebar }: { onToggleSidebar: () => void })
     return () => {
       mounted = false
     }
+    // Intentionally runs once on mount - disclosureAcknowledged is read only
+    // as a mount-time guard (its later true/false transitions come from
+    // this same effect and the acknowledge handler, not from outside).
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   // Preload region-appropriate hotlines for the "Need help now" pill.

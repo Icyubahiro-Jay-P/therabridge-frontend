@@ -301,13 +301,17 @@ export const useChatStore = create<ChatState & ChatActions>()((set, get) => ({
 
   loadOlderMessages: async () => {
     const { partner, nextCursor } = get()
-    if (!partner || !nextCursor || loadingOlderRef) return
-    loadingOlderRef = true
+    if (!partner || !nextCursor || loadingOlderIds.has(partner._id)) return
+    const requestedPartnerId = partner._id
+    loadingOlderIds.add(requestedPartnerId)
     set({ loadingOlder: true })
     try {
       const { data } = await api.get<{ data: DirectMessage[]; nextCursor: string | null }>(
-        `/api/chat/conversation/${partner._id}?cursor=${encodeURIComponent(nextCursor)}&limit=${CHAT_PAGE_SIZE}`
+        `/api/chat/conversation/${requestedPartnerId}?cursor=${encodeURIComponent(nextCursor)}&limit=${CHAT_PAGE_SIZE}`
       )
+      // Bail if the user has since switched conversations - this response no
+      // longer belongs to whatever is now open, and must not be spliced in.
+      if (get().partner?._id !== requestedPartnerId) return
       const older = Array.isArray(data.data) ? data.data : []
       set((state) => {
         const map = new Map<string, DirectMessage>()
@@ -320,10 +324,14 @@ export const useChatStore = create<ChatState & ChatActions>()((set, get) => ({
         }
       })
     } catch (err) {
-      set({ error: getErrorMessage(err) })
+      if (get().partner?._id === requestedPartnerId) {
+        set({ error: getErrorMessage(err) })
+      }
     } finally {
-      loadingOlderRef = false
-      set({ loadingOlder: false })
+      loadingOlderIds.delete(requestedPartnerId)
+      if (get().partner?._id === requestedPartnerId) {
+        set({ loadingOlder: false })
+      }
     }
   },
 

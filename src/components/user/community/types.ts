@@ -39,5 +39,4 @@ export interface Community {
   isDisabled?: boolean
   category: CommunityCategory
   rules: string
-  messages: CommunityMessage[]
 }

@@ -38,7 +38,9 @@ export const MessageBubble = memo(function MessageBubble({
   const menuOpenId = useCommunityStore((s) => s.menuOpenId)
   const setMenuOpenId = useCommunityStore((s) => s.setMenuOpenId)
   const toggleTimestamp = useCommunityStore((s) => s.toggleTimestamp)
-  const selectedTimestampMessage = useCommunityStore((s) => s.selectedTimestampMessage)
+  const selectedTimestampMessage = useCommunityStore(
+    (s) => s.selectedTimestampMessage
+  )
   const showHistoryFor = useCommunityStore((s) => s.showHistoryFor)
   const setShowHistoryFor = useCommunityStore((s) => s.setShowHistoryFor)
   const deleting = useCommunityStore((s) => s.deleting)
@@ -71,7 +73,9 @@ export const MessageBubble = memo(function MessageBubble({
       <div
         className={cn(
           "flex max-w-[70%] gap-1",
-          isMe ? "flex-row-reverse items-center justify-start" : "flex-row items-end"
+          isMe
+            ? "flex-row-reverse items-center justify-start"
+            : "flex-row items-end"
         )}
       >
         {!isMe &&
@@ -105,100 +109,100 @@ export const MessageBubble = memo(function MessageBubble({
                 <MoreVertical className="size-3.5" />
               </button>
             )}
-            {!isUnsent && msg.replyTo && (
-              <button
-                type="button"
-                onClick={() =>
-                  document
-                    .getElementById(`msg-${msg.replyTo!._id}`)
-                    ?.scrollIntoView({ behavior: "smooth", block: "center" })
-                }
-                className={cn(
-                  "mb-0.5 w-fit max-w-full cursor-pointer truncate rounded-2xl px-3 py-1.5 text-left text-xs",
-                  isMe
-                    ? "bg-emerald-600/50 text-white/85 hover:bg-emerald-600/60"
-                    : "bg-gray-200/70 text-gray-600 hover:bg-gray-200 dark:bg-white/[0.06] dark:text-gray-400 dark:hover:bg-white/[0.09]"
-                )}
-              >
-                <span className="font-semibold">{msg.replyTo.senderUsername}</span>
-                <span className="opacity-75">
-                  {" · "}
-                  {msg.replyTo.type === "voice" ? "🎤 Voice message" : msg.replyTo.content}
-                </span>
-              </button>
-            )}
-            <div className="relative">
-              <button
-                onClick={(e) => {
-                  e.stopPropagation()
-                  startReply(msg)
-                }}
-                className={cn(
-                  "absolute top-1/2 z-10 flex size-6 -translate-y-1/2 items-center justify-center rounded-full border border-gray-200 bg-white opacity-0 shadow-sm transition-opacity hover:bg-gray-100 group-hover/msg:opacity-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700",
-                  isMe ? "-left-3" : "-right-3"
-                )}
-              >
-                <Reply className="size-3 text-gray-500 dark:text-gray-400" />
-              </button>
-              <div
-                onClick={() => toggleTimestamp(msg._id)}
-                onDoubleClick={(e) => {
-                  e.stopPropagation()
-                  startReply(msg)
-                }}
-                className={cn(
-                  "wrap-break-words min-w-0 cursor-pointer overflow-hidden rounded-[18px] text-[14.5px] leading-snug",
-                  isMe
-                    ? "bg-emerald-600 text-white"
-                    : "bg-gray-100 text-gray-900 dark:bg-gray-800 dark:text-gray-100",
-                  isEditing &&
-                    "ring-2 ring-teal-400 ring-offset-1 ring-offset-gray-50 dark:ring-offset-gray-950"
-                )}
-              >
-                <div
+            <div
+              className={cn(
+                "flex flex-col",
+                isMe ? "items-end" : "items-start"
+              )}
+            >
+              {!isUnsent && msg.replyTo && (
+                <button
+                  type="button"
+                  onClick={() =>
+                    document
+                      .getElementById(`msg-${msg.replyTo!._id}`)
+                      ?.scrollIntoView({ behavior: "smooth", block: "center" })
+                  }
                   className={cn(
-                    "px-3.5 pt-2.5 pb-2",
-                    isUnsent && "italic opacity-60"
+                    "mb-0.5 w-fit max-w-full cursor-pointer truncate rounded-2xl px-3 py-1.5 text-left text-xs",
+                    isMe
+                      ? "bg-emerald-600/50 text-white/85 hover:bg-emerald-600/60"
+                      : "bg-gray-200/70 text-gray-600 hover:bg-gray-200 dark:bg-white/6 dark:text-gray-400 dark:hover:bg-white/9"
                   )}
                 >
-                  {!isUnsent && msg.replyTo && (
-                    <div
-                      className={cn(
-                        "mb-1.5 rounded-md border-l-2 px-2 py-1 text-xs opacity-80",
-                        isMe
-                          ? "border-white/50 bg-white/10"
-                          : "border-emerald-500 bg-black/5 dark:bg-white/5"
-                      )}
-                    >
-                      <p className="font-medium">{msg.replyTo.senderUsername}</p>
-                      <p className="truncate">
-                        {msg.replyTo.type === "voice" ? "🎤 Voice message" : msg.replyTo.content}
+                  <span className="font-semibold">
+                    {msg.replyTo.senderUsername}
+                  </span>
+                  <span className="opacity-75">
+                    {" · "}
+                    {msg.replyTo.type === "voice"
+                      ? "🎤 Voice message"
+                      : msg.replyTo.content}
+                  </span>
+                </button>
+              )}
+              <div className="relative">
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    startReply(msg)
+                  }}
+                  className={cn(
+                    "absolute top-1/2 z-10 flex size-6 -translate-y-1/2 items-center justify-center rounded-full border border-gray-200 bg-white opacity-0 shadow-sm transition-opacity group-hover/msg:opacity-100 hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700",
+                    isMe ? "-left-3" : "-right-3"
+                  )}
+                >
+                  <Reply className="size-3 text-gray-500 dark:text-gray-400" />
+                </button>
+                <div
+                  onClick={() => toggleTimestamp(msg._id)}
+                  onDoubleClick={(e) => {
+                    e.stopPropagation()
+                    startReply(msg)
+                  }}
+                  className={cn(
+                    "wrap-break-words min-w-0 cursor-pointer overflow-hidden rounded-[18px] text-[14.5px] leading-snug",
+                    isMe
+                      ? "bg-emerald-600 text-white"
+                      : "bg-gray-100 text-gray-900 dark:bg-gray-800 dark:text-gray-100",
+                    isEditing &&
+                      "ring-2 ring-teal-400 ring-offset-1 ring-offset-gray-50 dark:ring-offset-gray-950"
+                  )}
+                >
+                  <div
+                    className={cn(
+                      "px-3.5 pt-2.5 pb-2",
+                      isUnsent && "italic opacity-60"
+                    )}
+                  >
+                    {isUnsent ? (
+                      <p className="wrap-break-words whitespace-pre-wrap italic">
+                        Message unsent
                       </p>
-                    </div>
-                  )}
-                  {isUnsent ? (
-                    <p className="wrap-break-words whitespace-pre-wrap italic">
-                      Message unsent
-                    </p>
-                  ) : msg.type === "voice" && msg.audioUrl ? (
-                    <VoiceMessagePlayer
-                      audioUrl={msg.audioUrl}
-                      duration={msg.duration}
-                      isMe={isMe}
-                    />
-                  ) : (
-                    <p className="wrap-break-words whitespace-pre-wrap">{msg.content}</p>
-                  )}
-                  {isEditing && (
-                    <span
-                      className={cn(
-                        "mt-1 flex items-center gap-1 text-[10px] font-medium",
-                        isMe ? "text-teal-200" : "text-teal-600 dark:text-teal-400"
-                      )}
-                    >
-                      <PencilLine className="size-2.5" /> Editing...
-                    </span>
-                  )}
+                    ) : msg.type === "voice" && msg.audioUrl ? (
+                      <VoiceMessagePlayer
+                        audioUrl={msg.audioUrl}
+                        duration={msg.duration}
+                        isMe={isMe}
+                      />
+                    ) : (
+                      <p className="wrap-break-words whitespace-pre-wrap">
+                        {msg.content}
+                      </p>
+                    )}
+                    {isEditing && (
+                      <span
+                        className={cn(
+                          "mt-1 flex items-center gap-1 text-[10px] font-medium",
+                          isMe
+                            ? "text-teal-200"
+                            : "text-teal-600 dark:text-teal-400"
+                        )}
+                      >
+                        <PencilLine className="size-2.5" /> Editing...
+                      </span>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
@@ -266,7 +270,11 @@ export const MessageBubble = memo(function MessageBubble({
         />
       )}
       {confirmUnsend && (
-        <Modal open onClose={() => setConfirmUnsend(false)} panelClassName="mx-4 max-w-sm">
+        <Modal
+          open
+          onClose={() => setConfirmUnsend(false)}
+          panelClassName="mx-4 max-w-sm"
+        >
           <div className="mb-4 flex items-center gap-3">
             <span className="flex size-10 items-center justify-center rounded-full bg-red-100 text-red-600 dark:bg-red-900/40 dark:text-red-400">
               <TriangleAlert className="size-5" />

@@ -34,7 +34,9 @@ export const MessageBubble = memo(function MessageBubble({
   const menuOpenId = useChatStore((s) => s.menuOpenId)
   const setMenuOpenId = useChatStore((s) => s.setMenuOpenId)
   const toggleTimestamp = useChatStore((s) => s.toggleTimestamp)
-  const selectedTimestampMessage = useChatStore((s) => s.selectedTimestampMessage)
+  const selectedTimestampMessage = useChatStore(
+    (s) => s.selectedTimestampMessage
+  )
   const showHistoryFor = useChatStore((s) => s.showHistoryFor)
   const setShowHistoryFor = useChatStore((s) => s.setShowHistoryFor)
   const deleting = useChatStore((s) => s.deleting)
@@ -111,13 +113,17 @@ export const MessageBubble = memo(function MessageBubble({
                     "mb-0.5 w-fit max-w-full cursor-pointer truncate rounded-2xl px-3 py-1.5 text-left text-xs",
                     isMe
                       ? "bg-emerald-600/50 text-white/85 hover:bg-emerald-600/60"
-                      : "bg-gray-200/70 text-gray-600 hover:bg-gray-200 dark:bg-white/[0.06] dark:text-gray-400 dark:hover:bg-white/[0.09]"
+                      : "bg-gray-200/70 text-gray-600 hover:bg-gray-200 dark:bg-white/6 dark:text-gray-400 dark:hover:bg-white/9"
                   )}
                 >
-                  <span className="font-semibold">{msg.replyTo.senderUsername}</span>
+                  <span className="font-semibold">
+                    {msg.replyTo.senderUsername}
+                  </span>
                   <span className="opacity-75">
                     {" · "}
-                    {msg.replyTo.type === "voice" ? "🎤 Voice message" : msg.replyTo.content}
+                    {msg.replyTo.type === "voice"
+                      ? "🎤 Voice message"
+                      : msg.replyTo.content}
                   </span>
                 </button>
               )}
@@ -128,7 +134,7 @@ export const MessageBubble = memo(function MessageBubble({
                     startReply(msg)
                   }}
                   className={cn(
-                    "absolute top-1/2 z-10 flex size-6 -translate-y-1/2 items-center justify-center rounded-full border border-gray-200 bg-white opacity-0 shadow-sm transition-opacity hover:bg-gray-100 group-hover/msg:opacity-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700",
+                    "absolute top-1/2 z-10 flex size-6 -translate-y-1/2 items-center justify-center rounded-full border border-gray-200 bg-white opacity-0 shadow-sm transition-opacity group-hover/msg:opacity-100 hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700",
                     isMe ? "-left-3" : "-right-3"
                   )}
                 >
@@ -256,38 +262,42 @@ export const MessageBubble = memo(function MessageBubble({
         />
       )}
       {confirmUnsend && (
-        <Modal open onClose={() => setConfirmUnsend(false)} panelClassName="mx-4 max-w-sm">
-            <div className="mb-4 flex items-center gap-3">
-              <span className="flex size-10 items-center justify-center rounded-full bg-red-100 text-red-600 dark:bg-red-900/40 dark:text-red-400">
-                <TriangleAlert className="size-5" />
-              </span>
-              <div>
-                <h3 className="font-semibold text-gray-900 dark:text-white">
-                  Unsend message?
-                </h3>
-                <p className="text-sm text-gray-500 dark:text-gray-400">
-                  This action cannot be undone.
-                </p>
-              </div>
+        <Modal
+          open
+          onClose={() => setConfirmUnsend(false)}
+          panelClassName="mx-4 max-w-sm"
+        >
+          <div className="mb-4 flex items-center gap-3">
+            <span className="flex size-10 items-center justify-center rounded-full bg-red-100 text-red-600 dark:bg-red-900/40 dark:text-red-400">
+              <TriangleAlert className="size-5" />
+            </span>
+            <div>
+              <h3 className="font-semibold text-gray-900 dark:text-white">
+                Unsend message?
+              </h3>
+              <p className="text-sm text-gray-500 dark:text-gray-400">
+                This action cannot be undone.
+              </p>
             </div>
-            <div className="flex gap-2">
-              <button
-                onClick={() => setConfirmUnsend(false)}
-                className="flex-1 rounded-xl border border-gray-200 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={() => {
-                  handleUnsend(msg._id)
-                  setConfirmUnsend(false)
-                }}
-                disabled={deleting === msg._id}
-                className="flex-1 rounded-xl bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 disabled:opacity-50"
-              >
-                {deleting === msg._id ? "Unsending..." : "Unsend"}
-              </button>
-            </div>
+          </div>
+          <div className="flex gap-2">
+            <button
+              onClick={() => setConfirmUnsend(false)}
+              className="flex-1 rounded-xl border border-gray-200 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={() => {
+                handleUnsend(msg._id)
+                setConfirmUnsend(false)
+              }}
+              disabled={deleting === msg._id}
+              className="flex-1 rounded-xl bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 disabled:opacity-50"
+            >
+              {deleting === msg._id ? "Unsending..." : "Unsend"}
+            </button>
+          </div>
         </Modal>
       )}
       {showHistoryFor === msg._id && hasEdits && (

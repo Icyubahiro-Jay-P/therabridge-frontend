@@ -42,18 +42,8 @@ export function MessageArea() {
             </div>
           )
         }
-        const { isGroupStart, isGroupEnd } = getGroupPosition(
-          messages as DirectMessage[],
-          i
-        )
-        return (
-          <MessageBubble
-            key={m._id}
-            msg={m}
-            isGroupStart={isGroupStart}
-            isGroupEnd={isGroupEnd}
-          />
-        )
+        const { isGroupEnd } = getGroupPosition(messages as DirectMessage[], i)
+        return <MessageBubble key={m._id} msg={m} isGroupEnd={isGroupEnd} />
       }}
     />
   )

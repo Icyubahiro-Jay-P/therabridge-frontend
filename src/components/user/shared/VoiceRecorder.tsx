@@ -8,13 +8,18 @@ interface VoiceRecorderProps {
   sending?: boolean
 }
 
+const BAR_WIDTH = 3
+const BAR_GAP = 2
+const BAR_PITCH = BAR_WIDTH + BAR_GAP
+const MIN_LEVEL = 0.08
+const GAIN = 4
+
 export function VoiceRecorder({
   onRecordingComplete,
   onCancel,
   sending = false,
 }: VoiceRecorderProps) {
   const [duration, setDuration] = useState(0)
-  const [analyserData, setAnalyserData] = useState<number[]>([])
   const mediaRecorderRef = useRef<MediaRecorder | null>(null)
   const chunksRef = useRef<Blob[]>([])
   const streamRef = useRef<MediaStream | null>(null)
@@ -23,6 +28,9 @@ export function VoiceRecorder({
   const rafRef = useRef<number>(0)
   const durationRef = useRef(0)
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
+  const waveHolderRef = useRef<HTMLDivElement | null>(null)
+  const historyRef = useRef<number[]>([])
+  const smoothedRef = useRef(0)
   const onCancelRef = useRef(onCancel)
 
   useEffect(() => {
@@ -49,7 +57,7 @@ export function VoiceRecorder({
         const audioCtx = new AudioContext()
         const source = audioCtx.createMediaStreamSource(stream)
         const analyser = audioCtx.createAnalyser()
-        analyser.fftSize = 64
+        analyser.fftSize = 512
         source.connect(analyser)
         analyserRef.current = analyser
 
@@ -73,15 +81,68 @@ export function VoiceRecorder({
           setDuration(durationRef.current)
         }, 1000)
 
-        const drawWave = () => {
-          if (!analyserRef.current) return
-          const data = new Uint8Array(analyserRef.current.frequencyBinCount)
-          analyserRef.current.getByteFrequencyData(data)
-          const normalized = Array.from(data).map((v) => v / 255)
-          setAnalyserData(normalized)
-          rafRef.current = requestAnimationFrame(drawWave)
+        // Time-domain amplitude sampled into a scrolling bar history (the
+        // WhatsApp/Telegram pattern) instead of a raw 32-bin frequency
+        // spectrum. The canvas backing store is sized to the holder's real
+        // pixel size (times devicePixelRatio) every frame, which is what
+        // actually fixes the stretched/blurry look: the old canvas had a
+        // fixed 200x32 buffer stretched by CSS to whatever width the input
+        // row happened to render at.
+        const timeData = new Uint8Array(analyser.fftSize)
+        const tick = () => {
+          const canvas = canvasRef.current
+          const holder = waveHolderRef.current
+          const activeAnalyser = analyserRef.current
+          if (canvas && holder && activeAnalyser) {
+            activeAnalyser.getByteTimeDomainData(timeData)
+            let sumSquares = 0
+            for (let i = 0; i < timeData.length; i++) {
+              const centered = (timeData[i] - 128) / 128
+              sumSquares += centered * centered
+            }
+            const rms = Math.sqrt(sumSquares / timeData.length)
+            const level = Math.min(1, rms * GAIN)
+            // Fast attack, slow release — a real meter ballistic, so bars
+            // rise instantly on a syllable and settle gently after, instead
+            // of snapping around every animation frame.
+            const attack = level > smoothedRef.current ? 0.6 : 0.15
+            smoothedRef.current += (level - smoothedRef.current) * attack
+            const barLevel = Math.max(MIN_LEVEL, smoothedRef.current)
+
+            const cssWidth = holder.clientWidth
+            const cssHeight = holder.clientHeight
+            const dpr = window.devicePixelRatio || 1
+            const targetW = Math.max(1, Math.round(cssWidth * dpr))
+            const targetH = Math.max(1, Math.round(cssHeight * dpr))
+            if (canvas.width !== targetW || canvas.height !== targetH) {
+              canvas.width = targetW
+              canvas.height = targetH
+            }
+
+            const maxBars = Math.max(1, Math.floor(cssWidth / BAR_PITCH))
+            const history = historyRef.current
+            history.push(barLevel)
+            while (history.length > maxBars) history.shift()
+
+            const ctx = canvas.getContext("2d")
+            if (ctx) {
+              ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+              ctx.clearRect(0, 0, cssWidth, cssHeight)
+              ctx.fillStyle = "rgb(16, 185, 129)"
+              const startX = cssWidth - history.length * BAR_PITCH
+              history.forEach((v, i) => {
+                const barH = Math.max(2, v * cssHeight)
+                const x = startX + i * BAR_PITCH
+                const y = (cssHeight - barH) / 2
+                ctx.beginPath()
+                ctx.roundRect(x, y, BAR_WIDTH, barH, BAR_WIDTH / 2)
+                ctx.fill()
+              })
+            }
+          }
+          rafRef.current = requestAnimationFrame(tick)
         }
-        rafRef.current = requestAnimationFrame(drawWave)
+        rafRef.current = requestAnimationFrame(tick)
       } catch {
         onCancelRef.current()
       }
@@ -94,26 +155,6 @@ export function VoiceRecorder({
       streamRef.current?.getTracks().forEach((t) => t.stop())
     }
   }, [])
-
-  useEffect(() => {
-    const canvas = canvasRef.current
-    if (!canvas || analyserData.length === 0) return
-    const ctx = canvas.getContext("2d")
-    if (!ctx) return
-    const w = canvas.width
-    const h = canvas.height
-    ctx.clearRect(0, 0, w, h)
-    const barWidth = w / analyserData.length
-    analyserData.forEach((v, i) => {
-      const barH = Math.max(2, v * h)
-      const x = i * barWidth
-      const y = (h - barH) / 2
-      ctx.fillStyle = "rgb(16, 185, 129)"
-      ctx.beginPath()
-      ctx.roundRect(x + 1, y, barWidth - 2, barH, 2)
-      ctx.fill()
-    })
-  }, [analyserData])
 
   function stopRecording() {
     const recorder = mediaRecorderRef.current
@@ -154,29 +195,14 @@ export function VoiceRecorder({
         <X className="size-4" />
       </button>
 
-      <div className="flex min-w-0 flex-1 items-center gap-2">
-        <div className="flex h-8 flex-1 items-center overflow-hidden rounded-full bg-gray-100 dark:bg-gray-800">
-          {analyserData.length > 0 ? (
-            <canvas
-              ref={canvasRef}
-              width={200}
-              height={32}
-              className="h-8 w-full"
-            />
-          ) : (
-            <div className="flex items-center gap-1 px-3">
-              <span className="size-2 animate-pulse rounded-full bg-red-500" />
-              <span className="text-xs font-medium text-gray-600 dark:text-gray-300">
-                {formatTime(duration)}
-              </span>
-            </div>
-          )}
+      <div className="flex h-8 min-w-0 flex-1 items-center gap-2.5 rounded-full bg-gray-100 pr-3 pl-2 dark:bg-gray-800">
+        <span className="size-2 shrink-0 animate-pulse rounded-full bg-red-500" />
+        <div ref={waveHolderRef} className="h-full min-w-0 flex-1">
+          <canvas ref={canvasRef} className="block h-full w-full" />
         </div>
-        {analyserData.length > 0 && (
-          <span className="shrink-0 text-xs font-medium tabular-nums text-gray-500 dark:text-gray-400">
-            {formatTime(duration)}
-          </span>
-        )}
+        <span className="shrink-0 text-xs font-medium tabular-nums text-gray-500 dark:text-gray-400">
+          {formatTime(duration)}
+        </span>
       </div>
 
       <Button

@@ -99,6 +99,28 @@ export const MessageBubble = memo(function MessageBubble({
                 isMe ? "items-end" : "items-start"
               )}
             >
+              {!isUnsent && msg.replyTo && (
+                <button
+                  type="button"
+                  onClick={() =>
+                    document
+                      .getElementById(`msg-${msg.replyTo!._id}`)
+                      ?.scrollIntoView({ behavior: "smooth", block: "center" })
+                  }
+                  className={cn(
+                    "mb-0.5 w-fit max-w-full cursor-pointer truncate rounded-2xl px-3 py-1.5 text-left text-xs",
+                    isMe
+                      ? "bg-emerald-600/50 text-white/85 hover:bg-emerald-600/60"
+                      : "bg-gray-200/70 text-gray-600 hover:bg-gray-200 dark:bg-white/[0.06] dark:text-gray-400 dark:hover:bg-white/[0.09]"
+                  )}
+                >
+                  <span className="font-semibold">{msg.replyTo.senderUsername}</span>
+                  <span className="opacity-75">
+                    {" · "}
+                    {msg.replyTo.type === "voice" ? "🎤 Voice message" : msg.replyTo.content}
+                  </span>
+                </button>
+              )}
               <div className="relative">
                 <button
                   onClick={(e) => {
@@ -133,21 +155,6 @@ export const MessageBubble = memo(function MessageBubble({
                       isUnsent && "italic opacity-60"
                     )}
                   >
-                    {!isUnsent && msg.replyTo && (
-                      <div
-                        className={cn(
-                          "mb-1.5 rounded-md border-l-2 px-2 py-1 text-xs opacity-80",
-                          isMe
-                            ? "border-white/50 bg-white/10"
-                            : "border-emerald-500 bg-black/5 dark:bg-white/5"
-                        )}
-                      >
-                        <p className="font-medium">{msg.replyTo.senderUsername}</p>
-                        <p className="truncate">
-                          {msg.replyTo.type === "voice" ? "🎤 Voice message" : msg.replyTo.content}
-                        </p>
-                      </div>
-                    )}
                     {isUnsent ? (
                       <p className="wrap-break-words whitespace-pre-wrap italic">
                         Message unsent

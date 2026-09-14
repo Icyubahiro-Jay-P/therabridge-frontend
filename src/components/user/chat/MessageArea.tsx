@@ -1,7 +1,9 @@
 import { PhoneOff } from "lucide-react"
 import { useChatStore } from "@/store/chat-store"
 import { MessageArea as SharedMessageArea } from "../shared/MessageArea"
+import { getGroupPosition } from "../shared/utils"
 import { MessageBubble } from "./MessageBubble"
+import type { DirectMessage } from "./types"
 
 export function MessageArea() {
   const error = useChatStore((s) => s.error)
@@ -19,8 +21,8 @@ export function MessageArea() {
       onLoadOlder={loadOlderMessages}
       loadingOlder={loadingOlder}
       hasOlder={hasOlderMessages}
-      renderMessage={(msg) => {
-        const m = msg as import("./types").DirectMessage
+      renderMessage={(msg, i) => {
+        const m = msg as DirectMessage
         if (m.kind === "screenshot-notice") {
           return (
             <div key={m._id} className="mb-2 flex items-center justify-center">
@@ -40,10 +42,16 @@ export function MessageArea() {
             </div>
           )
         }
+        const { isGroupStart, isGroupEnd } = getGroupPosition(
+          messages as DirectMessage[],
+          i
+        )
         return (
           <MessageBubble
             key={m._id}
             msg={m}
+            isGroupStart={isGroupStart}
+            isGroupEnd={isGroupEnd}
           />
         )
       }}

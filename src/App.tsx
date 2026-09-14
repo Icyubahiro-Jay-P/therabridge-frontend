@@ -1,5 +1,6 @@
 import { Navigate, Route, Routes } from "react-router-dom"
 
+import { BubblePreview } from "@/pages/dev/BubblePreview"
 import { GuestRoute, ProtectedRoute } from "@/components/shared/auth/ProtectedRoute"
 import { AppLayout } from "@/components/layout/AppLayout"
 
@@ -50,6 +51,9 @@ import {
 } from "./routes"
 
 export function App() {
+  if (window.location.pathname === "/dev/bubbles") {
+    return <BubblePreview />
+  }
   return (
     <AuthInitializer>
       <Routes>

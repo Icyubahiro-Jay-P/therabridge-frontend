@@ -26,6 +26,43 @@ export function formatTime(dateString: string) {
   })
 }
 
+interface GroupableMessage {
+  sender: { _id: string }
+  createdAt: string
+  kind?: string
+}
+
+const GROUP_GAP_MS = 5 * 60 * 1000
+
+function inSameGroup(a: GroupableMessage, b: GroupableMessage) {
+  if ((a.kind && a.kind !== "message") || (b.kind && b.kind !== "message")) {
+    return false
+  }
+  if (a.sender._id !== b.sender._id) return false
+  const gap = Math.abs(
+    new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+  )
+  return gap < GROUP_GAP_MS
+}
+
+/**
+ * Instagram-style clustering: consecutive messages from the same sender,
+ * sent within a few minutes of each other, collapse into one visual group
+ * (avatar/name shown once, tighter gap between bubbles).
+ */
+export function getGroupPosition<T extends GroupableMessage>(
+  messages: T[],
+  index: number
+) {
+  const msg = messages[index]
+  const prev = messages[index - 1]
+  const next = messages[index + 1]
+  return {
+    isGroupStart: !prev || !inSameGroup(prev, msg),
+    isGroupEnd: !next || !inSameGroup(msg, next),
+  }
+}
+
 export function loadSetting<T>(key: string, fallback: T): T {
   try {
     const stored = localStorage.getItem("therabridge-settings")

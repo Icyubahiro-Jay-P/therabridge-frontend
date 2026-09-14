@@ -21,8 +21,12 @@ import { formatTime, timeAgo } from "../shared/utils"
 
 export const MessageBubble = memo(function MessageBubble({
   msg,
+  isGroupStart = true,
+  isGroupEnd = true,
 }: {
   msg: DirectMessage
+  isGroupStart?: boolean
+  isGroupEnd?: boolean
 }) {
   const currentUserId = useAuthStore((s) => s.user?.id)
   const editingId = useChatStore((s) => s.editingId)

@@ -1,6 +1,8 @@
 import { useCommunityStore } from "@/store/community-store"
 import { MessageArea as SharedMessageArea } from "../shared/MessageArea"
+import { getGroupPosition } from "../shared/utils"
 import { MessageBubble } from "./MessageBubble"
+import type { CommunityMessage } from "./types"
 
 export function MessageArea() {
   const error = useCommunityStore((s) => s.error)
@@ -18,12 +20,18 @@ export function MessageArea() {
       onLoadOlder={loadOlderMessages}
       loadingOlder={loadingOlder}
       hasOlder={hasOlderMessages}
-      renderMessage={(msg) => {
-        const m = msg as import("./types").CommunityMessage
+      renderMessage={(msg, i) => {
+        const m = msg as CommunityMessage
+        const { isGroupStart, isGroupEnd } = getGroupPosition(
+          messages as CommunityMessage[],
+          i
+        )
         return (
           <MessageBubble
             key={m._id}
             msg={m}
+            isGroupStart={isGroupStart}
+            isGroupEnd={isGroupEnd}
           />
         )
       }}

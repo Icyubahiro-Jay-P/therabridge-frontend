@@ -77,6 +77,11 @@ const communityMessages: CommunityMessage[] = [
 
 export function BubblePreview() {
   useEffect(() => {
+    if (new URLSearchParams(window.location.search).get("dark")) {
+      // Beats ThemeProvider's own effect, which runs after this one and
+      // would otherwise reset the class back to the system preference.
+      setTimeout(() => document.documentElement.classList.add("dark"), 0)
+    }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     useAuthStore.setState({
       user: { id: "me", username: "you", firstName: "You", lastName: "P", role: "user" } as any,

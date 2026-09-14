@@ -22,8 +22,12 @@ import { formatTime, timeAgo } from "../shared/utils"
 
 export const MessageBubble = memo(function MessageBubble({
   msg,
+  isGroupStart = true,
+  isGroupEnd = true,
 }: {
   msg: CommunityMessage
+  isGroupStart?: boolean
+  isGroupEnd?: boolean
 }) {
   const currentUser = useAuthStore((s) => s.user)
   const active = useCommunityStore((s) => s.active)
@@ -59,23 +63,27 @@ export const MessageBubble = memo(function MessageBubble({
     <div
       id={`msg-${msg._id}`}
       className={cn(
-        "group/msg relative mb-2 flex flex-col",
+        "group/msg relative flex flex-col",
+        isGroupEnd ? "mb-3" : "mb-0.5",
         isMe ? "items-end" : "items-start"
       )}
     >
       <div
         className={cn(
           "flex max-w-[70%] gap-1",
-          isMe ? "flex-row-reverse items-center justify-start" : "flex-row items-start"
+          isMe ? "flex-row-reverse items-center justify-start" : "flex-row items-end"
         )}
       >
-        {!isMe && (
-          <Link to={`/user/${msg.sender.username}`} className="mt-1 shrink-0">
-            <Avatar user={msg.sender} size="sm" />
-          </Link>
-        )}
+        {!isMe &&
+          (isGroupEnd ? (
+            <Link to={`/user/${msg.sender.username}`} className="shrink-0">
+              <Avatar user={msg.sender} size="sm" />
+            </Link>
+          ) : (
+            <div className="size-8 shrink-0" />
+          ))}
         <div className="flex min-w-0 flex-col">
-          {!isMe && (
+          {!isMe && isGroupStart && (
             <span className="px-1 text-[11px] font-semibold text-emerald-600 dark:text-emerald-400">
               {msg.sender.firstName}
             </span>
@@ -117,10 +125,10 @@ export const MessageBubble = memo(function MessageBubble({
                   startReply(msg)
                 }}
                 className={cn(
-                  "wrap-break-words min-w-0 cursor-pointer overflow-hidden rounded-2xl text-sm",
+                  "wrap-break-words min-w-0 cursor-pointer overflow-hidden rounded-[18px] text-[14.5px] leading-snug",
                   isMe
-                    ? "rounded-br-md bg-emerald-600 text-white"
-                    : "rounded-bl-md bg-gray-100 text-gray-900 dark:bg-gray-800 dark:text-gray-100",
+                    ? "bg-emerald-600 text-white"
+                    : "bg-gray-100 text-gray-900 dark:bg-gray-800 dark:text-gray-100",
                   isEditing &&
                     "ring-2 ring-teal-400 ring-offset-1 ring-offset-gray-50 dark:ring-offset-gray-950"
                 )}

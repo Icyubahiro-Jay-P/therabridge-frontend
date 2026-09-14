@@ -105,6 +105,28 @@ export const MessageBubble = memo(function MessageBubble({
                 <MoreVertical className="size-3.5" />
               </button>
             )}
+            {!isUnsent && msg.replyTo && (
+              <button
+                type="button"
+                onClick={() =>
+                  document
+                    .getElementById(`msg-${msg.replyTo!._id}`)
+                    ?.scrollIntoView({ behavior: "smooth", block: "center" })
+                }
+                className={cn(
+                  "mb-0.5 w-fit max-w-full cursor-pointer truncate rounded-2xl px-3 py-1.5 text-left text-xs",
+                  isMe
+                    ? "bg-emerald-600/50 text-white/85 hover:bg-emerald-600/60"
+                    : "bg-gray-200/70 text-gray-600 hover:bg-gray-200 dark:bg-white/[0.06] dark:text-gray-400 dark:hover:bg-white/[0.09]"
+                )}
+              >
+                <span className="font-semibold">{msg.replyTo.senderUsername}</span>
+                <span className="opacity-75">
+                  {" · "}
+                  {msg.replyTo.type === "voice" ? "🎤 Voice message" : msg.replyTo.content}
+                </span>
+              </button>
+            )}
             <div className="relative">
               <button
                 onClick={(e) => {
